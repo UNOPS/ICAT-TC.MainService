@@ -91,6 +91,16 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     }
   }
 
+  async findAllPolicies(): Promise<ClimateAction[]> {
+    const policies = await this.repo.createQueryBuilder('climate_action')
+      .select(['climate_action.id', 'climate_action.policyName'])
+      .getMany();
+
+      console.log("bbbb",policies)
+
+    return policies;
+  }
+  
 
   async getAllCAList(
     options: IPaginationOptions,

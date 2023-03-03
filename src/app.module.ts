@@ -35,6 +35,13 @@ import { MulterModule } from '@nestjs/platform-express';
 import { config } from './ormconfig';
 import { User } from './users/user.entity';
 import { TokenDetails } from './utills/token_details';
+import { Category } from './methodology-assessment/entities/category.entity';
+import { Characteristics } from './methodology-assessment/entities/characteristics.entity';
+import { MethodologyAssessmentParameters } from './methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Methodology } from './methodology-assessment/entities/methodology.entity';
+import { MethodologyAssessmentModule } from './methodology-assessment/methodology-assessment.module';
+import { AssessmentModule } from './assessment/assessment.module';
+import { MethodologyAssessmentController } from './methodology-assessment/methodology-assessment.controller';
 // import {config} from './config';
 
 @Module({
@@ -53,6 +60,10 @@ import { TokenDetails } from './utills/token_details';
       Country,
       ClimateAction,
       Institution,
+      Methodology,
+      Category,
+      Characteristics,
+      MethodologyAssessmentParameters,
 
     ]),
     UsersModule,
@@ -71,6 +82,8 @@ import { TokenDetails } from './utills/token_details';
     
     LearningMaterialModule,
     ReportModule,
+    MethodologyAssessmentModule,
+    AssessmentModule,
     
     InstitutionModule,
     ServeStaticModule.forRoot({
@@ -110,7 +123,7 @@ import { TokenDetails } from './utills/token_details';
     AppController,
     FinancingSchemeController,
     FinancingSchemeController,
-
+    MethodologyAssessmentController,
     ReportController,
     // InstitutionCategoryController,
     // UserController,
