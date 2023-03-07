@@ -22,7 +22,7 @@ async function bootstrap() {
   // });
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  // app.enableCors();
-  await app.listen(7080);
+  app.enableCors();
+  await app.listen(7081);
 }
 bootstrap();

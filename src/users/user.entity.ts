@@ -45,17 +45,12 @@ export class User extends BaseTrackingEntity {
 
   @Column()
   lastName: string;
-  
-  @Column()
-  loginProfile: string;
-
-
-  @Column({ unique: true })
-  username: string;
 
   @Column({ unique: true })
   email: string;
 
+  @Column({ unique: true })
+  username: string;
 
   @ManyToOne((type) => Institution, { eager: true })
   @JoinColumn()
@@ -88,6 +83,9 @@ export class User extends BaseTrackingEntity {
   @Exclude()
   @Column()
   resetToken: string;
+
+  @Column()
+  loginProfile: string;
 
   @DeleteDateColumn()
   deletedAt?: Date;

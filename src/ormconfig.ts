@@ -29,8 +29,8 @@ export const config: ConnectionOptions = {
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: 'pradeep123#',
-  database: 'tc-main-new',
+  password: 'dil19971121',
+  database: 'climate_action',
   autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
 

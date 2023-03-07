@@ -10,6 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
@@ -57,6 +58,7 @@ import { UsersService } from './users.service';
     // }
   },
 })
+@ApiTags('Users')
 @Controller('users')
 export class UsersController implements CrudController<User> {
   constructor(
@@ -69,7 +71,7 @@ export class UsersController implements CrudController<User> {
     private readonly auditService: AuditService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
 
@@ -205,26 +207,27 @@ export class UsersController implements CrudController<User> {
     );
   }
 
-  @Get(
-    'AllUserDetails/userDetalils/:page/:limit/:filterText/:userTypeId',
-  )
-  async getUserList(
-    @Request() request,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('userTypeId') filterText: string,
-    @Query('userTypeId') userTypeId: number,
-  ): Promise<any>{
-    console.log('incontroler...')
-    return await this.service
-    .getUserDetails(
-      {
-        limit: limit,
-        page: page,
-      },
-      filterText,
-      userTypeId,
-    );
-  }
+  // @Get(
+  //   'AllUserDetails/userDetalils/:page/:limit/:filterText/:userTypeId',
+  // )
+  // async getUserList(
+  //   @Request() request,
+  //   @Query('page') page: number,
+  //   @Query('limit') limit: number,
+  //   @Query('userTypeId') filterText: string,
+  //   @Query('userTypeId') userTypeId: number,
+  // ): Promise<any>{
+  //   console.log('incontroler...')
+  //   return await this.service
+  //   .getUserDetails(
+  //     {
+  //       limit: limit,
+  //       page: page,
+  //     },
+  //     filterText,
+  //     userTypeId,
+  //   );
+  // }
+  
     
 }
