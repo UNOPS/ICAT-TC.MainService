@@ -18,13 +18,7 @@ import { Repository } from 'typeorm';
   model: {
     type: UserType,
   },
-  query: {
-    join: {
-      institutionType: {
-        eager: true,
-      },
-    },
-  },
+  
 })
 @Controller('usertype')
 export class UserTypeController implements CrudController<UserType> {
@@ -40,7 +34,6 @@ export class UserTypeController implements CrudController<UserType> {
 
   @Get('usertype/GetUserTypes')
   async GetUserTypes(@Request() request): Promise<any> {
-    // console.log(moment(editedOn).format('YYYY-MM-DD'))
     return await this.service.GetUserTypes();
   }
 

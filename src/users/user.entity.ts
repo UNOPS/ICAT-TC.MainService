@@ -62,7 +62,7 @@ export class User extends BaseTrackingEntity {
   @Column()
   mobile: string;
 
-  @Column()
+  @Column({default: true})
   admin: string; // added by
 
   // @Column({ nullable: true })

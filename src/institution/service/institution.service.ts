@@ -456,6 +456,15 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
   }
 
+  async getAllInstitutions():Promise<Institution[]>{
+    let result = await this.repo.find();
+    if (result){
+      return result;
+    }
+    
+  }
+  
+
 
 
 
