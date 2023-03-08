@@ -9,9 +9,10 @@ import { User } from './user.entity';
 import { UserType } from './user.type.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { UserTypeModule } from './user-type/user-type.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserType, Institution, Country,Audit])],
+  imports: [TypeOrmModule.forFeature([User, UserType, Institution, Country,Audit]), UserTypeModule],
   providers: [UsersService, EmailNotificationService,AuditService],
   controllers: [UsersController],
   exports: [UsersService],
