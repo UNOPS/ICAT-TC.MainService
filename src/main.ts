@@ -2,9 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
+import * as bodyParser from 'body-parser';
+
 
 async function bootstrap() {
  const app = await NestFactory.create(AppModule);
+ app.use(json({ limit: '50mb' }));
+ app.use(urlencoded({ extended: true, limit: '50mb' }));
   const options = new DocumentBuilder()
     .setTitle('TC-AUTH-SERVICE')
     .setDescription('SCC')
@@ -20,9 +24,9 @@ async function bootstrap() {
   //   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
   //   next();
   // });
-  app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
+  // app.enableCors();
   app.enableCors();
   await app.listen(7081);
+ 
 }
 bootstrap();
