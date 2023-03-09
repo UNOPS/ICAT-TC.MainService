@@ -10,25 +10,10 @@ export class UserTypeService extends TypeOrmCrudService<UserType> {
   }
 
   async GetUserTypes(): Promise<UserType[]> {
-    let data = this.repo
-      .createQueryBuilder('ae')
-      .leftJoinAndMapMany(
-        'ae.institutionType',
-        'instype_usertype',
-        'int',
-        'int.userTypeId = ae.id',
-      )
-
-      .orderBy('ae.createdOn', 'DESC');
-    // console.log(
-    //   '=====================================================================',
-    // );
-    //console.log(data.getQuery());
-
-    let resualt = data.getRawMany();
-
-    if (resualt) {
-      return resualt;
+    let data = await this.repo.find()
+    console.log("data in usertypes",data)
+    if (data) {
+      return data;
     }
   }
 }

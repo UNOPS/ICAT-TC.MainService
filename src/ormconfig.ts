@@ -28,9 +28,17 @@ export const config: ConnectionOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
+
+  // username: 'sqluser',
+  // password: 'password',
+  // database: 'tc-main-new',
+
   username: 'root',
   password: 'pradeep123#',
   database: 'tc-main',
+  // password: 'dil19971121',
+  // database: 'climate_action',
+
   autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
 

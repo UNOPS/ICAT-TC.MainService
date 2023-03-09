@@ -222,4 +222,5 @@ export class ClimateAction extends BaseTrackingEntity {
   
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
+  
 }

@@ -8,7 +8,7 @@ constructor(
 
    
       getDetails(reqDetails:TokenReqestType[]):any[]{
-
+console.log("tokec",reqDetails)
         let details:any[]=[];
         let user:any = this.request.user.user;
         

@@ -120,6 +120,12 @@ export class ProjectController implements CrudController<ClimateAction> {
     await this.service.postOne(req)
   }
 
+  @Get('findAllPolicies')
+async findAllPolicies() {
+  const policies = await this.service.findAllPolicies();
+  console.log("aaaaa",policies)
+  return policies;
+}
 
 
   @Get(
