@@ -123,7 +123,11 @@ export class InstitutionController implements CrudController<Institution> {
     let sectorIdFromTocken: number;
     let userTypeFromTocken: string;
     let institutionTypeId: number; //instypeId
-
+    console.log('userTypeFromTocken==',  this.tokenDetails.getDetails([ 
+      TokenReqestType.countryId,
+      TokenReqestType.sectorId,
+      TokenReqestType.role,
+    ]));
     [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
