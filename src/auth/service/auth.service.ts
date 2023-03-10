@@ -1,11 +1,7 @@
 import { Injectable, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthCredentialDto } from '../Dto/auth.credential.dto';
 import { AuditService } from 'src/audit/audit.service';
-import { AuditDto } from 'src/audit/dto/audit-dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { UserTypeNames } from 'src/user-type/user-types-names';
 import { HttpService } from '@nestjs/axios';
 
 
