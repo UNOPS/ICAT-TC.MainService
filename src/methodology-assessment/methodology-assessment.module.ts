@@ -9,11 +9,15 @@ import { Methodology } from './entities/methodology.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ProjectService } from 'src/climate-action/climate-action.service';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { Barriers } from './entities/barriers.entity';
+import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
+import { BarriersCategory } from './entities/barrierscategory.entity';
 
 @Module({
   controllers: [MethodologyAssessmentController],
   providers: [MethodologyAssessmentService, ProjectService],
-  imports:[TypeOrmModule.forFeature([Methodology, Category, Characteristics, MethodologyAssessmentParameters, Assessment, ClimateAction])],
+  imports:[TypeOrmModule.forFeature([Methodology, Category, Characteristics, MethodologyAssessmentParameters,
+    AssessmentBarriers, Assessment, ClimateAction, Barriers, BarriersCategory])],
   exports:[MethodologyAssessmentService, ProjectService]
 })
 export class MethodologyAssessmentModule {}

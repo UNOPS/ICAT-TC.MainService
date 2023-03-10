@@ -10,6 +10,8 @@ import { Category } from './entities/category.entity';
 import { Characteristics } from './entities/characteristics.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { Barriers } from './entities/barriers.entity';
+import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -18,6 +20,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Methodology) private readonly methodologyRepository: Repository<Methodology>,
    @InjectRepository(Characteristics) private readonly characteristicsRepository: Repository<Characteristics>,
    @InjectRepository(Assessment) private readonly assessmentRepository: Repository<Assessment>,
+   @InjectRepository(Barriers) private readonly barriersRepository: Repository<Barriers>,
+   @InjectRepository(AssessmentBarriers) private readonly assessRepository: Repository<AssessmentBarriers>,
    ) {
     super(repo)
   }
@@ -61,11 +65,18 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async create(MethData: any) {
+
+    console.log("aaaa", MethData)
     let methodology = new Methodology();
     let policy = new ClimateAction();
      methodology.id = MethData.methodology;
   //  console.log("MethName: ", methodology.id);
     policy.id = MethData.policyId;
+
+    
+
+    
+   
 
 
     let  date  = new Date()
@@ -82,7 +93,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
 
+   assessement.id = assessementId
+
     console.log("assessRes : ",(await assessRes).id)
+
+    for(let y of MethData.barriers){
+      let assessmentBarriers = new AssessmentBarriers()
+      let barrier = new Barriers();
+      barrier.id = y.id,
+      barrier.barrier = y.barrier
+
+      assessmentBarriers.barriers = barrier
+      assessmentBarriers.assessment = assessement
+
+      await this.assessRepository.save(assessmentBarriers);
+    }
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
@@ -114,7 +139,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
        await this.repo.save(data);
       }
     }
-  
+
     return MethData;
   }
   
@@ -132,6 +157,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   findAllMethodologies(): Promise<Methodology[]> {
     return this.methodologyRepository.find();
+  }
+
+  findAllBarriers(): Promise<Barriers[]> {
+    return this.barriersRepository.find();
   }
 
 

@@ -31,13 +31,11 @@ export const config: ConnectionOptions = {
 
   username: 'sqluser',
   password: 'password',
-  database: 'tc-main-new',
+  database: 'tc-main-new2',
 /*   
-=======
   username: 'root',
   password: 'dil19971121',
   database: 'climate_action',
->>>>>>> f207810857976354636f3027aff37f0407412eb7
  */
   autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],

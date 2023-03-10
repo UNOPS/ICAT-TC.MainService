@@ -49,16 +49,15 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllMethodologies();
   }
   
+  @Get('findAllBarriers')
+  findAllBarriers() {
+    return this.methodologyAssessmentService.findAllBarriers();
+  }
 
   @Get('findAllCategories')
   findAllCategories() {
     return this.methodologyAssessmentService.findAllCategories();
   }
-
-
-
-
-
 
   @Get('findAllCharacteristics')
   findAllCharacteristics() {

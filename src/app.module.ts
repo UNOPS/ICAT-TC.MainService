@@ -42,6 +42,9 @@ import { Methodology } from './methodology-assessment/entities/methodology.entit
 import { MethodologyAssessmentModule } from './methodology-assessment/methodology-assessment.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { MethodologyAssessmentController } from './methodology-assessment/methodology-assessment.controller';
+import { Barriers } from './methodology-assessment/entities/barriers.entity';
+import { AssessmentBarriers } from './methodology-assessment/entities/assessmentbarriers.entity';
+import { BarriersCategory } from './methodology-assessment/entities/barrierscategory.entity';
 // import {config} from './config';
 
 @Module({
@@ -64,6 +67,9 @@ import { MethodologyAssessmentController } from './methodology-assessment/method
       Category,
       Characteristics,
       MethodologyAssessmentParameters,
+      Barriers,
+      AssessmentBarriers,
+      BarriersCategory
 
     ]),
     UsersModule,
