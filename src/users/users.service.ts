@@ -39,13 +39,13 @@ export class UsersService extends TypeOrmCrudService<User> {
     super(repo);
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: User): Promise<User> {
     //console.log("CreateUser=====",createUserDto.institution['id'])
     //console.log("CreateUserwwwwww=====",createUserDto.userType['id'])
-    console.log("CreateUserYYY=====",createUserDto)
-
+    console.log("CreateUserYYY=====",createUserDto.userType)
+    let userTypeId = createUserDto.userType.id
     let userType = await this.usersTypeRepository.findOne(
-      createUserDto.userType['id'],
+      { where:{id:userTypeId}}
     );
 
     // let institution;
@@ -85,11 +85,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
 
 
-    let institution = await this.institutionRepository.findOne(
-      insId
-    );
+    // let institution = await this.institutionRepository.findOne(
+    //   insId
+    // );
 
-    let country = await this.countryRepo.findOne(countryId);
+    //let country = await this.countryRepo.findOne(countryId);
 
     let newUser = new User();
 
@@ -99,13 +99,14 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.email = createUserDto.email;
     newUser.mobile = createUserDto.mobile;
     newUser.status = RecordStatus.Active;
-    newUser.landline = createUserDto.telephone;
+    newUser.landline = createUserDto.landline;
     newUser.userType = userType;
-    newUser.institution = institution;
-    newUser.country = country;
+    //newUser.institution = institution;
+   // newUser.country = country;
     //newUser.mrvInstitution = createUserDto.mrvInstitution;
     newUser.salt = await bcript.genSalt();
-
+    newUser.loginProfile = ''
+    newUser.admin = ''
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
     createUserDto.password = newPassword;
@@ -397,7 +398,6 @@ export class UsersService extends TypeOrmCrudService<User> {
     // console.log("sssssssss ",data.execute() );
     return data;
   }
-  
 
   
 

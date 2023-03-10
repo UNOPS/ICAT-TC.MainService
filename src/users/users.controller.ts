@@ -31,6 +31,7 @@ import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
+import { UserType } from './user.type.entity';
 import { UsersService } from './users.service';
 
 @Crud({
@@ -73,14 +74,17 @@ export class UsersController implements CrudController<User> {
 
   // @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  create(@Body() createUserDto: User): Promise<User> {
 
     let audit: AuditDto = new AuditDto();
     audit.action = createUserDto.firstName +' User Created';
     audit.comment = "User Created";
     audit.actionStatus = 'Created';
-    this.auditService.create(audit);
+    audit.userName = 'created'
+    //this.auditService.create(audit);
     console.log("audit.......",audit);
+    createUserDto.userType = new UserType()
+    createUserDto.userType.id = 1
 
     return this.service.create(createUserDto);
 
@@ -176,7 +180,7 @@ export class UsersController implements CrudController<User> {
     
     console.log(req.parsed.filter.length, req.parsed.search['$and'][0]);
 
-    let userList = this.base.getManyBase(req);
+    let userList = await this.base.getManyBase(req);
     console.log('yyyyyyyyyyyyyyyyyyyyyyyy',userList);
 
     return userList;

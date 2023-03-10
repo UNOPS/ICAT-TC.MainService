@@ -70,7 +70,7 @@ export class InstitutionController implements CrudController<Institution> {
     return this;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(
     'getInstitutionDataProvider/institutioninfo/:page/:limit/:filterText/:userId',
   )
@@ -308,7 +308,7 @@ export class InstitutionController implements CrudController<Institution> {
    
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('getInstitutionForManageUsers')
   async getInstitutionForManageUsers(
     @Request() request,
@@ -363,4 +363,11 @@ export class InstitutionController implements CrudController<Institution> {
 
     return resault;
   }
+  @Get('getALlinstitutions')
+  async getAllInstitutions(
+  ): Promise<any> {
+    return await this.service.getAllInstitutions();
+  }
+  
+  
 }
