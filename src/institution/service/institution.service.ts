@@ -463,8 +463,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
     
   }
-  
-
+  async creteNew(ins:Institution):Promise<Institution> {
+    return this.repo.save(ins)
+  }
 
 
 

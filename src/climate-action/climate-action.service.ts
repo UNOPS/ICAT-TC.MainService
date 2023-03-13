@@ -9,10 +9,16 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/project-approval-status.entity';
+import { PolicyBarriers } from './entity/policy-barriers.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
-  constructor(@InjectRepository(ClimateAction) repo) {
+  constructor(
+    @InjectRepository(ClimateAction) repo,
+    // @InjectRepository(PolicyBarriers)
+    // public PolicyBarriersRepo: Repository<PolicyBarriers>,
+) {
     super(repo);
   }
   async postOne(req:ClimateAction){
@@ -90,7 +96,9 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       return resualt;
     }
   }
-
+async save(any){
+  
+}
   async findAllPolicies(): Promise<ClimateAction[]> {
     const policies = await this.repo.createQueryBuilder('climateAction')
       .select(['climateAction.id', 'climateAction.policyName'])

@@ -1,30 +1,7 @@
 import { ConnectionOptions, DataSourceOptions } from 'typeorm';
-//https://github.com/ambroiseRabier/typeorm-nestjs-migration-example
-
-// import { ConnectionOptions } from "typeorm/connection/ConnectionOptions";
 
 
-//***********************************************************************//
-
-// npm run typeorm:migrate <myEntity-migration>
-// Check your migration queries in src/migrations
-// npm run start:dev or npm run start:prod or npm run typeorm:run
-
-///Do not use capital letters for db name if used migration will NOT WORK
-//If migration not working please delete dist folder and retry
-//***********************************************************************//
-
-// You can load you .env file here synchronously using dotenv package (not installed here),
-// import * as dotenv from 'dotenv';
-// import * as fs from 'fs';
-// const environment = process.env.NODE_ENV || 'development';
-// const data: any = dotenv.parse(fs.readFileSync(`${environment}.env`));
-// You can also make a singleton service that load and expose the .env file content.
-// ...
-
-// Check typeORM documentation for more information.
 export const config: ConnectionOptions = {
-  // name: 'Real',
   type: 'mysql',
   host: 'localhost',
   port: 3306,

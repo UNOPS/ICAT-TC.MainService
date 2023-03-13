@@ -5,6 +5,7 @@ import { ProjectService } from 'src/climate-action/climate-action.service';
 import { Report } from './entity/report.entity';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Report,  ClimateAction])],

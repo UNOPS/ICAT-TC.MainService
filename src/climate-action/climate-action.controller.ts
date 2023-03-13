@@ -29,9 +29,9 @@ var multer = require('multer');
       projectStatus: {
         eager: true,
       },
-      sector: {
-        eager: true,
-      },
+      // sector: {
+      //   eager: true,
+      // },
       subSector: {
         eager: true,
       },
@@ -50,12 +50,12 @@ var multer = require('multer');
       assessments: {
         eager: true,
       },
-      mappedInstitution: {
-        eager: true,
-      },
-      country: {
-        eager: true,
-      },
+      // mappedInstitution: {
+      //   eager: true,
+      // },
+      // country: {
+      //   eager: true,
+      // },
       mitigationActionType: {
         eager: true,
       },
