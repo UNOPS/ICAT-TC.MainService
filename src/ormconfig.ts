@@ -2,6 +2,7 @@ import { ConnectionOptions, DataSourceOptions } from 'typeorm';
 
 
 export const config: ConnectionOptions = {
+  // name: 'Real',
   type: 'mysql',
   host: 'localhost',
   port: 3306,

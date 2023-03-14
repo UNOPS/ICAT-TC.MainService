@@ -16,8 +16,8 @@ import { Repository } from 'typeorm';
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
   constructor(
     @InjectRepository(ClimateAction) repo,
-    // @InjectRepository(PolicyBarriers)
-    // public PolicyBarriersRepo: Repository<PolicyBarriers>,
+    @InjectRepository(PolicyBarriers)
+    public PolicyBarriersRepo: Repository<PolicyBarriers>,
 ) {
     super(repo);
   }
@@ -96,8 +96,8 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       return resualt;
     }
   }
-async save(any){
-  
+async save(req:PolicyBarriers[]){
+  console.log(req)
 }
   async findAllPolicies(): Promise<ClimateAction[]> {
     const policies = await this.repo.createQueryBuilder('climateAction')

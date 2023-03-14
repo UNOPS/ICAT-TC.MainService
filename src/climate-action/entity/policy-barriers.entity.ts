@@ -6,12 +6,19 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity({ name: 'policy-barriers' })
 export class PolicyBarriers extends BaseTrackingEntity {
 
+    constructor() {
+        super();
+        this.createdBy = '';
+        this.editedBy = '';
+      }
+
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => ClimateAction, { cascade: false })
+    @ManyToOne(() => ClimateAction, climateAction => climateAction.policyBarriers)
     climateAction: ClimateAction;
 
-    @ManyToOne(() => Barriers, { cascade: false })
+    @ManyToOne(() => Barriers, barriers => barriers.policyBarriers)
     barriers: Barriers;
+
 }

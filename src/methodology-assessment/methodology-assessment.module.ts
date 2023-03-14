@@ -13,12 +13,14 @@ import { Barriers } from './entities/barriers.entity';
 import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
 import { ParameterStatus } from './entities/parameterStatus.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 
 @Module({
   controllers: [MethodologyAssessmentController],
   providers: [
     MethodologyAssessmentService,
-    ProjectService
+    ProjectService,
+    PolicyBarriers
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -30,7 +32,9 @@ import { ParameterStatus } from './entities/parameterStatus.entity';
     ClimateAction,
     Barriers,
     BarriersCategory,
-    ParameterStatus
+    ParameterStatus,
+    PolicyBarriers
+
   ])],
   exports: [
     MethodologyAssessmentService,

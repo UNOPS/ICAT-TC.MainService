@@ -21,6 +21,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ActionArea } from 'src/master-data/action-area/entity/action-area.entity';
+import { PolicyBarriers } from './policy-barriers.entity';
 
 @Entity({ name: 'climateAction'})
 export class ClimateAction extends BaseTrackingEntity {
@@ -222,5 +223,9 @@ export class ClimateAction extends BaseTrackingEntity {
   
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
+
+  @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction,{eager:true})
+  @JoinColumn()
+  policyBarriers: PolicyBarriers[];
   
 }
