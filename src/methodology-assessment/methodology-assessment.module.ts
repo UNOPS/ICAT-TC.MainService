@@ -12,12 +12,16 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { Barriers } from './entities/barriers.entity';
 import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
+import { Indicators } from './entities/indicators.entity';
+import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 
 @Module({
   controllers: [MethodologyAssessmentController],
   providers: [MethodologyAssessmentService, ProjectService],
   imports:[TypeOrmModule.forFeature([Methodology, Category, Characteristics, MethodologyAssessmentParameters,
-    AssessmentBarriers, Assessment, ClimateAction, Barriers, BarriersCategory])],
+    AssessmentBarriers, Assessment, ClimateAction, Barriers, 
+    Indicators ,BarriersCategory,
+  AssessmentCharacteristics])],
   exports:[MethodologyAssessmentService, ProjectService]
 })
 export class MethodologyAssessmentModule {}
