@@ -13,6 +13,8 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { Barriers } from './entities/barriers.entity';
 import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
+import { Indicators } from './entities/indicators.entity';
+import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -24,10 +26,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Barriers) private readonly barriersRepository: Repository<Barriers>,
    @InjectRepository(AssessmentBarriers) private readonly assessRepository: Repository<AssessmentBarriers>,
    @InjectRepository(BarriersCategory) private readonly baricatRepository: Repository<BarriersCategory>,
+   @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
+   @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    ) {
     super(repo)
   }
-
   
 /*   create(MethData : any) {
    // console.log("result")
@@ -74,11 +77,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      methodology.id = MethData.methodology;
   //  console.log("MethName: ", methodology.id);
     policy.id = MethData.policyId;
-
-    
-
-    
-   
 
 
     let  date  = new Date()
@@ -141,10 +139,53 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
        await this.repo.save(data);
       }
     }
+    //assessementId
+    console.log("iddd", assessementId)
+    return assessementId;
+  }
 
-    return MethData;
+
+  async createAssessCharacteristics(charAssessData :any){
+
+    console.log("assessChaData:", charAssessData)
+    let charAssessment = new Assessment();
+
+    charAssessment.id = charAssessData.assessment
+
+    for(let item of charAssessData.characteristics){
+      let newdata = new AssessmentCharacteristics();
+      let characteristic = new Characteristics();
+
+      characteristic.id = item.id;
+      characteristic.name = item.name;
+
+      newdata.assessment = charAssessment
+      newdata.characteristics = characteristic
+
+      await this.assessmentCharcteristicsRepository.save(newdata);
+
+    }
+
+    return charAssessData
   }
   
+  async findByAssessIdAndRelevanceNotRelevant(assessId: number): Promise<Characteristics[]> {
+    const characteristicsIds = await this.repo
+      .createQueryBuilder('map')
+      .select('map.characteristics.id', 'id')
+      .leftJoin('map.characteristics', 'characteristics')
+      .where('map.assessment.id = :assessId', { assessId })
+      .andWhere('map.relevance != :notRelevant', { notRelevant: 'not_relevant' })
+      .getRawMany();
+
+    const characteristics = await this.characteristicsRepository
+      .createQueryBuilder('characteristics')
+      .where('characteristics.id IN (:...ids)', { ids: characteristicsIds.map((c) => c.id) })
+      .getMany();
+
+    return characteristics;
+  }
+
 
 /*   findAll(): Promise<Category[]> {
     return this.methodologyRepository.find();
@@ -168,6 +209,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   async findByAllCategories(): Promise<BarriersCategory[]> {
     return await this.baricatRepository.find();
 
+  }
+
+  findAllIndicators(): Promise<Indicators[]> {
+    return this.indicatorRepository.find();
   }
 
 

@@ -46,6 +46,8 @@ import { Barriers } from './methodology-assessment/entities/barriers.entity';
 import { AssessmentBarriers } from './methodology-assessment/entities/assessmentbarriers.entity';
 import { BarriersCategory } from './methodology-assessment/entities/barrierscategory.entity';
 import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
+import { Indicators } from './methodology-assessment/entities/indicators.entity';
+import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
 // import {config} from './config';
 
 @Module({
@@ -71,7 +73,10 @@ import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
       Barriers,
       AssessmentBarriers,
       BarriersCategory,
-      PolicyBarriers
+      PolicyBarriers,
+      Indicators,
+      AssessmentCharacteristics,
+
     ]),
     UsersModule,
     UserTypeModule,

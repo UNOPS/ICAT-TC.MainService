@@ -14,6 +14,9 @@ import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
 import { ParameterStatus } from './entities/parameterStatus.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { Indicators } from './entities/indicators.entity';
+import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
+
 
 @Module({
   controllers: [MethodologyAssessmentController],
@@ -33,12 +36,14 @@ import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity
     Barriers,
     BarriersCategory,
     ParameterStatus,
-    PolicyBarriers
+    PolicyBarriers,
+    Indicators
 
   ])],
   exports: [
     MethodologyAssessmentService,
     ProjectService 
   ]
+
 })
 export class MethodologyAssessmentModule { }

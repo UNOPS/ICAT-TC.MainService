@@ -14,6 +14,10 @@ export const config: ConnectionOptions = {
   username: 'root',
   password: 'pradeep123#',
   database: 'tc-main',
+  // password: 'dil19971121',
+  // database: 'climate_action',
+
+
   autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
 
