@@ -9,6 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { MethodologyAssessmentParameters } from './entities/methodology-assessment-parameters.entity';
 import axios from 'axios';
 import { ProjectService } from 'src/climate-action/climate-action.service';
+import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 
 
 const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
@@ -16,12 +17,16 @@ const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
 export class MethodologyAssessmentController {
+  
 
  
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly climateService : ProjectService,
     ) { }
+
+    res2 : number;
+    resData :any;
 
   /*  @Post()
    create(@Body() createMethodologyAssessmentDto: CreateMethodologyAssessmentDto) {
@@ -30,13 +35,35 @@ export class MethodologyAssessmentController {
 
   @Post('methAssignDataSave')
   async methAssignDataSave(@Body() MethAssignParam: MethodologyAssessmentParameters): Promise<any> {
-
+  this.res2 = 0
+  this.resData = ''
 
     const response = await axios.post(MainMethURL, MethAssignParam);
     console.log("resss", response.data)
 
-    let res = this.methodologyAssessmentService.create(MethAssignParam)
-    return response.data
+    this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
+   
+    this.resData = {
+      result : response.data,
+      assesId : this.res2
+    }
+
+    return this.resData
+
+  }
+
+  @Post('AssessCharacteristicsDataSave')
+  async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
+ 
+    let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
+
+    return newRes
+
+  }
+
+  @Get('findChar/:assessId')
+  async findByAssessIdAndRelevanceNotRelevant(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.findByAssessIdAndRelevanceNotRelevant(assessId);
   }
 
   /*   @Get()
@@ -49,20 +76,24 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllMethodologies();
   }
   
+  @Get('findAllBarriers')
+  findAllBarriers() {
+    return this.methodologyAssessmentService.findAllBarriers();
+  }
 
   @Get('findAllCategories')
   findAllCategories() {
     return this.methodologyAssessmentService.findAllCategories();
   }
 
-
-
-
-
-
   @Get('findAllCharacteristics')
   findAllCharacteristics() {
     return this.methodologyAssessmentService.findAllCharacteristics();
+  }
+
+  @Get('findAllIndicators')
+  findAllIndicators() {
+    return this.methodologyAssessmentService.findAllIndicators();
   }
 
   /*   @Get(':id')

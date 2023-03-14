@@ -39,6 +39,7 @@ export const config: ConnectionOptions = {
   // password: 'dil19971121',
   // database: 'climate_action',
 
+
   autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
 
