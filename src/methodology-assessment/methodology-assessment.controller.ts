@@ -96,6 +96,11 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllIndicators();
   }
 
+  @Get('findAllMethIndicators')
+  findAllMethIndicators() {
+    return this.methodologyAssessmentService.findAllMethIndicators();
+  }
+
   /*   @Get(':id')
     findOne(@Param('id') id: string) {
       return this.methodologyAssessmentService.findOne(+id);

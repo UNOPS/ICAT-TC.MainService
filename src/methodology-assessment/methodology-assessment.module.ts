@@ -14,13 +14,14 @@ import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
+import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 
 @Module({
   controllers: [MethodologyAssessmentController],
   providers: [MethodologyAssessmentService, ProjectService],
   imports:[TypeOrmModule.forFeature([Methodology, Category, Characteristics, MethodologyAssessmentParameters,
     AssessmentBarriers, Assessment, ClimateAction, Barriers, 
-    Indicators ,BarriersCategory,
+    Indicators ,BarriersCategory,MethodologyIndicators,
   AssessmentCharacteristics])],
   exports:[MethodologyAssessmentService, ProjectService]
 })
