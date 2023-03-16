@@ -47,6 +47,7 @@ import { AssessmentBarriers } from './methodology-assessment/entities/assessment
 import { BarriersCategory } from './methodology-assessment/entities/barrierscategory.entity';
 import { Indicators } from './methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
+import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
 // import {config} from './config';
 
 @Module({
@@ -74,6 +75,7 @@ import { AssessmentCharacteristics } from './methodology-assessment/entities/ass
       BarriersCategory,
       Indicators,
       AssessmentCharacteristics,
+      MethodologyIndicators,
 
     ]),
     UsersModule,
