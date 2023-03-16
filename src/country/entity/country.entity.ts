@@ -1,3 +1,4 @@
+import { DefaultValue } from 'src/default-value/defaultValue.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 import {
@@ -110,5 +111,8 @@ export class Country extends BaseTrackingEntity{
 
   @Column({ default: null })
   domain: string;
+
+  @OneToMany(() => DefaultValue, (defaultValue) => defaultValue.country)
+  defaultValue: DefaultValue[]
 
 }

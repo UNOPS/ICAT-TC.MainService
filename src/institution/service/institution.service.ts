@@ -226,7 +226,8 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       // OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText
     }
     let cou = await this.countryRepository.findOne({where:{ id: countryIdFromTocken} });
-    let num = await this.repo.find({ where:{name: filterText, country: cou} })
+    let num = await this.repo.find({ where:{name: filterText} })
+    // let num = await this.repo.find({ where:{name: filterText, country: cou} })
     return num;
   }
 

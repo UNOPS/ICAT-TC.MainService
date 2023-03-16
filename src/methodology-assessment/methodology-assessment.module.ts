@@ -37,8 +37,8 @@ import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.
     BarriersCategory,
     ParameterStatus,
     PolicyBarriers,
-    Indicators
-
+    Indicators,
+    AssessmentCharacteristics
   ])],
   exports: [
     MethodologyAssessmentService,
