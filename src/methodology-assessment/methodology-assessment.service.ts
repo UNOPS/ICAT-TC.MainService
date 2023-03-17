@@ -12,6 +12,7 @@ import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { Barriers } from './entities/barriers.entity';
 import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
+import { BarriersCategory } from './entities/barrierscategory.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
@@ -25,6 +26,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Assessment) private readonly assessmentRepository: Repository<Assessment>,
    @InjectRepository(Barriers) private readonly barriersRepository: Repository<Barriers>,
    @InjectRepository(AssessmentBarriers) private readonly assessRepository: Repository<AssessmentBarriers>,
+   @InjectRepository(BarriersCategory) private readonly baricatRepository: Repository<BarriersCategory>,
    @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
@@ -202,8 +204,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return this.methodologyRepository.find();
   }
 
-  findAllBarriers(): Promise<Barriers[]> {
-    return this.barriersRepository.find();
+  async findAllBarriers(): Promise<Barriers[]> {
+    return await this.barriersRepository.find();
+  }
+
+  async findByAllCategories(): Promise<BarriersCategory[]> {
+    return await this.baricatRepository.find();
+
   }
 
   findAllIndicators(): Promise<Indicators[]> {

@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -17,6 +17,7 @@ import { ClimateAction } from './entity/climate-action.entity';
 import { ProjectService } from './climate-action.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entity/file-upload.utils';
+import { PolicyBarriers } from './entity/policy-barriers.entity';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -29,9 +30,9 @@ var multer = require('multer');
       projectStatus: {
         eager: true,
       },
-      sector: {
-        eager: true,
-      },
+      // sector: {
+      //   eager: true,
+      // },
       subSector: {
         eager: true,
       },
@@ -50,12 +51,12 @@ var multer = require('multer');
       assessments: {
         eager: true,
       },
-      mappedInstitution: {
-        eager: true,
-      },
-      country: {
-        eager: true,
-      },
+      // mappedInstitution: {
+      //   eager: true,
+      // },
+      // country: {
+      //   eager: true,
+      // },
       mitigationActionType: {
         eager: true,
       },
@@ -340,5 +341,11 @@ async findAllPolicies() {
         );
       }
     }
+  }
+
+
+  @Post("policybar")
+  async policyBar(@Body() req:PolicyBarriers[]){
+    this.service.save(req);
   }
 }

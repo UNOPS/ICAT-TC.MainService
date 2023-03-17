@@ -40,9 +40,6 @@ import { UsersService } from './users.service';
   },
   query: {
     join: {
-      institution: {
-        eager: true,
-      },
       userType: {
         eager: true,
       },
@@ -159,9 +156,9 @@ export class UsersController implements CrudController<User> {
 
   @Get('findUserByUserName/:userName')
   async findUserByUserName(@Param('userName') userName: string): Promise<any> {
-    console.log(userName);
+    // console.log(userName);
 
-    console.log('test', this.service.findByUserName(userName));
+    // console.log('test',await this.service.findByUserName(userName));
     return await this.service.findUserByUserName(userName);
   }
 

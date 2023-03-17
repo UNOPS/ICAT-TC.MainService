@@ -86,8 +86,6 @@ export class SectorController implements CrudController<Sector> {
       @Request() request,
       @Query('countryId') countryId: number): Promise<any> {
         
-  
-  console.log("+++++++++++++++++++++++++++",await this.service.getCountrySector(countryId))
       return await this.service.getCountrySector(countryId);
     }
 

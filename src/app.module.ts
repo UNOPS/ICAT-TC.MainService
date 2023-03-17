@@ -45,10 +45,27 @@ import { MethodologyAssessmentController } from './methodology-assessment/method
 import { Barriers } from './methodology-assessment/entities/barriers.entity';
 import { AssessmentBarriers } from './methodology-assessment/entities/assessmentbarriers.entity';
 import { BarriersCategory } from './methodology-assessment/entities/barrierscategory.entity';
+import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
 import { Indicators } from './methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
 // import {config} from './config';
+// import { DataRequestService } from './data-request/data-request.service';
+import { DataRequestController } from './data-request/data-request.controller';
+import { ParameterRequestModule } from './data-request/data-request.module';
+import { QualityCheckService } from './quality-check/quality-check.service';
+import { QualityCheckController } from './quality-check/quality-check.controller';
+import { QualityCheckModule } from './quality-check/quality-check.module';
+import { ParameterHistoryService } from './parameter-history/parameter-history.service';
+import { ParameterHistoryController } from './parameter-history/parameter-history.controller';
+import { ParameterHistoryModule } from './parameter-history/parameter-history.module';
+import { DefaultValueService } from './default-value/default-value.service';
+import { DefaultValueController } from './default-value/default-value.controller';
+import { DefaultValueModule } from './default-value/default-value.module';
+import { ParameterRequestService } from './data-request/data-request.service';
+import { ParameterRequest } from './data-request/entity/data-request.entity';
+import { DefaultValue } from './default-value/defaultValue.entity';
+import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 
 @Module({
   imports: [
@@ -73,8 +90,12 @@ import { MethodologyIndicators } from './methodology-assessment/entities/methodo
       Barriers,
       AssessmentBarriers,
       BarriersCategory,
+      PolicyBarriers,
       Indicators,
       AssessmentCharacteristics,
+      ParameterRequest,
+      DefaultValue,
+      ParameterHistory,
       MethodologyIndicators,
 
     ]),
@@ -128,6 +149,10 @@ import { MethodologyIndicators } from './methodology-assessment/entities/methodo
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    ParameterRequestModule,
+    QualityCheckModule,
+    ParameterHistoryModule,
+    DefaultValueModule,
     
 
   ],
@@ -137,9 +162,13 @@ import { MethodologyIndicators } from './methodology-assessment/entities/methodo
     FinancingSchemeController,
     MethodologyAssessmentController,
     ReportController,
+    DataRequestController,
+    QualityCheckController,
+    ParameterHistoryController,
+    DefaultValueController,
     // InstitutionCategoryController,
     // UserController,
   ],
-  providers: [AppService,TokenDetails],
+  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService, ParameterHistoryService, DefaultValueService],
 })
 export class AppModule { }

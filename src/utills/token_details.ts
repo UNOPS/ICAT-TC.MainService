@@ -8,29 +8,35 @@ constructor(
 
    
       getDetails(reqDetails:TokenReqestType[]):any[]{
-
         let details:any[]=[];
         let user:any = this.request.user.user;
-        
+        console.log("user",reqDetails) 
+        console.log("user1",user) 
         for(let det of reqDetails){
          switch(det){
          case 1:
              details.push(user.countryId);
+             console.log("1")
              break;
          case 2:
-             details.push(user.sectorId?user.sectorId:0)
+            details.push(user.insId?user.insId:0)
+            console.log("2")
              break;
          case 3:
-             details.push(user.institutionId?user.institutionId:0)
+            details.push(user.sectorId?user.sectorId:0)
+            console.log("3")
              break;
          case 4:
-             details.push(user.roles[0])
+             details.push(user.role[0])
+             console.log("4")
              break;  
          case 5:
              details.push(user.usr)
+             console.log("5")
              break;  
          case 6:
              details.push(user.moduleLevels)
+             console.log("6")
              break;  
          default:
 

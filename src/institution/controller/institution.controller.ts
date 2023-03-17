@@ -118,11 +118,16 @@ export class InstitutionController implements CrudController<Institution> {
     @Query('filterText') filterText: string,
     @Query('userId') userId: number,
   ): Promise<any> {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     let userTypeFromTocken: string;
     let institutionTypeId: number; //instypeId
-
+    console.log('userTypeFromTocken==',  this.tokenDetails.getDetails([ 
+      TokenReqestType.countryId,
+      TokenReqestType.sectorId,
+      TokenReqestType.role,
+    ]));
     [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
@@ -228,9 +233,11 @@ export class InstitutionController implements CrudController<Institution> {
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Institution,
   ): Promise<Institution> {
-
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.startTransaction();
+    console.log(
+      '------ppp--------------------',
+    );
+    // const queryRunner = getConnection().createQueryRunner();
+    // await queryRunner.startTransaction();
     try {
       console.log(
         '-----------------------------------------------------------',
@@ -250,25 +257,25 @@ export class InstitutionController implements CrudController<Institution> {
       }
 
       console.log(dto);
-      let newInstitution= await queryRunner.manager.save(Institution ,dto);
+      let newInstitution= await this.service.creteNew(dto);
+      // let newInstitution= await queryRunner.manager.save(Institution ,dto);
 
-      let audit: AuditDto = new AuditDto();
-      audit.action = newInstitution.name + ' Created';
-      audit.comment = newInstitution.name + ' Created';
-      audit.actionStatus = 'Created';
-      this.auditService.create(audit);
-      console.log('Institution created');
+      // let audit: AuditDto = new AuditDto();
+      // audit.action = newInstitution.name + ' Created';
+      // audit.comment = newInstitution.name + ' Created';
+      // audit.actionStatus = 'Created';
+      // this.auditService.create(audit);
 
-      await queryRunner.commitTransaction();
+      // await queryRunner.commitTransaction();
       return newInstitution;
     }
     catch (err) {
       console.log("worktran2")
       console.log(err);
-      await queryRunner.rollbackTransaction();
+      // await queryRunner.rollbackTransaction();
       return err;
     } finally {
-      await queryRunner.release();
+      // await queryRunner.release();
     }
   }
 

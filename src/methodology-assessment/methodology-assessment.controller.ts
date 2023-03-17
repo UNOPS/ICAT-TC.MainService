@@ -77,13 +77,18 @@ export class MethodologyAssessmentController {
   }
   
   @Get('findAllBarriers')
-  findAllBarriers() {
-    return this.methodologyAssessmentService.findAllBarriers();
+  async findAllBarriers() {
+    return await this.methodologyAssessmentService.findAllBarriers();
   }
 
   @Get('findAllCategories')
-  findAllCategories() {
-    return this.methodologyAssessmentService.findAllCategories();
+  async findAllCategories() {
+    return await this.methodologyAssessmentService.findAllCategories();
+  }
+
+  @Get('findByAllCategories')
+  async findByAllCategories() {
+    return await this.methodologyAssessmentService.findByAllCategories();
   }
 
   @Get('findAllCharacteristics')
