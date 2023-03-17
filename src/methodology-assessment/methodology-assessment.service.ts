@@ -15,6 +15,7 @@ import { AssessmentBarriers } from './entities/assessmentbarriers.entity';
 import { BarriersCategory } from './entities/barrierscategory.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
+import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -28,6 +29,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(BarriersCategory) private readonly baricatRepository: Repository<BarriersCategory>,
    @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
+   @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
    ) {
     super(repo)
   }
@@ -215,7 +217,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return this.indicatorRepository.find();
   }
 
-
+  async findAllMethIndicators(): Promise<MethodologyIndicators[]> {
+    const methodologyIndicators = await this.methIndicatorRepository.createQueryBuilder('methodology_indicators')
+        .leftJoinAndSelect('methodology_indicators.indicator', 'indicator')
+        .getMany();
+    return methodologyIndicators;
+  }
+  
   findAllCategories(): Promise<Category[]> {
     return this.categotyRepository.createQueryBuilder('category')
       .leftJoinAndSelect('category.methodology', 'methodology')

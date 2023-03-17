@@ -48,6 +48,7 @@ import { BarriersCategory } from './methodology-assessment/entities/barrierscate
 import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
 import { Indicators } from './methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
+import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
 // import {config} from './config';
 // import { DataRequestService } from './data-request/data-request.service';
 import { DataRequestController } from './data-request/data-request.controller';
@@ -94,7 +95,9 @@ import { ParameterHistory } from './parameter-history/entity/parameter-history.e
       AssessmentCharacteristics,
       ParameterRequest,
       DefaultValue,
-      ParameterHistory
+      ParameterHistory,
+      MethodologyIndicators,
+
     ]),
     UsersModule,
     UserTypeModule,

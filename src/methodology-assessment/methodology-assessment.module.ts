@@ -16,6 +16,7 @@ import { ParameterStatus } from './entities/parameterStatus.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
+import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 
 
 @Module({
@@ -38,12 +39,12 @@ import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.
     ParameterStatus,
     PolicyBarriers,
     Indicators,
-    AssessmentCharacteristics
+    AssessmentCharacteristics,
+    MethodologyIndicators
   ])],
   exports: [
     MethodologyAssessmentService,
     ProjectService 
   ]
-
 })
 export class MethodologyAssessmentModule { }
