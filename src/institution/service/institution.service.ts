@@ -55,9 +55,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
       // OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText
     }
-    console.log('userId', userId);
-    console.log('institutionTypeId', institutionTypeId);
-    console.log('userTypeFromTocken', userTypeFromTocken);
+    // console.log('userId', userId);
+    // console.log('institutionTypeId', institutionTypeId);
+    // console.log('userTypeFromTocken', userTypeFromTocken);
 
 
 
@@ -203,7 +203,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     // console.log('query',data.getQuery());
 
     let resualt = await paginate(data, options);
-    // console.log('resula====', resualt);
     if (resualt) {
       // console.log('resula',resualt)
       return resualt;
@@ -217,17 +216,14 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     userTypeFromTocken: string
     // status: number,
   ) {
-    console.log('==========', countryIdFromTocken, " ", sectorIdFromTocken, " ", userTypeFromTocken);
     let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(ins.name LIKE :filterText )';
-      // OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText
     }
     let cou = await this.countryRepository.findOne({where:{ id: countryIdFromTocken} });
     let num = await this.repo.find({ where:{name: filterText} })
-    // let num = await this.repo.find({ where:{name: filterText, country: cou} })
     return num;
   }
 

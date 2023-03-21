@@ -14,7 +14,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { DefaultValue } from 'src/default-value/defaultValue.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
-import { DataRequestController } from './data-request.controller';
+import { ParameterRequestController as DataRequestController } from './data-request.controller';
 import { DefaultValueModule } from 'src/default-value/default-value.module';
 
 @Module({

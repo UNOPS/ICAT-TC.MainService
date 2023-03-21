@@ -7,13 +7,13 @@ export const config: ConnectionOptions = {
   host: 'localhost',
   port: 3306,
 
-   username: 'sqluser',
-   password: 'password',
-   database: 'tc-main-new3',
+  //  username: 'sqluser',
+  //  password: 'password',
+  //  database: 'tc-main-new3',
 
- /*  username: 'root',
+  username: 'root',
   password: 'pradeep123#',
-  database: 'tc-main', */
+  database: 'tc-main',
   // password: 'dil19971121',
   // database: 'climate_action',
 

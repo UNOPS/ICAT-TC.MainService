@@ -40,7 +40,7 @@ export class AuditController implements CrudController<Audit> {
       @UseGuards(JwtAuthGuard)
       @Post()
       create(@Body() auditDto: AuditDto){
-        return this.service.create(auditDto);
+        // return this.service.create(auditDto);
       }
 
       @Get(

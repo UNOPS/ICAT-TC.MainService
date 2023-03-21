@@ -398,6 +398,44 @@ export class UsersService extends TypeOrmCrudService<User> {
     return data;
   }
 
+  async getUserDetailsByInstitution(
+    options: IPaginationOptions,
+    filterText: string,
+    userTypeId: number,
+    userName: string,
+  ): Promise<Pagination<User>> {
+    const user = await this.usersRepository.findOne( { where :{username: userName } });
+    let institutionId = user ? user.institution.id : 0;
+
+    console.log('calling......');
+    let filter: string = '';
+
+    let data = this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndMapOne(
+        'user.institution',
+        Institution,
+        'ins',
+        'ins.id = user.institutionId',
+      )
+      .leftJoinAndMapOne(
+        'user.userType',
+        UserType,
+        'type',
+        'type.id = user.userTypeId',
+      )
+
+      .where(' type.id=' + userTypeId + ' AND ins.id=' + institutionId)
+      .orderBy('user.status', 'ASC');
+    let SQLString = data.getSql();
+    console.log('SQLString', SQLString);
+    let resualt = await paginate(data, options);
+
+    if (resualt) {
+      console.log('reaslt...', resualt);
+      return resualt;
+    }
+  }
   
 
 }

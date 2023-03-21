@@ -105,7 +105,7 @@ export class CountryController implements CrudController<Country>{
     audit.action = coun.name + ' Country Activated';
     audit.comment = "Country Activated";
     audit.actionStatus = 'Activated';
-    this.auditService.create(audit);
+    // this.auditService.create(audit);
     // console.log("audit.......", audit);
 
 
