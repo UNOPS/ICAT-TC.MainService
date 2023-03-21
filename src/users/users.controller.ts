@@ -208,6 +208,29 @@ export class UsersController implements CrudController<User> {
     );
   }
 
+  @Get(
+    'UsersByInstitution/userDetalils/:page/:limit/:filterText/:userTypeId/:institutionId',
+  )
+  async UsersByInstitution(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+    @Query('userTypeId') userTypeId: number,
+    @Query('userName') userName: string,
+  ): Promise<any> {
+    console.log('incontroler...');
+    return await this.service.getUserDetailsByInstitution(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      userTypeId,
+      userName,
+    );
+  }
+
   // @Get(
   //   'AllUserDetails/userDetalils/:page/:limit/:filterText/:userTypeId',
   // )

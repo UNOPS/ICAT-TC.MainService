@@ -11,8 +11,8 @@ import { ParameterHistoryAction } from './entity/parameter-history-action-histor
 export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory>  {
     constructor(
         @InjectRepository(ParameterHistory) repo,
-        // @InjectRepository(Parameter)
-        // private readonly parameterRepo: Repository<Parameter>,
+        @InjectRepository(Parameter)
+        private readonly parameterRepo: Repository<Parameter>,
         @InjectRepository(ParameterRequest)
         private readonly parameterRequestRepo: Repository<ParameterRequest>,
       ) {

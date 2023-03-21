@@ -51,7 +51,7 @@ import { AssessmentCharacteristics } from './methodology-assessment/entities/ass
 import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
 // import {config} from './config';
 // import { DataRequestService } from './data-request/data-request.service';
-import { DataRequestController } from './data-request/data-request.controller';
+import {ParameterRequestController as DataRequestController } from './data-request/data-request.controller';
 import { ParameterRequestModule } from './data-request/data-request.module';
 import { QualityCheckService } from './quality-check/quality-check.service';
 import { QualityCheckController } from './quality-check/quality-check.controller';
