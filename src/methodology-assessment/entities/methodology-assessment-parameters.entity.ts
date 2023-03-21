@@ -49,4 +49,5 @@ export class MethodologyAssessmentParameters {
     @JoinColumn({ name: 'status_id' })
     status?: ParameterStatus;
 
+    
 }

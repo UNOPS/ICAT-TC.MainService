@@ -99,7 +99,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     console.log("assessRes : ",(await assessRes).id)
 
-    for(let y of MethData.barriers){
+  /*   for(let y of MethData.barriers){
       let assessmentBarriers = new AssessmentBarriers()
       let barrier = new Barriers();
       barrier.id = y.id,
@@ -109,7 +109,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       assessmentBarriers.assessment = assessement
 
       await this.assessRepository.save(assessmentBarriers);
-    }
+    } */
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
@@ -213,8 +213,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   }
 
-  findAllIndicators(): Promise<Indicators[]> {
-    return this.indicatorRepository.find();
+  async findAllIndicators(): Promise<Indicators[]> {
+   // return this.indicatorRepository.find();
+
+    const indicators = await this.indicatorRepository.createQueryBuilder('indicators')
+        .leftJoinAndSelect('indicators.characteristics', 'characteristics')
+        .getMany();
+    return indicators;
   }
 
   async findAllMethIndicators(): Promise<MethodologyIndicators[]> {

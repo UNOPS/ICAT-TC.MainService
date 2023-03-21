@@ -48,6 +48,8 @@ export class MethodologyAssessmentController {
       assesId : this.res2
     }
 
+    console.log("resData", this.resData)
+
     return this.resData
 
   }
