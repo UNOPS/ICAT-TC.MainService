@@ -19,10 +19,11 @@ import { Country } from 'src/country/entity/country.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { ClimateAction as Project } from 'src/climate-action/entity/climate-action.entity';
-import { ParameterHistoryService as Parameter, ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
+import { ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
 import { DefaultValue } from 'src/default-value/defaultValue.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
+import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -59,8 +60,14 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       )
       .select(['dr.dataRequestStatus', 'para.id'])
       .where(
-        `para.assessmentId = ${assesmentId} AND ((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false )) AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
+        `para.assessment_id = ${assesmentId} 
+         AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
       );
+      // .where(
+      //   `para.assessment_id = ${assesmentId} 
+      //   AND ((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false ))
+      //    AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
+      // );
 
     return await data.execute();
   }
@@ -80,8 +87,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
         : '') +
       (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
-      (dataProvider != 0 ? `para.institutionId=${dataProvider} AND ` : '') +
-      '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
+      (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
+      // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
       `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
       (filterText != ''
         ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
@@ -103,9 +110,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.Assessment',
         Assessment,
         'a',
-        'a.id = para.assessmentId',
+        'a.id = para.assessment_id',
       )
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
       .innerJoinAndMapOne(
         'p.Country',
         Country,
@@ -117,7 +124,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.institution',
         Institution,
         'i',
-        'i.id = para.institutionId',
+        'i.id = para.institution_id',
       )
       .where(whereCond)
       .orderBy('dr.createdOn', 'DESC')
@@ -143,8 +150,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
         : '') +
       (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
-      (dataProvider != 0 ? `para.institutionId=${dataProvider} AND ` : '') +
-      '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
+      (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
+      // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
       `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
       (filterText != ''
         ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
@@ -153,7 +160,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     ).replace(/AND $/, '');
 
     console.log(whereCond);
-
+    console.log("{==========================}");
     let data = this.repo
       .createQueryBuilder('dr')
       .select(['dr.id', 'para.id ', 'a.id as aid', 'p.id as pid'])
@@ -167,9 +174,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.Assessment',
         Assessment,
         'a',
-        'a.id = para.assessmentId',
+        'a.id = para.assessment_id',
       )
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
       .innerJoinAndMapOne(
         'p.Country',
         Country,
@@ -180,7 +187,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.institution',
         Institution,
         'i',
-        'i.id = para.institutionId',
+        'i.id = para.institution_id',
       )
       .where(whereCond)
       .orderBy('dr.createdOn', 'DESC')
@@ -189,7 +196,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     let result = await paginate(data, options);
 
     if (result) {
-      // console.log(result);
       console.log('resulthhhhh====', result);
       return result;
     }
@@ -217,9 +223,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.Assessment',
         Assessment,
         'a',
-        'a.id = para.assessmentId',
+        'a.id = para.assessment_id',
       )
-      .leftJoinAndMapMany('a.Prject', Project, 'p', 'p.id = a.projectId')
+      .leftJoinAndMapMany('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
       //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
       .select([
         'p.climateActionName as climateAction',
@@ -260,16 +266,16 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.Institution',
         Institution,
         'i',
-        'i.id = para.institutionId',
+        'i.id = para.institution_id',
       )
       .leftJoinAndMapOne(
         'para.Assessment',
         Assessment,
         'a',
-        'a.id = para.assessmentId',
+        'a.id = para.assessment_id',
       )
       .leftJoinAndMapOne('a.User', User, 'u', 'u.id = dr.UserDataEntry')
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
       .where(
         (
           (institutionId != 0 ? `i.id=${institutionId} AND ` : '') +
@@ -314,9 +320,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'para.Assessment',
           Assessment,
           'a',
-          'a.id = para.assessmentId',
+          'a.id = para.assessment_id',
         )
-        .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+        .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
         .leftJoinAndMapOne('a.User', User, 'u', 'u.id = dr.UserDataEntry')
         .where(
           (
@@ -350,18 +356,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'para.Assessment',
           Assessment,
           'a',
-          'a.id = para.assessmentId',
+          'a.id = para.assessment_id',
         )
-        .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+        .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
         .leftJoinAndMapOne(
           'para.Institution',
           Institution,
           'ins',
-          'para.institutionId = ins.id',
+          'para.institution_id = ins.id',
         )
         .where(
           (
-            (insId != 0 ? `para.institutionId=${insId} AND ` : '') +
+            (insId != 0 ? `para.institution_id=${insId} AND ` : '') +
             (climateActionId != 0 ? `p.id=${climateActionId} AND ` : '') +
             `dr.dataRequestStatus in (4,5,-8) AND ` +
             (year != '' ? `ay.AssessmentYear ='${year}' AND ` : '') +
@@ -404,16 +410,16 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.Assessment',
         Assessment,
         'a',
-        'a.id = para.assessmentId',
+        'a.id = para.assessment_id',
       )
       .leftJoinAndMapOne(
         'para.Institution',
         Institution,
         'i',
-        'i.id = para.institutionId',
+        'i.id = para.institution_id',
       )
       .leftJoinAndMapOne('a.User', User, 'u', 'u.id = dr.UserDataEntry')
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.projectId')
+      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
       .where(
         (
           (institutionId != 0 ? `i.id=${institutionId} AND ` : '') +
@@ -831,7 +837,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'ass.Parameter',
         Parameter,
         'para',
-        'ass.id = para.assessmentId',
+        'ass.id = para.assessment_id',
       )
       .leftJoinAndMapOne(
         'para.DataRequest',
@@ -858,7 +864,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'ass.Parameter',
         Parameter,
         'para',
-        'ass.id = para.assessmentId',
+        'ass.id = para.assessment_id',
       )
       .leftJoinAndMapOne(
         'para.DataRequest',

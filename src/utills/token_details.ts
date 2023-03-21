@@ -10,8 +10,8 @@ constructor(
       getDetails(reqDetails:TokenReqestType[]):any[]{
         let details:any[]=[];
         let user:any = this.request.user.user;
-        console.log("user",reqDetails) 
-        console.log("user1",user) 
+        // console.log("user",reqDetails) 
+        // console.log("user1",user) 
         for(let det of reqDetails){
          switch(det){
          case 1:

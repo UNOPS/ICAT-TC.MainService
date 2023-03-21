@@ -29,51 +29,51 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     super(repo);
   }
 
-  async create(auditDto: AuditDto) {
-    //To-do get user from context
-   // const contextUser = "";
-    if(auditDto.userName!= undefined){
-      this.contextUser = auditDto.userName;
-    }
-    else{
-      this.contextUser = this.request.user.username;
-    }
+  // async create(auditDto: AuditDto) {
+  //   //To-do get user from context
+  //  // const contextUser = "";
+  //   if(auditDto.userName!= undefined){
+  //     this.contextUser = auditDto.userName;
+  //   }
+  //   else{
+  //     this.contextUser = this.request.user.username;
+  //   }
     
 
    
    
 
-  //  let user = await this.userRepo.findOne(40);
+  // //  let user = await this.userRepo.findOne(40);
   
    
    
-  //  console.log('============requset========', this.request);
-    console.log('============contextUser========', this.contextUser);
-    //To-do get user from context
-    let user = await this.userRepo.findOne({
-      where: { email: this.contextUser },
-    });
+  // //  console.log('============requset========', this.request);
+  //   console.log('============contextUser========', this.contextUser);
+  //   //To-do get user from context
+  //   let user = await this.userRepo.findOne({
+  //     where: { email: this.contextUser },
+  //   });
 
     
-    console.log("finduser---",user)
+  //   console.log("finduser---",user)
 
-    let newAudit = new Audit();
-    newAudit.action = auditDto.action;
-    newAudit.actionStatus = auditDto.actionStatus;
-    newAudit.comment = auditDto.comment;
-    // newAudit.createdBy = auditDto.createdBy;
-    // newAudit.createdOn = auditDto.createdOn;
-    // newAudit.editedBy = auditDto.editedBy;
-    // newAudit.editedOn = auditDto.editedOn;
-    // newAudit.id = auditDto.id;
-    // newAudit.status= auditDto.status;
-    newAudit.user = user;
-    newAudit.userName = user.firstName;
-    //To-do save user role
-    newAudit.userType = user.userType.name;
+  //   let newAudit = new Audit();
+  //   newAudit.action = auditDto.action;
+  //   newAudit.actionStatus = auditDto.actionStatus;
+  //   newAudit.comment = auditDto.comment;
+  //   // newAudit.createdBy = auditDto.createdBy;
+  //   // newAudit.createdOn = auditDto.createdOn;
+  //   // newAudit.editedBy = auditDto.editedBy;
+  //   // newAudit.editedOn = auditDto.editedOn;
+  //   // newAudit.id = auditDto.id;
+  //   // newAudit.status= auditDto.status;
+  //   newAudit.user = user;
+  //   newAudit.userName = user.firstName;
+  //   //To-do save user role
+  //   newAudit.userType = user.userType.name;
 
-    var newaudit = await this.repo.save(newAudit);
-  }
+  //   var newaudit = await this.repo.save(newAudit);
+  // }
  
   
   

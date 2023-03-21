@@ -70,7 +70,7 @@ export class InstitutionController implements CrudController<Institution> {
     return this;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(
     'getInstitutionDataProvider/institutioninfo/:page/:limit/:filterText/:userId',
   )
@@ -92,8 +92,6 @@ export class InstitutionController implements CrudController<Institution> {
         TokenReqestType.sectorId,
         TokenReqestType.role,
       ]);
-
-    console.log('userTypeFromTocken==', userTypeFromTocken);
 
     return await this.service.getInstitutionDetails(
       {
@@ -189,7 +187,7 @@ export class InstitutionController implements CrudController<Institution> {
     audit.action = 'Institution Deactivated';
     audit.comment = 'Institution Deactivated';
     audit.actionStatus = 'Deactivated';
-    this.auditService.create(audit);
+    // this.auditService.create(audit);
     console.log('Institution Deactivated');
     return await this.service.softDelete(instiId);
   }
@@ -298,7 +296,7 @@ export class InstitutionController implements CrudController<Institution> {
         audit.action = updateInstitution.name + ' Institution Updated';
         audit.comment = 'Institution Updated';
         audit.actionStatus = 'Updated';
-        this.auditService.create(audit);
+        // this.auditService.create(audit);
         console.log('Institution Updated');
       }
       await queryRunner.commitTransaction();

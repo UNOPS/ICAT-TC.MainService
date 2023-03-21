@@ -20,5 +20,7 @@ export class Assessment {
     @JoinColumn({ name: 'methodology_id' })
     methodology?: Methodology;
 
+    @Column({ nullable: true })
+    assessmentType: string; // assessmentType :- Ex-Post, Ex-Ante
 
 }
