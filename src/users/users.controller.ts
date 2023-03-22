@@ -196,7 +196,7 @@ export class UsersController implements CrudController<User> {
     @Query('filterText') filterText: string,
     @Query('userTypeId') userTypeId: number,
   ): Promise<any>{
-    console.log('incontroler...')
+    console.log('incontroler...aaa')
     return await this.service
     .getUserDetails(
       {
@@ -231,27 +231,6 @@ export class UsersController implements CrudController<User> {
     );
   }
 
-  // @Get(
-  //   'AllUserDetails/userDetalils/:page/:limit/:filterText/:userTypeId',
-  // )
-  // async getUserList(
-  //   @Request() request,
-  //   @Query('page') page: number,
-  //   @Query('limit') limit: number,
-  //   @Query('userTypeId') filterText: string,
-  //   @Query('userTypeId') userTypeId: number,
-  // ): Promise<any>{
-  //   console.log('incontroler...')
-  //   return await this.service
-  //   .getUserDetails(
-  //     {
-  //       limit: limit,
-  //       page: page,
-  //     },
-  //     filterText,
-  //     userTypeId,
-  //   );
-  // }
   
     
 }

@@ -31,27 +31,7 @@ export class CountrySector extends BaseTrackingEntity {
     @Column()
     @Generated("uuid")
     uniqueIdentification: string;
-
-    /*
-    @ManyToMany((type) => UserType, {
-      eager: true,
-      cascade: false,
-    })
-
-
-    @ManyToMany(() => UserType, userType => userType.learningmaterils)
-    @JoinTable()
-    userTypes?: UserType[];
-
-    @ManyToMany(() => Sector, sector => sector.learningmaterils)
-    @JoinTable()
-    sectors?: Sector[];
-
-*/
-
-
-
-    		 	
+		 	
 
 
 }
