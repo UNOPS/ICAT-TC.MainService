@@ -16,6 +16,7 @@ import { BarriersCategory } from './entities/barrierscategory.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
+import { Institution } from 'src/institution/entity/institution.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -30,6 +31,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
+/*    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, */
    ) {
     super(repo)
   }
@@ -91,6 +93,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.climateAction = policy
     assessement.methodology = methodology
     assessement.year = y
+    assessement.tool = MethData.tool
+    assessement.assessmentType = MethData.assessment_type
+    assessement.assessment_approach = MethData.assessment_approach,
+    assessement.assessment_method = MethData.assessment_method,
+    assessement.from = MethData.date1,
+    assessement.to  = MethData.date2
 
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
@@ -212,6 +220,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return await this.baricatRepository.find();
 
   }
+
+/*   async dataCollectionInstitution(): Promise<Institution[]> {
+    return await this.institutionRepository.find();
+
+  } */
 
   async findAllIndicators(): Promise<Indicators[]> {
    // return this.indicatorRepository.find();
