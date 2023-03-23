@@ -24,6 +24,7 @@ import { DefaultValue } from 'src/default-value/defaultValue.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -263,6 +264,12 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.id = dr.parameterId',
       )
       .leftJoinAndMapOne(
+        'para.characteristics',
+        Characteristics,
+        'cha',
+        'cha.id = para.characteristics_id',
+      )
+      .leftJoinAndMapOne(
         'para.Institution',
         Institution,
         'i',
@@ -292,6 +299,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
 
     let result = await paginate(data, options);
     if (result) {
+      console.log('ffff',result)
       return result;
     }
   }
@@ -831,7 +839,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'pr.Assessment',
         Assessment,
         'ass',
-        'pr.id = ass.projectId',
+        'pr.id = ass.climateAction_id',
       )
       .leftJoinAndMapMany(
         'ass.Parameter',
@@ -848,7 +856,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .where('paraReq.dataRequestStatus = ' + 2);
 
     let result = await data.getMany();
-
     return result;
   }
 
@@ -858,7 +865,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'pr.Assessment',
         Assessment,
         'ass',
-        'pr.id = ass.projectId',
+        'pr.id = ass.climateAction_id',
       )
       .leftJoinAndMapMany(
         'ass.Parameter',

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
@@ -12,6 +12,7 @@ import { ProjectService } from 'src/climate-action/climate-action.service';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 
 
+
 const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
 
 @ApiTags('methodology-assessment')
@@ -23,7 +24,9 @@ export class MethodologyAssessmentController {
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly climateService : ProjectService,
-    ) { }
+ 
+    ) { 
+    }
 
     res2 : number;
     resData :any;
@@ -47,6 +50,8 @@ export class MethodologyAssessmentController {
       result : response.data,
       assesId : this.res2
     }
+
+    console.log("resData", this.resData)
 
     return this.resData
 
@@ -106,10 +111,19 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllMethIndicators();
   }
 
-  /*   @Get(':id')
-    findOne(@Param('id') id: string) {
-      return this.methodologyAssessmentService.findOne(+id);
-    } */
+  @Get('findAllPolicyBarriers')
+  findAllPolicyBarriers() {
+    return this.methodologyAssessmentService.findAllPolicyBarriers();
+  }
+  
+
+  
+ /*  @Get('dataCollectionInstitution')
+  dataCollectionInstitution() {
+
+    return this.methodologyAssessmentService.dataCollectionInstitution();
+  } */
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {

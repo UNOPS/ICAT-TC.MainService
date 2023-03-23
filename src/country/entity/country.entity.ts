@@ -36,15 +36,6 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: 1 })
   sortOrder: number;
 
-  // @Column({ default: null })
-  // submissions: string; // add as string for document upload
-
-  // @Column({ default: null })
-  // emissionSummary: string;
-
-  // @Column({ default: null })
-  // ndcDocuments: string;
-
   @Column({ default: null })
   isSystemUse: boolean;
 
@@ -61,9 +52,6 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   isMember: boolean;
 
- // @Column({ default: null })
- // isRegister: boolean;
-
   @Column({ default: null })  // enum 
   countryStatus: countryStatus;
 
@@ -73,20 +61,12 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   uniqueIdentification: string;
 
-  @OneToMany(() => CountrySector, countrySector => countrySector.country,{eager:true})
+  @OneToMany(() => CountrySector, countrySector => countrySector.country)
   @JoinColumn()
   countrysector: CountrySector[];
 
-  /*
-  @ManyToMany((type) => Sector, {
-    eager: true,
-    cascade: false,
-  })
-  @JoinTable({ name: 'country_sector' })
-  Sector?: Sector[];*/
-
-  //new added
-  @ManyToOne((type) => Institution, { eager: true })
+ 
+  @ManyToOne((type) => Institution, { eager: false })
   @JoinColumn()
   institution?: Institution;
 

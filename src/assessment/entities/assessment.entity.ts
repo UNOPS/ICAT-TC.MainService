@@ -23,4 +23,19 @@ export class Assessment {
     @Column({ nullable: true })
     assessmentType: string; // assessmentType :- Ex-Post, Ex-Ante
 
+    @Column({ nullable: true })
+    tool: string;
+
+    @Column({ nullable: true })
+    from: string;
+
+    @Column({ nullable: true })
+    to: string;
+
+    @Column({ nullable: true })
+    assessment_method: string; //track , track 2
+
+    @Column({ nullable: true })
+    assessment_approach: string; //direct, indirect
+
 }

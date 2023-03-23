@@ -97,7 +97,9 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     }
   }
 async save(req:PolicyBarriers[]){
-  console.log(req)
+  for(let re of req){
+    this.PolicyBarriersRepo.save(re);
+  }
 }
   async findAllPolicies(): Promise<ClimateAction[]> {
     const policies = await this.repo.createQueryBuilder('climateAction')

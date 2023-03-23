@@ -22,7 +22,7 @@ export class LearningMaterialUserType extends BaseTrackingEntity {
   @ManyToOne(() => LearningMaterial, learningMaterial => learningMaterial.learningMaterialusertype)
   public learningMaterial!: LearningMaterial;
 
-  @ManyToOne(() => UserType, userType => userType.learningMaterialusertype)
+  @ManyToOne(() => UserType, userType => userType.learningMaterialusertype,{eager:false})
   public userType!: UserType;
   
   @Column()
