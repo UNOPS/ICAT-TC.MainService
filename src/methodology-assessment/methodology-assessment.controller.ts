@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
@@ -10,6 +10,8 @@ import { MethodologyAssessmentParameters } from './entities/methodology-assessme
 import axios from 'axios';
 import { ProjectService } from 'src/climate-action/climate-action.service';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 
 
 const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
@@ -119,5 +121,21 @@ export class MethodologyAssessmentController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.methodologyAssessmentService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update-value')
+  
+  updateDeadline(
+    @Body() updateValueDto: UpdateValueEnterData,
+  ): Promise<boolean> {
+    // let audit: AuditDto = new AuditDto();
+    // audit.action = 'Review Data Updated';
+    // audit.comment = updateValueDto.value + ' Updated';
+    // audit.actionStatus = 'Updated';
+
+    // this.auditService.create(audit);
+    console.log(updateValueDto);
+    return this.service.updateEnterDataValue(updateValueDto);
   }
 }
