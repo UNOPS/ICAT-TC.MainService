@@ -17,6 +17,7 @@ import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -32,6 +33,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
 /*    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, */
+    @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
    ) {
     super(repo)
   }
@@ -123,6 +125,18 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       let category = new Category();
       category.id = categoryData.categoryId;
       category.name = categoryData.category;
+
+      let savedAssessment = new Assessment();
+
+      savedAssessment.id = assessementId
+
+      let dataForCategory = new MethodologyAssessmentParameters();
+      dataForCategory.score = categoryData.categoryScore
+      dataForCategory.category = category
+      dataForCategory.assessment = savedAssessment
+      dataForCategory.methodology = methodology
+      dataForCategory.isCategory = 1
+     
      // category.categoryScore = categoryData.categoryScore;
      // console.log("Category: ", category);
   
@@ -133,21 +147,22 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      //   console.log("Characteristics: ", characteristics);
   
   
-        let savedAssessment = new Assessment();
-
-        savedAssessment.id = assessementId
+       
         let data = new MethodologyAssessmentParameters();
         data.methodology = methodology;
         data.category = category;
-        data.category_score = categoryData.categoryScore;
+      //  data.category_score = categoryData.categoryScore;
         data.characteristics = characteristics;
-        data.characteristics_score = characteristic.score;
+        data.score = characteristic.score;
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
+        data.isCategory = 0
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
       }
+      await this.repo.save(dataForCategory);
+
     }
     //assessementId
     console.log("iddd", assessementId)
@@ -220,6 +235,28 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return await this.baricatRepository.find();
 
   }
+
+  async findAllPolicyBarriers(): Promise<any[]> {
+    const policyBarriers = await this.policyBarrierRepository.find({
+      relations: ['climateAction', 'barriers'],
+      select: ['id'],
+      join: {
+        alias: 'policyBarriers',
+        leftJoinAndSelect: {
+          climateAction: 'policyBarriers.climateAction',
+        },
+      },
+    });
+  
+    return policyBarriers.map((pb) => ({
+      id: pb.id,
+      policyName: pb.climateAction.policyName,
+      barriers: pb.barriers,
+      editedBy: pb.editedBy,
+    }));
+  }
+  
+
 
 /*   async dataCollectionInstitution(): Promise<Institution[]> {
     return await this.institutionRepository.find();

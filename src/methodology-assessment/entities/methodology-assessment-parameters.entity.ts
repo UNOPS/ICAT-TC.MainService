@@ -28,15 +28,12 @@ export class MethodologyAssessmentParameters {
     category?: Category;
 
 
-    @Column({ nullable: true })
-    category_score: string;
-
     @ManyToOne((type) => Characteristics, { cascade: false ,eager:true })
     @JoinColumn({ name: 'characteristics_id' })
     characteristics?: Characteristics;
 
     @Column({ nullable: true })
-    characteristics_score: string;
+    score: string;
 
     @Column({ nullable: true })
     relevance: string;
@@ -49,5 +46,6 @@ export class MethodologyAssessmentParameters {
     @JoinColumn({ name: 'status_id' })
     status?: ParameterStatus;
 
-    
+    @Column({ nullable: true })
+    isCategory: number;
 }

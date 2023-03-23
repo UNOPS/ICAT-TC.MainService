@@ -111,6 +111,12 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllMethIndicators();
   }
 
+  @Get('findAllPolicyBarriers')
+  findAllPolicyBarriers() {
+    return this.methodologyAssessmentService.findAllPolicyBarriers();
+  }
+  
+
   
  /*  @Get('dataCollectionInstitution')
   dataCollectionInstitution() {
