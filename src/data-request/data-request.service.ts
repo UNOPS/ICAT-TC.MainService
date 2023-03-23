@@ -25,6 +25,7 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -108,6 +109,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.id = dr.parameterId',
       )
       .leftJoinAndMapOne(
+        'para.category',
+        Category,
+        'cat',
+        'cat.id = para.category_id',
+      )
+      .leftJoinAndMapOne(
+        'para.characteristics',
+        Characteristics,
+        'chara',
+        'chara.id = para.characteristics_id',
+      )
+      .leftJoinAndMapOne(
         'para.Assessment',
         Assessment,
         'a',
@@ -130,7 +143,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .where(whereCond)
       .orderBy('dr.createdOn', 'DESC')
       .groupBy('dr.id');
-    console.log(options);
     let result = await paginate(data, options);
     if (result) {
       return result;
@@ -268,6 +280,12 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         Characteristics,
         'cha',
         'cha.id = para.characteristics_id',
+      )
+      .leftJoinAndMapOne(
+        'para.category',
+        Category,
+        'cat',
+        'cat.id = para.category_id',
       )
       .leftJoinAndMapOne(
         'para.Institution',

@@ -405,6 +405,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     userName: string,
   ): Promise<Pagination<User>> {
     const user = await this.repo.findOne( { where :{username: userName } });
+    console.log('calling......',user);
     let institutionId = user ? user.institution.id : 0;
 
     console.log('calling......');
