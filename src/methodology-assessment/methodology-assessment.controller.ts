@@ -14,6 +14,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 
 
+
 const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
 
 @ApiTags('methodology-assessment')
@@ -25,7 +26,9 @@ export class MethodologyAssessmentController {
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly climateService : ProjectService,
-    ) { }
+ 
+    ) { 
+    }
 
     res2 : number;
     resData :any;
@@ -49,6 +52,8 @@ export class MethodologyAssessmentController {
       result : response.data,
       assesId : this.res2
     }
+
+    console.log("resData", this.resData)
 
     return this.resData
 
@@ -108,10 +113,19 @@ export class MethodologyAssessmentController {
     return this.methodologyAssessmentService.findAllMethIndicators();
   }
 
-  /*   @Get(':id')
-    findOne(@Param('id') id: string) {
-      return this.methodologyAssessmentService.findOne(+id);
-    } */
+  @Get('findAllPolicyBarriers')
+  findAllPolicyBarriers() {
+    return this.methodologyAssessmentService.findAllPolicyBarriers();
+  }
+  
+
+  
+ /*  @Get('dataCollectionInstitution')
+  dataCollectionInstitution() {
+
+    return this.methodologyAssessmentService.dataCollectionInstitution();
+  } */
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
@@ -136,6 +150,6 @@ export class MethodologyAssessmentController {
 
     // this.auditService.create(audit);
     console.log(updateValueDto);
-    return this.service.updateEnterDataValue(updateValueDto);
+    return this.methodologyAssessmentService.updateEnterDataValue(updateValueDto);
   }
 }

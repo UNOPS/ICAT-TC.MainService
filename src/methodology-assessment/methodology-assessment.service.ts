@@ -17,6 +17,8 @@ import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
+import { Institution } from 'src/institution/entity/institution.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -31,6 +33,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
+/*    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, */
+    @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
    ) {
     super(repo)
   }
@@ -92,6 +96,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.climateAction = policy
     assessement.methodology = methodology
     assessement.year = y
+    assessement.tool = MethData.tool
+    assessement.assessmentType = MethData.assessment_type
+    assessement.assessment_approach = MethData.assessment_approach,
+    assessement.assessment_method = MethData.assessment_method,
+    assessement.from = MethData.date1,
+    assessement.to  = MethData.date2
 
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
@@ -100,7 +110,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     console.log("assessRes : ",(await assessRes).id)
 
-    for(let y of MethData.barriers){
+  /*   for(let y of MethData.barriers){
       let assessmentBarriers = new AssessmentBarriers()
       let barrier = new Barriers();
       barrier.id = y.id,
@@ -110,12 +120,24 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       assessmentBarriers.assessment = assessement
 
       await this.assessRepository.save(assessmentBarriers);
-    }
+    } */
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
       category.id = categoryData.categoryId;
       category.name = categoryData.category;
+
+      let savedAssessment = new Assessment();
+
+      savedAssessment.id = assessementId
+
+      let dataForCategory = new MethodologyAssessmentParameters();
+      dataForCategory.score = categoryData.categoryScore
+      dataForCategory.category = category
+      dataForCategory.assessment = savedAssessment
+      dataForCategory.methodology = methodology
+      dataForCategory.isCategory = 1
+     
      // category.categoryScore = categoryData.categoryScore;
      // console.log("Category: ", category);
   
@@ -126,21 +148,22 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      //   console.log("Characteristics: ", characteristics);
   
   
-        let savedAssessment = new Assessment();
-
-        savedAssessment.id = assessementId
+       
         let data = new MethodologyAssessmentParameters();
         data.methodology = methodology;
         data.category = category;
-        data.category_score = categoryData.categoryScore;
+      //  data.category_score = categoryData.categoryScore;
         data.characteristics = characteristics;
-        data.characteristics_score = characteristic.score;
+        data.score = characteristic.score;
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
+        data.isCategory = 0
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
       }
+      await this.repo.save(dataForCategory);
+
     }
     //assessementId
     console.log("iddd", assessementId)
@@ -214,8 +237,40 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   }
 
-  findAllIndicators(): Promise<Indicators[]> {
-    return this.indicatorRepository.find();
+  async findAllPolicyBarriers(): Promise<any[]> {
+    const policyBarriers = await this.policyBarrierRepository.find({
+      relations: ['climateAction', 'barriers'],
+      select: ['id'],
+      join: {
+        alias: 'policyBarriers',
+        leftJoinAndSelect: {
+          climateAction: 'policyBarriers.climateAction',
+        },
+      },
+    });
+  
+    return policyBarriers.map((pb) => ({
+      id: pb.id,
+      policyName: pb.climateAction.policyName,
+      barriers: pb.barriers,
+      editedBy: pb.editedBy,
+    }));
+  }
+  
+
+
+/*   async dataCollectionInstitution(): Promise<Institution[]> {
+    return await this.institutionRepository.find();
+
+  } */
+
+  async findAllIndicators(): Promise<Indicators[]> {
+   // return this.indicatorRepository.find();
+
+    const indicators = await this.indicatorRepository.createQueryBuilder('indicators')
+        .leftJoinAndSelect('indicators.characteristics', 'characteristics')
+        .getMany();
+    return indicators;
   }
 
   async findAllMethIndicators(): Promise<MethodologyIndicators[]> {
@@ -259,28 +314,28 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     });
     // console.log('dataEnterItem+++',dataEnterItem)
     if (dataEnterItem) {
-      dataEnterItem.value = updateValueDto.value;
+      dataEnterItem.score = updateValueDto.value;
       if(updateValueDto.assumptionParameter != null)
       {
         dataEnterItem.enterDataAssumption = updateValueDto.assumptionParameter;
 
       }
       dataEnterItem.uomDataEntry = updateValueDto.unitType;
-      if (dataEnterItem.uomDataEntry != dataEnterItem.uomDataRequest) {
-        let ratioItem = await this.unitConversionRepository.findOne({
-          where: {
-            fromUnit: updateValueDto.unitType,
-            toUnit: dataEnterItem.uomDataRequest,
-          },
-        });
-        if (ratioItem) {
-          dataEnterItem.conversionValue = (
-            Number(updateValueDto.value) * ratioItem.conversionFactor
-          ).toString();
-        }
-      } else {
-        dataEnterItem.conversionValue = updateValueDto.value;
-      }
+      // if (dataEnterItem.uomDataEntry != dataEnterItem.uomDataRequest) {
+      //   let ratioItem = await this.unitConversionRepository.findOne({
+      //     where: {
+      //       fromUnit: updateValueDto.unitType,
+      //       toUnit: dataEnterItem.uomDataRequest,
+      //     },
+      //   });
+      //   if (ratioItem) {
+      //     dataEnterItem.conversionValue = (
+      //       Number(updateValueDto.value) * ratioItem.conversionFactor
+      //     ).toString();
+      //   }
+      // } else {
+      //   dataEnterItem.conversionValue = updateValueDto.value;
+      // }
       this.repo.save(dataEnterItem);
       return true;
     }
