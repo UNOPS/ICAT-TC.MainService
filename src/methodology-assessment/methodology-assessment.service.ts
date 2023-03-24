@@ -16,9 +16,14 @@ import { BarriersCategory } from './entities/barrierscategory.entity';
 import { Indicators } from './entities/indicators.entity';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
+import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
-
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -319,5 +324,49 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   remove(id: number) {
     return `This action removes a #${id} methodologyAssessment`;
+  }
+
+
+  async updateEnterDataValue(
+    /// Unit Conversion Applied
+    updateValueDto: UpdateValueEnterData,
+  ): Promise<boolean> {
+    let dataEnterItem = await this.repo.findOne({
+      where: { id: updateValueDto.id },
+    });
+    console.log('dataEnterItem+++',dataEnterItem)
+    if (dataEnterItem) {
+      dataEnterItem.score = updateValueDto.value;
+      if(updateValueDto.assumptionParameter != null)
+      {
+        dataEnterItem.enterDataAssumption = updateValueDto.assumptionParameter;
+      }
+      // dataEnterItem.uomDataEntry = updateValueDto.unitType;
+      // if (dataEnterItem.uomDataEntry != dataEnterItem.uomDataRequest) {
+      //   let ratioItem = await this.unitConversionRepository.findOne({
+      //     where: {
+      //       fromUnit: updateValueDto.unitType,
+      //       toUnit: dataEnterItem.uomDataRequest,
+      //     },
+      //   });
+      //   if (ratioItem) {
+      //     dataEnterItem.conversionValue = (
+      //       Number(updateValueDto.value) * ratioItem.conversionFactor
+      //     ).toString();
+      //   }
+      // } else {
+      //   dataEnterItem.conversionValue = updateValueDto.value;
+      // }
+      this.repo.save(dataEnterItem);
+      return true;
+    }
+    return false;
+  }
+
+
+  async allParam(
+    options: IPaginationOptions,
+    filterText: string[]){
+      let filter: string = '';
   }
 }

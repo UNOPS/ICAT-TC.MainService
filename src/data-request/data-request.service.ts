@@ -25,6 +25,7 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -108,6 +109,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para.id = dr.parameterId',
       )
       .leftJoinAndMapOne(
+        'para.category',
+        Category,
+        'cat',
+        'cat.id = para.category_id',
+      )
+      .leftJoinAndMapOne(
+        'para.characteristics',
+        Characteristics,
+        'chara',
+        'chara.id = para.characteristics_id',
+      )
+      .leftJoinAndMapOne(
         'para.Assessment',
         Assessment,
         'a',
@@ -130,7 +143,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .where(whereCond)
       .orderBy('dr.createdOn', 'DESC')
       .groupBy('dr.id');
-    console.log(options);
     let result = await paginate(data, options);
     if (result) {
       return result;
@@ -270,6 +282,12 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'cha.id = para.characteristics_id',
       )
       .leftJoinAndMapOne(
+        'para.category',
+        Category,
+        'cat',
+        'cat.id = para.category_id',
+      )
+      .leftJoinAndMapOne(
         'para.Institution',
         Institution,
         'i',
@@ -311,11 +329,14 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     year: string,
     userName: string,
   ): Promise<Pagination<any>> {
+    console.log("++++++++++++++++",userName)
     let userItem = await this.userService.findByUserName(userName);
+    // console.log("++++++++++++++++",userItem)
     let userId = userItem ? userItem.id : 0;
     let insId = userItem ? userItem.institution.id : 0;
-
+    console.log(userId ,"++++++++++++++++",userItem.userType.name)
     if (userItem.userType.name != 'Institution Admin') {
+      console.log(userId ,"++++++++++++++++",userItem.userType.name)
       let data = this.repo
         .createQueryBuilder('dr')
         .leftJoinAndMapOne(
@@ -367,6 +388,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'a.id = para.assessment_id',
         )
         .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
+        .leftJoinAndMapOne('para.category',Category,'cat','cat.id = para.category_id',)
+        .leftJoinAndMapOne('para.characteristics',Characteristics,'chara','chara.id = para.characteristics_id',)
         .leftJoinAndMapOne(
           'para.Institution',
           Institution,
@@ -387,12 +410,12 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         .orderBy('dr.deadline', 'DESC');
 
       let result = await paginate(data, options);
-
+console.log("=========11",result)
       if (result) {
         return result;
       }
     }
-  }
+  } 
 
   async getReviewDataRequest(
     options: IPaginationOptions,
@@ -414,6 +437,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'para',
         'para.id = dr.parameterId',
       )
+      .leftJoinAndMapOne('para.category',Category,'cat','cat.id = para.category_id',)
+        .leftJoinAndMapOne('para.characteristics',Characteristics,'chara','chara.id = para.characteristics_id',)
       .leftJoinAndMapOne(
         'para.Assessment',
         Assessment,
@@ -566,26 +591,45 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-      let originalStatus = dataRequestItem
-        ? dataRequestItem.dataRequestStatus
+
+
+      let para = this.repo.createQueryBuilder('dr')
+       .leftJoinAndMapOne(
+        'dr.parameter',
+        Parameter,
+        'para',
+        'dr.ParameterId = para.id',
+      )
+      .leftJoinAndMapOne(
+        'para.institution',
+        Institution,
+        'ins',
+        'ins.id = para.institution_id',
+      )
+      .leftJoinAndMapOne(
+        'ins.country',
+        Country,
+        'cou',
+        'cou.id = ins.countryId',
+      ).where('dr.id = ' +id);
+
+      let pararesult = await para.getMany();
+    
+      let originalStatus = pararesult
+        ? pararesult[0].dataRequestStatus
         : 0;
-      dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
+        pararesult[0].dataRequestStatus = updateDataRequestDto.status;
       if (
-        dataRequestItem.dataRequestStatus &&
-        dataRequestItem.dataRequestStatus == DataRequestStatus.Data_Approved
+        pararesult[0].dataRequestStatus &&
+        pararesult[0].dataRequestStatus == DataRequestStatus.Data_Approved
       ) {
-        dataRequestItem.qaStatus = null;
+        pararesult[0].qaStatus = null;
       }
-      // let parm =await this.paramterRepo.findByIds([id]);
 
-      inscon = dataRequestItem.parameter.institution.country;
-      insSec = dataRequestItem.parameter.institution.sector;
+      inscon = pararesult[0].parameter.institution.country;
+      insSec = pararesult[0].parameter.institution.sector;
 
-      // dataRequestItemList.push(dataRequestItem);
-      // console.log('dataRequestItem', dataRequestItem);
-      this.repo.save(dataRequestItem).then((res) => {
-        //console.log('res', res);
+      this.repo.save(pararesult[0]).then((res) => {
         this.parameterHistoryService.SaveParameterHistory(
           res.id,
           ParameterHistoryAction.EnterData,

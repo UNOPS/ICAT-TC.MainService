@@ -28,7 +28,7 @@ export class MethodologyAssessmentParameters {
     category?: Category;
 
 
-    @ManyToOne((type) => Characteristics, { cascade: false ,eager:true })
+    @ManyToOne((type) => Characteristics, { cascade: false})
     @JoinColumn({ name: 'characteristics_id' })
     characteristics?: Characteristics;
 
@@ -38,7 +38,7 @@ export class MethodologyAssessmentParameters {
     @Column({ nullable: true })
     relevance: string;
 
-    @ManyToOne((type) => Institution, { cascade: false })
+    @ManyToOne((type) => Institution, { cascade: false})
     @JoinColumn({ name: 'institution_id' })
     institution?: Institution;
 
@@ -48,4 +48,14 @@ export class MethodologyAssessmentParameters {
 
     @Column({ nullable: true })
     isCategory: number;
+
+    @Column({ nullable: true })
+    enterDataAssumption: string;
+
+    @Column({ nullable: true })
+    uomDataEntry?: string;
+
+    @Column({ nullable: true })
+    uomDataRequest?: string;
+
 }
