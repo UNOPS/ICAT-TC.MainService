@@ -109,7 +109,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     console.log("assessRes : ",(await assessRes).id)
 
-  /*   for(let y of MethData.barriers){
+   for(let y of MethData.selectedBarriers){
       let assessmentBarriers = new AssessmentBarriers()
       let barrier = new Barriers();
       barrier.id = y.id,
@@ -119,7 +119,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       assessmentBarriers.assessment = assessement
 
       await this.assessRepository.save(assessmentBarriers);
-    } */
+    } 
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
@@ -161,7 +161,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   
        await this.repo.save(data);
       }
-      await this.repo.save(dataForCategory);
+      if(categoryData.categoryScore){
+        await this.repo.save(dataForCategory);
+      }
+      
 
     }
     //assessementId
@@ -235,6 +238,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return await this.baricatRepository.find();
 
   }
+
+  async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
+  //  return await this.repo.find();
+    return this.repo.find({
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status'],
+    });
+  }
+
+  AssessmentDetails(): Promise<Assessment[]> {
+    //  return await this.repo.find();
+      return this.assessmentRepository.find({
+        relations: [ 'methodology', 'climateAction'],
+      });
+    }
+
 
   async findAllPolicyBarriers(): Promise<any[]> {
     const policyBarriers = await this.policyBarrierRepository.find({
