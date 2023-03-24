@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
@@ -20,18 +20,18 @@ const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
 export class MethodologyAssessmentController {
-  
 
- 
+
+
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
-    private readonly climateService : ProjectService,
- 
-    ) { 
-    }
+    private readonly climateService: ProjectService,
 
-    res2 : number;
-    resData :any;
+  ) {
+  }
+
+  res2: number;
+  resData: any;
 
   /*  @Post()
    create(@Body() createMethodologyAssessmentDto: CreateMethodologyAssessmentDto) {
@@ -40,17 +40,17 @@ export class MethodologyAssessmentController {
 
   @Post('methAssignDataSave')
   async methAssignDataSave(@Body() MethAssignParam: MethodologyAssessmentParameters): Promise<any> {
-  this.res2 = 0
-  this.resData = ''
+    this.res2 = 0
+    this.resData = ''
 
     const response = await axios.post(MainMethURL, MethAssignParam);
     console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
-   
+
     this.resData = {
-      result : response.data,
-      assesId : this.res2
+      result: response.data,
+      assesId: this.res2
     }
 
     console.log("resData", this.resData)
@@ -61,7 +61,7 @@ export class MethodologyAssessmentController {
 
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
- 
+
     let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
 
     return newRes
@@ -82,7 +82,7 @@ export class MethodologyAssessmentController {
   findAllMethodologies() {
     return this.methodologyAssessmentService.findAllMethodologies();
   }
-  
+
   @Get('findAllBarriers')
   async findAllBarriers() {
     return await this.methodologyAssessmentService.findAllBarriers();
@@ -117,14 +117,14 @@ export class MethodologyAssessmentController {
   findAllPolicyBarriers() {
     return this.methodologyAssessmentService.findAllPolicyBarriers();
   }
-  
 
-  
- /*  @Get('dataCollectionInstitution')
-  dataCollectionInstitution() {
 
-    return this.methodologyAssessmentService.dataCollectionInstitution();
-  } */
+
+  /*  @Get('dataCollectionInstitution')
+   dataCollectionInstitution() {
+ 
+     return this.methodologyAssessmentService.dataCollectionInstitution();
+   } */
 
 
   @Patch(':id')
@@ -139,7 +139,7 @@ export class MethodologyAssessmentController {
 
   @UseGuards(JwtAuthGuard)
   @Put('update-value')
-  
+
   updateDeadline(
     @Body() updateValueDto: UpdateValueEnterData,
   ): Promise<boolean> {
@@ -151,5 +151,22 @@ export class MethodologyAssessmentController {
     // this.auditService.create(audit);
     console.log(updateValueDto);
     return this.methodologyAssessmentService.updateEnterDataValue(updateValueDto);
+  }
+
+  @Get('allParam')
+  async allParam(
+    @Request() request,   
+    @Query('filterText') filterText: string[],   
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) : Promise<any>{ 
+
+    return await this.methodologyAssessmentService.allParam(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+    )
   }
 }

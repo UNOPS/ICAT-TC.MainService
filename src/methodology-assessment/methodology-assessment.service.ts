@@ -19,7 +19,11 @@ import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
-
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -312,15 +316,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let dataEnterItem = await this.repo.findOne({
       where: { id: updateValueDto.id },
     });
-    // console.log('dataEnterItem+++',dataEnterItem)
+    console.log('dataEnterItem+++',dataEnterItem)
     if (dataEnterItem) {
       dataEnterItem.score = updateValueDto.value;
       if(updateValueDto.assumptionParameter != null)
       {
         dataEnterItem.enterDataAssumption = updateValueDto.assumptionParameter;
-
       }
-      dataEnterItem.uomDataEntry = updateValueDto.unitType;
+      // dataEnterItem.uomDataEntry = updateValueDto.unitType;
       // if (dataEnterItem.uomDataEntry != dataEnterItem.uomDataRequest) {
       //   let ratioItem = await this.unitConversionRepository.findOne({
       //     where: {
@@ -340,5 +343,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       return true;
     }
     return false;
+  }
+
+
+  async allParam(
+    options: IPaginationOptions,
+    filterText: string[]){
+      let filter: string = '';
   }
 }
