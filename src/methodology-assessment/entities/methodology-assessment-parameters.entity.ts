@@ -58,4 +58,10 @@ export class MethodologyAssessmentParameters {
     @Column({ nullable: true })
     uomDataRequest?: string;
 
+    @Column({ nullable: true })
+    fileName?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    comment?: string;
+
 }

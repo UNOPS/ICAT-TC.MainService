@@ -19,6 +19,7 @@ import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.
 import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { InstitutionService } from 'src/institution/service/institution.service';
+import { TokenDetails } from 'src/utills/token_details';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { InstitutionService } from 'src/institution/service/institution.service'
   providers: [
     MethodologyAssessmentService,
     ProjectService,
-    PolicyBarriers
+    PolicyBarriers,
+    TokenDetails
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
