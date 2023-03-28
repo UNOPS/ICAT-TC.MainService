@@ -20,9 +20,6 @@ import { Country } from './entity/country.entity';
       },
       sector: {
         eager: true,
-      },
-      institution: {
-        eager: true,
       }
     },
   },

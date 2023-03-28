@@ -373,6 +373,23 @@ export class InstitutionController implements CrudController<Institution> {
   ): Promise<any> {
     return await this.service.getAllInstitutions();
   }
-  
+  @Get('getInstituion')
+  async getInstituion(
+    @Request() request,   
+    @Query('filterText') type: number,   
+    @Query('countryId') countryId: number, 
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) : Promise<any>{ 
+
+    return await this.service.getInstituion(
+      {
+        limit: limit,
+        page: page,
+      },
+      type,
+      countryId,
+    )
+  }
   
 }

@@ -64,7 +64,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({length: 500, default: null, nullable: true  })
   defenitionofAssessment: string;
 
-  @ManyToOne((type) => Institution, { cascade: false, nullable: true })
+  @ManyToOne((type) => Institution, { cascade: false, nullable: true , eager:false})
   @JoinColumn()
   mappedInstitution?: Institution;//
 
