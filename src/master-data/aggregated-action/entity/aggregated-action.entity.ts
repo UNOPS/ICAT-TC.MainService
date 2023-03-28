@@ -26,7 +26,7 @@ export class AggregatedAction extends BaseTrackingEntity{
   name: string;
  
 
-  @OneToMany(() => ActionArea, actionArea => actionArea.aggregatedAction,{eager:true})
+  @OneToMany(() => ActionArea, actionArea => actionArea.aggregatedAction)
   actionArea: ActionArea[];
 
 
