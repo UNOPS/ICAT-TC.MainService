@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req, Res } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { Methodology } from './entities/methodology.entity';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController, CrudRequest } from '@nestjsx/crud';
 import { Category } from './entities/category.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { MethodologyAssessmentParameters } from './entities/methodology-assessment-parameters.entity';
@@ -12,20 +12,26 @@ import { ProjectService } from 'src/climate-action/climate-action.service';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
-
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { editFileName, fileLocation } from './entities/file-upload.utils';
+import { Response } from 'express';
+import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
 export class MethodologyAssessmentController {
+  originalname: any;
+  filename: any;
 
 
 
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly climateService: ProjectService,
+    private readonly tokenDetails: TokenDetails,
 
   ) {
   }
@@ -94,6 +100,34 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findByAllAssessmentData();
   }
 
+  @Post('uploadtest')
+@UseInterceptors(
+  FileInterceptor('file', {
+    storage: multer.diskStorage({
+      destination: fileLocation,
+      filename: editFileName,
+    }),
+  }),
+)
+async uploadFile2(
+  @UploadedFile() file,
+  @Req() req: CrudRequest,
+  @Request() request,
+) {
+  console.log("file")
+  console.log(file)
+  this.filename = file.filename
+  console.log("xxx" + this.filename)
+  return { location: `${this.filename}` }
+}
+
+
+
+  @Get('findByAllAssessmentBarriers')
+  async findByAllAssessmentBarriers() {
+    return await this.methodologyAssessmentService.findByAllAssessmentBarriers();
+  }
+
   @Get('AssessmentDetails')
   async AssessmentDetails() {
     return await this.methodologyAssessmentService.AssessmentDetails();
@@ -132,12 +166,25 @@ export class MethodologyAssessmentController {
 
 
 
-  /*  @Get('dataCollectionInstitution')
+  @Get('dataCollectionInstitution')
    dataCollectionInstitution() {
- 
-     return this.methodologyAssessmentService.dataCollectionInstitution();
-   } */
 
+    let countryIdFromTocken: number;
+    let sectorIdFromTocken: number;
+    let userTypeFromTocken: string;
+    let institutionTypeId: number; //instypeId
+
+    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
+      this.tokenDetails.getDetails([
+        TokenReqestType.countryId,
+        TokenReqestType.sectorId,
+        TokenReqestType.role,
+      ]);
+
+      console.log("ammmm :", countryIdFromTocken)
+ 
+     return countryIdFromTocken
+   } 
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {

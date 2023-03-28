@@ -161,6 +161,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.score = characteristic.score;
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
+        data.fileName = characteristic.filename;
+        data.comment = characteristic.comment
         data.isCategory = 0
       //  console.log("Data: ", data);
   
@@ -241,6 +243,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   async findByAllCategories(): Promise<BarriersCategory[]> {
     return await this.baricatRepository.find();
+
+  }
+
+  async findByAllAssessmentBarriers(): Promise<AssessmentBarriers[]> {
+   // return await this.assessRepository.find();
+
+    return await this.assessRepository.find({
+      relations: ['assessment', 'barriers'],
+    });
 
   }
 
