@@ -101,6 +101,23 @@ async save(req:PolicyBarriers[]){
     this.PolicyBarriersRepo.save(re);
   }
 }
+
+
+async allProject(
+  options: IPaginationOptions,
+  filterText: number){
+    console.log("22222222222222222")
+
+    const policies = await this.repo.createQueryBuilder('climateAction')
+      .select(['climateAction.id', 'climateAction.policyName'])
+      .where('projectApprovalStatusId=' + filterText)
+      .getMany();
+  console.log("22222222222222222",policies)
+   return policies
+}
+
+
+
   async findAllPolicies(): Promise<ClimateAction[]> {
     const policies = await this.repo.createQueryBuilder('climateAction')
       .select(['climateAction.id', 'climateAction.policyName'])

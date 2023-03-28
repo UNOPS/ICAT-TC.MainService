@@ -224,7 +224,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
 
-  @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction,{eager:true})
+  @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction)
   @JoinColumn()
   policyBarriers: PolicyBarriers[];
   

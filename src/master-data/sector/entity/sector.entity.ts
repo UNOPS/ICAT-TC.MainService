@@ -23,10 +23,10 @@ export class Sector extends BaseTrackingEntity{
   @Column({ default: null })
   name: string;
 
-  @OneToMany(() => ClimateAction, climateAction => climateAction.sector,{eager:true})
+  @OneToMany(() => ClimateAction, climateAction => climateAction.sector)
   climateAction: ClimateAction[];
 
-  @OneToMany(() => CountrySector, countrySector => countrySector.sector,{eager:true})
+  @OneToMany(() => CountrySector, countrySector => countrySector.sector)
   countrysector: CountrySector[];
   
   
