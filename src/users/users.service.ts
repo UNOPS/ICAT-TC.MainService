@@ -351,7 +351,6 @@ export class UsersService extends TypeOrmCrudService<User> {
     filterText: string,
     userTypeId: number,
   ): Promise<Pagination<User>> {
-    console.log('calling......')
     let filter: string = '';
 
     if(filterText != null && filterText != undefined && filterText != ''){
@@ -405,10 +404,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     userName: string,
   ): Promise<Pagination<User>> {
     const user = await this.repo.findOne( { where :{username: userName } });
-    console.log('calling......',user);
     let institutionId = user ? user.institution.id : 0;
 
-    console.log('calling......');
     let filter: string = '';
 
     let data = this.repo
@@ -429,11 +426,11 @@ export class UsersService extends TypeOrmCrudService<User> {
       .where(' type.id=' + userTypeId + ' AND ins.id=' + institutionId)
       .orderBy('user.status', 'ASC');
     let SQLString = data.getSql();
-    console.log('SQLString', SQLString);
+    // console.log('SQLString', SQLString);
     let resualt = await paginate(data, options);
 
     if (resualt) {
-      console.log('reaslt...', resualt);
+      // console.log('reaslt...', resualt);
       return resualt;
     }
   }

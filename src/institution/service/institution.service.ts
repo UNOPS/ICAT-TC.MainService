@@ -228,6 +228,19 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
   }
 
 
+  async getInstituion(
+    options: IPaginationOptions,
+    filterText: number,
+    countryId:number){
+  
+      const policies = await this.repo.createQueryBuilder('institution')
+        .select(['institution.id', 'institution.name'])
+        .where('typeId=' + filterText+' AND countryId=' + countryId)
+        .getMany();
+    console.log("22222222222222222",policies)
+     return policies
+  }
+
   async getInstitutionForUsers(
 
     inside: number,

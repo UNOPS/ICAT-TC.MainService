@@ -343,9 +343,26 @@ async findAllPolicies() {
     }
   }
 
-
+ 
   @Post("policybar")
   async policyBar(@Body() req:PolicyBarriers[]){
     this.service.save(req);
+  }
+
+  @Get('allProjectApprove')
+  async allProjectApprove(
+    @Request() request,   
+    @Query('filterText') filterText: number,   
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ) : Promise<any>{ 
+
+    return await this.service.allProject(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+    )
   }
 }

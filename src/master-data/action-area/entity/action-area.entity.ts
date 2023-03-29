@@ -26,7 +26,7 @@ export class ActionArea extends MasterData{
   aggregatedAction: AggregatedAction;
 
 
-  @OneToMany(() => ClimateAction, climateAction => climateAction.actionArea,{eager:true})
+  @OneToMany(() => ClimateAction, climateAction => climateAction.actionArea,{})
   climateAction: ClimateAction[];
 
  

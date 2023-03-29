@@ -17,7 +17,7 @@ export class Barriers {
     @JoinColumn({ name: 'barriersCategory_id' })
     barriersCategory?: BarriersCategory;
 
-    @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction,{eager:true})
+    @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction,)
     @JoinColumn()
     policyBarriers: PolicyBarriers[];
 }
