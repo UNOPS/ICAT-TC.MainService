@@ -18,7 +18,7 @@ export const config: ConnectionOptions = {
   database: 'tc-main-new',
 
 
- // autoLoadEntities: true,
+  autoLoadEntities: true,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
 
   // We are using migrations, synchronize should be set to false.
@@ -34,10 +34,10 @@ export const config: ConnectionOptions = {
   // __dirname is either dist or src folder, meaning either
   // the compiled js in prod or the ts in dev.
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-  // cli: {
-  //   // Location of migration should be inside src folder
-  //   // to be compiled into dist/ folder.
-  //   migrationsDir: 'src/migrations',
-  // },
+  cli: {
+    // Location of migration should be inside src folder
+    // to be compiled into dist/ folder.
+    migrationsDir: 'src/migrations',
+  },
 };
 
