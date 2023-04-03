@@ -54,11 +54,15 @@ export const config: ConnectionOptions = {
   //   password: 'password',
   //   database: 'tc-main-new3',
 
-  username: 'root',
+   username: 'sqluser',
+    // password: 'password',
+    // database: 'tc-main-new3',
+
+ /* username: 'root',
  password: 'pradeep123#',
- database: 'tc-main',  
-  // password: 'dil19971121',
-  // database: 'climate_action',
+ database: 'tc-main', */
+  password: '1997',
+  database: 'tc-main-new',
 
 
   autoLoadEntities: true,
