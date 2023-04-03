@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { User } from 'src/users/user.entity';
-import { UserType } from 'src/users/user.type.entity';
+import { User } from 'src/users/entity/user.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
 import { Institution } from '../entity/institution.entity';
 import { InstitutionType } from '../entity/institution.type.entity';
 

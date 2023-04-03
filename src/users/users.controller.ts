@@ -30,8 +30,8 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
-import { UserType } from './user.type.entity';
+import { User } from './entity/user.entity';
+import { UserType } from './entity/user.type.entity';
 import { UsersService } from './users.service';
 
 @Crud({

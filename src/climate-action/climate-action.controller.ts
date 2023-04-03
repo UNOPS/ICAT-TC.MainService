@@ -18,6 +18,8 @@ import { ProjectService } from './climate-action.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entity/file-upload.utils';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -76,6 +78,7 @@ export class ProjectController implements CrudController<ClimateAction> {
     @InjectRepository(ClimateAction)
     private readonly projectRepository: Repository<ClimateAction>,
     public configService: ConfigService,
+    private readonly tokenDetails: TokenDetails,
   ) {}
 
   filename: any = [];
@@ -365,4 +368,9 @@ async findAllPolicies() {
       filterText,
     )
   }
+
+ 
+
+  
 }
+

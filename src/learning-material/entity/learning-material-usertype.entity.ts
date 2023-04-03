@@ -1,4 +1,4 @@
-import { UserType } from "src/users/user.type.entity";
+import { UserType } from "src/users/entity/user.type.entity";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, Generated, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LearningMaterial } from "./learning-material.entity";

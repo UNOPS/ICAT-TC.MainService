@@ -1,5 +1,5 @@
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'audit' })
