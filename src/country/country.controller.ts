@@ -114,6 +114,7 @@ export class CountryController implements CrudController<Country>{
   async getCountry(
     @Query('countryId') countryId: number,
   ): Promise<any> {
+    console.log("country111 :",this.service.getCountry(countryId))
     return await this.service.getCountry(countryId);
   }
 
