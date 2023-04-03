@@ -11,10 +11,10 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { UsersController } from 'src/users/users.controller';
 import { UsersService } from 'src/users/users.service';
-import { UserType } from 'src/users/user.type.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from '../entity/institution.entity';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { InstitutionCategory } from '../entity/institution.category.entity';
 import { InstitutionType } from '../entity/institution.type.entity';
 

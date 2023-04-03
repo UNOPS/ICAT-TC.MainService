@@ -11,6 +11,7 @@ import { ProjectStatus } from 'src/master-data/project-status/project-status.ent
 import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/project-approval-status.entity';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { Repository } from 'typeorm';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -373,4 +374,9 @@ async allProject(
       return resualt;
     }
   }
+
+
+  
+
+
 }

@@ -1,4 +1,4 @@
-import { DefaultValue } from 'src/default-value/defaultValue.entity';
+import { DefaultValue } from 'src/default-value/entity/defaultValue.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 import {
