@@ -46,6 +46,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     let userType = await this.usersTypeRepository.findOne(
       { where:{id:userTypeId}}
     );
+    console.log("createUserDto.userType",userType.description)
 
     // let institution;
     // if(createUserDto.userType['id'] == 3)
@@ -94,11 +95,16 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     newUser.firstName = createUserDto.firstName;
     newUser.lastName = createUserDto.lastName;
-    newUser.username = createUserDto.username;
+    if(createUserDto.username){
+      newUser.username = createUserDto.username;
+    }
+    else{
+      newUser.username = newUser.firstName + (newUser.lastName ? ' ' + newUser.lastName : '');
+    }
     newUser.email = createUserDto.email;
-    newUser.mobile = createUserDto.mobile;
+    newUser.mobile = createUserDto.mobile?createUserDto.mobile:'';
     newUser.status = RecordStatus.Active;
-    newUser.landline = createUserDto.landline;
+    newUser.landline = createUserDto.landline?createUserDto.landline:'';
     newUser.userType = userType;
     //newUser.institution = institution;
    // newUser.country = country;
