@@ -25,6 +25,7 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 import { Results } from './entities/results.entity';
+import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -38,9 +39,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Indicators) private readonly indicatorRepository: Repository<Indicators>,
    @InjectRepository(AssessmentCharacteristics) private readonly assessmentCharcteristicsRepository: Repository<AssessmentCharacteristics>,
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
-/*    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, */
+   @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, 
     @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
+    @InjectRepository(ParameterRequest)
+    private readonly parameterRequestRepository: Repository<ParameterRequest>,
    ) {
     super(repo)
   }
@@ -397,6 +400,37 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return false;
   }
 
+  async updateInstitution(
+    updateValueDto: UpdateValueEnterData,
+  ): Promise<boolean> {
+    let institutionItem = await this.institutionRepository.findOne({
+      where: { id: updateValueDto.institutionId }
+    });
+   let data= this.parameterRequestRepository.findOne({
+    where: { id: updateValueDto.id }
+  });
+    let dataEnterItem = await this.repo.findOne({
+      where: { id: (await data).parameter.id }
+    });
+    // dataEnterItem.value = updateValueDto.value;  // not comming value
+    dataEnterItem.institution = institutionItem;
+    console.log('updateValueDto', updateValueDto);
+    console.log('institutionItem', institutionItem);
+    this.repo.save(dataEnterItem);
+
+    // let template = 'Dear ' +
+    // institutionItem.name + ' '  +
+    // '<br/>Data request with following information has shared with you.'+
+    // ' <br/> We are assign  Data entry' ;
+
+    // this.emaiService.sendMail(
+    //   institutionItem.email,
+    //   'Assign  Data Entry',
+    //   '',
+    //   template,
+    // );
+    return true;
+  }
 
   async allParam(
     options: IPaginationOptions,

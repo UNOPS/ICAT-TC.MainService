@@ -33,7 +33,7 @@ import { join } from 'path';
 import { Institution } from './institution/entity/institution.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { config } from './ormconfig';
-import { User } from './users/user.entity';
+import { User } from './users/entity/user.entity';
 import { TokenDetails } from './utills/token_details';
 import { Category } from './methodology-assessment/entities/category.entity';
 import { Characteristics } from './methodology-assessment/entities/characteristics.entity';
@@ -64,9 +64,10 @@ import { DefaultValueController } from './default-value/default-value.controller
 import { DefaultValueModule } from './default-value/default-value.module';
 import { ParameterRequestService } from './data-request/data-request.service';
 import { ParameterRequest } from './data-request/entity/data-request.entity';
-import { DefaultValue } from './default-value/defaultValue.entity';
+import { DefaultValue } from './default-value/entity/defaultValue.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 import { Results } from './methodology-assessment/entities/results.entity';
+import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { Results } from './methodology-assessment/entities/results.entity';
       ClimateChangeDataCategory,
       Country,
       ClimateAction,
+      AggregatedAction,
       Institution,
       Methodology,
       Category,

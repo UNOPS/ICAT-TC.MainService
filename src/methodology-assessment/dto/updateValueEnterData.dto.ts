@@ -1,7 +1,7 @@
 export class UpdateValueEnterData {
   id: number;
   value: string;
-  institutionId: string;
+  institutionId: number;
   unitType: string;
   assumptionParameter:string;
 }

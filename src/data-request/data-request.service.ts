@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { DataRequestStatus } from './entity/data-request-status.entity';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -20,7 +20,7 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { Institution } from 'src/institution/entity/institution.entity';
 import { ClimateAction as Project } from 'src/climate-action/entity/climate-action.entity';
 import { ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
-import { DefaultValue } from 'src/default-value/defaultValue.entity';
+import { DefaultValue } from 'src/default-value/entity/defaultValue.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
@@ -62,8 +62,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       )
       .select(['dr.dataRequestStatus', 'para.id'])
       .where(
-        `para.assessment_id = ${assesmentId} 
-         AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
+        `para.assessment_id = ${assesmentId}`,
       );
       // .where(
       //   `para.assessment_id = ${assesmentId} 

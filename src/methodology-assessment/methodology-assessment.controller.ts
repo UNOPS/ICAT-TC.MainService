@@ -79,6 +79,15 @@ export class MethodologyAssessmentController {
 
   }
 
+  
+  @Put('update-institution')
+  updateInstitution(
+    @Body() updateValueDto: UpdateValueEnterData,
+  ): Promise<boolean> {
+    console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
+    return this.methodologyAssessmentService.updateInstitution(updateValueDto);
+  }
+
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
 
