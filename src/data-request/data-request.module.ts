@@ -1,6 +1,6 @@
 import { UsersModule } from './../users/users.module';
 import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { Module } from '@nestjs/common';
 import { ParameterRequestService } from './data-request.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,7 +12,7 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { TokenDetails } from 'src/utills/token_details';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
-import { DefaultValue } from 'src/default-value/defaultValue.entity';
+import { DefaultValue } from 'src/default-value/entity/defaultValue.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { ParameterRequestController as DataRequestController } from './data-request.controller';
 import { DefaultValueModule } from 'src/default-value/default-value.module';

@@ -10,7 +10,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';

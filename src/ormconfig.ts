@@ -1,4 +1,48 @@
 import { ConnectionOptions, DataSourceOptions } from 'typeorm';
+import { Assessment } from './assessment/entities/assessment.entity';
+import { Audit } from './audit/entity/audit.entity';
+import { Auth } from './auth/entities/auth.entity';
+import { ClimateAction } from './climate-action/entity/climate-action.entity';
+import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
+import { CountrySector } from './country/entity/country-sector.entity';
+import { countryStatus } from './country/entity/country-status.entity';
+import { Country } from './country/entity/country.entity';
+import { DataRequestStatus } from './data-request/entity/data-request-status.entity';
+import { ParameterRequest } from './data-request/entity/data-request.entity';
+import { DefaultValue } from './default-value/entity/defaultValue.entity';
+import { DocumentOwner } from './document/entity/document-owner.entity';
+import { Documents } from './document/entity/document.entity';
+import { InstitutionCategory } from './institution/entity/institution.category.entity';
+import { Institution } from './institution/entity/institution.entity';
+import { InstitutionType } from './institution/entity/institution.type.entity';
+import { LearningMaterialUserType } from './learning-material/entity/learning-material-usertype.entity';
+import { LearningMaterial } from './learning-material/entity/learning-material.entity';
+import { ActionArea } from './master-data/action-area/entity/action-area.entity';
+import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
+import { ClimateChangeDataCategory } from './master-data/cimate-change-data-category/climate.change.data.category.entity';
+import { FinancingScheme } from './master-data/financing-scheme/financing-scheme.entity';
+import { ProjectApprovalStatus } from './master-data/project-approval-status/project-approval-status.entity';
+import { ProjectOwner } from './master-data/project-owner/projeect-owner.entity';
+import { ProjectStatus } from './master-data/project-status/project-status.entity';
+import { Sector } from './master-data/sector/entity/sector.entity';
+import { AssessmentBarriers } from './methodology-assessment/entities/assessmentbarriers.entity';
+import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
+import { Barriers } from './methodology-assessment/entities/barriers.entity';
+import { BarriersCategory } from './methodology-assessment/entities/barrierscategory.entity';
+import { Category } from './methodology-assessment/entities/category.entity';
+import { Characteristics } from './methodology-assessment/entities/characteristics.entity';
+import { Indicators } from './methodology-assessment/entities/indicators.entity';
+import { MethodologyAssessmentParameters } from './methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Methodology } from './methodology-assessment/entities/methodology.entity';
+import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
+import { ParameterStatus } from './methodology-assessment/entities/parameterStatus.entity';
+import { ParameterHistoryAction } from './parameter-history/entity/parameter-history-action-history.entity';
+import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
+import { Report } from './report/entity/report.entity';
+import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
+import { MasterData } from './shared/entities/master.data.entity';
+import { User } from './users/entity/user.entity';
+import { UserType } from './users/entity/user.type.entity';
 
 
 export const config: ConnectionOptions = {
@@ -22,7 +66,12 @@ export const config: ConnectionOptions = {
 
 
   autoLoadEntities: true,
-  entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  // entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
+    Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
+ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
+Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,

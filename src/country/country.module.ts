@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuditService } from 'src/audit/audit.service';
 import { Audit } from 'src/audit/entity/audit.entity';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entity/user.entity';
 import { CountryController } from './country.controller';
 import { CountryService } from './country.service';
 import { CountrySector } from './entity/country-sector.entity';
