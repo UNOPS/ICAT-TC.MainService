@@ -49,6 +49,8 @@ export class MethodologyAssessmentController {
     this.res2 = 0
     this.resData = ''
 
+    let newData : any = MethAssignParam
+
     const response = await axios.post(MainMethURL, MethAssignParam);
     console.log("resss", response.data)
 
@@ -59,6 +61,18 @@ export class MethodologyAssessmentController {
       assesId: this.res2
     }
 
+    if(newData.assessment_approach === 'Direct' && newData.assessment_method === 'Track 1'){
+
+      let result : any = {
+        averageProcess : response.data.averageProcess,
+        averageOutcome:  response.data.averageOutcome,
+        assessment_id :this.res2
+      }
+  
+      await this.methodologyAssessmentService.createResults(result)
+    }
+  
+    
     console.log("resData", this.resData)
 
     return this.resData
@@ -101,6 +115,11 @@ export class MethodologyAssessmentController {
   @Get('findAllBarriers')
   async findAllBarriers() {
     return await this.methodologyAssessmentService.findAllBarriers();
+  }
+
+  @Get('results')
+  async results() {
+    return await this.methodologyAssessmentService.results();
   }
 
 
