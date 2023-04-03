@@ -24,6 +24,7 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
+import { Results } from './entities/results.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -39,6 +40,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(MethodologyIndicators) private readonly methIndicatorRepository: Repository<MethodologyIndicators>,
 /*    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, */
     @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
+    @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
    ) {
     super(repo)
   }
@@ -141,6 +143,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.assessment = savedAssessment
       dataForCategory.methodology = methodology
       dataForCategory.isCategory = 1
+      dataForCategory.institution = categoryData.categoryInstitution
+      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.fileName = categoryData.categoryFile
      
      // category.categoryScore = categoryData.categoryScore;
      // console.log("Category: ", category);
@@ -162,13 +167,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
         data.fileName = characteristic.filename;
-        data.comment = characteristic.comment
-        data.isCategory = 0
+        data.comment = characteristic.comment;
+        data.isCategory = 0;
+        data.institution = characteristic.institution;
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
       }
-      if(categoryData.categoryScore){
+      if(categoryData.categoryScore || categoryData.categoryInstitution){
         await this.repo.save(dataForCategory);
       }
       
@@ -203,6 +209,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     return charAssessData
   }
+
+  async createResults(result :any){
+    let data = new Results ()
+    data.assessment = result.assessment_id
+    data.averageOutcome = result.averageOutcome
+    data.averageProcess = result.averageProcess
+    await this.resultRepository.save(data);
+
+  }
+
   
   async findByAssessIdAndRelevanceNotRelevant(assessId: number): Promise<Characteristics[]> {
     const characteristicsIds = await this.repo
@@ -254,6 +270,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     });
 
   }
+
+  async results(): Promise<Results[]> {
+    // return await this.assessRepository.find();
+     return await this.resultRepository.find({
+       relations: ['assessment'],
+     });
+   }
 
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
   //  return await this.repo.find();

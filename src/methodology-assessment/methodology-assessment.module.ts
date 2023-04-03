@@ -20,6 +20,7 @@ import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { InstitutionService } from 'src/institution/service/institution.service';
 import { TokenDetails } from 'src/utills/token_details';
+import { Results } from './entities/results.entity';
 
 
 @Module({
@@ -45,6 +46,7 @@ import { TokenDetails } from 'src/utills/token_details';
     Indicators,
     AssessmentCharacteristics,
     MethodologyIndicators,
+    Results,
     
   ])],
   exports: [
