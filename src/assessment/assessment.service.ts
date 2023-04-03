@@ -10,13 +10,16 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
+import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
   constructor(
     @InjectRepository(Assessment) repo,
-) {
+    private readonly userService: UsersService,
+  ) {
     super(repo);
   }
   create(createAssessmentDto: CreateAssessmentDto) {
@@ -28,7 +31,26 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
   async findbyID(id: number) {
-    return this.repo.findOne({where:{id:id}});
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        Methodology,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .where({ id: id })
+      .getOne();
+    console.log("qqqqqqq", data)
+    return data;
   }
 
   update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
@@ -46,15 +68,15 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     projectApprovalStatusId: number,
     isProposal: number,
     countryIdFromTocken: number,
-    sectorIdFromTocken:number,
-  
+    sectorIdFromTocken: number,
+
   ): Promise<any> {
 
     let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-      '(proj.policyName LIKE :filterText OR asse.assessmentType LIKE :filterText)';
+        '(proj.policyName LIKE :filterText OR asse.assessmentType LIKE :filterText)';
     }
     // if (isProposal != undefined) {
     //   if (filter) {
@@ -86,37 +108,48 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       }
     }
 
-    
-  let data = this.repo
-  .createQueryBuilder('asse')
-  
-  .leftJoinAndMapOne(
-    'asse.climateAction',
-    ClimateAction,
-    'proj',
-    `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
-  )
-  // .select([
-  //   'asse.id',
-  //   'asse.assessmentType',
-  //   'proj.policyName',
-  // ])
-  .where(filter, {
-    filterText: `%${filterText}%`,
-    isProposal,
-    projectStatusId,
-    projectApprovalStatusId,
-   sectorIdFromTocken,
-  })
-  // .orderBy('asse.createdOn', 'DESC');
 
-  console.log(
-    '=====================================================================',projectApprovalStatusId , sectorIdFromTocken
-  );
-  let resualt = await paginate(data, options);
-  if (resualt) {
-    console.log('results for manage..', resualt);
-    return resualt;
+    let data = this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+      )
+      // .select([
+      //   'asse.id',
+      //   'asse.assessmentType',
+      //   'proj.policyName',
+      // ])
+      .where(filter, {
+        filterText: `%${filterText}%`,
+        isProposal,
+        projectStatusId,
+        projectApprovalStatusId,
+        sectorIdFromTocken,
+      })
+    // .orderBy('asse.createdOn', 'DESC');
+
+    console.log(
+      '=====================================================================', projectApprovalStatusId, sectorIdFromTocken
+    );
+    let resualt = await paginate(data, options);
+    if (resualt) {
+      console.log('results for manage..', resualt);
+      return resualt;
+    }
   }
+
+
+  async getAssessmentForApproveData(
+    assessmentId: number,
+    assementYear: string,
+    userName: string,
+  ): Promise<any> {
+    let userItem = await this.userService.findByUserName(userName);
+    console.log('userItem', userItem);
+
   }
 }
