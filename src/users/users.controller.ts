@@ -70,7 +70,7 @@ export class UsersController implements CrudController<User> {
   ) {}
 
   // @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('createUser')
   create(@Body() createUserDto: User): Promise<User> {
 
     let audit: AuditDto = new AuditDto();
@@ -85,9 +85,27 @@ export class UsersController implements CrudController<User> {
 
     return this.service.create(createUserDto);
 
+  }
+  @Post('createExternalUser')
+  createExternalUser(@Body() createUserDto: User): Promise<User> {
+
+    let audit: AuditDto = new AuditDto();
+    audit.action = createUserDto.firstName +' User Created';
+    audit.comment = "User Created";
+    audit.actionStatus = 'Created';
+    audit.userName = 'created'
+    //this.auditService.create(audit);
+    console.log("audit.......",audit);
+    createUserDto.userType = new UserType()
+    createUserDto.userType.id = 10 // external user
+    console.log("external user",createUserDto);
+
+    return this.service.create(createUserDto);
+
  
 
   }
+  
 
   @Post('/add-master-admin')
   async addMasterAdmin(@Body() dto: CreateUserDto){
