@@ -128,6 +128,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findByAllAssessmentData();
   }
 
+  @Get('findAssessmentParameters/:assessmentId')
+  async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
+    return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
+  }
+
   @Post('uploadtest')
 @UseInterceptors(
   FileInterceptor('file', {

@@ -354,6 +354,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     .getMany();
   }
 
+  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
+    let paras = await this.repo.find({where: {assessment: {id: assessmentId}}})
+    return paras
+  }
+
 
   update(id: number, updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return `This action updates a #${id} methodologyAssessment`;

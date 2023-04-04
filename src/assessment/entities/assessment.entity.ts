@@ -7,7 +7,7 @@ import { QuAlityCheckStatus } from "src/quality-check/entity/quality-check-statu
 import { VerificationStatus } from "src/verification/entity/verification-status.entity";
 import { User } from "src/users/entity/user.entity";
 @Entity()
-export class Assessment {
+export class Assessment extends BaseTrackingEntity{
 
     @PrimaryGeneratedColumn()
     id: number;
