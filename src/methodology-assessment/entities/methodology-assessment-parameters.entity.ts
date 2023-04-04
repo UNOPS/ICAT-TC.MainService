@@ -65,4 +65,7 @@ export class MethodologyAssessmentParameters {
     @Column({ type:"mediumtext" ,nullable: true })
     comment?: string;
 
+    @Column({ nullable: true, default: false })
+    isAcceptedByVerifier: boolean;
+
 }
