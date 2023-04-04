@@ -68,6 +68,7 @@ import { DefaultValue } from './default-value/entity/defaultValue.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
+import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -157,7 +158,7 @@ import { AggregatedAction } from './master-data/aggregated-action/entity/aggrega
     QualityCheckModule,
     ParameterHistoryModule,
     DefaultValueModule,
-    
+    VerificationModule
 
   ],
   controllers: [
