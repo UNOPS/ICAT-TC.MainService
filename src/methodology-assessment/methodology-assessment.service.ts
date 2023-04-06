@@ -355,7 +355,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
-    let paras = await this.repo.find({where: {assessment: {id: assessmentId}}})
+    let paras = await this.repo.find({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
+    })
     return paras
   }
 

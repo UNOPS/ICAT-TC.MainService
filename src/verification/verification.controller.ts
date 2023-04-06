@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -72,22 +72,22 @@ export class VerificationController
     );
   }
 
-  // @Get('verification/GetVerificationDetails/:assesmentYearId')
-  // async GetVerificationDetails(
-  //   @Query('assesmentYearId') assesmentYearId: number,
-  // ) {
-  //   return await this.service.GetVerificationDetails(assesmentYearId);
-  // }
+  @Get('getVerificationDetails/:assesmentId')
+  async getVerificationDetails(
+    @Param('assesmentId') assesmentId: number,
+  ): Promise<VerificationDetail[]> {
+    return await this.service.getVerificationDetails(assesmentId);
+  }
 
-  @Put('verification/SaveVerificationDetails')
+  @Put('saveVerificationDetails')
   @ApiBody({ type: [VerificationDetail] })
-  async SaveVerificationDetails(
+  async saveVerificationDetails(
     @Body() verificationDetail: VerificationDetail[],
   ): Promise<boolean> {
     verificationDetail.map((a) =>
       a.parameter?.id === undefined ? (a.parameter = null) : 1 + 1,
     );
-    await this.service.SaveVerificationDetail(verificationDetail);
+    await this.service.saveVerificationDetail(verificationDetail);
     return true;
   }
 }

@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { VerificationStatus } from './verification-status.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 
 @Entity({ name: 'verificationDetail' })
 export class VerificationDetail extends BaseTrackingEntity {
@@ -28,8 +29,8 @@ export class VerificationDetail extends BaseTrackingEntity {
   @Column()
   year: number;
 
-  @Column()
-  assessmentId: number;
+  // @Column()
+  // assessmentId: number;
 
   @Column({ nullable: true })
   updatedDate: Date;
@@ -49,26 +50,26 @@ export class VerificationDetail extends BaseTrackingEntity {
   @Column({ nullable: false })
   isAccepted: boolean;
 
-  @Column({ default: false })
-  isNDC: boolean;
+  // @Column({ default: false })
+  // isNDC: boolean;
 
-  @Column({ default: false })
-  isMethodology: boolean;
+  // @Column({ default: false })
+  // isMethodology: boolean;
 
-  @Column({ default: false })
-  isBaseline: boolean;
+  // @Column({ default: false })
+  // isBaseline: boolean;
 
-  @Column({ default: false })
-  isProject: boolean;
+  // @Column({ default: false })
+  // isProject: boolean;
 
-  @Column({ default: false })
-  isLekage: boolean;
+  // @Column({ default: false })
+  // isLekage: boolean;
 
-  @Column({ default: false })
-  isProjection: boolean;
+  // @Column({ default: false })
+  // isProjection: boolean;
 
-  @Column({ default: false })
-  isResult: boolean;
+  // @Column({ default: false })
+  // isResult: boolean;
 
   @Column({ default: false })
   isDataRequested: boolean;
@@ -87,14 +88,23 @@ export class VerificationDetail extends BaseTrackingEntity {
 
   // @Column({ nullable: true })
   // institutionName?: string;
-  @Column({ nullable: true })
-  isAssumption: boolean;
+  // @Column({ nullable: true })
+  // isAssumption: boolean;
 
   @Column({ nullable: true })
   assumption: string;
 
+  // @ManyToOne(
+  //   () => AssessmentYear,
+  //   (assessmentYear) => assessmentYear.verificationDetail,
+  // )
+  // public assessmentYear!: AssessmentYear;
 
-  @ManyToOne((type) => MethodologyAssessmentParameters)
+  @ManyToOne((type) => Assessment)
+  @JoinColumn()
+  assessment: Assessment
+
+  @ManyToOne(() => MethodologyAssessmentParameters)
   @JoinColumn()
   public parameter: MethodologyAssessmentParameters;
 }

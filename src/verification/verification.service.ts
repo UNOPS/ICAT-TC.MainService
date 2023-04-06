@@ -16,6 +16,9 @@ import { ParameterHistoryService } from 'src/parameter-history/parameter-history
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
+import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { DataRequestStatus } from 'src/data-request/entity/data-request-status.entity';
+import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-history-action-history.entity';
 
 @Injectable()
 export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
@@ -118,123 +121,123 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     }
   }
 
-  async SaveVerificationDetail(verificationDetail: VerificationDetail[]) {
-    // try {
-    //   this.verificationDetailRepo.save(verificationDetail);
+  async saveVerificationDetail(verificationDetail: VerificationDetail[]) {
+    try {
+      this.verificationDetailRepo.save(verificationDetail);
 
-    //   let ass = verificationDetail[0].assessmentYear.id;
-    //   console.log("asseYa",verificationDetail)
-    //   let asseYa = await this.assessmentYearRepo.findOne({ where: { id: ass }})
-    //   let assesment = await this.assesmentservice.findOne({ where: { id: verificationDetail[0].assessmentId }})
-    //   console.log("asseYa",asseYa)
-    //   let user:User[];
-    //   let inscon = assesment.project.country;
-    //   let insSec = assesment.project.sector
-    //   let ins = await this.institutionRepo.findOne({ where: { country: inscon, sector: insSec, type: 2 } });
-    //   user= await this.userRepo.find({where:{country:inscon,userType:5,institution:ins}});
- 
-    //   user.forEach((ab)=>{
-    //     let template =
-    //     'Dear ' +
-    //     ab.username + ' ' +
-    //     '<br/>Data request with following information has shared with you.' +
-    //     ' <br/> Accepted Verifir value' +
-    //     // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-    //     // '<br/> value -:' + dataRequestItem.parameter.value +
-    //     '<br> project -: ' + asseYa.assessment.project.climateActionName;
+      let ass = verificationDetail[0].assessment.id;
+      console.log("asseYa", verificationDetail)
+      let assesment = await this.assessmentRepo.findOne({
+        where: { id: ass } , 
+        relations: ['climateAction', 'climateAction.country', 'climateAction.sector']})
+      // let assesment = await this.assesmentservice.findOne({ where: { id: verificationDetail[0].assessmentId }})
 
-    //   this.emaiService.sendMail(
-    //     ab.email,
-    //     'Accepted parameter',
-    //     '',
-    //     template,
-    //   );
-    //   })
-     
+      let user: User[];
+      let inscon = assesment.climateAction.country;
+      let insSec = assesment.climateAction.sector
+      // let ins = await this.institutionRepo.findOne({ where: { country: inscon, sector: insSec, type: 2 } });
+      let ins = await this.institutionRepo.findOne({ where: { country: { id: inscon.id }, sector: { id: insSec.id }, type: { id: 2 } } })
+      console.log(ins)
+      user = await this.userRepo.find({ where: { country: { id: inscon.id }, userType: { id: 5 }, institution: { id: ins.id } } })
 
-    //   verificationDetail.map(async (a) => {
-    //     if (a.parameter) {
-    //       let description = '';
-    //       let comment = '';
+      user.forEach((ab) => {
+        let template =
+          'Dear ' +
+          ab.username + ' ' +
+          '<br/>Data request with following information has shared with you.' +
+          ' <br/> Accepted Verifir value' +
+          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
+          // '<br/> value -:' + dataRequestItem.parameter.value +
+          '<br> project -: ' + assesment.climateAction.policyName;
 
-    //       if (a.verificationStage == 1) {
-    //         if (a.isAccepted) {
-    //           description = 'Verifier Accepted.';
-    //         }
+        this.emaiService.sendMail(
+          ab.email,
+          'Accepted parameter',
+          '',
+          template,
+        );
+      })
 
-    //         if (a.explanation) {
-    //           description = 'Verifier raised concern.';
-    //           comment = a.rootCause;
-    //         }
-    //       }
+      verificationDetail.map(async (a) => {
+        if (a.parameter) {
+          let description = '';
+          let comment = '';
+          if (a.verificationStage == 1) {
+            if (a.isAccepted) {
+              description = 'Verifier Accepted.';
+            }
+            if (a.explanation) {
+              description = 'Verifier raised concern.';
+              comment = a.rootCause;
+            }
+          }
 
+          let data = this.ParameterRequestRepo
+            .createQueryBuilder('paraReq')
+            .innerJoinAndMapOne(
+              'paraReq.parameter',
+              MethodologyAssessmentParameters,
+              'para',
+              `paraReq.ParameterId = para.id and para.id = ${a.parameter.id}`,
+            )
 
-    //       let data = this.ParameterRequestRepo
-    //         .createQueryBuilder('paraReq')
-    //         .innerJoinAndMapOne(
-    //           'paraReq.parameter',
-    //           Parameter,
-    //           'para',
-    //           `paraReq.ParameterId = para.id and para.id = ${a.parameter.id}`,
-    //         )
-    //       //.where('paraHis.id = dataReqestId')
+          let result1 = await data.getOne();
+          console.log("my parameter111..", result1)
 
-    //       let result1 = await data.getOne();
-    //       console.log("my parameter111..", result1)
+          this.parameterHistoryService.SaveParameterHistory(
+            result1.id,
+            ParameterHistoryAction.Verifier,
+            description,
+            comment,
+            a.verificationStatus.toString(),
+            '',
+          );
 
-
-
-    //       // this.parameterHistoryService.SaveParameterHistory(
-    //       //   result1.id,
-    //       //   ParameterHistoryAction.Verifier,
-    //       //   description,
-    //       //   comment,
-    //       //   a.verificationStatus.toString(),
-    //       //   '',
-    //       // );
-
-    //       if (a.id == undefined && a.isDataRequested == true) {
-    //         let dataRequest = await this.ParameterRequestRepo.findOne({
-    //           where: { parameter: a.parameter },
-    //         });
-    //         console.log(dataRequest);
-    //         dataRequest.dataRequestStatus =
-    //           DataRequestStatus.Verifier_Data_Request;
-    //         await this.ParameterRequestRepo.save(dataRequest);
-    //       }
-    //     }
-    //   });
+          if (a.id == undefined && a.isDataRequested == true) {
+            let dataRequest = await this.ParameterRequestRepo.findOne({
+              where: { parameter: {id: a.parameter.id} },
+            });
+            console.log(dataRequest);
+            dataRequest.dataRequestStatus =
+              DataRequestStatus.Verifier_Data_Request;
+            await this.ParameterRequestRepo.save(dataRequest);
+          }
+        }
+      });
 
 
-    // } catch (error) {
-    //   throw error;
-    // }
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // async GetVerificationDetails(
-  //   assessmentYearId: number,
-  // ): Promise<VerificationDetail[]> {
-  //   // let filter: string = `dataRequestStatus in (${DataRequestStatus.QA_Assign.valueOf()},${DataRequestStatus.QAPass.valueOf()},${DataRequestStatus.QAFail.valueOf()})`;
+  async getVerificationDetails(
+    assessmentId: number,
+  ): Promise<VerificationDetail[]> {
+    // let filter: string = `dataRequestStatus in (${DataRequestStatus.QA_Assign.valueOf()},${DataRequestStatus.QAPass.valueOf()},${DataRequestStatus.QAFail.valueOf()})`;
 
-  //   let data = this.verificationDetailRepo
-  //     .createQueryBuilder('vd')
-  //     .leftJoinAndMapOne(
-  //       'vd.parameter',
-  //       Parameter,
-  //       'p',
-  //       'vd.parameterId = p.id',
-  //     )
-  //     .where('vd.assessmentYearId = :assessmentYearId', { assessmentYearId });
+    let data = this.verificationDetailRepo
+      .createQueryBuilder('vd')
+      .leftJoinAndMapOne(
+        'vd.parameter',
+        MethodologyAssessmentParameters,
+        'p',
+        'vd.parameterId = p.id',
+      )
+      .innerJoinAndMapOne(
+        'vd.assessment',
+        Assessment,
+        'assessment',
+        'vd.assessmentId = assessment.id'
+      )
+      .where('assessment.id = :assessmentId', { assessmentId });
 
-  //   // console.log('lllllllllllllllllllllllllllllll');
-  //   // console.log(data.getQuery());
+    let resualt = data.getMany();
 
-  //   let resualt = data.getMany();
-
-  //   if (resualt) {
-  //     return resualt;
-  //   }
-  // }
+    if (resualt) {
+      return resualt;
+    }
+  }
 }
 
 
