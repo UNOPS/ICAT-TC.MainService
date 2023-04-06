@@ -7,6 +7,7 @@ import { Category } from "./category.entity";
 import { Characteristics } from "./characteristics.entity";
 import { Methodology } from "./methodology.entity";
 import { ParameterStatus } from "./parameterStatus.entity";
+import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 
 
 @Entity()
@@ -63,5 +64,7 @@ export class MethodologyAssessmentParameters {
 
     @Column({ type:"mediumtext" ,nullable: true })
     comment?: string;
+
+    parameterRequest?: ParameterRequest;
 
 }
