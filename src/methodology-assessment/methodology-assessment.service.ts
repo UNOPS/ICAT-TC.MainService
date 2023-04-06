@@ -29,7 +29,9 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
-   constructor(@InjectRepository(MethodologyAssessmentParameters) repo, @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
+   constructor(
+    @InjectRepository(MethodologyAssessmentParameters) repo, 
+    @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
    @InjectRepository(Methodology) private readonly methodologyRepository: Repository<Methodology>,
    @InjectRepository(Characteristics) private readonly characteristicsRepository: Repository<Characteristics>,
    @InjectRepository(Assessment) private readonly assessmentRepository: Repository<Assessment>,
@@ -272,6 +274,20 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       relations: ['assessment', 'barriers'],
     });
 
+  }
+  async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
+    // const ass =await  this.assessmentRepository.findOne({where:{id:id}})
+    let result=await this.repo.createQueryBuilder('param')
+    .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
+    .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
+    .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
+    .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
+    .leftJoinAndMapOne('param.institution',Institution,'ins',`ins.id = param.institution_id`)
+    .leftJoinAndMapOne('param.parameterRequest',ParameterRequest,'pr',`pr.ParameterId = param.id`)
+    .where(`param.assessment_id = ` +id)
+    .getMany();
+
+    return result;
   }
 
   async results(): Promise<Results[]> {

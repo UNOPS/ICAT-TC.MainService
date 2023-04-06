@@ -97,6 +97,12 @@ export class MethodologyAssessmentController {
 
   }
 
+  
+  @Get('findParam/:assessId')
+  async findByAssemeId(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.getparam(assessId);
+  }
+
   @Get('findChar/:assessId')
   async findByAssessIdAndRelevanceNotRelevant(@Param('assessId') assessId: number) {
     return await this.methodologyAssessmentService.findByAssessIdAndRelevanceNotRelevant(assessId);

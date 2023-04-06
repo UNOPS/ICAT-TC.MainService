@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Request, UseGuards,  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Request, UseGuards, Put,  } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { DataVerifierDto } from './dto/dataVerifier.dto';
+import { getConnection } from 'typeorm';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -69,6 +71,38 @@ export class AssessmentController {
       sectorIdFromTocken,
 
     );
+  }
+
+
+  @Get('checkAssessmentReadyForQC/getAssment/:id')
+  async checkAssessmentReadyForQC(
+    @Request() request,
+    @Query('assessmentId') assessmentId: number,
+    @Query('assessmentYear') assessmenYear: number,
+  ): Promise<any> {
+    return await this.assessmentService.checkAssessmentReadyForQC(assessmentId, assessmenYear);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('accept-qc')
+  async acceptQC(@Body() updateDeadlineDto: DataVerifierDto): Promise<boolean> {
+
+    const queryRunner = getConnection().createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      let paeameter = this.assessmentService.acceptQC(updateDeadlineDto);
+      // console.log(updateDeadlineDto)
+      // await queryRunner.commitTransaction();
+      return paeameter;
+    }
+    catch (err) {
+      console.log("worktran2")
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Get('getAssessmentsForApproveData/:id/:assementYear/:userName')
