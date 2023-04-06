@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
+import helmet from 'helmet';
 
 
 async function bootstrap() {
@@ -24,8 +25,24 @@ async function bootstrap() {
   //   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
   //   next();
   // });
+  app.use(helmet());
   // app.enableCors();
-  app.enableCors();
+  // app.use(helmet.contentSecurityPolicy({
+  //   // useDefaults: false,
+  //   directives: {
+  //     defaultSrc: ["http://13.127.171.33/erp"],
+  //     scriptSrc: [ "http://13.127.171.33/erp"],
+     
+  //     upgradeInsecureRequests: [],
+  //   },
+  //   // reportOnly: true,
+  // }));
+  app.enableCors({
+    "origin": ["http://localhost:4200","http://3.108.9.184:4200","http://3.108.9.184:7100","http://3.108.9.184:7000","http://3.108.9.184:7090"],
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  });
   await app.listen(7080);
  
 }

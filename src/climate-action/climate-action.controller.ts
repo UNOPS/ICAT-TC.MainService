@@ -20,6 +20,7 @@ import { editFileName, fileLocation } from './entity/file-upload.utils';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -145,7 +146,7 @@ async findAllPolicies() {
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
-    // console.log("heelo controler");
+    console.log("heelo controler");
     return await this.service.getAllCAList(
       {
         limit: limit,
@@ -198,6 +199,7 @@ async findAllPolicies() {
 
 
 
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
 
   @Get(
