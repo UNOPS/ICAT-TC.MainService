@@ -1,9 +1,10 @@
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity'
 import { Methodology } from "src/methodology-assessment/entities/methodology.entity";
 import { QuAlityCheckStatus } from "src/quality-check/entity/quality-check-status.entity";
+import { MethodologyAssessmentParameters } from "src/methodology-assessment/entities/methodology-assessment-parameters.entity";
 @Entity()
 export class Assessment {
 
@@ -41,5 +42,19 @@ export class Assessment {
 
     @Column({ nullable: true })
     qaStatus?: QuAlityCheckStatus;
+
+    @Column({ nullable: true })
+    qaAssighnDate?: string;
+
+    @Column({ nullable: true })
+    qaDeadline?: Date;
+
+    @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+        cascade: false,
+        nullable: true,
+        eager: true,
+      })
+      @JoinColumn()
+      parameters: MethodologyAssessmentParameters[];
 
 }
