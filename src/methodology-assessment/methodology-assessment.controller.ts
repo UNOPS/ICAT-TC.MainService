@@ -224,6 +224,11 @@ async uploadFile2(
     return this.methodologyAssessmentService.update(+id, updateMethodologyAssessmentDto);
   }
 
+  @Patch('update-parameter/:id')
+  updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
+    return this.methodologyAssessmentService.updateParameter(+id, parameter);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.methodologyAssessmentService.remove(+id);
