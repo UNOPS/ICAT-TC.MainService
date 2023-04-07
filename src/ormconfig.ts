@@ -50,16 +50,10 @@ export const config: ConnectionOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-    // username: 'sqluser',
-    //  password: 'password',
-    //  database: 'tc-main-new3',
 
-  //  username: 'sqluser',
-    // password: 'password',
-    // database: 'tc-main-new3',
 
 username: 'root',
- password: '7860150',
+ password: 'pradeep123#',
  database: 'tc-main',  // password: '1997',
   // database: 'tc-main-new',
 
