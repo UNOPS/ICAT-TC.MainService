@@ -68,6 +68,7 @@ import { DefaultValue } from './default-value/entity/defaultValue.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
+import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 
 @Module({
   imports: [
@@ -100,7 +101,8 @@ import { AggregatedAction } from './master-data/aggregated-action/entity/aggrega
       DefaultValue,
       ParameterHistory,
       MethodologyIndicators,
-      Results
+      Results,
+      BarriersCharacteristics
 
     ]),
     UsersModule,

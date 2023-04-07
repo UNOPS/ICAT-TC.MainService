@@ -42,4 +42,5 @@ export class Assessment {
     @Column({ nullable: true })
     qaStatus?: QuAlityCheckStatus;
 
+    
 }

@@ -79,7 +79,26 @@ export class MethodologyAssessmentController {
 
   }
 
-  
+
+  @Post('barrier-characteristics')
+  async barrierCharacteristics(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
+
+    let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
+
+    return res
+
+  }
+
+  @Post('barrierCharSave')
+  async barrierCharSave(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
+
+    let res = await this.methodologyAssessmentService.barrierCharSave(BarrierCharData)
+
+    return res
+
+  }
+
+ 
   @Put('update-institution')
   updateInstitution(
     @Body() updateValueDto: UpdateValueEnterData,
@@ -96,6 +115,8 @@ export class MethodologyAssessmentController {
     return newRes
 
   }
+
+
 
   @Get('findChar/:assessId')
   async findByAssessIdAndRelevanceNotRelevant(@Param('assessId') assessId: number) {
@@ -115,6 +136,11 @@ export class MethodologyAssessmentController {
   @Get('findAllBarriers')
   async findAllBarriers() {
     return await this.methodologyAssessmentService.findAllBarriers();
+  }
+
+  @Get('findAllBarriersCharacter')
+  async findAllBarriersCharacter() {
+    return await this.methodologyAssessmentService.findAllBarriersCharacter();
   }
 
   @Get('results')
