@@ -43,6 +43,7 @@ export class Assessment {
     @Column({ nullable: true })
     qaStatus?: QuAlityCheckStatus;
 
+    
     @Column({ nullable: true })
     qaAssighnDate?: string;
 

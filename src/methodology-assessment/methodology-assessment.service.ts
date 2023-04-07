@@ -26,6 +26,8 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
+import { getConnection } from 'typeorm';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -44,8 +46,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, 
     @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
-    @InjectRepository(ParameterRequest)
-    private readonly parameterRequestRepository: Repository<ParameterRequest>,
+    @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
+    @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
+
    ) {
     super(repo)
   }
@@ -190,6 +193,98 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return assessementId;
   }
 
+  async barrierCharacteristics(dataArr : any){
+    let data = dataArr.alldata
+    console.log("dattaaaa",data)
+    let  date  = new Date()
+     const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    let y = `${year}-${month}-${day}`;
+
+    let savedAssessment = new Assessment();
+    savedAssessment.assessmentType = data.assessment_type;
+    savedAssessment.assessment_approach = data.assessment_approach;
+    savedAssessment.assessment_method = data.assessment_method;
+    savedAssessment.climateAction = data.policyId;
+    savedAssessment.methodology = data.methodology;
+    savedAssessment.from = data.date1;
+    savedAssessment.to = data.date2;
+    savedAssessment.tool = data.tool;
+    savedAssessment.year = y
+
+    let assessRes =  this.assessmentRepository.save(savedAssessment);
+    let assessementId = (await assessRes).id
+ 
+    savedAssessment.id = assessementId
+ 
+     console.log("assessRes : ",(await assessRes).id)
+ 
+    for(let y of data.selectedBarriers){
+       let assessmentBarriers = new AssessmentBarriers()
+       let barrier = new Barriers();
+       barrier.id = y.id,
+       barrier.barrier = y.barrier
+ 
+       assessmentBarriers.barriers = barrier
+       assessmentBarriers.assessment = savedAssessment
+ 
+       await this.assessRepository.save(assessmentBarriers);
+     } 
+
+
+     for(let barrierCharacteristic of dataArr.dataArray){
+      let obj = new BarriersCharacteristics()
+    //  let assessmentBarriers = new AssessmentBarriers()
+      let barrierdata = new Barriers()
+      barrierdata.id = barrierCharacteristic.barrier
+      let assess = new Assessment();
+      assess.id = assessementId
+    
+      obj.assessment = assess
+      obj.barriers = barrierdata
+      obj.characteristics = barrierCharacteristic.chaId
+      obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.bscore_comment = barrierCharacteristic.barrierComment
+      obj.barrier_weight = barrierCharacteristic.barrierWeight
+      obj.bweight_comment = barrierCharacteristic.bWeightComment
+
+      await this.barrierCharacterRepo.save(obj);
+     }
+
+
+
+    return assessementId
+  } 
+
+
+  async barrierCharSave(dataArr : any){
+
+    console.log("barrierCharSave", dataArr)
+    for(let barrierCharacteristic of dataArr.dataArray){
+      let obj = new BarriersCharacteristics()
+    //  let assessmentBarriers = new AssessmentBarriers()
+      let barrierdata = new Barriers()
+      barrierdata.id = barrierCharacteristic.barrier
+      let savedAssessment = new Assessment();
+      savedAssessment.id = dataArr.assessmentId
+    
+      obj.assessment = savedAssessment
+      obj.barriers = barrierdata
+      obj.characteristics = barrierCharacteristic.chaId
+      obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.bscore_comment = barrierCharacteristic.barrierComment
+      obj.barrier_weight = barrierCharacteristic.barrierWeight
+      obj.bweight_comment = barrierCharacteristic.bWeightComment
+      
+
+
+      await this.barrierCharacterRepo.save(obj);
+     }
+
+    return dataArr
+  }
+
 
   async createAssessCharacteristics(charAssessData :any){
 
@@ -260,6 +355,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   async findAllBarriers(): Promise<Barriers[]> {
     return await this.barriersRepository.find();
+  }
+
+  async findAllBarriersCharacter(): Promise<BarriersCharacteristics[]> {
+    return await this.barrierCharacterRepo.find({
+      relations: ['assessment', 'barriers','characteristics'],
+    });
   }
 
   async findByAllCategories(): Promise<BarriersCategory[]> {
