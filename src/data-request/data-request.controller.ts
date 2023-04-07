@@ -40,6 +40,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     public service: ParameterRequestService,
     private readonly auditService: AuditService,
   ) {}
+  
   @Get('getDateRequestToManageDataStatus')
   async getDateRequestToManageDataStatus(
     @Request() request,
