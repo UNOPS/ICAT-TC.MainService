@@ -279,6 +279,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     // const ass =await  this.assessmentRepository.findOne({where:{id:id}})
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
+    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
     .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
     .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
     .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
