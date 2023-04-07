@@ -9,6 +9,8 @@ import { Repository } from 'typeorm';
 import { AuditService } from './audit.service';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 
 @Crud({
     model: {
@@ -31,13 +33,13 @@ export class AuditController implements CrudController<Audit> {
     constructor(public service: AuditService,
       @InjectRepository(Audit)
       // private readonly projectRepository: Repository<Audit>,
-      public configService: ConfigService,) {}
+      public configService: ConfigService, private readonly tokenDetails: TokenDetails,) {}
 
     get base(): CrudController<Audit> {
         return this;
       }
 
-      @UseGuards(JwtAuthGuard)
+      @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.DATA_COLLECTION_TEAM,LoginRole.QC_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_ENTRY_OPERATOR]))
       @Post()
       create(@Body() auditDto: AuditDto){
         // return this.service.create(auditDto);
@@ -56,9 +58,12 @@ export class AuditController implements CrudController<Audit> {
         @Query('institutionId') institutionId:number
         
       ): Promise<any> {
-        
+        let InstitutionIdFromTocken: number;
        //let editedOnnew= moment(editedOn, "DD/MM/YYYY");
-       
+       [ InstitutionIdFromTocken] =
+       this.tokenDetails.getDetails([
+         TokenReqestType.InstitutionId
+       ]);
        var timestamp = Date.parse(editedOn);
       var dateObject = new Date(timestamp);
       

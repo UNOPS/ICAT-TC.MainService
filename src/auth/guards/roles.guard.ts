@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 
 
 export enum LoginRole {
-  MASTER_ADMIN = "Master_Admin",
+  MASTER_ADMIN = "Master_Admin", //icat admin
   COUNTRY_ADMIN = "Country Admin",
   VERIFIER = "Verifier",
   SECTOR_ADMIN = "Sector Admin",
@@ -12,6 +12,8 @@ export enum LoginRole {
   DATA_ENTRY_OPERATOR = "Data Entry Operator",
   QC_TEAM = "QC Team",
   INSTITUTION_ADMIN = "Institution Admin",
+  DATA_COLLECTION_TEAM = "Data Collection Team",
+  EXTERNAL_USER = "External User",
 }
 
 export function RoleGuard(roles?: LoginRole[]): Type<CanActivate>{

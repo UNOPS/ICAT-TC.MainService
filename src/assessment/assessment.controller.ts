@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
+import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -30,7 +31,7 @@ export class AssessmentController {
   findOne(@Param('id') id: number) {
     return this.assessmentService.findbyID(id);
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
     return this.assessmentService.update(+id, updateAssessmentDto);
@@ -73,7 +74,7 @@ export class AssessmentController {
     );
   }
 
-
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('checkAssessmentReadyForQC/getAssment/:id')
   async checkAssessmentReadyForQC(
     @Request() request,
@@ -83,7 +84,7 @@ export class AssessmentController {
     return await this.assessmentService.checkAssessmentReadyForQC(assessmentId, assessmenYear);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MRV_ADMIN,LoginRole.QC_TEAM,LoginRole.MASTER_ADMIN]))
   @Put('accept-qc')
   async acceptQC(@Body() updateDeadlineDto: DataVerifierDto): Promise<boolean> {
 
@@ -104,7 +105,7 @@ export class AssessmentController {
       await queryRunner.release();
     }
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('getAssessmentsForApproveData/:id/:assementYear/:userName')
   async getAssessmentsForApproveData(
     @Request() request,

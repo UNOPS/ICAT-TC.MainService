@@ -33,6 +33,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
 import { UsersService } from './users.service';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -144,7 +145,7 @@ export class UsersController implements CrudController<User> {
       return "Failed to add master admin";
     }
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.TECNICAL_TEAM]))
   @Patch('changeStatus')
   changeStatus( @Query('id') id:number, @Query('status') status:number): Promise<User> {
    console.log('status',status)
@@ -171,6 +172,7 @@ export class UsersController implements CrudController<User> {
   async isUserAvailable(@Param('userName') userName: string): Promise<boolean> {
     return await this.service.isUserAvailable(userName);
   }
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN]))
 
   @Get('findUserByUserName/:userName')
   async findUserByUserName(@Param('userName') userName: string): Promise<any> {
@@ -203,6 +205,7 @@ export class UsersController implements CrudController<User> {
 
 
 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.TECNICAL_TEAM]))
 
   @Get(
     'AllUserDetails/userDetalils/:page/:limit/:filterText/:userTypeId',
@@ -225,6 +228,7 @@ export class UsersController implements CrudController<User> {
       userTypeId,
     );
   }
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
 
   @Get(
     'UsersByInstitution/userDetalils/:page/:limit/:filterText/:userTypeId/:institutionId',

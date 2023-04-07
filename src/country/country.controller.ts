@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CountryService } from './country.service';
 import { CountrySector } from './entity/country-sector.entity';
 import { Country } from './entity/country.entity';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -43,6 +44,8 @@ export class CountryController implements CrudController<Country>{
     return this;
   }
 
+
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @UseGuards(JwtAuthGuard)
   @Override()
   async updateOne(
@@ -68,7 +71,7 @@ export class CountryController implements CrudController<Country>{
   }
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Override()
   async createOne(
     @Request() request,
