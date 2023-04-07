@@ -10,13 +10,21 @@ import {
   Pagination,
 } from 'nestjs-typeorm-paginate';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
+import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
+import { UsersService } from 'src/users/users.service';
+import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Institution } from 'src/institution/entity/institution.entity';
+import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { DataVerifierDto } from './dto/dataVerifier.dto';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
   constructor(
     @InjectRepository(Assessment) repo,
-) {
+    private readonly userService: UsersService,
+  ) {
     super(repo);
   }
   create(createAssessmentDto: CreateAssessmentDto) {
@@ -28,10 +36,32 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
   async findbyID(id: number) {
-    return this.repo.findOne({where:{id:id}});
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        Methodology,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .where({ id: id })
+      .getOne();
+    console.log("qqqqqqq", data)
+    return data;
   }
 
-  update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
+  async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
+    let ass =await this.repo.findOne({ where: { id: id }});
+    ass.qaDeadline = updateAssessmentDto.deadline
+    await this.repo.save(ass);
     return `This action updates a #${id} assessment`;
   }
 
@@ -46,23 +76,16 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     projectApprovalStatusId: number,
     isProposal: number,
     countryIdFromTocken: number,
-    sectorIdFromTocken:number,
-  
+    sectorIdFromTocken: number,
+
   ): Promise<any> {
 
     let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-      '(proj.policyName LIKE :filterText OR asse.assessmentType LIKE :filterText)';
+        '(proj.policyName LIKE :filterText OR asse.assessmentType LIKE :filterText)';
     }
-    // if (isProposal != undefined) {
-    //   if (filter) {
-    //     filter = `${filter}  and asse.isProposal = :isProposal`;
-    //   } else {
-    //     filter = ` asse.isProposal = :isProposal`;
-    //   }
-    // }
     if (projectStatusId != 0) {
       if (filter) {
         filter = `${filter}  and proj.projectStatusId = :projectStatusId`;
@@ -71,7 +94,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       }
     }
     if (projectApprovalStatusId != 0) {
-      console.log("1111111111111111111111")
       if (filter) {
         filter = `${filter}  and proj.projectApprovalStatusId = :projectApprovalStatusId`;
       } else {
@@ -86,37 +108,133 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       }
     }
 
-    
-  let data = this.repo
-  .createQueryBuilder('asse')
-  
-  .leftJoinAndMapOne(
-    'asse.climateAction',
-    ClimateAction,
-    'proj',
-    `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
-  )
-  // .select([
-  //   'asse.id',
-  //   'asse.assessmentType',
-  //   'proj.policyName',
-  // ])
-  .where(filter, {
-    filterText: `%${filterText}%`,
-    isProposal,
-    projectStatusId,
-    projectApprovalStatusId,
-   sectorIdFromTocken,
-  })
-  // .orderBy('asse.createdOn', 'DESC');
 
-  console.log(
-    '=====================================================================',projectApprovalStatusId , sectorIdFromTocken
-  );
-  let resualt = await paginate(data, options);
-  if (resualt) {
-    console.log('results for manage..', resualt);
-    return resualt;
+    let data = this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+        isProposal,
+        projectStatusId,
+        projectApprovalStatusId,
+        sectorIdFromTocken,
+      })
+
+    let resualt = await paginate(data, options);
+    if (resualt) {
+      console.log('results for manage..', resualt);
+      return resualt;
+    }
   }
+
+
+  async getAssessmentForApproveData(
+    assessmentId: number,
+    assementYear: string,
+    userName: string,
+  ): Promise<any> {
+    let userItem = await this.userService.findByUserName(userName);
+    console.log('userItem', userItem);
+
+    var data = this.repo
+      .createQueryBuilder('as')
+      .leftJoinAndMapMany('as.parameters', MethodologyAssessmentParameters, 'pa', 'as.id = pa.assessment_id ',)
+      .leftJoinAndMapOne('pa.institution', Institution, 'in', 'in.id = pa.institution_id',)
+      .leftJoinAndMapOne('pa.parameterRequest', ParameterRequest, 'par', 'par.ParameterId = pa.id',)
+      .leftJoinAndMapOne('as.project', ClimateAction, 'pr', 'pr.id = as.climateAction_id')
+      .where(
+        `as.id = ${assessmentId} AND par.dataRequestStatus in (9,-9,11)`,
+      );
+    let result = await data.getOne();
+    console.log('qqqqqqqqqq111qqqqqq', result)
+    return result;
+  }
+
+
+  async acceptQC(updateDataRequestDto: DataVerifierDto): Promise<boolean> {
+    let insSec: any;
+    let inscon: any;
+
+    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+      const id = updateDataRequestDto.ids[index];
+      let dataRequestItem = await this.repo.findOne({ where: { id: id }});
+      console.log('dataRequestItem', dataRequestItem);
+      let originalStatus = dataRequestItem.qaStatus;
+      dataRequestItem.qaStatus = updateDataRequestDto.status;
+
+
+      // inscon = dataRequestItem.assessment.project.country;
+      // console.log("inscon", dataRequestItem.assessment.project.country)
+      // insSec = dataRequestItem.assessment.project.sector;
+      // console.log("insSec", insSec)
+
+      this.repo.save(dataRequestItem).then((res) => {
+        console.log('res', res);
+      });
+    }
+  //   let user:User[];
+  //  let ins = await this.institutionRepo.findOne({ where: { country: inscon, sector: insSec, type: 2 } });
+  //  user= await this.userService.find({where:{country:inscon,userType:7,institution:ins}})
+    return true;
+  }
+
+
+
+  async checkAssessmentReadyForQC(
+    assessmentId: number,
+    assessmenYear: number,
+  ): Promise<boolean> {
+    var data = this.repo
+      .createQueryBuilder('as')
+      .innerJoinAndMapMany(
+        'as.parameters',
+        MethodologyAssessmentParameters,
+        'para',
+        'as.id = para.assessment_id',
+      )
+      .innerJoinAndMapMany(
+        'para.parameterRequest',
+        ParameterRequest,
+        'par',
+        'par.ParameterId = para.id',
+      )
+      .where(
+        'par.UserDataEntry is not null AND as.id =' + assessmentId.toString() +')',
+      );
+    let totalRecordsAllStatus: any[] = await data.execute();
+
+    ///////////////////////////////////////////////////////////
+
+    var data2 = this.repo
+      .createQueryBuilder('as')
+      .leftJoinAndMapMany(
+        'as.parameters',
+        MethodologyAssessmentParameters,
+        'pa',
+        'as.id = pa.assessment_id',
+      )
+      .leftJoinAndMapMany(
+        'pa.parameterRequest',
+        ParameterRequest,
+        'par',
+        'par.ParameterId = pa.id',
+      )
+
+      .where(
+        'par.dataRequestStatus in (11) AND as.id =' + assessmentId.toString() + ')',
+      );
+    // console.log('data1SQL2', data2.getSql());
+    let totalRecordsApprovedStatus: any[] = await data2.execute();
+    if (totalRecordsApprovedStatus.length == totalRecordsAllStatus.length) {
+      return true;
+    }
+
+    return false;
   }
 }

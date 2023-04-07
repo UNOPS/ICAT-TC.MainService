@@ -69,6 +69,7 @@ import { ParameterHistory } from './parameter-history/entity/parameter-history.e
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
+import { Assessment } from './assessment/entities/assessment.entity';
 
 @Module({
   imports: [
@@ -102,8 +103,9 @@ import { BarriersCharacteristics } from './methodology-assessment/entities/barri
       ParameterHistory,
       MethodologyIndicators,
       Results,
-      BarriersCharacteristics
+      BarriersCharacteristics,
 
+      Assessment
     ]),
     UsersModule,
     UserTypeModule,
@@ -118,7 +120,6 @@ import { BarriersCharacteristics } from './methodology-assessment/entities/barri
     DocumentModule,
     AuthModule,
     ProjectApprovalStatusModule,
-    
     LearningMaterialModule,
     ReportModule,
     MethodologyAssessmentModule,
