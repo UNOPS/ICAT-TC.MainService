@@ -20,6 +20,7 @@ import { editFileName, fileLocation } from './entity/file-upload.utils';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -90,7 +91,7 @@ export class ProjectController implements CrudController<ClimateAction> {
   get base(): CrudController<ClimateAction> {
     return this;
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
   @Override()
   @Post('createOne')
   async createOne(
@@ -123,6 +124,7 @@ export class ProjectController implements CrudController<ClimateAction> {
   async postOneClimateAction(req:ClimateAction){
     await this.service.postOne(req)
   }
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
   @Get('findAllPolicies')
 async findAllPolicies() {
@@ -145,7 +147,8 @@ async findAllPolicies() {
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
-    // console.log("heelo controler");
+    console.log("heelo controler");
+
     return await this.service.getAllCAList(
       {
         limit: limit,
@@ -198,6 +201,7 @@ async findAllPolicies() {
 
 
 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
 
   @Get(
@@ -215,6 +219,7 @@ async findAllPolicies() {
     
   ): Promise<any> {
     // console.log(moment(editedOn).format('YYYY-MM-DD'))
+  
     console.log("getall",page,limit,sectorId,statusId,mitigationActionTypeId,editedOn,filterText)
     return await this.service.getProjectDetails(
       {
@@ -228,7 +233,7 @@ async findAllPolicies() {
       editedOn,
     );
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get(
     'AllClimateActions/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:assessmentStatusName/:Active/:countryId/:sectorId',
   )
@@ -244,6 +249,15 @@ async findAllPolicies() {
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
+    let countryIdFromTocken: number;
+    let sectorIdFromTocken: number;
+  
+
+    [countryIdFromTocken, sectorIdFromTocken] =this.tokenDetails.getDetails([
+        TokenReqestType.countryId,
+        TokenReqestType.sectorId,
+    
+      ]);
     return await this.service.getAllProjectDetails(
       {
         limit: limit,
@@ -254,11 +268,11 @@ async findAllPolicies() {
       projectApprovalStatusId,
       assessmentStatusName,
       Active, 
-      countryId,
+      countryIdFromTocken,
       sectorId,
     );
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   // @Override()
   @Patch('updateOneClimateAction')
   async updateOneClimateAction(
@@ -346,12 +360,14 @@ async findAllPolicies() {
     }
   }
 
- 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Post("policybar")
   async policyBar(@Body() req:PolicyBarriers[]){
     this.service.save(req);
   }
 
+  
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('allProjectApprove')
   async allProjectApprove(
     @Request() request,   

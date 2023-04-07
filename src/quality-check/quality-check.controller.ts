@@ -2,6 +2,7 @@ import { QualityCheckService } from './quality-check.service';
 import { Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { CrudController } from '@nestjsx/crud';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 
@@ -12,7 +13,8 @@ export class QualityCheckController implements CrudController<ParameterRequest>{
         private readonly tokenDetails:TokenDetails,
         ) {}
 
-    @UseGuards(JwtAuthGuard)
+        @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+
   @Get(
     'quality-check/GetQCParameters/:page/:limit/:statusId/:filterText',
   )
@@ -43,7 +45,8 @@ export class QualityCheckController implements CrudController<ParameterRequest>{
 
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+
   @Post(
     'quality-check/UpdateQCStatus/:paramId/:assesmentYearId/:qaStatusId/:comment/:userQc',
   )

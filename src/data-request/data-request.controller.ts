@@ -19,6 +19,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiHeader } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -40,6 +41,10 @@ export class ParameterRequestController implements CrudController<ParameterReque
     public service: ParameterRequestService,
     private readonly auditService: AuditService,
   ) {}
+
+
+
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get('getDateRequestToManageDataStatus')
   async getDateRequestToManageDataStatus(
     @Request() request,
@@ -50,7 +55,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return await this.service.getDateRequestToManageDataStatus(assessmentId,assessmentYear);
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get(
     'getNewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:dataProvider',
   )
@@ -60,7 +65,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
    
   }) 	
   
-  @UseGuards(JwtAuthGuard)
   async getNewDataRequest(
     @Request() request,
     @Query('page') page: number,
@@ -91,7 +95,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
   }
 
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get(
     'getNewDataRequestForClimateList/:page/:limit/:filterText/:climateActionId/:year/:dataProvider',
   )
@@ -100,7 +104,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
     schema: { type: 'string', default: '1234'} 
    
   }) 	
-  @UseGuards(JwtAuthGuard)
   async getNewDataRequestForClimateList(
     @Request() request,
     @Query('page') page: number,
@@ -130,7 +133,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     );
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
   @Get(
     'getAssignDateRequest/:page/:limit/:filterText/:climateActionId/:userName',
   )
@@ -157,7 +160,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
       userName,
     );
   }
-  @UseGuards(LocalAuthGuard)
+
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_ENTRY_OPERATOR]))
   @Get('getEnterDataRequest/:page/:limit/:filterText/:climateActionId/:year')
   @ApiHeader({
     name: 'api-key',
@@ -185,7 +189,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
     );
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
+
   @Get(
     'getReviewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:type',
   )
@@ -217,7 +222,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
   @Put('update-deadline')
   updateDeadline(
     @Request() request,
@@ -232,7 +237,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.updateDeadlineForIds(updateDeadlineDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
   @Put('update-deadline-dataEntry')
   updateDeadlineDataEntry(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
@@ -246,7 +251,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.updateDataEntryDeadlineForIds(updateDeadlineDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
   @Put('accept-review-data')
   acceptReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
@@ -261,7 +266,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.acceptReviewDataForIds(updateDeadlineDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.INSTITUTION_ADMIN]))
+
   @Put('reject-review-data')
   rejectReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
@@ -276,7 +282,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.rejectReviewDataForIds(updateDeadlineDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
+
   @Put('reject-enter-data')
   rejectEnterData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
@@ -291,6 +298,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.rejectEnterDataForIds(updateDeadlineDto);
   }
 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
   @Get('climateaction/bydatRequestStatsu2')
   async getClimateActionByDataRequestStatus(
     @Request() request,
@@ -303,6 +311,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
   }
 
 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
 
   @Get('climateaction/bydatRequestStatsusSix')
   async getClimateActionByDataRequestStatusSix(
