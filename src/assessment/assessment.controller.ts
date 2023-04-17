@@ -7,6 +7,7 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
+import { Assessment } from './entities/assessment.entity';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -35,6 +36,11 @@ export class AssessmentController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
     return this.assessmentService.update(+id, updateAssessmentDto);
+  }
+
+  @Patch('update-assessment/:id')
+  updateParameter(@Param('id') id: number, @Body() assessment: Assessment){
+    return this.assessmentService.updateAssessment(+id, assessment);
   }
 
   @Delete(':id')

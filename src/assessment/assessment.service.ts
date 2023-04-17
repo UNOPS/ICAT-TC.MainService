@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -236,5 +236,19 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
 
     return false;
+  }
+
+  async updateAssessment(id: number, assessment: Assessment){
+    try {
+      let update = await this.repo.update(id, assessment)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error){
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
   }
 }
