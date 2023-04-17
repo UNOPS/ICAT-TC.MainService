@@ -61,6 +61,8 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
     let ass =await this.repo.findOne({ where: { id: id }});
     ass.qaDeadline = updateAssessmentDto.deadline
+    ass.editedOn = updateAssessmentDto.editedOn
+    ass.verificationStatus = updateAssessmentDto.verificationStatus
     await this.repo.save(ass);
     return `This action updates a #${id} assessment`;
   }
@@ -237,18 +239,5 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     return false;
   }
-
-  async updateAssessment(id: number, assessment: Assessment){
-    try {
-      let update = await this.repo.update(id, assessment)
-      if (update.affected === 1){
-        return update
-      } else {
-        throw new InternalServerErrorException()
-      }
-    } catch(error){
-      console.log(error)
-      throw new InternalServerErrorException()
-    }
-  }
+  
 }

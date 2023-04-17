@@ -38,11 +38,6 @@ export class AssessmentController {
     return this.assessmentService.update(+id, updateAssessmentDto);
   }
 
-  @Patch('update-assessment/:id')
-  updateAssessment(@Param('id') id: number, @Body() assessment: Assessment){
-    return this.assessmentService.updateAssessment(+id, assessment);
-  }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.assessmentService.remove(+id);
