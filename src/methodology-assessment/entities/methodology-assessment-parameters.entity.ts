@@ -8,6 +8,7 @@ import { Characteristics } from "./characteristics.entity";
 import { Methodology } from "./methodology.entity";
 import { ParameterStatus } from "./parameterStatus.entity";
 import { VerificationDetail } from "src/verification/entity/verification-detail.entity";
+import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 
 
 @Entity()
@@ -67,5 +68,6 @@ export class MethodologyAssessmentParameters {
 
     @Column({ nullable: true, default: false })
     isAcceptedByVerifier: boolean;
+    parameterRequest?: ParameterRequest;
 
 }

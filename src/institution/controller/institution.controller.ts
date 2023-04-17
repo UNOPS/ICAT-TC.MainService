@@ -21,6 +21,7 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { Institution } from '../entity/institution.entity';
 import { InstitutionService } from '../service/institution.service';
 import { ApiCreatedResponse } from '@nestjs/swagger';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -70,7 +71,8 @@ export class InstitutionController implements CrudController<Institution> {
     return this;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
+
   @Get(
     'getInstitutionDataProvider/institutioninfo/:page/:limit/:filterText/:userId',
   )
@@ -107,7 +109,7 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Get('institution/institutioninfo/:page/:limit/:filterText/:userId')
   async getInstiDetails(
     @Request() request,
@@ -149,7 +151,8 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+
   @Get('institution/institutioninfo/:filterText/:userId')
   @ApiCreatedResponse({type: Any})
   async getInsti(
@@ -179,7 +182,8 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+
   @Get('deactivateInstituion')
   @ApiCreatedResponse({type: Any})
   async deactivateInstitution(@Query('instiId') instiId: number): Promise<any> {
@@ -192,7 +196,7 @@ export class InstitutionController implements CrudController<Institution> {
     return await this.service.softDelete(instiId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get('getInstitutionforAssesment')
   @ApiCreatedResponse({type: Any})
   async getInstitutionforAssesment(): Promise<any> {
@@ -208,7 +212,8 @@ export class InstitutionController implements CrudController<Institution> {
   }
   
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
+
   @Get('getInstitutionforApproveData')
   @ApiCreatedResponse({type: Any})
   async getInstitutionforApproveData(): Promise<any> {
@@ -223,7 +228,8 @@ export class InstitutionController implements CrudController<Institution> {
     return await this.service.getInstitutionforApproveData(countryIdFromTocken,sectorIdFromTocken);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+
   @Override()
   @ApiCreatedResponse({type: Any})
   async createOne(
@@ -277,7 +283,7 @@ export class InstitutionController implements CrudController<Institution> {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Override()
   async updateOne(
     @Request() request,
@@ -352,7 +358,8 @@ export class InstitutionController implements CrudController<Institution> {
   }
 
 
- 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN]))
+
   @Get('getInstitutionForUsers')
   async getInstitutionForUsers(
     @Request() request,

@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Request, UseGuards,  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Request, UseGuards, Put,  } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { DataVerifierDto } from './dto/dataVerifier.dto';
+import { getConnection } from 'typeorm';
+import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -28,7 +31,7 @@ export class AssessmentController {
   findOne(@Param('id') id: number) {
     return this.assessmentService.findbyID(id);
   }
-
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
     return this.assessmentService.update(+id, updateAssessmentDto);
@@ -71,6 +74,38 @@ export class AssessmentController {
     );
   }
 
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  @Get('checkAssessmentReadyForQC/getAssment/:id')
+  async checkAssessmentReadyForQC(
+    @Request() request,
+    @Query('assessmentId') assessmentId: number,
+    @Query('assessmentYear') assessmenYear: number,
+  ): Promise<any> {
+    return await this.assessmentService.checkAssessmentReadyForQC(assessmentId, assessmenYear);
+  }
+
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MRV_ADMIN,LoginRole.QC_TEAM,LoginRole.MASTER_ADMIN]))
+  @Put('accept-qc')
+  async acceptQC(@Body() updateDeadlineDto: DataVerifierDto): Promise<boolean> {
+
+    const queryRunner = getConnection().createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      let paeameter = this.assessmentService.acceptQC(updateDeadlineDto);
+      // console.log(updateDeadlineDto)
+      // await queryRunner.commitTransaction();
+      return paeameter;
+    }
+    catch (err) {
+      console.log("worktran2")
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('getAssessmentsForApproveData/:id/:assementYear/:userName')
   async getAssessmentsForApproveData(
     @Request() request,

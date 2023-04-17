@@ -4,13 +4,14 @@ import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
 import { Crud, CrudController, ParsedRequest, CrudRequest } from '@nestjsx/crud';
 import { Documents } from './entity/document.entity';
-import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus } from '@nestjs/common';
 import { assert, log } from 'console';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 var multer = require('multer')
 //var upload = multer({ dest: './public/data/uploads/' })
-
+const restrictedFileExtentions = ["exe", "dll", "com", "bat", "sql","php","js.","ts"];
+const allowedFileExtentions = ["xls","xlsx","doc","docx","ppt","pptx","txt","pdf","png","jpeg","gif","jpg","avi","mp3","mp4"];
 
 @Crud({
     model: {
@@ -36,6 +37,31 @@ export class DocumentController implements CrudController<Documents> {
 
     }))
     async uploadFile2(@UploadedFile() file, @Req() req: CrudRequest, @Param("oid") oid, @Param("owner") owner) {
+
+        let fileExtentionTemp = ("" + file.originalname).split(".");
+        let fileExtention = fileExtentionTemp[fileExtentionTemp.length - 1].toLowerCase();
+
+        if (restrictedFileExtentions.includes(fileExtention)) {
+            // an un authorized file
+            throw new HttpException('Forbidden, Unauthorized file type.', HttpStatus.FORBIDDEN);
+        }
+
+        if(!allowedFileExtentions.includes(fileExtention)){
+            throw new HttpException('Forbidden, Unauthorized file type..', HttpStatus.FORBIDDEN);
+        }
+
+        let fileNameLower = (""+file.originalname).toLowerCase();
+
+        for (let index = 0; index < restrictedFileExtentions.length; index++) {
+            const element = restrictedFileExtentions[index];
+            let extentiontemp = "."+ element+  ".";
+            console.log("element", extentiontemp);
+            console.log("fileNameLower", fileNameLower);
+            if(fileNameLower.includes(extentiontemp)){
+                throw new HttpException('Forbidden, Unauthorized file type.', HttpStatus.FORBIDDEN);
+            }
+        }
+
         console.log('+++++++++++++++++==')
         var docowner: DocumentOwner = (<any>DocumentOwner)[owner];
         let path = join(owner, oid, file.filename)

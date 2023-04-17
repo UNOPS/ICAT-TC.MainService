@@ -22,6 +22,7 @@ import { InstitutionService } from 'src/institution/service/institution.service'
 import { TokenDetails } from 'src/utills/token_details';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 
 
 @Module({
@@ -50,6 +51,7 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
     Results,
     Institution,
     ParameterRequest,
+    BarriersCharacteristics
     
   ])],
   exports: [
