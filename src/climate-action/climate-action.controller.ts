@@ -201,7 +201,7 @@ async findAllPolicies() {
 
 
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
 
   @Get(
@@ -367,7 +367,7 @@ async findAllPolicies() {
   }
 
   
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('allProjectApprove')
   async allProjectApprove(
     @Request() request,   

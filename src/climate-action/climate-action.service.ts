@@ -52,11 +52,13 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     }
 
     if (statusId != 0) {
+      console.log(filter,"----------")
       if (filter) {
         filter = `${filter}  and dr.projectStatusId = :statusId`;
       } else {
         filter = `dr.projectStatusId = :statusId`;
       }
+      console.log(filter,"----------")
     }
 
     if (mitigationActionTypeId != 0) {
