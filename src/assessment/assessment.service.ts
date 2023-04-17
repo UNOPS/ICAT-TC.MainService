@@ -63,8 +63,8 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     ass.qaDeadline = updateAssessmentDto.deadline
     ass.editedOn = updateAssessmentDto.editedOn
     ass.verificationStatus = updateAssessmentDto.verificationStatus
-    await this.repo.save(ass);
-    return `This action updates a #${id} assessment`;
+    // await this.repo.save(ass);
+    return await this.repo.save(ass);
   }
 
   remove(id: number) {
@@ -239,5 +239,5 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     return false;
   }
-  
+
 }

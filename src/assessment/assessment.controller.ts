@@ -34,8 +34,8 @@ export class AssessmentController {
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
-    return this.assessmentService.update(+id, updateAssessmentDto);
+  async update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
+    return await this.assessmentService.update(+id, updateAssessmentDto);
   }
 
   @Delete(':id')
