@@ -39,7 +39,7 @@ export class AssessmentController {
   }
 
   @Patch('update-assessment/:id')
-  updateParameter(@Param('id') id: number, @Body() assessment: Assessment){
+  updateAssessment(@Param('id') id: number, @Body() assessment: Assessment){
     return this.assessmentService.updateAssessment(+id, assessment);
   }
 
