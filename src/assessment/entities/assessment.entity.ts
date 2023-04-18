@@ -44,18 +44,18 @@ export class Assessment {
     qaStatus?: QuAlityCheckStatus;
 
     
-    @Column({ nullable: true })
-    qaAssighnDate?: string;
+  //  @Column({ nullable: true })
+  //  qaAssighnDate?: string;
 
-    @Column({ nullable: true })
+   @Column({ nullable: true })
     qaDeadline?: Date;
 
-    @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
-        cascade: false,
-        nullable: true,
-        eager: true,
-      })
-      @JoinColumn()
-      parameters: MethodologyAssessmentParameters[];
+   // @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+   //     cascade: false,
+   //     nullable: true,
+   //     eager: true,
+   //   })
+  //    @JoinColumn()
+     // parameters: MethodologyAssessmentParameters[];
 
 }
