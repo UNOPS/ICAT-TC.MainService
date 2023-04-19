@@ -194,6 +194,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async barrierCharacteristics(dataArr : any){
+
+    let methodology = new Methodology();
+    let policy = new ClimateAction();
+     methodology.id = dataArr.alldata.methodology;
+  //  console.log("MethName: ", methodology.id);
+    policy.id = dataArr.alldata.policyId;
+
+
     let data = dataArr.alldata
     console.log("dattaaaa",data)
     let  date  = new Date()
@@ -248,10 +256,66 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       obj.bscore_comment = barrierCharacteristic.barrierComment
       obj.barrier_weight = barrierCharacteristic.barrierWeight
       obj.bweight_comment = barrierCharacteristic.bWeightComment
+      obj.institution = barrierCharacteristic.barrierScoreInstitution
 
       await this.barrierCharacterRepo.save(obj);
      }
 
+
+     for (let categoryData of dataArr.categoryData) {
+      let category = new Category();
+      category.id = categoryData.categoryId;
+      category.name = categoryData.category;
+
+      let savedAssessmentnew = new Assessment();
+
+      savedAssessmentnew.id = assessementId
+
+      let dataForCategory = new MethodologyAssessmentParameters();
+      dataForCategory.score = categoryData.categoryScore
+      dataForCategory.category = category
+      dataForCategory.assessment = savedAssessmentnew
+      dataForCategory.methodology = methodology
+      dataForCategory.isCategory = 1
+      dataForCategory.institution = categoryData.categoryInstitution
+      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.fileName = categoryData.categoryFile
+      dataForCategory.weight = categoryData.categoryWeight
+     
+     // category.categoryScore = categoryData.categoryScore;
+     // console.log("Category: ", category);
+  
+      for (let characteristic of categoryData.characteristics) {
+        let characteristics = new Characteristics();
+        characteristics.name = characteristic.name;
+        characteristics.id = characteristic.id;
+     //   console.log("Characteristics: ", characteristics);
+  
+  
+       
+        let data = new MethodologyAssessmentParameters();
+        data.methodology = methodology;
+        data.category = category;
+      //  data.category_score = categoryData.categoryScore;
+        data.characteristics = characteristics;
+        data.score = characteristic.score;
+        data.relevance = characteristic.relevance;
+        data.assessment = savedAssessment
+        data.fileName = characteristic.filename;
+        data.comment = characteristic.comment;
+        data.isCategory = 0;
+        data.institution = characteristic.institution;
+        data.weight = characteristic.weight
+      //  console.log("Data: ", data);
+  
+       await this.repo.save(data);
+      }
+      if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
+        await this.repo.save(dataForCategory);
+      }
+      
+
+    }
 
 
     return assessementId

@@ -67,4 +67,8 @@ export class MethodologyAssessmentParameters {
 
     parameterRequest?: ParameterRequest;
 
+    @Column({ type: 'double', nullable: true })
+    weight : number
+
+    
 }
