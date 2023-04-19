@@ -3,6 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "t
 import { Characteristics } from "./characteristics.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Barriers } from "./barriers.entity";
+import { Institution } from "src/institution/entity/institution.entity";
 
 @Entity()
 export class BarriersCharacteristics {
@@ -33,5 +34,10 @@ export class BarriersCharacteristics {
 
     @Column({ nullable: true })
     bweight_comment : string;
+
+
+    @ManyToOne((type) => Institution, { cascade: false, eager:false})
+    @JoinColumn({ name: 'institution_id' })
+    institution?: Institution;
 }
 

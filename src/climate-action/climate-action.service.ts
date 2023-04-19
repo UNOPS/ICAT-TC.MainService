@@ -172,11 +172,11 @@ async allProject(
 
    
        
-      if (filter) {
-        filter = `${filter}  and pas.id !=4 `; // no proposed CA s all climate
-      } else {
-        filter = `pas.id !=4`;
-      }
+      // if (filter) {
+      //   filter = `${filter}  and pas.id !=4 `; // no proposed CA s all climate
+      // } else {
+      //   filter = `pas.id !=4`;
+      // }
     
     
 

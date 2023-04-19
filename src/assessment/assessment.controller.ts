@@ -7,6 +7,7 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
+import { Assessment } from './entities/assessment.entity';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -33,8 +34,8 @@ export class AssessmentController {
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
-    return this.assessmentService.update(+id, updateAssessmentDto);
+  async update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
+    return await this.assessmentService.update(+id, updateAssessmentDto);
   }
 
   @Delete(':id')

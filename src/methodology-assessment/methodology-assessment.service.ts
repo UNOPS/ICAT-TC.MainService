@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -194,6 +194,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async barrierCharacteristics(dataArr : any){
+
+    let methodology = new Methodology();
+    let policy = new ClimateAction();
+     methodology.id = dataArr.alldata.methodology;
+  //  console.log("MethName: ", methodology.id);
+    policy.id = dataArr.alldata.policyId;
+
+
     let data = dataArr.alldata
     console.log("dattaaaa",data)
     let  date  = new Date()
@@ -248,10 +256,66 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       obj.bscore_comment = barrierCharacteristic.barrierComment
       obj.barrier_weight = barrierCharacteristic.barrierWeight
       obj.bweight_comment = barrierCharacteristic.bWeightComment
+      obj.institution = barrierCharacteristic.barrierScoreInstitution
 
       await this.barrierCharacterRepo.save(obj);
      }
 
+
+     for (let categoryData of dataArr.categoryData) {
+      let category = new Category();
+      category.id = categoryData.categoryId;
+      category.name = categoryData.category;
+
+      let savedAssessmentnew = new Assessment();
+
+      savedAssessmentnew.id = assessementId
+
+      let dataForCategory = new MethodologyAssessmentParameters();
+      dataForCategory.score = categoryData.categoryScore
+      dataForCategory.category = category
+      dataForCategory.assessment = savedAssessmentnew
+      dataForCategory.methodology = methodology
+      dataForCategory.isCategory = 1
+      dataForCategory.institution = categoryData.categoryInstitution
+      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.fileName = categoryData.categoryFile
+      dataForCategory.weight = categoryData.categoryWeight
+     
+     // category.categoryScore = categoryData.categoryScore;
+     // console.log("Category: ", category);
+  
+      for (let characteristic of categoryData.characteristics) {
+        let characteristics = new Characteristics();
+        characteristics.name = characteristic.name;
+        characteristics.id = characteristic.id;
+     //   console.log("Characteristics: ", characteristics);
+  
+  
+       
+        let data = new MethodologyAssessmentParameters();
+        data.methodology = methodology;
+        data.category = category;
+      //  data.category_score = categoryData.categoryScore;
+        data.characteristics = characteristics;
+        data.score = characteristic.score;
+        data.relevance = characteristic.relevance;
+        data.assessment = savedAssessment
+        data.fileName = characteristic.filename;
+        data.comment = characteristic.comment;
+        data.isCategory = 0;
+        data.institution = characteristic.institution;
+        data.weight = characteristic.weight
+      //  console.log("Data: ", data);
+  
+       await this.repo.save(data);
+      }
+      if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
+        await this.repo.save(dataForCategory);
+      }
+      
+
+    }
 
 
     return assessementId
@@ -472,6 +536,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     .getMany();
   }
 
+  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
+    let paras = await this.repo.find({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
+    })
+    return paras
+  }
+
 
   update(id: number, updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return `This action updates a #${id} methodologyAssessment`;
@@ -548,6 +620,20 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     //   template,
     // );
     return true;
+  }
+
+  async updateParameter(id: number, parameter: MethodologyAssessmentParameters){
+    try {
+      let update = await this.repo.update(id, parameter)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error){
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
   }
 
   async allParam(
