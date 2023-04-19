@@ -18,7 +18,7 @@ import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 var multer = require('multer');
 
-const MainMethURL = 'http://localhost:7100/methodology/assessmentData';
+const MainMethURL = 'http://localhost:7100/methodology';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -51,7 +51,7 @@ export class MethodologyAssessmentController {
 
     let newData : any = MethAssignParam
 
-    const response = await axios.post(MainMethURL, MethAssignParam);
+    const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
     console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
@@ -78,14 +78,46 @@ export class MethodologyAssessmentController {
     return this.resData
 
   }
+  
 
 
   @Post('barrier-characteristics')
   async barrierCharacteristics(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
+    this.resData = ''
+
+    let methdata : any = BarrierCharData
+
+    console.log("methdata : ", methdata)
+
+    if(methdata.alldata.assessment_approach === 'Direct'){
+
+      const response = await axios.post(MainMethURL + '/assessmentDataTrack3', BarrierCharData);
+    console.log("reeesss", response.data)
 
     let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
 
-    return res
+    this.resData = {
+      result: response.data,
+      assesId: res
+    }
+
+    let result : any = {
+      averageProcess : response.data.averageProcess,
+      averageOutcome:  response.data.averageOutcome,
+      assessment_id :  res
+    }
+
+    await this.methodologyAssessmentService.createResults(result)
+
+    return this.resData
+    }
+
+    if(methdata.alldata.assessment_approach === 'Indirect'){
+      let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
+      console.log("resssID : ", res)
+      return res
+    }
+    
 
   }
 
@@ -157,6 +189,11 @@ export class MethodologyAssessmentController {
   @Get('findByAllAssessmentData')
   async findByAllAssessmentData() {
     return await this.methodologyAssessmentService.findByAllAssessmentData();
+  }
+
+  @Get('findAssessmentParameters/:assessmentId')
+  async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
+    return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
   }
 
   @Post('uploadtest')
@@ -248,6 +285,11 @@ async uploadFile2(
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return this.methodologyAssessmentService.update(+id, updateMethodologyAssessmentDto);
+  }
+
+  @Patch('update-parameter/:id')
+  updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
+    return this.methodologyAssessmentService.updateParameter(+id, parameter);
   }
 
   @Delete(':id')

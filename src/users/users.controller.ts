@@ -182,6 +182,11 @@ export class UsersController implements CrudController<User> {
     return await this.service.findUserByUserName(userName);
   }
 
+  @Get('findUserByEmail/:userName')
+  async findUserByEmail(@Param('userName') userName: string): Promise<any> {
+    return await this.service.findUserByEmail(userName);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: number): Promise<void> {
     return this.service.remove(id);
