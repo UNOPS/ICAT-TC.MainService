@@ -191,6 +191,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findByAllAssessmentData();
   }
 
+  @Get('findAssessmentParameters/:assessmentId')
+  async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
+    return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
+  }
+
   @Post('uploadtest')
 @UseInterceptors(
   FileInterceptor('file', {
@@ -280,6 +285,11 @@ async uploadFile2(
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return this.methodologyAssessmentService.update(+id, updateMethodologyAssessmentDto);
+  }
+
+  @Patch('update-parameter/:id')
+  updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
+    return this.methodologyAssessmentService.updateParameter(+id, parameter);
   }
 
   @Delete(':id')

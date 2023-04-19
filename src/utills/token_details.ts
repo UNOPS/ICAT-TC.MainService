@@ -31,7 +31,7 @@ constructor(
              console.log("4")
              break;  
          case 5:
-             details.push(user.usr)
+             details.push(user.username)
              console.log("5")
              break;  
          case 6:

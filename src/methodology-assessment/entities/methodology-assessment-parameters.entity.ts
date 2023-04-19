@@ -2,11 +2,12 @@
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Institution } from "src/institution/entity/institution.entity";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Category } from "./category.entity";
 import { Characteristics } from "./characteristics.entity";
 import { Methodology } from "./methodology.entity";
 import { ParameterStatus } from "./parameterStatus.entity";
+import { VerificationDetail } from "src/verification/entity/verification-detail.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 
 
@@ -65,6 +66,8 @@ export class MethodologyAssessmentParameters {
     @Column({ type:"mediumtext" ,nullable: true })
     comment?: string;
 
+    @Column({ nullable: true, default: false })
+    isAcceptedByVerifier: boolean;
     parameterRequest?: ParameterRequest;
 
     @Column({ type: 'double', nullable: true })

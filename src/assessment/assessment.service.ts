@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -61,8 +61,10 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
     let ass =await this.repo.findOne({ where: { id: id }});
     ass.qaDeadline = updateAssessmentDto.deadline
-    await this.repo.save(ass);
-    return `This action updates a #${id} assessment`;
+    ass.editedOn = updateAssessmentDto.editedOn
+    ass.verificationStatus = updateAssessmentDto.verificationStatus
+    // await this.repo.save(ass);
+    return await this.repo.save(ass);
   }
 
   remove(id: number) {
@@ -237,4 +239,5 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     return false;
   }
+
 }
