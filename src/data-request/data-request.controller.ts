@@ -251,18 +251,19 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return this.service.updateDataEntryDeadlineForIds(updateDeadlineDto);
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
   @Put('accept-review-data')
   acceptReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
   ): Promise<boolean> {
+    console.log("================",updateDeadlineDto);
     let audit: AuditDto=new AuditDto();
     audit.action='Review Data Accepted';
     audit.comment=updateDeadlineDto.comment+' Accepted';
     audit.actionStatus ='Approved'
   
     // this.auditService.create(audit);
-    console.log("================",updateDeadlineDto);
+    
     return this.service.acceptReviewDataForIds(updateDeadlineDto);
   }
 

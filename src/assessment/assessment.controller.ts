@@ -111,12 +111,10 @@ export class AssessmentController {
   async getAssessmentsForApproveData(
     @Request() request,
     @Query('id') id: number,
-    @Query('assementYear') assementYear: string,
     @Query('userName') userName: string,
   ): Promise<any> {
     return await this.assessmentService.getAssessmentForApproveData(
       id,
-      assementYear,
       userName,
     );
   }
