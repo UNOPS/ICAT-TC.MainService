@@ -136,7 +136,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
   async getAssessmentForApproveData(
     assessmentId: number,
-    assementYear: string,
     userName: string,
   ): Promise<any> {
     let userItem = await this.userService.findByUserName(userName);
@@ -229,7 +228,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where(
         'par.dataRequestStatus in (11) AND as.id =' + assessmentId.toString() + ')',
       );
-    // console.log('data1SQL2', data2.getSql());
+    // console.log('data1SQL2', data2.execute());
     let totalRecordsApprovedStatus: any[] = await data2.execute();
     if (totalRecordsApprovedStatus.length == totalRecordsAllStatus.length) {
       return true;
