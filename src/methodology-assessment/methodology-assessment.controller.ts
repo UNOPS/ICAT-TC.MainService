@@ -16,6 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entities/file-upload.utils';
 import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { Results } from './entities/results.entity';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
@@ -295,6 +296,11 @@ async uploadFile2(
   @Patch('update-parameter/:id')
   updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
     return this.methodologyAssessmentService.updateParameter(+id, parameter);
+  }
+
+  @Patch('update-result/:id')
+  updateResult(@Param('id') id: number, @Body() result: Results){
+    return this.methodologyAssessmentService.updateResult(+id, result);
   }
 
   @Delete(':id')
