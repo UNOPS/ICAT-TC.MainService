@@ -130,6 +130,11 @@ export class CountryController implements CrudController<Country>{
     return await this.service.getCountrySector(countryId);
   }
 
+  @Get('find-All')
+  async findall():Promise<any>{
+    return await this.CountryRepo.find();
+  }
+
   
 
 }
