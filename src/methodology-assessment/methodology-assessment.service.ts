@@ -463,6 +463,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      });
    }
 
+   async getResultByAssessment(assessmentId: number){
+    return await this.resultRepository.findOne({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment']
+    })
+   }
+
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
   //  return await this.repo.find();
     return this.repo.find({

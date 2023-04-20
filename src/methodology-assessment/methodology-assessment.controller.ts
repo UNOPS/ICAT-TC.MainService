@@ -185,6 +185,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.results();
   }
 
+  @Get('get-results-by-assessment/:assessmentId')
+  async getResultByAssessment(@Param('assessmentId') assessmentId: number) {
+    return await this.methodologyAssessmentService.getResultByAssessment(assessmentId);
+  }
+
 
   @Get('findByAllAssessmentData')
   async findByAllAssessmentData() {

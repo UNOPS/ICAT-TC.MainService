@@ -39,7 +39,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     super(repo);
   }
 
-  // async GetVRParameters(
+  // async GetVRParameters( //for sector admin
   //   options: IPaginationOptions,
   //   filterText: string,
   //   VRstatusId: number,
