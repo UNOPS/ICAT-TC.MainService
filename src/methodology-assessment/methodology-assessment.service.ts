@@ -643,6 +643,20 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     }
   }
 
+  async updateResult(id: number, result: Results){
+    try{
+      let update = await this.resultRepository.update(id, result)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error) {
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
+  }
+
   async allParam(
     options: IPaginationOptions,
     filterText: string[]){
