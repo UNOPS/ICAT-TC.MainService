@@ -1,117 +1,36 @@
-import { Injectable, Options } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { Report } from './entity/report.entity';
+import { Injectable } from '@nestjs/common';
+import { CreateReportDto } from './dto/create-report.dto';
+import { UpdateReportDto } from './dto/update-report.dto';
+import { ReportDto } from './dto/report.dto';
+import { AssessmentDto } from './dto/assessment.dto';
 
 @Injectable()
-export class ReportService extends TypeOrmCrudService<Report>{
+export class ReportService {
+  create(createReportDto: CreateReportDto) {
+    return 'This action adds a new report';
+  }
 
-    constructor(@InjectRepository(Report) repo) {
-        super(repo);
-    }
-/*
-    async getReportDetails(
-        options: IPaginationOptions,
-        filterText: string,
-        countryId: number,
-        sectorId: number,
-        ndcId: number,
-        projectId: number,
-        assessmentType: string,
-    ): Promise<Pagination<Report>>{
+  findAll() {
+    return `This action returns all report`;
+  }
 
-        // console.log('selected type',assessmentType)
-        
-        let filter: string = '';
+  findOne(id: number) {
+    return `This action returns a #${id} report`;
+  }
 
-        if(filterText != null && filterText != undefined && filterText != '')
-        {
-            filter = '(rep.reportName LIKE :filterText)';
-        }
+  update(id: number, updateReportDto: UpdateReportDto) {
+    return `This action updates a #${id} report`;
+  }
 
-        if(assessmentType != null && assessmentType != undefined && assessmentType != ''){
-            
-            if(filter){
-                // console.log('ewwwww',assessmentType)
-                filter = `${filter} and asse.assessmentType = :assessmentType`;
-            }else {
-                filter = `asse.assessmentType = :assessmentType`;
-            }
-            // filter = '(asse.assessmentType LIKE :assessmentType)';
-        }
+  remove(id: number) {
+    return `This action removes a #${id} report`;
+  }
 
-        if(countryId != 0) {
-            if (filter) {
-                filter = `${filter} and con.id = :countryId`
-            }
-            else {
-                filter = `con.id = :countryId`
-            }
-        }
-
-        if(sectorId != 0) {
-            if (filter) {
-                filter = `${filter} and sec.id = :sectorId`
-            }
-            else {
-                filter = `sec.id = :sectorId`
-            }
-        }
-
-        if(ndcId != 0) {
-            if (filter) {
-                filter = `${filter} and ndc.id = :ndcId`
-            }
-            else {
-                filter = `ndc.id = :ndcId`
-            }
-        }
-
-        if(projectId != 0) {
-            if (filter) {
-                filter = `${filter} and ca.id = :projectId`
-            }
-            else {
-                filter = `ca.id = :projectId`
-            }
-        }
-
-        var data = this.repo
-        .createQueryBuilder('rep')
-
-        .leftJoinAndMapOne('rep.country', Country, 'con', 'con.Id = rep.countryId')
-
-        .leftJoinAndMapMany('rep.reportAsse', ReportAssessment, 'rasse', 'rasse.Id = rep.Id')
-        .leftJoinAndMapMany('rep.assessment', Assessment, 'asse', 'rasse.assessmentId = asse.Id')
-
-        .leftJoinAndMapMany('rep.reportNdc', ReportNdc, 'rndc', 'rndc.Id = rep.Id')
-        .leftJoinAndMapMany('rep.ndc', Ndc, 'ndc', 'rndc.ndcId = ndc.Id')
-
-        .leftJoinAndMapMany('rep.reportProject', ReportProject, 'rca', 'rca.Id = rep.Id')
-        .leftJoinAndMapMany('rep.project', Project, 'ca', 'rca.projectId = ca.Id')
-
-        .leftJoinAndMapMany('rep.reportSector', ReportSector, 'rsec', 'rsec.Id = rep.Id')
-        .leftJoinAndMapMany('rep.sector', Sector, 'sec', 'rsec.sectorId = sec.Id')
-
-        .where(filter, {
-            filterText: `%${filterText}%`,
-            countryId,
-            sectorId,
-            ndcId,
-            projectId,
-            assessmentType,
-        })
-        .orderBy('rep.createdOn', 'DESC');
-
-        let resualt = await paginate(data, options);
-
-        // console.log(data.getQuery());
-        if(resualt){
-            return resualt;
-        }
-
-    }
-
- */
+  genarateReportDto():ReportDto {
+    return new ReportDto();
+  }
+  genarateAssessmentDto():AssessmentDto{
+    return new AssessmentDto();
+  }
 
 }

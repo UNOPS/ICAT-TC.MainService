@@ -26,7 +26,7 @@ import { ProjectStatusModule } from './master-data/project-status/project-status
 import { SectorModule } from './master-data/sector/sector.module';
 import { UserTypeModule } from './master-data/user-type/user-type.module';
 import { ReportController } from './report/report.controller';
-import { ReportModule } from './report/report.module';
+
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -69,6 +69,8 @@ import { ParameterHistory } from './parameter-history/entity/parameter-history.e
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
+import { ReportModule } from './report/report.module';
+
 
 @Module({
   imports: [
@@ -123,13 +125,13 @@ import { Assessment } from './assessment/entities/assessment.entity';
     AssessmentModule,
     
     InstitutionModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../static-files'),
-      renderPath: 'icatcountryportal',
-      exclude: ['/api*'],
-      serveStaticOptions: { index: false },
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', '../static-files'),
+    //   renderPath: 'icatcountryportal',
+    //   exclude: ['/api*'],
+    //   serveStaticOptions: { index: false },
 
-    }),
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -153,6 +155,7 @@ import { Assessment } from './assessment/entities/assessment.entity';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    // MulterModule.register({dest: './public'}),
     ParameterRequestModule,
     QualityCheckModule,
     ParameterHistoryModule,

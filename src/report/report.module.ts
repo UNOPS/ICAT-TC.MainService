@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
-import { ProjectService } from 'src/climate-action/climate-action.service';
-import { Report } from './entity/report.entity';
-import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
-import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { ReportController } from './report.controller';
+import { ReportGenaratesService } from './report-genarates/report-genarates.service';
+import { ReportHtmlGenaratesService } from './report-html-genarates/report-html-genarates.service';
+import { ReportPagesService } from './report-html-genarates/report-pages/report-pages.service';
+import { AssessmentPagesService } from './report-html-genarates/assessment-pages/assessment-pages.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Report,  ClimateAction,PolicyBarriers])],
-    controllers: [ReportController],
-    providers: [ReportService,  ProjectService,PolicyBarriers],
-    exports: [ReportService,  ProjectService],
+  controllers: [ReportController],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService],
+  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService],
 })
 export class ReportModule {}
