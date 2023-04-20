@@ -17,6 +17,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -24,6 +25,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     private readonly userService: UsersService,
+    private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
@@ -274,6 +276,55 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     let result = await paginate(data, options);
     return result;
+  }
+
+  async acceptDataVerifiersForIds(
+    updateDataRequestDto: DataVerifierDto,
+  ): Promise<boolean> {
+    // let dataRequestItemList = new Array<ParameterRequest>();
+
+    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+      const id = updateDataRequestDto.ids[index];
+      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
+      let originalStatus = dataRequestItem.verificationStatus;
+      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
+      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
+      dataRequestItem.verificationUser = updateDataRequestDto.userId;
+
+      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
+      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
+      var template: any;
+        template =
+          'Dear ' +
+          user.firstName + ' ' + user.lastName+
+          ' <br/> Data request with following information has shared with you.' +
+          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
+          // '<br/> value -:' + dataRequestItem.parameter.value +
+          // '<br> comment -: ' + updateDataRequestDto.comment;
+      
+          this.emaiService.sendMail(
+            user.email,
+            'Assign verifier',
+            '',
+            template,
+          );
+      // dataRequestItemList.push(dataRequestItem);
+      this.repo.save(dataRequestItem).then((res) => {
+        console.log('res', res);
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.AssignVerifier,
+        //   'AssignVerifier',
+        //   '',
+        //   res.verificationStatus.toString(),
+        //   originalStatus.toString(),
+        // );
+      });
+    }
+
+    // this.repo.save(dataRequestItemList);
+
+    return true;
   }
 
 }

@@ -8,6 +8,7 @@ import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
 import { Assessment } from './entities/assessment.entity';
+import { AuditDto } from 'src/audit/dto/audit-dto';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -119,7 +120,7 @@ export class AssessmentController {
     );
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-assessments-for-assign-verifier')
   async getAssessmentForAssignVerifier(
     @Request() request,
@@ -142,5 +143,35 @@ export class AssessmentController {
       statusId,
       countryIdFromTocken
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update-assign-verifiers')
+  async updateAssignVerifiers(
+    @Body() updateDeadlineDto: DataVerifierDto,
+  ): Promise<boolean> {
+
+    const queryRunner = getConnection().createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      let audit: AuditDto = new AuditDto();
+      let paeameter = this.assessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
+      console.log(updateDeadlineDto)
+      audit.action = 'Verifier Deadline Created';
+      audit.comment = 'Verifier Deadline Created';
+      audit.actionStatus = 'Created'
+      // this.auditService.create(audit);
+      await queryRunner.commitTransaction();
+      return paeameter;
+    }
+    catch (err) {
+      console.log("worktran2")
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
+
   }
 }
