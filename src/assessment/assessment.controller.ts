@@ -9,39 +9,48 @@ import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
 import { Assessment } from './entities/assessment.entity';
 import { AuditDto } from 'src/audit/dto/audit-dto';
+import { Crud, CrudController } from '@nestjsx/crud';
 
+@Crud({
+  model: {
+    type: Assessment,
+  },
+})
 @Controller('assessment')
-export class AssessmentController {
+export class AssessmentController implements CrudController<Assessment>{
   constructor(
-    public assessmentService: AssessmentService,
+    public service: AssessmentService,
     private readonly tokenDetails: TokenDetails,
   ) { }
 
+  get base(): CrudController<Assessment> {
+    return this;
+}
 
 
   @Post()
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
-    return this.assessmentService.create(createAssessmentDto);
+    return this.service.create(createAssessmentDto);
   }
 
   @Get()
   findAll() {
-    return this.assessmentService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.assessmentService.findbyID(id);
+    return this.service.findbyID(id);
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
-    return await this.assessmentService.update(+id, updateAssessmentDto);
+    return await this.service.update(+id, updateAssessmentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.assessmentService.remove(+id);
+    return this.service.remove(+id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -61,7 +70,7 @@ export class AssessmentController {
     );
     [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId])
    
-    return await this.assessmentService.assessmentYearForManageDataStatus(
+    return await this.service.assessmentYearForManageDataStatus(
       {
         limit: limit,
         page: page,
@@ -83,7 +92,7 @@ export class AssessmentController {
     @Query('assessmentId') assessmentId: number,
     @Query('assessmentYear') assessmenYear: number,
   ): Promise<any> {
-    return await this.assessmentService.checkAssessmentReadyForQC(assessmentId, assessmenYear);
+    return await this.service.checkAssessmentReadyForQC(assessmentId, assessmenYear);
   }
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MRV_ADMIN,LoginRole.QC_TEAM,LoginRole.MASTER_ADMIN]))
@@ -93,7 +102,7 @@ export class AssessmentController {
     const queryRunner = getConnection().createQueryRunner();
     await queryRunner.startTransaction();
     try {
-      let paeameter = this.assessmentService.acceptQC(updateDeadlineDto);
+      let paeameter = this.service.acceptQC(updateDeadlineDto);
       // console.log(updateDeadlineDto)
       // await queryRunner.commitTransaction();
       return paeameter;
@@ -114,13 +123,13 @@ export class AssessmentController {
     @Query('id') id: number,
     @Query('userName') userName: string,
   ): Promise<any> {
-    return await this.assessmentService.getAssessmentForApproveData(
+    return await this.service.getAssessmentForApproveData(
       id,
       userName,
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('get-assessments-for-assign-verifier')
   async getAssessmentForAssignVerifier(
     @Request() request,
@@ -129,12 +138,14 @@ export class AssessmentController {
     @Query('statusId') statusId: number,
     @Query('filterText') filterText: string,
   ): Promise<any> {
+    console.log("getAssessmentForAssignVerifier")
 
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId, TokenReqestType.InstitutionId])
+    console.log(countryIdFromTocken, sectorIdFromTocken)
 
-    return await this.assessmentService.getAssessmentForAssignVerifier(
+    return await this.service.getAssessmentForAssignVerifier(
       {
         limit: limit,
         page: page,
@@ -155,7 +166,7 @@ export class AssessmentController {
     await queryRunner.startTransaction();
     try {
       let audit: AuditDto = new AuditDto();
-      let paeameter = this.assessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
+      let paeameter = this.service.acceptDataVerifiersForIds(updateDeadlineDto);
       console.log(updateDeadlineDto)
       audit.action = 'Verifier Deadline Created';
       audit.comment = 'Verifier Deadline Created';

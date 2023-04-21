@@ -28,6 +28,7 @@ import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 import { getConnection } from 'typeorm';
+import { User } from 'src/users/entity/user.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -661,5 +662,44 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     options: IPaginationOptions,
     filterText: string[]){
       let filter: string = '';
+  }
+
+  async getAssessmentForAssignVerifier(
+    options: IPaginationOptions,
+    filterText: string,
+    QAstatusId: number,
+    countryIdFromTocken:number
+  ): Promise<any> {
+
+    console.log("getAssessmentForAssignVerifier")
+
+    let data = this.assessRepository
+      .createQueryBuilder('assessment')
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .leftJoinAndMapOne(
+        'assessment.verificationUser',
+        User,
+        'u',
+        'assessment.verificationUser = u.id',
+      )
+      .where(
+        (
+          (QAstatusId != 0
+            ? `assessment.verificationStatus=${QAstatusId} AND `
+            : `assessment.verificationStatus in (2,3,4,5,6,7) AND `) +
+          `assessment.qaStatus in (4) AND ` +
+          (filterText != ''
+            ? `(p.policyName LIKE '%${filterText}%' OR assessment.assessmentType LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
+           )`
+            : '')
+        ).replace(/AND $/, ''),
+      )
+      .orderBy('assessment.verificationDeadline', 'DESC')
+      .groupBy('assessment.id');
+
+    console.log('AssessmentFor Verifier', data.getSql());
+
+    let result = await paginate(data, options);
+    return result;
   }
 }

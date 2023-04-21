@@ -340,4 +340,31 @@ async uploadFile2(
       filterText,
     )
   }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-assessments-for-assign-verifier')
+  async getAssessmentForAssignVerifier(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('statusId') statusId: number,
+    @Query('filterText') filterText: string,
+  ): Promise<any> {
+    console.log("getAssessmentForAssignVerifier")
+
+    let countryIdFromTocken: number;
+    let sectorIdFromTocken: number;
+    [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId, TokenReqestType.InstitutionId])
+    console.log(countryIdFromTocken, sectorIdFromTocken)
+
+    // return await this.service.getAssessmentForAssignVerifier(
+    //   {
+    //     limit: limit,
+    //     page: page,
+    //   },
+    //   filterText,
+    //   statusId,
+    //   countryIdFromTocken
+    // );
+  }
 }
