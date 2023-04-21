@@ -673,7 +673,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     console.log("getAssessmentForAssignVerifier")
 
-    let data = this.assessRepository
+    let data = this.assessmentRepository
       .createQueryBuilder('assessment')
       .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
       .leftJoinAndMapOne(
