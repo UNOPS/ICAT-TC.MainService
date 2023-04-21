@@ -20,6 +20,7 @@ import { Results } from './entities/results.entity';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { AuditDto } from 'src/audit/dto/audit-dto';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
@@ -344,7 +345,7 @@ async uploadFile2(
     )
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
   @Get('get-assessments-for-assign-verifier')
   async getAssessmentForAssignVerifier(
     @Request() request,
@@ -371,7 +372,7 @@ async uploadFile2(
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
   @Put('update-assign-verifiers')
   async updateAssignVerifiers(
     @Body() updateDeadlineDto: DataVerifierDto,

@@ -6,6 +6,7 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { VerificationDetail } from './entity/verification-detail.entity';
 import { VerificationService } from './verification.service';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -21,7 +22,7 @@ export class VerificationController
     ) {}
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.SECTOR_ADMIN]))
   @Get('verification/GetVRParameters/:page/:limit/:statusId/:filterText')
   async GetVRParameters(
     @Request() request,
@@ -45,7 +46,7 @@ export class VerificationController
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.VERIFIER]))
   @Get('verification/GetVerifierParameters/:page/:limit/:statusId/:filterText')
   async GetVerifierParameters(
     @Request() request,
@@ -71,6 +72,7 @@ export class VerificationController
     );
   }
 
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.SECTOR_ADMIN, LoginRole.VERIFIER]))
   @Get('getVerificationDetails/:assesmentId')
   async getVerificationDetails(
     @Param('assesmentId') assesmentId: number,
