@@ -45,31 +45,29 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     VRstatusId: number,
     countryIdFromTocken: number,
   ): Promise<Pagination<Assessment>> {
-    let filter: string = `ae.verificationStatus is not null`;
+    let filter: string = `assessment.verificationStatus is not null`;
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(p.climateActionName LIKE :filterText  OR as.assessmentType LIKE :filterText OR ae.year like :filterText OR ae.editedOn  like :filterText OR ae.verificationDeadline  like :filterText OR ae.verificationStatus  like :filterText)';
+        '(p.climateActionName LIKE :filterText  OR assessment.assessmentType LIKE :filterText OR assessment.year like :filterText OR assessment.editedOn  like :filterText OR assessment.verificationDeadline  like :filterText OR assessment.verificationStatus  like :filterText)';
     }
 
     if (VRstatusId != 0) {
-      filter = `${filter}  and ae.verificationStatus = :VRstatusId`;
+      filter = `${filter}  and assessment.verificationStatus = :VRstatusId`;
     }
-    let data = this.assessmentRepo
-      .createQueryBuilder('ae')
+    let data = this.assessmentRepo.createQueryBuilder('assessment')
       .innerJoinAndMapOne(
-        'as.project',
+        'assessment.climateAction',
         ClimateAction,
         'p',
-        `as.projectId = p.id and p.countryId = ${countryIdFromTocken}`
-      )
+        `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
       .where(filter, {
         filterText: `%${filterText}%`,
         VRstatusId,
       })
       // .groupBy('ae.Assessmentid')
       // .groupBy('ae.AssessmentYear')
-      .orderBy('ae.qaDeadline', 'DESC');
+      .orderBy('assessment.qaDeadline', 'DESC');
     // console.log(
     //   '=====================================================================',
     // );
