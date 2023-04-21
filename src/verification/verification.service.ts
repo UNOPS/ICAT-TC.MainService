@@ -39,51 +39,49 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     super(repo);
   }
 
-  // async GetVRParameters( //for sector admin
-  //   options: IPaginationOptions,
-  //   filterText: string,
-  //   VRstatusId: number,
-  //   countryIdFromTocken: number,
-  // ): Promise<Pagination<Assessment>> {
-  //   let filter: string = `ae.verificationStatus is not null`;
+  async GetVRParameters( //for sector admin
+    options: IPaginationOptions,
+    filterText: string,
+    VRstatusId: number,
+    countryIdFromTocken: number,
+  ): Promise<Pagination<Assessment>> {
+    let filter: string = `ae.verificationStatus is not null`;
 
-  //   if (filterText != null && filterText != undefined && filterText != '') {
-  //     filter =
-  //       '(p.climateActionName LIKE :filterText  OR as.assessmentType LIKE :filterText OR ae.AssessmentYear like :filterText OR ae.editedOn  like :filterText OR ae.verificationDeadline  like :filterText OR ae.verificationStatus  like :filterText)';
-  //   }
+    if (filterText != null && filterText != undefined && filterText != '') {
+      filter =
+        '(p.climateActionName LIKE :filterText  OR as.assessmentType LIKE :filterText OR ae.year like :filterText OR ae.editedOn  like :filterText OR ae.verificationDeadline  like :filterText OR ae.verificationStatus  like :filterText)';
+    }
 
-  //   if (VRstatusId != 0) {
-  //     filter = `${filter}  and ae.verificationStatus = :VRstatusId`;
-  //   }
-  //   let data = this.assessmentYearRepo
-  //     .createQueryBuilder('ae')
-  //     .innerJoinAndMapOne(
-  //       'ae.assessment',
-  //       Assessment,
-  //       'as',
-  //       'ae.assessmentId = as.id',   //`a.projectId = p.id and p.countryId = ${countryIdFromTocken}`
-  //     )
-  //     .innerJoinAndMapOne('as.project', Project, 'p', `as.projectId = p.id and p.countryId = ${countryIdFromTocken}`)
+    if (VRstatusId != 0) {
+      filter = `${filter}  and ae.verificationStatus = :VRstatusId`;
+    }
+    let data = this.assessmentRepo
+      .createQueryBuilder('ae')
+      .innerJoinAndMapOne(
+        'as.project',
+        ClimateAction,
+        'p',
+        `as.projectId = p.id and p.countryId = ${countryIdFromTocken}`
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+        VRstatusId,
+      })
+      // .groupBy('ae.Assessmentid')
+      // .groupBy('ae.AssessmentYear')
+      .orderBy('ae.qaDeadline', 'DESC');
+    // console.log(
+    //   '=====================================================================',
+    // );
+    console.log("PPPPPPPP",data.getQuery());
 
-  //     .where(filter, {
-  //       filterText: `%${filterText}%`,
-  //       VRstatusId,
-  //     })
-  //     // .groupBy('ae.Assessmentid')
-  //     // .groupBy('ae.AssessmentYear')
-  //     .orderBy('ae.qaDeadline', 'DESC');
-  //   // console.log(
-  //   //   '=====================================================================',
-  //   // );
-  //   console.log("PPPPPPPP",data.getQuery());
+    let resualt = await paginate(data, options);
 
-  //   let resualt = await paginate(data, options);
-
-  //   if (resualt) {
-  //     console.log("result is...",resualt)
-  //     return resualt;
-  //   }
-  // }
+    if (resualt) {
+      console.log("result is...",resualt)
+      return resualt;
+    }
+  }
 
   async GetVerifierParameters(
     options: IPaginationOptions,
@@ -97,7 +95,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(p.climateActionName LIKE :filterText  OR assessment.assessmentType LIKE :filterText OR ae.AssessmentYear like :filterText OR ae.editedOn  like :filterText OR ae.verificationDeadline  like :filterText OR ae.verificationStatus  like :filterText)';
+        '(p.climateActionName LIKE :filterText  OR assessment.assessmentType LIKE :filterText OR ae.year like :filterText OR ae.editedOn  like :filterText OR ae.verificationDeadline  like :filterText OR ae.verificationStatus  like :filterText)';
     }
 
     if (VRstatusId != 0) {

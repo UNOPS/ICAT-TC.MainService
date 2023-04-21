@@ -21,30 +21,29 @@ export class VerificationController
     ) {}
 
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('verification/GetVRParameters/:page/:limit/:statusId/:filterText')
-  // async GetVRParameters(
-  //   @Request() request,
-  //   @Query('page') page: number,
-  //   @Query('limit') limit: number,
-  //   @Query('statusId') statusId: number,
-  //   @Query('filterText') filterText: string,
-  // ): Promise<any> {
+  @UseGuards(JwtAuthGuard)
+  @Get('verification/GetVRParameters/:page/:limit/:statusId/:filterText')
+  async GetVRParameters(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('statusId') statusId: number,
+    @Query('filterText') filterText: string,
+  ): Promise<any> {
 
-  //   let countryIdFromTocken:number ;
-  //   [countryIdFromTocken] =    this.tokenDetails.getDetails([TokenReqestType.countryId])
+    let countryIdFromTocken:number ;
+    [countryIdFromTocken] =    this.tokenDetails.getDetails([TokenReqestType.countryId])
    
-
-  //   return await this.service.GetVRParameters(
-  //     {
-  //       limit: limit,
-  //       page: page,
-  //     },
-  //     filterText,
-  //     statusId,
-  //     countryIdFromTocken,
-  //   );
-  // }
+    return await this.service.GetVRParameters(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      statusId,
+      countryIdFromTocken,
+    );
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('verification/GetVerifierParameters/:page/:limit/:statusId/:filterText')

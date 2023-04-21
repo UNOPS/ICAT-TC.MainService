@@ -377,27 +377,27 @@ async uploadFile2(
     @Body() updateDeadlineDto: DataVerifierDto,
   ): Promise<boolean> {
 
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.startTransaction();
-    try {
+    // const queryRunner = getConnection().createQueryRunner();
+    // await queryRunner.startTransaction();
+    // try {
       let audit: AuditDto = new AuditDto();
       let paeameter = this.methodologyAssessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
-      console.log(updateDeadlineDto)
-      audit.action = 'Verifier Deadline Created';
-      audit.comment = 'Verifier Deadline Created';
-      audit.actionStatus = 'Created'
-      // this.auditService.create(audit);
-      await queryRunner.commitTransaction();
+      // console.log(updateDeadlineDto)
+      // audit.action = 'Verifier Deadline Created';
+      // audit.comment = 'Verifier Deadline Created';
+      // audit.actionStatus = 'Created'
+      // // this.auditService.create(audit);
+      // await queryRunner.commitTransaction();
       return paeameter;
-    }
-    catch (err) {
-      console.log("worktran2")
-      console.log(err);
-      await queryRunner.rollbackTransaction();
-      return err;
-    } finally {
-      await queryRunner.release();
-    }
+    // }
+    // catch (err) {
+    //   console.log("worktran2")
+    //   console.log(err);
+    //   await queryRunner.rollbackTransaction();
+    //   return err;
+    // } finally {
+    //   await queryRunner.release();
+    // }
 
   }
 }
