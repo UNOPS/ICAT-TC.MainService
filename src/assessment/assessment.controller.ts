@@ -120,60 +120,6 @@ export class AssessmentController {
     );
   }
 
-  // @UseGuards(JwtAuthGuard)
-  @Get('get-assessments-for-assign-verifier')
-  async getAssessmentForAssignVerifier(
-    @Request() request,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-    @Query('statusId') statusId: number,
-    @Query('filterText') filterText: string,
-  ): Promise<any> {
-    console.log("getAssessmentForAssignVerifier")
 
-    let countryIdFromTocken: number;
-    let sectorIdFromTocken: number;
-    [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId, TokenReqestType.InstitutionId])
-    console.log(countryIdFromTocken, sectorIdFromTocken)
 
-    return await this.assessmentService.getAssessmentForAssignVerifier(
-      {
-        limit: limit,
-        page: page,
-      },
-      filterText,
-      statusId,
-      countryIdFromTocken
-    );
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Put('update-assign-verifiers')
-  async updateAssignVerifiers(
-    @Body() updateDeadlineDto: DataVerifierDto,
-  ): Promise<boolean> {
-
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.startTransaction();
-    try {
-      let audit: AuditDto = new AuditDto();
-      let paeameter = this.assessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
-      console.log(updateDeadlineDto)
-      audit.action = 'Verifier Deadline Created';
-      audit.comment = 'Verifier Deadline Created';
-      audit.actionStatus = 'Created'
-      // this.auditService.create(audit);
-      await queryRunner.commitTransaction();
-      return paeameter;
-    }
-    catch (err) {
-      console.log("worktran2")
-      console.log(err);
-      await queryRunner.rollbackTransaction();
-      return err;
-    } finally {
-      await queryRunner.release();
-    }
-
-  }
 }

@@ -17,6 +17,9 @@ import { editFileName, fileLocation } from './entities/file-upload.utils';
 import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { Results } from './entities/results.entity';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { getConnection } from 'typeorm';
+import { AuditDto } from 'src/audit/dto/audit-dto';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
@@ -366,5 +369,35 @@ async uploadFile2(
       statusId,
       countryIdFromTocken
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update-assign-verifiers')
+  async updateAssignVerifiers(
+    @Body() updateDeadlineDto: DataVerifierDto,
+  ): Promise<boolean> {
+
+    const queryRunner = getConnection().createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      let audit: AuditDto = new AuditDto();
+      let paeameter = this.methodologyAssessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
+      console.log(updateDeadlineDto)
+      audit.action = 'Verifier Deadline Created';
+      audit.comment = 'Verifier Deadline Created';
+      audit.actionStatus = 'Created'
+      // this.auditService.create(audit);
+      await queryRunner.commitTransaction();
+      return paeameter;
+    }
+    catch (err) {
+      console.log("worktran2")
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
+
   }
 }

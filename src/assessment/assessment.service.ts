@@ -56,7 +56,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    console.log("qqqqqqq", data)
     return data;
   }
 
@@ -241,90 +240,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     return false;
   }
 
-  async getAssessmentForAssignVerifier(
-    options: IPaginationOptions,
-    filterText: string,
-    QAstatusId: number,
-    countryIdFromTocken:number
-  ): Promise<any> {
 
-    let data = this.repo
-      .createQueryBuilder('assessment')
-      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
-      .leftJoinAndMapOne(
-        'assessment.verificationUser',
-        User,
-        'u',
-        'assessment.verificationUser = u.id',
-      )
-      .where(
-        (
-          (QAstatusId != 0
-            ? `assessment.verificationStatus=${QAstatusId} AND `
-            : `assessment.verificationStatus in (2,3,4,5,6,7) AND `) +
-          `assessment.qaStatus in (4) AND ` +
-          (filterText != ''
-            ? `(p.policyName LIKE '%${filterText}%' OR assessment.assessmentType LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
-           )`
-            : '')
-        ).replace(/AND $/, ''),
-      )
-      .orderBy('assessment.verificationDeadline', 'DESC')
-      .groupBy('assessment.id');
-
-    console.log('AssessmentFor Verifier', data.getSql());
-
-    let result = await paginate(data, options);
-    return result;
-  }
-
-  async acceptDataVerifiersForIds(
-    updateDataRequestDto: DataVerifierDto,
-  ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
-
-    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
-      const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-      let originalStatus = dataRequestItem.verificationStatus;
-      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
-      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
-      dataRequestItem.verificationUser = updateDataRequestDto.userId;
-
-      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
-      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
-      var template: any;
-        template =
-          'Dear ' +
-          user.firstName + ' ' + user.lastName+
-          ' <br/> Data request with following information has shared with you.' +
-          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-          // '<br/> value -:' + dataRequestItem.parameter.value +
-          // '<br> comment -: ' + updateDataRequestDto.comment;
-      
-          this.emaiService.sendMail(
-            user.email,
-            'Assign verifier',
-            '',
-            template,
-          );
-      // dataRequestItemList.push(dataRequestItem);
-      this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
-        // this.parameterHistoryService.SaveParameterHistory(
-        //   res.id,
-        //   ParameterHistoryAction.AssignVerifier,
-        //   'AssignVerifier',
-        //   '',
-        //   res.verificationStatus.toString(),
-        //   originalStatus.toString(),
-        // );
-      });
-    }
-
-    // this.repo.save(dataRequestItemList);
-
-    return true;
-  }
 
 }

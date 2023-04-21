@@ -29,6 +29,9 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 import { getConnection } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -49,6 +52,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
+    private userService: UsersService,
+    private emaiService: EmailNotificationService
 
    ) {
     super(repo)
@@ -701,5 +706,53 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let result = await paginate(data, options);
     return result;
+  }
+
+  async acceptDataVerifiersForIds(
+    updateDataRequestDto: DataVerifierDto,
+  ): Promise<boolean> {
+    // let dataRequestItemList = new Array<ParameterRequest>();
+
+    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+      const id = updateDataRequestDto.ids[index];
+      let dataRequestItem = await this.assessmentRepository.findOne({ where: { id: id } });
+      let originalStatus = dataRequestItem.verificationStatus;
+      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
+      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
+      dataRequestItem.verificationUser = updateDataRequestDto.userId;
+
+      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
+      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
+      var template: any;
+        template =
+          'Dear ' +
+          user.firstName + ' ' + user.lastName+
+          ' <br/> Data request with following information has shared with you.' +
+          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
+          // '<br/> value -:' + dataRequestItem.parameter.value +
+          // '<br> comment -: ' + updateDataRequestDto.comment;
+      
+          this.emaiService.sendMail(
+            user.email,
+            'Assign verifier',
+            '',
+            template,
+          );
+      // dataRequestItemList.push(dataRequestItem);
+      this.assessmentRepository.save(dataRequestItem).then((res) => {
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.AssignVerifier,
+        //   'AssignVerifier',
+        //   '',
+        //   res.verificationStatus.toString(),
+        //   originalStatus.toString(),
+        // );
+      });
+    }
+
+    // this.repo.save(dataRequestItemList);
+
+    return true;
   }
 }
