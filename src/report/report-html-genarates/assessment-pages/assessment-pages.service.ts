@@ -54,7 +54,6 @@ export class AssessmentPagesService {
     <div class="content">
     <div class="table-of-content ">
     <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-    <div class="table-of-content-header-item"><div >List of Tables ................................................................................................................................................................</div><div ><bdi>.................7</bdi></div> </div>
     <div class="table-of-content-header-item"><div >1.	OVERVIEW OF THE METHODOLOGY  ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
     <div class="table-of-content-header-item"><div >2.	DEFINING THE ASSESSMENT (PART I & II).................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
     <div class="table-of-content-header-item"><div >3.	IMPACT ASSESSMENT (PART III).................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
@@ -72,5 +71,12 @@ export class AssessmentPagesService {
      </div>`;
 
     return page_one;
+  }
+
+
+  contentOne(header: string, footer: string): string {
+
+
+    
   }
 }

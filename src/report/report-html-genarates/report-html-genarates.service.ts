@@ -57,6 +57,8 @@ export class ReportHtmlGenaratesService {
             <body>
              ${this.reportPagesService.coverPage()}
              ${this.reportPagesService.tableOfContent(header,footer)}
+             ${this.reportPagesService.contentOne(header,footer)}
+             ${this.reportPagesService.contentTwo(header,footer)}
             </body></html>`,
     };
   }
@@ -104,6 +106,8 @@ export class ReportHtmlGenaratesService {
 
         <body>
         ${this.assessmentPagesService.coverPage()}
+        ${this.assessmentPagesService.tableOfContent(header,footer)}
+       
         </body></html>`,
     };
   }
