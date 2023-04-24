@@ -66,12 +66,13 @@ export class ReportHtmlGenaratesService {
   async assessmentHtmlGenarate(assessmentDto: AssessmentDto): Promise<any> {
     const header = ` <div class="header">
     <div class="row ">
+    <div class="col-4 align-self-center">
+    <img height="50px" src="" >
+</div>
       <div class="col-8 align-self-center">
-          Greenhouse Gas Inventory Report –
+      January 2021
       </div>
-      <div class="col-4 align-self-center">
-          <img height="50px" src="" >
-      </div>
+     
     </div>
     <div  class="row"></div>
   </div>`;
