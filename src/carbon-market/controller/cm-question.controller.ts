@@ -49,5 +49,10 @@ export class CMQuestionController implements CrudController<CMQuestion>
     return await this.service.getQuestionsByCriteria(criteriaId)
   }
 
+  @Get('get-answers-by-question')
+  async getAnswersByQuestion(@Query('questionId') questionId: number){
+    return await this.service.getAnswersByQuestion(questionId)
+  }
+
 
 }

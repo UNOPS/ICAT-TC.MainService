@@ -5,6 +5,7 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { Repository } from "typeorm-next";
 import { Section } from "../entity/section.entity";
+import { CMAnswer } from "../entity/cm-answer.entity";
 
 @Injectable()
 export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
@@ -13,7 +14,9 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
     @InjectRepository(Criteria)
     private criteriaRepo: Repository<Criteria>,
     @InjectRepository(Section)
-    private sectionRepo: Repository<Section>
+    private sectionRepo: Repository<Section>,
+    @InjectRepository(CMAnswer)
+    private answerRepo: Repository<CMAnswer>
   ) {
     super(repo);
   }
@@ -43,9 +46,32 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       'criteria',
       'criteria.id = question.criteriaId'
     )
+    .leftJoinAndSelect(
+      'question.pre_question',
+      'pre_q',
+      'pre_q.id = question.preQuestionId'
+    )
+    .leftJoinAndSelect(
+      'question.prev_answer_to_generate',
+      'pre_a',
+      'pre_a.id = question.prevAnswerToGenerateId'
+    )
     .where('criteria.id = :criteriaId', {criteriaId: criteriaId})
 
     return data.getMany()
+  }
+
+  async getAnswersByQuestion(questionId: number){
+    // return await this.answerRepo.find({question: {id: questionId}})
+    let data = this.answerRepo.createQueryBuilder('answer')
+    .leftJoinAndSelect(
+      'answer.question',
+      'question',
+      'question.id = answer.questionId'
+    )
+    .where('question.id = :questionId', {questionId: questionId})
+
+    return await data.getMany()
   }
 }
 
