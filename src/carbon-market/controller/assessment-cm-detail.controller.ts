@@ -16,7 +16,7 @@ import { AssessmentCMDetailService } from "../service/assessment-cm-detail.servi
     },
   },
 })
-@Controller()
+@Controller('assessment-cm-detail')
 export class AssessmentCMDetailController
   implements CrudController<AssessmentCMDetail>
 {

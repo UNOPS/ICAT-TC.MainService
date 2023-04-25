@@ -24,7 +24,7 @@ import { CMQuestionService } from "../service/cm-question.service";
     },
   },
 })
-@Controller()
+@Controller('cm-question')
 export class CMQuestionController implements CrudController<CMQuestion>
 {
   constructor(public service: CMQuestionService,
