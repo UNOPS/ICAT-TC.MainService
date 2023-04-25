@@ -18,6 +18,9 @@ export class CMQuestion extends BaseTrackingEntity {
   code: string
 
   @Column()
+  label: string
+
+  @Column()
   order: number
 
   @ManyToOne((type) => CMQuestion, { eager: false}) // dont change eager = false
