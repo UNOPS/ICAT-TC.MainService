@@ -18,7 +18,7 @@ export class Criteria extends BaseTrackingEntity {
   @Column()
   order: number
 
-  @ManyToOne((type) => Criteria, { eager: true}) 
+  @ManyToOne((type) => Section, { eager: true}) 
   @JoinColumn()
   section: Section; 
 
