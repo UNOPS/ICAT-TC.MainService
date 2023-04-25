@@ -14,4 +14,7 @@ export class Section extends BaseTrackingEntity {
   @Column()
   code: string
 
+  @Column()
+  order: number
+
 }
