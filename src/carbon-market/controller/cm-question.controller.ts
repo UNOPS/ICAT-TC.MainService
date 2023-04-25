@@ -44,5 +44,10 @@ export class CMQuestionController implements CrudController<CMQuestion>
     return await this.service.getCriteriaBySectionId(sectionId)
   }
 
+  @Get('get-question-by-criteria')
+  async getQuestionsByCriteria(@Query('criteriaId') criteriaId: number){
+    return await this.service.getQuestionsByCriteria(criteriaId)
+  }
+
 
 }

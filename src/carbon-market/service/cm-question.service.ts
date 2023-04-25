@@ -23,7 +23,29 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
   }
 
   async getCriteriaBySectionId(sectionId: number):Promise<Criteria[]>{
-    return await this.criteriaRepo.find({section: {id: sectionId}})
+    let data = this.criteriaRepo.createQueryBuilder('criteria')
+    .innerJoinAndMapOne(
+      'criteria.section',
+      Section,
+      'section',
+      'criteria.sectionId = section.id'
+    )
+    .where ('section.id = :sectionId', {sectionId: sectionId})
+
+    return await data.getMany()
+  }
+
+  async getQuestionsByCriteria(criteriaId: number){
+    let data = this.repo.createQueryBuilder('question')
+    .innerJoinAndMapOne(
+      'question.criteria',
+      Criteria,
+      'criteria',
+      'criteria.id = question.criteriaId'
+    )
+    .where('criteria.id = :criteriaId', {criteriaId: criteriaId})
+
+    return data.getMany()
   }
 }
 
