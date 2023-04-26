@@ -15,6 +15,9 @@ export class CMAnswer extends BaseTrackingEntity {
   @Column()
   weight: string
 
+  @Column({default: true})
+  isPassing: boolean
+
   @ManyToOne((type) => CMQuestion, { eager: true}) 
   @JoinColumn()
   question: CMQuestion; 
