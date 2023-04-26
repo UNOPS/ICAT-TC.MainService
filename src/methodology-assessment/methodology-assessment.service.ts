@@ -199,6 +199,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return assessementId;
   }
 
+  async saveAssessment(assessment: Assessment){
+    return await this.assessmentRepository.save(assessment)
+  }
+
   async barrierCharacteristics(dataArr : any){
 
     let methodology = new Methodology();

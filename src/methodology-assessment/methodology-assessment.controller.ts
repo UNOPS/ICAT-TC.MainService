@@ -21,6 +21,7 @@ import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
@@ -82,6 +83,12 @@ export class MethodologyAssessmentController {
 
     return this.resData
 
+  }
+
+
+  @Post('save-assessment')
+  async saveAssessment(@Body() assessment: Assessment){
+    return await this.methodologyAssessmentService.saveAssessment(assessment)
   }
   
 
