@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { ReportContentOne, ReportContentTwo, ReportCoverPage, ReportTableOfContent } from 'src/report/dto/report.dto';
 
 @Injectable()
 export class ReportPagesService {
   constructor() {}
 
-  coverPage(): string {
+  coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
     <!-- <div  class="row ">
@@ -14,7 +15,7 @@ export class ReportPagesService {
    </div> -->
    <div class="row ">
        <div class="col h2 d-flex justify-content-center">
-         REPORT TITLE
+         ${coverPage.generateReportName}
        </div>
    </div>
    <div class="row ">
@@ -24,7 +25,7 @@ export class ReportPagesService {
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Document Prepared By (individual or entity)
+         Document Prepared By ${coverPage.document_prepared_by}
        </div>
    </div>
    <div class="row ">
@@ -34,19 +35,23 @@ export class ReportPagesService {
  </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date
+       Report Date:${coverPage.reportDate}
      </div>
  </div>
  </div>
  <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
-       <img  style="padding: 0px;" src="http://localhost:7080/report/cover/icatlogo.jpg" > 
+       <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
 
     return cover;
   }
 
-  tableOfContent(header: string, footer: string): string {
+  tableOfContent(
+    header: string,
+    footer: string,
+    tableOfContent: ReportTableOfContent,
+  ): string {
     let pageNumber = 5;
 
     const page_one = `  <div id="page_5" class="page text-center" >
@@ -82,7 +87,7 @@ export class ReportPagesService {
     return page_one;
   }
 
-  contentOne(header: string, footer: string): string {
+  contentOne(header: string, footer: string, contentOne: ReportContentOne): string {
     let pageNumber = 5;
     const policyOrActions = [
       {
@@ -108,27 +113,25 @@ export class ReportPagesService {
   <div class="content">
   <div  class="main_header text-start">1 INTRODUCTION</div>
   <div  class="main_header_sub text-start">1.1	General information about the assessment</div> 
-         <blockquote class=" paragraph blockquote text-start ">
-           <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-             took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-             </p>
-         </blockquote>
-         <blockquote class=" paragraph blockquote text-start ">
-           <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took 
-            a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
-           </p>
-         </blockquote>
-
-         <div  class="main_header_sub text-start">1.1	General information about the assessment</div> 
-         <blockquote class=" paragraph blockquote text-start ">
-         <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-            but also the leap into electronic typesetting, remaining essentially unchanged. 
-            </p>
-       </blockquote>
+  <div class="list">  
+  <ul>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Provides a good understanding on impacts on climate change;</p>
+  </blockquote></li>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Develops key performance indicators for emission and energy management;</p>
+  </blockquote></li>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Maintains a higher rank among other competitive industries showing its commitment towards sustainable business;</p>
+  </blockquote></li>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Meets stakeholders demand to address the imperative corporate responsibility of environmental conservation; and</p>
+  </blockquote></li>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Develops Carbon management plan to make real emission reduction through supply chain and production.</p>
+  </blockquote></li>  
+</ul>
+</div>
        <div class="report-table-sm">
        <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
        <table class="table  table-bordered border-dark">
@@ -286,7 +289,7 @@ export class ReportPagesService {
     return page_one + page_two;
   }
 
-  contentTwo(header: string, footer: string): string {
+  contentTwo(header: string, footer: string, contentTwo: ReportContentTwo): string {
     let pageNumber = 5;
     const assessment = [];
 

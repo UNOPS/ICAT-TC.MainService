@@ -58,9 +58,10 @@ export class ReportController {
     res.setHeader('Content-Disposition', 'inline;filename=yolo.pdf');
 
 
-
-  const reprtDto:ReportDto=this.reportService.genarateReportDto();
-    return res.send(await this.reportGenarateService.reportGenarate('reportPDF.pdf',await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto)));
+  const createReportDto= new CreateReportDto()
+  createReportDto.assessmentId=1;
+  const reprtDto:ReportDto=this.reportService.genarateReportDto(createReportDto);
+    return res.send(await this.reportGenarateService.reportGenarate(reprtDto.reportName,await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto)));
   }
 
   @Get('assessmentPDF')

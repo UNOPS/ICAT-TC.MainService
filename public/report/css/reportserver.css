@@ -151,7 +151,17 @@ body {
   height: 500px;
   width: 800px;
 }
-
+.image-set {
+  margin-left: 75px;
+  margin-right: 75px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+.image-set img{
+ width: 100%;
+ height: auto;
+ /* position: relative; */
+}
 .image-pie {
   margin-left: 75px;
   padding-top: 50px;

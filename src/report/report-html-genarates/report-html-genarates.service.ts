@@ -55,10 +55,10 @@ export class ReportHtmlGenaratesService {
   
   
             <body>
-             ${this.reportPagesService.coverPage()}
-             ${this.reportPagesService.tableOfContent(header,footer)}
-             ${this.reportPagesService.contentOne(header,footer)}
-             ${this.reportPagesService.contentTwo(header,footer)}
+             ${this.reportPagesService.coverPage(repportDto.coverPage)}
+             ${this.reportPagesService.tableOfContent(header,footer,repportDto.tableOfContent)}
+             ${this.reportPagesService.contentOne(header,footer,repportDto.contentOne)}
+             ${this.reportPagesService.contentTwo(header,footer,repportDto.contentTwo)}
             </body></html>`,
     };
   }
@@ -69,7 +69,7 @@ export class ReportHtmlGenaratesService {
     <div class="col-4 align-self-center">
     <img height="50px" src="" >
 </div>
-      <div class="col-8 align-self-center">
+      <div class="col-8 align-self-end">
       January 2021
       </div>
      
@@ -108,6 +108,12 @@ export class ReportHtmlGenaratesService {
         <body>
         ${this.assessmentPagesService.coverPage()}
         ${this.assessmentPagesService.tableOfContent(header,footer)}
+        ${this.assessmentPagesService.contentOne(header,footer)}
+        ${this.assessmentPagesService.contentTwo(header,footer)}
+        ${this.assessmentPagesService.contentThree(header,footer)}
+        ${this.assessmentPagesService.contentFour(header,footer)}
+        ${this.assessmentPagesService.contentFive(header,footer)}
+       
        
         </body></html>`,
     };

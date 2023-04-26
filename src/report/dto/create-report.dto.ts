@@ -1,1 +1,6 @@
-export class CreateReportDto {}
+export class CreateReportDto {
+
+assessmentId:number;
+
+
+}
