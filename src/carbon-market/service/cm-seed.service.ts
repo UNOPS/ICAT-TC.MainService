@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { criterias, questions, sections } from "../dto/seed-data";
+import { answers, criterias, questions, sections } from "../dto/seed-data";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Section } from "../entity/section.entity";
 import { Repository } from "typeorm-next";
 import { Criteria } from "../entity/criteria.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
+import { CMAnswer } from "../entity/cm-answer.entity";
 
 @Injectable()
 export class CMSeedService {
@@ -12,7 +13,8 @@ export class CMSeedService {
     constructor(
         @InjectRepository(Section) private sectionRepo: Repository<Section>,
         @InjectRepository(Criteria) private criteriaRepo: Repository<Criteria>,
-        @InjectRepository(CMQuestion) private questionRepo: Repository<CMQuestion>
+        @InjectRepository(CMQuestion) private questionRepo: Repository<CMQuestion>,
+        @InjectRepository(CMAnswer) private answerRepo: Repository<CMAnswer>
     ){}
 
     async sectionSeed(){
@@ -95,5 +97,34 @@ export class CMSeedService {
             return "All the questions are saved"
         }
 
+    }
+
+    async answerSeed() {
+        let _answers: CMAnswer[] = []
+        for await (let answer of answers){
+            let exist = await this.answerRepo.find({code: answer.code})
+            if (exist.length === 0 ){
+                let question = await this.questionRepo.find({code: answer.question})
+                let a = new CMAnswer()
+                a.label = answer.label
+                a.code = answer.code
+                a.isPassing = answer.isPassing
+                a.weight = answer.weight
+                a.score_portion = answer.score_portion
+                a.question = question[0]
+
+                _answers.push(a)
+            }
+        }
+        if (_answers.length > 0) {
+            let res = this.answerRepo.save(_answers)
+            if (res) {
+                return "saved"
+            } else {
+                return "failed to save"
+            }
+        } else {
+            return "All the answers are saved"
+        }
     }
 }

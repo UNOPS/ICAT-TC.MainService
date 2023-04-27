@@ -12,6 +12,9 @@ export class CMAnswer extends BaseTrackingEntity {
   @Column()
   label: string;
 
+  @Column()
+  code: string;
+
   @Column({default: 0})
   weight: number
 

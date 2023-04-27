@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Controller, Post } from "@nestjs/common";
 import { CMSeedService } from "../service/cm-seed.service";
 
 @Controller('cm-seed')
@@ -21,5 +21,10 @@ export class CMSeedController {
     @Post('question-seed')
     async questionSeed(){
         return await this.service.questionSeed()
+    }
+
+    @Post('answer-seed')
+    async answerSeed(){
+        return await this.service.answerSeed()
     }
 }
