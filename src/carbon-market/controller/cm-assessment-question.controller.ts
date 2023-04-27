@@ -2,7 +2,7 @@ import { Crud, CrudController } from "@nestjsx/crud";
 import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
-import { CMResultDto, SaveCMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 
 
@@ -35,6 +35,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @Post('save-result')
   async saveResult(@Body() req: SaveCMResultDto){
     return await this.service.saveResult(req.result, req.assessment)
+  }
+
+  @Post('calculate')
+  async calculateResult(@Body() req: CalculateDto){
+    return await this.service.calculateResult(req.assessmentId)
   }
 
 

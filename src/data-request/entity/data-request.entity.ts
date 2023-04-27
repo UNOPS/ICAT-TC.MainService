@@ -14,7 +14,7 @@ import {
 } from 'typeorm';
 import { DataRequestStatus } from './data-request-status.entity';
 
-@Entity({ name: 'dataRequest' })
+@Entity({ name: 'datarequest' })
 export class ParameterRequest extends BaseTrackingEntity {
   constructor() {
     super();

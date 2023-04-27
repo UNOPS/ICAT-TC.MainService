@@ -46,16 +46,6 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       'criteria',
       'criteria.id = question.criteriaId'
     )
-    .leftJoinAndSelect(
-      'question.pre_question',
-      'pre_q',
-      'pre_q.id = question.preQuestionId'
-    )
-    .leftJoinAndSelect(
-      'question.prev_answer_to_generate',
-      'pre_a',
-      'pre_a.id = question.prevAnswerToGenerateId'
-    )
     .where('criteria.id = :criteriaId', {criteriaId: criteriaId})
 
     return data.getMany()

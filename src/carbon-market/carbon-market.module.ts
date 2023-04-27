@@ -15,6 +15,8 @@ import { CMAssessmentQuestionController } from "./controller/cm-assessment-quest
 import { CMAssessmentQuestionService } from "./service/cm-assessment-question.service";
 import { CMAssessmentAnswerController } from "./controller/cm-assessment-answer.controller";
 import { CMAssessmentAnswerService } from "./service/cm-assessment-answer.service";
+import { CMSeedController } from "./controller/cm-seed.controller";
+import { CMSeedService } from "./service/cm-seed.service";
 
 
 @Module({
@@ -33,13 +35,15 @@ import { CMAssessmentAnswerService } from "./service/cm-assessment-answer.servic
     AssessmentCMDetailController,
     CMQuestionController,
     CMAssessmentQuestionController,
-    CMAssessmentAnswerController
+    CMAssessmentAnswerController,
+    CMSeedController
   ],
   providers: [
     AssessmentCMDetailService,
     CMQuestionService,
     CMAssessmentQuestionService,
-    CMAssessmentAnswerService
+    CMAssessmentAnswerService,
+    CMSeedService
   ],
   exports: [],
 })

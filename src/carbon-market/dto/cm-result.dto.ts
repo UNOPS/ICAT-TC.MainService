@@ -12,3 +12,7 @@ export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
 }
+
+export class CalculateDto {
+    assessmentId: number
+}
