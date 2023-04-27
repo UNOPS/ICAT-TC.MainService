@@ -68,29 +68,29 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return a_ans
   }
 
-  async calculateResult(assessmentId: number){
+  async calculateResult(assessmentId: number) {
     let tc_score = 0
     let questions = await this.assessmentQuestionRepo
-    .createQueryBuilder('aq')
-    .innerJoin(
-      'aq.assessment',
-      'assessment',
-      'assessment.id = aq.assessmentId'
-    )
-    .where('assessment.id = :id', {id: assessmentId} )
-    .getMany()
-    if (questions.length > 0){
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .where('assessment.id = :id', { id: assessmentId })
+      .getMany()
+    if (questions.length > 0) {
       let qIds: number[] = questions.map((q) => q.id)
       console.log(qIds)
       let answers = await this.assessmentAnswerRepo
-      .createQueryBuilder('ans')
-      .innerJoin(
-        'ans.assessment_question',
-        'question',
-        'question.id = ans.assessmentQuestionId'
-      )
-      .where('question.id In (:id)', {id: qIds})
-      .getMany()
+        .createQueryBuilder('ans')
+        .innerJoin(
+          'ans.assessment_question',
+          'question',
+          'question.id = ans.assessmentQuestionId'
+        )
+        .where('question.id In (:id)', { id: qIds })
+        .getMany()
       answers.forEach(ans => {
         tc_score += ans.score
       })
