@@ -12,8 +12,8 @@ export class CMAnswer extends BaseTrackingEntity {
   @Column()
   label: string;
 
-  @Column()
-  weight: string
+  @Column({default: 0})
+  weight: number
 
   @Column({default: true})
   isPassing: boolean
