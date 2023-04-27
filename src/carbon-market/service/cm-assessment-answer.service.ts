@@ -2,16 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
+import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 
 @Injectable()
-export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
+export class CMAssessmentAnswerService extends TypeOrmCrudService<CMAssessmentAnswer> {
   constructor(
-    @InjectRepository(CMAssessmentQuestion) repo,
+    @InjectRepository(CMAssessmentAnswer) repo,
   ) {
     super(repo);
   }
 
-  async create(question:CMAssessmentQuestion){
+  async create(question:CMAssessmentAnswer){
     return await this.repo.save(question)
   }
 

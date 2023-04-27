@@ -11,6 +11,10 @@ import { CMAssessmentAnswer } from "./entity/cm-assessment-answer.entity";
 import { AssessmentCMDetailController } from "./controller/assessment-cm-detail.controller";
 import { CMQuestionService } from "./service/cm-question.service";
 import { CMQuestionController } from "./controller/cm-question.controller";
+import { CMAssessmentQuestionController } from "./controller/cm-assessment-question.controller";
+import { CMAssessmentQuestionService } from "./service/cm-assessment-question.service";
+import { CMAssessmentAnswerController } from "./controller/cm-assessment-answer.controller";
+import { CMAssessmentAnswerService } from "./service/cm-assessment-answer.service";
 
 
 @Module({
@@ -27,11 +31,15 @@ import { CMQuestionController } from "./controller/cm-question.controller";
   ],
   controllers: [
     AssessmentCMDetailController,
-    CMQuestionController
+    CMQuestionController,
+    CMAssessmentQuestionController,
+    CMAssessmentAnswerController
   ],
   providers: [
     AssessmentCMDetailService,
-    CMQuestionService
+    CMQuestionService,
+    CMAssessmentQuestionService,
+    CMAssessmentAnswerService
   ],
   exports: [],
 })
