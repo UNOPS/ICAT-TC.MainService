@@ -23,18 +23,6 @@ export class CMQuestion extends BaseTrackingEntity {
   @Column()
   order: number
 
-  @ManyToOne((type) => CMQuestion, { eager: false}) // dont change eager = false
-  @JoinColumn()
-  pre_question: CMQuestion; 
-  
-  @ManyToOne((type) => CMAnswer, { eager: true}) 
-  @JoinColumn()
-  prev_answer_to_generate: CMAnswer; 
-
-  @ManyToOne((type) => Section, { eager: true}) 
-  @JoinColumn()
-  section: Section; 
-
   @ManyToOne((type) => Criteria, { eager: true}) 
   @JoinColumn()
   criteria: Criteria; 
