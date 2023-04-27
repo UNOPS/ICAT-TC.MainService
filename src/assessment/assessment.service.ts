@@ -17,6 +17,9 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
+import { Sector } from 'src/master-data/sector/entity/sector.entity';
+import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
+import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -236,5 +239,71 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
 
     return false;
+  }
+
+  async findbyIDforReport(id: number) {
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        Methodology,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .leftJoinAndMapOne(
+        'proj.sector',
+        Sector,
+        'sec',
+        `sec.id = proj.sectorId`,
+      )
+      .leftJoinAndMapOne(
+        'proj.projectStatus',
+        ProjectStatus,
+        'prostatus',
+        `prostatus.id = proj.projectStatusId`,
+      )
+      .where({ id: id })
+      .getOne();
+    console.log("qqqqqqq", data)
+    return data;
+  }
+
+
+  async getCharacteristicasforReport(id: number,catagoryType:string) {
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+
+    
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        AssessmentCharacteristics,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .leftJoinAndMapOne(
+        'proj.sector',
+        Sector,
+        'sec',
+        `sec.id = proj.sectorId`,
+      )
+      .leftJoinAndMapOne(
+        'proj.projectStatus',
+        ProjectStatus,
+        'prostatus',
+        `prostatus.id = proj.projectStatusId`,
+      )
+      .where({ id: id })
+      .getOne();
+    console.log("qqqqqqq", data)
+    return data;
   }
 }

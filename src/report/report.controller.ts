@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Response,
+  Query,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
@@ -60,7 +61,7 @@ export class ReportController {
 
   const createReportDto= new CreateReportDto()
   createReportDto.assessmentId=1;
-  const reprtDto:ReportDto=this.reportService.genarateReportDto(createReportDto);
+  const reprtDto:ReportDto=await this.reportService.genarateReportDto(createReportDto);
     return res.send(await this.reportGenarateService.reportGenarate(reprtDto.reportName,await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto)));
   }
 
@@ -72,6 +73,17 @@ export class ReportController {
 
     const assessmentDto:AssessmentDto=this.reportService.genarateAssessmentDto();
     return res.send(await this.reportGenarateService.assessmentGenarate('assessmentPDF.pdf',await this.reportHtmlGenarateService.assessmentHtmlGenarate(assessmentDto)));
+  }
+
+  @Get('test/ReportDto')
+  async testReportDto(@Query('id') id: string):Promise<any>  {
+    
+
+    console.log("reprtDto",id)
+  const createReportDto= new CreateReportDto()
+  createReportDto.assessmentId=1;
+  const reprtDto:ReportDto= await this.reportService.genarateReportDto(createReportDto);
+  // console.log("reprtDto",reprtDto)
   }
 
 }

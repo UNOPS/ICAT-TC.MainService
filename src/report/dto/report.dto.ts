@@ -40,9 +40,9 @@ export class ReportContentOne {
     intendedAudience:string[]=[];
     opportunities:string[]=[];
     assessmetType:string="";
-    assessmentBoundary:string[]=[]
-
-
+    assessmentBoundary:string[]=[];
+    policyOrActionsDetails:object[]=[];
+    contextOfPolicy :object[]=[];
 
 
 }

@@ -89,24 +89,7 @@ export class ReportPagesService {
 
   contentOne(header: string, footer: string, contentOne: ReportContentOne): string {
     let pageNumber = 5;
-    const policyOrActions = [
-      {
-        information: 'data 1',
-        description: 'description 1',
-      },
-      {
-        information: 'data 2',
-        description: 'description 2',
-      },
-      {
-        information: 'data 3',
-        description: 'description 3',
-      },
-      {
-        information: 'data 4',
-        description: 'description 4',
-      },
-    ];
+    const policyOrActionsDetails = contentOne.policyOrActionsDetails
 
     const page_one = `  <div id="page_9" class="page text-center" >
   ${header}
@@ -116,22 +99,22 @@ export class ReportPagesService {
   <div class="list">  
   <ul>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Provides a good understanding on impacts on climate change;</p>
+    <p class="mb-0 lh-base">Name of Policy: ${contentOne.policyName}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Develops key performance indicators for emission and energy management;</p>
+    <p class="mb-0 lh-base">Assesment done by: ${contentOne.assesmentPersonOrOrganization}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Maintains a higher rank among other competitive industries showing its commitment towards sustainable business;</p>
+    <p class="mb-0 lh-base">Assesmet Year: ${contentOne.assessmentYear}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Meets stakeholders demand to address the imperative corporate responsibility of environmental conservation; and</p>
+    <p class="mb-0 lh-base">Assesment type: ${contentOne.assessmetType}</p>
   </blockquote></li>
-  <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Develops Carbon management plan to make real emission reduction through supply chain and production.</p>
-  </blockquote></li>  
+ 
 </ul>
 </div>
+
+<div  class="main_header_sub text-start">1.2	Describe the policy or action </div> 
        <div class="report-table-sm">
        <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
        <table class="table  table-bordered border-dark">
@@ -143,7 +126,7 @@ export class ReportPagesService {
            </tr>
          </thead>
          <tbody class="table-active ">
-         ${policyOrActions
+         ${policyOrActionsDetails
            .map(
              (a: { information: string; description: string }) =>
                '<tr><td>' +
