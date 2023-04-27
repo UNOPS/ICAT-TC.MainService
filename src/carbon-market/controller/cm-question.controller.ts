@@ -12,12 +12,6 @@ import { CMQuestionService } from "../service/cm-question.service";
   },
   query: {
     join: {
-      pre_question: {
-        eager: true,
-      },
-      prev_answer_to_generate: {
-        eager: true
-      },
       criteria: {
         eager: true
       }
