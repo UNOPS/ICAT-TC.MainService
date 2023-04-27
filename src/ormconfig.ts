@@ -43,6 +43,7 @@ import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Notification } from './notification/notification.entity';
 
 
 export const config: ConnectionOptions = {
@@ -66,10 +67,10 @@ export const config: ConnectionOptions = {
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User,Notification],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false,
+  synchronize: true,
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.

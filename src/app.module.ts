@@ -71,6 +71,7 @@ import { AggregatedAction } from './master-data/aggregated-action/entity/aggrega
 import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -161,7 +162,8 @@ import { Assessment } from './assessment/entities/assessment.entity';
     QualityCheckModule,
     ParameterHistoryModule,
     DefaultValueModule,
-    VerificationModule
+    VerificationModule,
+    NotificationModule
 
   ],
   controllers: [
