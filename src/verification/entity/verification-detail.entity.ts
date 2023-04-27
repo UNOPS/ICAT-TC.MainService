@@ -68,8 +68,8 @@ export class VerificationDetail extends BaseTrackingEntity {
   // @Column({ default: false })
   // isProjection: boolean;
 
-  // @Column({ default: false })
-  // isResult: boolean;
+  @Column({ default: false })
+  isResult: boolean;
 
   @Column({ default: false })
   isDataRequested: boolean;
