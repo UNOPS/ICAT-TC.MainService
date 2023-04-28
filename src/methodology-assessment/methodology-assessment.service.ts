@@ -427,6 +427,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
 
+  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
+    let paras = await this.repo.find({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
+    })
+    return paras
+  }
+  
   async assessCategory(resData :any){
     console.log("yyyyyyyyy", resData)
     for(let item of resData.result.categoryCalculatedProcess){

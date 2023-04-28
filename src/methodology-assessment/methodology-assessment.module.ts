@@ -1,4 +1,4 @@
-import { Module, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { MethodologyAssessmentController } from './methodology-assessment.controller';
 import { Category } from './entities/category.entity';
