@@ -20,6 +20,8 @@ import { User } from 'src/users/entity/user.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -277,33 +279,40 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
 
-  async getCharacteristicasforReport(id: number,catagoryType:string) {
+  async getCharacteristicasforReport(assessmentId: number,catagoryType:string) {
+    let filter: string = 'asse.id=:assessmentId and   parameters.characteristics_id is not null';
 
+    if(catagoryType){
+      if(filter){
+        filter=`${filter} and category.type= :catagoryType `
+      }else{
+        filter='category.type= :catagoryType '
+      }
+    }
     let data = await this.repo
-      .createQueryBuilder('asse')
+      .createQueryBuilder('asse') 
 
     
-      .leftJoinAndMapOne(
-        'asse.methodology',
-        AssessmentCharacteristics,
-        'meth',
-        `meth.id = asse.methodology_id`,
+      .leftJoinAndMapMany(
+        'asse.parameters',
+        MethodologyAssessmentParameters,
+        'parameters',
+        `parameters.assessment_id = asse.id`,
       )
       .leftJoinAndMapOne(
-        'proj.sector',
-        Sector,
-        'sec',
-        `sec.id = proj.sectorId`,
+        'parameters.category',
+        Category,
+        'category',
+        `category.id = parameters.category_id`,
       )
       .leftJoinAndMapOne(
-        'proj.projectStatus',
-        ProjectStatus,
-        'prostatus',
-        `prostatus.id = proj.projectStatusId`,
+        'parameters.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = parameters.characteristics_id`,
       )
-      .where({ id: id })
-      .getOne();
-    console.log("qqqqqqq", data)
-    return data;
+      .where(filter,{ assessmentId,catagoryType });
+    console.log("qqqqqqq", data.getQueryAndParameters())
+    return await data.getOne();
   }
 }

@@ -11,11 +11,12 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { AssessmentService } from 'src/assessment/assessment.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
+import { AssessmentModule } from 'src/assessment/assessment.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Report,Assessment]),UsersModule],
   controllers: [ReportController],
   providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService,AssessmentService],
-  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService],
+  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService],
 })
 export class ReportModule {}

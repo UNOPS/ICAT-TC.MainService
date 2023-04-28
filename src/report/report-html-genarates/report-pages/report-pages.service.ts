@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ReportContentOne, ReportContentTwo, ReportCoverPage, ReportTableOfContent } from 'src/report/dto/report.dto';
+import {
+  ReportContentOne,
+  ReportContentTwo,
+  ReportCoverPage,
+  ReportTableOfContent,
+} from 'src/report/dto/report.dto';
 
 @Injectable()
 export class ReportPagesService {
@@ -87,11 +92,15 @@ export class ReportPagesService {
     return page_one;
   }
 
-  contentOne(header: string, footer: string, contentOne: ReportContentOne): string {
+  contentOne(
+    header: string,
+    footer: string,
+    contentOne: ReportContentOne,
+  ): string {
     let pageNumber = 5;
-    const policyOrActionsDetails = contentOne.policyOrActionsDetails
+    const policyOrActionsDetails = contentOne.policyOrActionsDetails;
 
-    const page_one = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div id="page_9" class="page text-center" >
   ${header}
   <div class="content">
   <div  class="main_header text-start">1 INTRODUCTION</div>
@@ -102,7 +111,9 @@ export class ReportPagesService {
     <p class="mb-0 lh-base">Name of Policy: ${contentOne.policyName}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesment done by: ${contentOne.assesmentPersonOrOrganization}</p>
+    <p class="mb-0 lh-base">Assesment done by: ${
+      contentOne.assesmentPersonOrOrganization
+    }</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
     <p class="mb-0 lh-base">Assesmet Year: ${contentOne.assessmentYear}</p>
@@ -180,7 +191,7 @@ export class ReportPagesService {
         barrier_directly_targeted: 'test barrier_directly_targeted',
       },
     ];
-    const page_two = `  <div id="page_9" class="page text-center" >
+    const page_2 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    
@@ -257,22 +268,137 @@ export class ReportPagesService {
     </table>
   </div>
 
-  <div  class="main_header_sub text-start">1.4	Choosing transformational change characteristics to assess </div> 
-  <blockquote class=" paragraph blockquote text-start ">
-            <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-              took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-              </p>
-          </blockquote>
+  
    </div>
    
    ${footer.replace('#pageNumber#', pageNumber.toString())}
    
     </div>`;
-    return page_one + page_two;
+
+    const catagory_out = contentOne.outcomecharacteristics;
+
+    const page_3 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+  
+   <div  class="main_header_sub text-start">1.4	Choosing transformational change characteristics to assess </div> 
+   <blockquote class=" paragraph blockquote text-start ">
+             <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+               took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
+               </p>
+           </blockquote>
+
+           <div class="report-table-sm">
+<figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+<table class="table  table-bordered border-dark">
+  <thead class="table-primary  border-dark">
+    <tr>
+      <th scope="col">Category</th>
+      <th scope="col">Outcome Characteristic</th>
+      <th scope="col">Description - specific to a policy or action </th>
+      <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
+    </tr>
+  </thead>
+  <tbody class="table-active">
+  ${catagory_out
+    .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      a.characteristics
+        .map((b, index) => {
+          if (!index) {
+            return `<tr>
+      <td rowspan="${a.rows}" >${a.name}</td>
+      <td>${b.name?b.name:'-'}</td>
+      <td>${b.comment?b.comment:"-"}</td>
+      <td>${b.relevance?b.relevance:"-"}</td>
+     </tr>`;
+          } else {
+            return `<tr>
+            <td>${b.name?b.name:'-'}</td>
+            <td>${b.comment?b.comment:"-"}</td>
+            <td>${b.relevance?b.relevance:"-"}</td>
+            </tr>`;
+          }
+        })
+        .join(''),
+    )
+    .join('')}
+  
+
+  </tbody>
+</table>
+</div>
+    </div>
+    
+    ${footer.replace('#pageNumber#', pageNumber.toString())}
+    
+     </div>`;
+
+     const catagory_process = contentOne.prossescharacteristics;
+     const page_4= `  <div id="page_9" class="page text-center" >
+     ${header}
+     <div class="content">
+   
+   
+    <blockquote class=" paragraph blockquote text-start ">
+              <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+               Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
+                </p>
+            </blockquote>
+ 
+            <div class="report-table-sm">
+ <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+ <table class="table  table-bordered border-dark">
+   <thead class="table-primary  border-dark">
+     <tr>
+       <th scope="col">Category</th>
+       <th scope="col">Process Characteristic</th>
+       <th scope="col">Description - specific to a policy or action </th>
+       <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
+     </tr>
+   </thead>
+   <tbody class="table-active">
+   ${catagory_process
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
+       <td rowspan="${a.rows}" >${a.name}</td>
+       <td>${b.name?b.name:'-'}</td>
+       <td>${b.comment?b.comment:"-"}</td>
+       <td>${b.relevance?b.relevance:"-"}</td>
+      </tr>`;
+           } else {
+             return `<tr>
+             <td>${b.name?b.name:'-'}</td>
+             <td>${b.comment?b.comment:"-"}</td>
+             <td>${b.relevance?b.relevance:"-"}</td>
+             </tr>`;
+           }
+         })
+         .join(''),
+     )
+     .join('')}
+   
+ 
+   </tbody>
+ </table>
+ </div>
+     </div>
+     
+     ${footer.replace('#pageNumber#', pageNumber.toString())}
+     
+      </div>`;
+    return page_1 + page_2 + page_3+page_4;
   }
 
-  contentTwo(header: string, footer: string, contentTwo: ReportContentTwo): string {
+  contentTwo(
+    header: string,
+    footer: string,
+    contentTwo: ReportContentTwo,
+  ): string {
     let pageNumber = 5;
     const assessment = [];
 

@@ -61,13 +61,13 @@ export class ReportService {
 
    //genaral details
       
-let asse= await this.assessmentService.findbyIDforReport(assessmentId)
+let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       console.log(asse)
       reportContentOne.policyName=asse.climateAction.policyName;
       reportContentOne.assesmentPersonOrOrganization=asse.climateAction.contactPersoFullName;
       reportContentOne.assessmentYear=asse.year;
       
-      reportContentOne.assessmetType=asse.climateAction.policyName;
+      reportContentOne.assessmetType=asse.assessmentType;
       // reportContentOne.assessmentBoundary=asse.climateAction.policyName;
       reportContentOne.policyOrActionsDetails=[
         {
@@ -129,6 +129,58 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId)
 
         
       ]
+
+
+      let asssCharacProcess = await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'process',
+      );
+      let catagoryProcess = [];
+      for (let parameter of asssCharacProcess.parameters) {
+        console.log(parameter);
+        let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
+        if (cat) {
+         
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.rows=cat.characteristics.length;
+        } else {
+          catagoryProcess.push({
+            rows:1,
+            name: parameter.category.name,
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+          });
+        }
+      
+       
+      }
+
+      let asssCharacOutcome = await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+      );
+      let catagoryOutcome = [];
+      for (let parameter of asssCharacOutcome.parameters) {
+        console.log(parameter);
+        let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
+        if (cat) {
+         
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.rows=cat.characteristics.length;
+        } else {
+          catagoryOutcome.push({
+            rows:1,
+            name: parameter.category.name,
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+          });
+        }
+      
+       
+      }
+      // for(let cat of catagoryProcess){
+      //   console.log(cat);
+      // }
+      reportContentOne.outcomecharacteristics=catagoryOutcome;
+      reportContentOne.prossescharacteristics=catagoryProcess
     
     return reportContentOne;
   }

@@ -43,7 +43,8 @@ export class ReportContentOne {
     assessmentBoundary:string[]=[];
     policyOrActionsDetails:object[]=[];
     contextOfPolicy :object[]=[];
-
+    prossescharacteristics:object[]=[];
+    outcomecharacteristics:object[]=[]
 
 }
 export class ReportContentTwo {
