@@ -16,9 +16,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entities/file-upload.utils';
 import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { RequestDto } from './dto/request.dto';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
+const MainCalURL = 'http://localhost:7100/indicator_calculation';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -50,9 +52,9 @@ export class MethodologyAssessmentController {
     this.resData = ''
 
     let newData : any = MethAssignParam
-
+    console.log("MethAssignParam", MethAssignParam)
     const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
-    console.log("resss", response.data)
+    // console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
 
@@ -141,11 +143,35 @@ export class MethodologyAssessmentController {
 
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
-
+ console.log("AssessCharData", AssessCharData)
     let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
 
     return newRes
 
+  }
+  @Post('assessParameterSave')
+  async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
+    console.log("assesParameterData",assesParameterData)
+    let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
+    let request= new RequestDto();
+    request.equation =meth?.meth_code;
+    let params = this.toObject(assesParameterData.parameters)
+    const obj = { ...assesParameterData.parameters }
+    
+    console.log("before",assesParameterData.parameters, "after",obj)
+
+    // request.data = 
+    const response = await axios.post(MainCalURL + '/calculate',request);
+
+    return response
+
+  }
+
+  toObject(arr) {
+    var rv = {};
+    for (var i = 0; i < arr.length; ++i)
+      rv[i] = arr[i];
+    return rv;
   }
 
 
@@ -195,6 +221,14 @@ export class MethodologyAssessmentController {
   async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
     return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
   }
+
+  @Get('findMethbyName')
+  async findMethbyName(@Param('methName') methName: string) {
+    // console.log("methName",methName)
+    return await this.methodologyAssessmentService.findMethbyName(methName);
+  }
+
+  
 
   @Post('uploadtest')
 @UseInterceptors(
@@ -260,7 +294,10 @@ async uploadFile2(
     return this.methodologyAssessmentService.findAllPolicyBarriers();
   }
 
-
+  @Get('findAllMethParameters')
+  findAllMethParameters() {
+    return this.methodologyAssessmentService.findAllMethParameters();
+  }
 
   @Get('dataCollectionInstitution')
    dataCollectionInstitution() {

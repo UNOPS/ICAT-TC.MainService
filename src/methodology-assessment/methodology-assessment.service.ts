@@ -28,8 +28,10 @@ import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 import { getConnection } from 'typeorm';
+import { MethodologyParameters } from './entities/methodologyParameters.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
+  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -48,6 +50,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
+    @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
 
    ) {
     super(repo)
@@ -116,10 +119,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.assessment_method = MethData.assessment_method,
     assessement.from = MethData.date1,
     assessement.to  = MethData.date2
-
+  
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
-
+   console.log("wwwwwwww")
    assessement.id = assessementId
 
     console.log("assessRes : ",(await assessRes).id)
@@ -492,7 +495,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   
     return policyBarriers.map((pb) => ({
       id: pb.id,
-      policyName: pb.climateAction.policyName,
+      policyName: pb.climateAction?.policyName,
       barriers: pb.barriers,
       editedBy: pb.editedBy,
     }));
@@ -519,6 +522,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         .leftJoinAndSelect('methodology_indicators.indicator', 'indicator')
         .getMany();
     return methodologyIndicators;
+  }
+
+  async findAllMethParameters():Promise<MethodologyParameters[]> {
+    const methodologyParamaeters = await this.methParameterRepo.createQueryBuilder('methodology_parameters')
+        .leftJoinAndSelect('methodology_parameters.methodology', 'methodology')
+        .getMany();
+    return methodologyParamaeters;
   }
   
   findAllCategories(): Promise<Category[]> {
@@ -640,5 +650,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     options: IPaginationOptions,
     filterText: string[]){
       let filter: string = '';
+  }
+
+
+  async findMethbyName(methName: string) {
+    // console.log("methName",methName)
+    const methodologyIndicators = await this.methIndicatorRepository.findOneBy({
+      name: methName,
+  })
+  // console.log("methodologyIndicators",methodologyIndicators)
+return methodologyIndicators;
   }
 }
