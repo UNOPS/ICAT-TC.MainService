@@ -6,6 +6,7 @@ import { Repository } from "typeorm-next";
 import { Criteria } from "../entity/criteria.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
+import { CMQuestionService } from "./cm-question.service";
 
 @Injectable()
 export class CMSeedService {
@@ -14,7 +15,8 @@ export class CMSeedService {
         @InjectRepository(Section) private sectionRepo: Repository<Section>,
         @InjectRepository(Criteria) private criteriaRepo: Repository<Criteria>,
         @InjectRepository(CMQuestion) private questionRepo: Repository<CMQuestion>,
-        @InjectRepository(CMAnswer) private answerRepo: Repository<CMAnswer>
+        @InjectRepository(CMAnswer) private answerRepo: Repository<CMAnswer>,
+        private questionService: CMQuestionService
     ){}
 
     async sectionSeed(){
@@ -46,13 +48,12 @@ export class CMSeedService {
         let _criterias: Criteria[] = []
         for await (let criteria of criterias) {
             let exist = await this.criteriaRepo.createQueryBuilder('criteria').where('code = :code', {code: criteria.code}).getOne()
-            console.log(exist)
             if (!exist) {
-                let section = await this.sectionRepo.find({ code: criteria.section })
+                let section = await this.sectionRepo.createQueryBuilder('se').where('se.code = :code', {code: criteria.section}).getOne()
                 let cri = new Criteria()
                 cri.name = criteria.name
                 cri.code = criteria.code
-                cri.section = section[0]
+                cri.section = section
                 cri.order = criteria.order
 
                 _criterias.push(cri)
@@ -73,15 +74,15 @@ export class CMSeedService {
     async questionSeed() {
         let _questions: CMQuestion[] = []
         for await (let question of questions){
-            let exist = await this.questionRepo.find({code: question.code})
+            let exist = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: question.code}).getMany()
             if (exist.length === 0){
-                let criteria = await this.criteriaRepo.find({code: question.criteria})
+                let criteria = await this.criteriaRepo.createQueryBuilder('cr').where('cr.code = :code', {code: question.criteria}).getOne()
                 let q = new CMQuestion()
                 q.label = question.label
                 q.code = question.code
                 q.order = question.order
                 q.answer_type = question.answer_type
-                q.criteria = criteria[0]
+                q.criteria = criteria
 
                 _questions.push(q)
             }
@@ -102,16 +103,16 @@ export class CMSeedService {
     async answerSeed() {
         let _answers: CMAnswer[] = []
         for await (let answer of answers){
-            let exist = await this.answerRepo.find({code: answer.code})
+            let exist = await this.answerRepo.createQueryBuilder('an').where('an.code = :code', {code: answer.code}).getMany()
             if (exist.length === 0 ){
-                let question = await this.questionRepo.find({code: answer.question})
+                let question = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: answer.question}).getOne()
                 let a = new CMAnswer()
                 a.label = answer.label
                 a.code = answer.code
                 a.isPassing = answer.isPassing
                 a.weight = answer.weight
                 a.score_portion = answer.score_portion
-                a.question = question[0]
+                a.question = question
 
                 _answers.push(a)
             }
