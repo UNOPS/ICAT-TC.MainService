@@ -100,12 +100,14 @@ export class MethodologyAssessmentController {
       result: response.data,
       assesId: res
     }
-
+    //console.log("resData", this.resData)
+  
     let result : any = {
       averageProcess : response.data.averageProcess,
       averageOutcome:  response.data.averageOutcome,
       assessment_id :  res
     }
+     this.methodologyAssessmentService.assessCategory(this.resData)
 
     await this.methodologyAssessmentService.createResults(result)
 
@@ -159,6 +161,18 @@ export class MethodologyAssessmentController {
   async findByAssessIdAndRelevanceNotRelevant(@Param('assessId') assessId: number) {
     return await this.methodologyAssessmentService.findByAssessIdAndRelevanceNotRelevant(assessId);
   }
+
+  @Get('findBarrierData/:assessId')
+  async findByAssessIdBarrierData(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.findByAssessIdBarrierData(assessId);
+  }
+
+
+  @Get('getAssessCategory/:assessId')
+  async getAssessCategory(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.getAssessCategory(assessId);
+  }
+
 
   /*   @Get()
     findAll() {
@@ -236,10 +250,38 @@ async uploadFile2(
   }
 
   @Get('findAllCharacteristics')
-  findAllCharacteristics() {
+  async findAllCharacteristics() {
     return this.methodologyAssessmentService.findAllCharacteristics();
   }
 
+/*   @Get('findAllBarrierData')
+  findAllBarrierData() {
+    return this.methodologyAssessmentService.findAllBarrierData();
+  } */
+
+  //ppppppppppppppppppppppppppp
+  @Get('findAllBarrierData/:assessId')
+  async findAllBarrierData(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.findAllBarrierData(assessId);
+  }
+
+  @Get('assessmentParameters/:assessId')
+  async assessmentParameters(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.assessmentParameters(assessId);
+  }
+
+  @Get('assessmentData/:assessId')
+  async assessmentData(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.assessmentData(assessId);
+  }
+
+  @Get('barriesByassessId/:assessId')
+  async barriesByassessId(@Param('assessId') assessId: number) {
+    return await this.methodologyAssessmentService.barriesByassessId(assessId);
+  }
+
+
+  //pppppppppppppppppp
   @Get('findAllIndicators')
   findAllIndicators() {
     return this.methodologyAssessmentService.findAllIndicators();
@@ -255,7 +297,10 @@ async uploadFile2(
     return this.methodologyAssessmentService.findAllPolicyBarriers();
   }
 
-
+  @Get('findAllObjectives')
+  findAllObjectives() {
+    return this.methodologyAssessmentService.findAllObjectives();
+  }
 
   @Get('dataCollectionInstitution')
    dataCollectionInstitution() {

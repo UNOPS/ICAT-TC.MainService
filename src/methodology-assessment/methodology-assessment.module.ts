@@ -23,6 +23,9 @@ import { TokenDetails } from 'src/utills/token_details';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
+import { AssessmentCategory } from './entities/assessmentCategory.entity';
+import { Objectives } from './entities/objectives.entity';
+import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 
 
 @Module({
@@ -51,7 +54,10 @@ import { BarriersCharacteristics } from './entities/barriercharacteristics.entit
     Results,
     Institution,
     ParameterRequest,
-    BarriersCharacteristics
+    BarriersCharacteristics,
+    AssessmentCategory,
+    Objectives,
+    AssessmentObjectives
     
   ])],
   exports: [

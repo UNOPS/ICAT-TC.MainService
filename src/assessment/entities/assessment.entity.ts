@@ -43,12 +43,29 @@ export class Assessment {
     @Column({ nullable: true })
     qaStatus?: QuAlityCheckStatus;
 
+    @Column({ nullable: true })
+    person: string;
+
+    @Column({type: 'longtext', nullable: true })
+    opportunities: string;
+    
+    @Column({ type:"mediumtext" ,nullable: true })
+    audience?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    assessBoundry?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    impactsCovered?: string;
+
     
   //  @Column({ nullable: true })
   //  qaAssighnDate?: string;
 
    @Column({ nullable: true })
     qaDeadline?: Date;
+
+
 
    // @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
    //     cascade: false,

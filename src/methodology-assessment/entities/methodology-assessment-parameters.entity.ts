@@ -63,12 +63,19 @@ export class MethodologyAssessmentParameters {
     fileName?: string;
 
     @Column({ type:"mediumtext" ,nullable: true })
-    comment?: string;
+    scoreOrInstitutionJusti?: string;
 
     parameterRequest?: ParameterRequest;
 
     @Column({ type: 'double', nullable: true })
     weight : number
 
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaDescription?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaRelJustification?: string;
+
+   
     
 }

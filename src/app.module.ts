@@ -70,6 +70,9 @@ import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
+import { AssessmentCategory } from './methodology-assessment/entities/assessmentCategory.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
+import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
 
 @Module({
   imports: [
@@ -104,8 +107,10 @@ import { Assessment } from './assessment/entities/assessment.entity';
       MethodologyIndicators,
       Results,
       BarriersCharacteristics,
-
-      Assessment
+      AssessmentCategory,
+      Assessment,
+      Objectives,
+      AssessmentObjectives
     ]),
     UsersModule,
     UserTypeModule,
