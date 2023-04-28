@@ -23,6 +23,11 @@ import { TokenDetails } from 'src/utills/token_details';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { User } from 'src/users/entity/user.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
+import { Country } from 'src/country/entity/country.entity';
 import { MethodologyParameters } from './entities/methodologyParameters.entity';
 import { CalcParameters } from './entities/calcParameters.entity';
 
@@ -33,7 +38,9 @@ import { CalcParameters } from './entities/calcParameters.entity';
     MethodologyAssessmentService,
     ProjectService,
     PolicyBarriers,
-    TokenDetails
+    TokenDetails,
+    UsersService,
+    EmailNotificationService
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -54,9 +61,11 @@ import { CalcParameters } from './entities/calcParameters.entity';
     Institution,
     ParameterRequest,
     BarriersCharacteristics,
+    User,
+    UserType,,
     MethodologyParameters,
     CalcParameters,
-    
+    Country
   ])],
   exports: [
     MethodologyAssessmentService,

@@ -6,6 +6,7 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { VerificationDetail } from './entity/verification-detail.entity';
 import { VerificationService } from './verification.service';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 
 @Crud({
   model: {
@@ -21,32 +22,31 @@ export class VerificationController
     ) {}
 
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('verification/GetVRParameters/:page/:limit/:statusId/:filterText')
-  // async GetVRParameters(
-  //   @Request() request,
-  //   @Query('page') page: number,
-  //   @Query('limit') limit: number,
-  //   @Query('statusId') statusId: number,
-  //   @Query('filterText') filterText: string,
-  // ): Promise<any> {
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.SECTOR_ADMIN]))
+  @Get('verification/GetVRParameters/:page/:limit/:statusId/:filterText')
+  async GetVRParameters(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('statusId') statusId: number,
+    @Query('filterText') filterText: string,
+  ): Promise<any> {
 
-  //   let countryIdFromTocken:number ;
-  //   [countryIdFromTocken] =    this.tokenDetails.getDetails([TokenReqestType.countryId])
+    let countryIdFromTocken:number ;
+    [countryIdFromTocken] =    this.tokenDetails.getDetails([TokenReqestType.countryId])
    
+    return await this.service.GetVRParameters(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      statusId,
+      countryIdFromTocken,
+    );
+  }
 
-  //   return await this.service.GetVRParameters(
-  //     {
-  //       limit: limit,
-  //       page: page,
-  //     },
-  //     filterText,
-  //     statusId,
-  //     countryIdFromTocken,
-  //   );
-  // }
-
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.VERIFIER]))
   @Get('verification/GetVerifierParameters/:page/:limit/:statusId/:filterText')
   async GetVerifierParameters(
     @Request() request,
@@ -72,6 +72,7 @@ export class VerificationController
     );
   }
 
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.SECTOR_ADMIN, LoginRole.VERIFIER]))
   @Get('getVerificationDetails/:assesmentId')
   async getVerificationDetails(
     @Param('assesmentId') assesmentId: number,
