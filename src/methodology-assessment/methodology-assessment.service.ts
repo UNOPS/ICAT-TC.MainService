@@ -769,4 +769,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     return true;
   }
+
+
+  async findMethbyName(methName:string){
+    let meth = this.methIndicatorRepository.findOneBy({meth_code:methName})
+    return meth;
+
+  }
 }
