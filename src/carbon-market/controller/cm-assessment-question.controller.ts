@@ -42,6 +42,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return await this.service.calculateResult(req.assessmentId)
   }
 
+  @Post('get-result')
+  async getResults(@Query('assessmentId') assessmentId: number): Promise<any>{
+    return await this.service.getResults(assessmentId)
+  }
+
 
 
 }

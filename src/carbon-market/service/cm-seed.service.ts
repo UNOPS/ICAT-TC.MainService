@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { answers, criterias, questions, sections } from "../dto/seed-data";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Section } from "../entity/section.entity";
-import { Repository } from "typeorm-next";
 import { Criteria } from "../entity/criteria.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { CMQuestionService } from "./cm-question.service";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CMSeedService {
@@ -22,7 +22,7 @@ export class CMSeedService {
     async sectionSeed(){
         let _sections: Section[] = []
         for await (let section of sections) {
-            let exist = await this.sectionRepo.find({code: section.code})
+            let exist = await this.sectionRepo.createQueryBuilder('se').where('se.code = :code', {code: section.code}).getMany()
             if (exist.length === 0){
                 let sec = new Section()
                 sec.name = section.name
