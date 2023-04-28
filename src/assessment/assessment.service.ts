@@ -17,6 +17,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -24,6 +25,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     private readonly userService: UsersService,
+    private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
@@ -54,7 +56,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    console.log("qqqqqqq", data)
     return data;
   }
 
@@ -238,5 +239,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     return false;
   }
+
+
 
 }

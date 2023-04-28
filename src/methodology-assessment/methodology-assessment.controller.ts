@@ -16,9 +16,17 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entities/file-upload.utils';
 import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { RequestDto } from './dto/request.dto';
+import { Results } from './entities/results.entity';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { getConnection } from 'typeorm';
+import { AuditDto } from 'src/audit/dto/audit-dto';
+import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
+const MainCalURL = 'http://localhost:7100/indicator_calculation';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -50,9 +58,9 @@ export class MethodologyAssessmentController {
     this.resData = ''
 
     let newData : any = MethAssignParam
-
+    console.log("MethAssignParam", MethAssignParam)
     const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
-    console.log("resss", response.data)
+    // console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
 
@@ -77,6 +85,12 @@ export class MethodologyAssessmentController {
 
     return this.resData
 
+  }
+
+
+  @Post('save-assessment')
+  async saveAssessment(@Body() assessment: Assessment){
+    return await this.methodologyAssessmentService.saveAssessment(assessment)
   }
   
 
@@ -141,11 +155,35 @@ export class MethodologyAssessmentController {
 
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
-
+ console.log("AssessCharData", AssessCharData)
     let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
 
     return newRes
 
+  }
+  @Post('assessParameterSave')
+  async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
+    console.log("assesParameterData",assesParameterData)
+    let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
+    let request= new RequestDto();
+    request.equation =meth?.meth_code;
+    let params = this.toObject(assesParameterData.parameters)
+    const obj = { ...assesParameterData.parameters }
+    
+    console.log("before",assesParameterData.parameters, "after",obj)
+
+    // request.data = 
+    const response = await axios.post(MainCalURL + '/calculate',request);
+
+    return response
+
+  }
+
+  toObject(arr) {
+    var rv = {};
+    for (var i = 0; i < arr.length; ++i)
+      rv[i] = arr[i];
+    return rv;
   }
 
 
@@ -185,6 +223,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.results();
   }
 
+  @Get('get-results-by-assessment/:assessmentId')
+  async getResultByAssessment(@Param('assessmentId') assessmentId: number) {
+    return await this.methodologyAssessmentService.getResultByAssessment(assessmentId);
+  }
+
 
   @Get('findByAllAssessmentData')
   async findByAllAssessmentData() {
@@ -195,6 +238,14 @@ export class MethodologyAssessmentController {
   async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
     return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
   }
+
+  @Get('findMethbyName')
+  async findMethbyName(@Param('methName') methName: string) {
+    // console.log("methName",methName)
+    return await this.methodologyAssessmentService.findMethbyName(methName);
+  }
+
+  
 
   @Post('uploadtest')
 @UseInterceptors(
@@ -260,7 +311,10 @@ async uploadFile2(
     return this.methodologyAssessmentService.findAllPolicyBarriers();
   }
 
-
+  @Get('findAllMethParameters')
+  findAllMethParameters() {
+    return this.methodologyAssessmentService.findAllMethParameters();
+  }
 
   @Get('dataCollectionInstitution')
    dataCollectionInstitution() {
@@ -290,6 +344,11 @@ async uploadFile2(
   @Patch('update-parameter/:id')
   updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
     return this.methodologyAssessmentService.updateParameter(+id, parameter);
+  }
+
+  @Patch('update-result/:id')
+  updateResult(@Param('id') id: number, @Body() result: Results){
+    return this.methodologyAssessmentService.updateResult(+id, result);
   }
 
   @Delete(':id')
@@ -328,5 +387,62 @@ async uploadFile2(
       },
       filterText,
     )
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
+  @Get('get-assessments-for-assign-verifier')
+  async getAssessmentForAssignVerifier(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('statusId') statusId: number,
+    @Query('filterText') filterText: string,
+  ): Promise<any> {
+    console.log("getAssessmentForAssignVerifier")
+
+    let countryIdFromTocken: number;
+    let sectorIdFromTocken: number;
+    [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId, TokenReqestType.InstitutionId])
+    console.log(countryIdFromTocken, sectorIdFromTocken)
+
+    return await this.methodologyAssessmentService.getAssessmentForAssignVerifier(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      statusId,
+      countryIdFromTocken
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
+  @Put('update-assign-verifiers')
+  async updateAssignVerifiers(
+    @Body() updateDeadlineDto: DataVerifierDto,
+  ): Promise<boolean> {
+
+    // const queryRunner = getConnection().createQueryRunner();
+    // await queryRunner.startTransaction();
+    // try {
+      let audit: AuditDto = new AuditDto();
+      let paeameter = this.methodologyAssessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
+      // console.log(updateDeadlineDto)
+      // audit.action = 'Verifier Deadline Created';
+      // audit.comment = 'Verifier Deadline Created';
+      // audit.actionStatus = 'Created'
+      // // this.auditService.create(audit);
+      // await queryRunner.commitTransaction();
+      return paeameter;
+    // }
+    // catch (err) {
+    //   console.log("worktran2")
+    //   console.log(err);
+    //   await queryRunner.rollbackTransaction();
+    //   return err;
+    // } finally {
+    //   await queryRunner.release();
+    // }
+
   }
 }
