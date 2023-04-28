@@ -68,11 +68,13 @@ import { DefaultValue } from './default-value/entity/defaultValue.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
+import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
 import { AssessmentCategory } from './methodology-assessment/entities/assessmentCategory.entity';
 import { Objectives } from './methodology-assessment/entities/objectives.entity';
 import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
+import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 
 @Module({
   imports: [
@@ -165,7 +167,8 @@ import { AssessmentObjectives } from './methodology-assessment/entities/assessme
     QualityCheckModule,
     ParameterHistoryModule,
     DefaultValueModule,
-    
+    VerificationModule,
+    CarbonMarketModule
 
   ],
   controllers: [

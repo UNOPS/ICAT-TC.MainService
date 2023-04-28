@@ -697,7 +697,7 @@ console.log("=========11",result)
     user.forEach((ab)=>{
       console.log('=========', ins);
       var template: any;
-      if (updateDataRequestDto.comment != undefined) {
+      if (updateDataRequestDto.comment != undefined) { 
         template =
           'Dear ' +
           ab.username +

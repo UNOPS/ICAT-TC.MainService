@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -17,6 +17,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -24,6 +25,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     private readonly userService: UsersService,
+    private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
@@ -54,15 +56,16 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    console.log("qqqqqqq", data)
     return data;
   }
 
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
     let ass =await this.repo.findOne({ where: { id: id }});
     ass.qaDeadline = updateAssessmentDto.deadline
-    await this.repo.save(ass);
-    return `This action updates a #${id} assessment`;
+    ass.editedOn = updateAssessmentDto.editedOn
+    ass.verificationStatus = updateAssessmentDto.verificationStatus
+    // await this.repo.save(ass);
+    return await this.repo.save(ass);
   }
 
   remove(id: number) {
@@ -136,7 +139,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
   async getAssessmentForApproveData(
     assessmentId: number,
-    assementYear: string,
     userName: string,
   ): Promise<any> {
     let userItem = await this.userService.findByUserName(userName);
@@ -229,7 +231,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where(
         'par.dataRequestStatus in (11) AND as.id =' + assessmentId.toString() + ')',
       );
-    // console.log('data1SQL2', data2.getSql());
+    // console.log('data1SQL2', data2.execute());
     let totalRecordsApprovedStatus: any[] = await data2.execute();
     if (totalRecordsApprovedStatus.length == totalRecordsAllStatus.length) {
       return true;
@@ -237,4 +239,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     return false;
   }
+
+
+
 }

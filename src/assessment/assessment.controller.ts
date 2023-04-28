@@ -7,6 +7,9 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
+import { Assessment } from './entities/assessment.entity';
+import { AuditDto } from 'src/audit/dto/audit-dto';
+import { Crud, CrudController } from '@nestjsx/crud';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -14,7 +17,6 @@ export class AssessmentController {
     public assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails,
   ) { }
-
 
 
   @Post()
@@ -33,8 +35,8 @@ export class AssessmentController {
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM]))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
-    return this.assessmentService.update(+id, updateAssessmentDto);
+  async update(@Param('id') id: string, @Body() updateAssessmentDto: UpdateAssessmentDto) {
+    return await this.assessmentService.update(+id, updateAssessmentDto);
   }
 
   @Delete(':id')
@@ -110,13 +112,14 @@ export class AssessmentController {
   async getAssessmentsForApproveData(
     @Request() request,
     @Query('id') id: number,
-    @Query('assementYear') assementYear: string,
     @Query('userName') userName: string,
   ): Promise<any> {
     return await this.assessmentService.getAssessmentForApproveData(
       id,
-      assementYear,
       userName,
     );
   }
+
+
+
 }

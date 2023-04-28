@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Module } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { MethodologyAssessmentController } from './methodology-assessment.controller';
 import { Category } from './entities/category.entity';
@@ -23,6 +23,11 @@ import { TokenDetails } from 'src/utills/token_details';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { User } from 'src/users/entity/user.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
+import { Country } from 'src/country/entity/country.entity';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
@@ -34,7 +39,9 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
     MethodologyAssessmentService,
     ProjectService,
     PolicyBarriers,
-    TokenDetails
+    TokenDetails,
+    UsersService,
+    EmailNotificationService
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -54,10 +61,7 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
     Results,
     Institution,
     ParameterRequest,
-    BarriersCharacteristics,
-    AssessmentCategory,
-    Objectives,
-    AssessmentObjectives
+    BarriersCharacteristics
     
   ])],
   exports: [

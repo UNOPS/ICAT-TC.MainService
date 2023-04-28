@@ -1,0 +1,106 @@
+import { Injectable } from "@nestjs/common";
+import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
+import { CMResultDto } from "../dto/cm-result.dto";
+import { Assessment } from "src/assessment/entities/assessment.entity";
+import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
+import { Repository } from "typeorm-next";
+import { CMQuestion } from "../entity/cm-question.entity";
+import { In } from "typeorm";
+
+@Injectable()
+export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
+  constructor(
+    @InjectRepository(CMAssessmentQuestion) repo,
+    @InjectRepository(CMAssessmentAnswer) 
+    private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
+    @InjectRepository(CMAssessmentQuestion)
+    private assessmentQuestionRepo: Repository<CMAssessmentQuestion>
+  ) {
+    super(repo);
+  }
+
+  async create(question:CMAssessmentQuestion){
+    return await this.repo.save(question)
+  }
+
+  /**
+   * 
+   * @param result 
+   * @param assessment 
+   * For passing answers and answers with 0 score set weight in answer table as 0.
+   */
+
+  async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
+    let a_ans: any[]
+    for await (let res of result) {
+      let ass_question = new CMAssessmentQuestion()
+      ass_question.assessment = assessment;
+      ass_question.comment = res.comment;
+      ass_question.question = res.question;
+
+      let q_res = await this.repo.save(ass_question)
+      let answers = []
+
+      if (res.answer){
+        if (Array.isArray(res.answer)) {
+          res.answer.forEach(async ans => {
+            let ass_answer = new CMAssessmentAnswer()
+            ass_answer.answer = ans
+            ass_answer.assessment_question = q_res
+            ass_answer.score = score * ans.score_portion * ans.weight
+  
+            answers.push(ass_answer)
+          })
+        } else {
+          let ass_answer = new CMAssessmentAnswer()
+          ass_answer.answer = res.answer
+          ass_answer.assessment_question = q_res
+          ass_answer.score = score * res.answer.score_portion * res.answer.weight
+  
+          answers.push(ass_answer)
+        }
+        a_ans = await this.assessmentAnswerRepo.save(answers)
+      }
+
+    }
+    return a_ans
+  }
+
+  async calculateResult(assessmentId: number) {
+    let tc_score = 0
+    let questions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .where('assessment.id = :id', { id: assessmentId })
+      .getMany()
+    if (questions.length > 0) {
+      let qIds: number[] = questions.map((q) => q.id)
+      console.log(qIds)
+      let answers = await this.assessmentAnswerRepo
+        .createQueryBuilder('ans')
+        .innerJoin(
+          'ans.assessment_question',
+          'question',
+          'question.id = ans.assessmentQuestionId'
+        )
+        .where('question.id In (:id)', { id: qIds })
+        .getMany()
+      answers.forEach(ans => {
+        tc_score += ans.score
+      })
+      return tc_score
+    } else {
+      return 'No questions found for this assessment'
+    }
+  }
+
+
+}
+
+
