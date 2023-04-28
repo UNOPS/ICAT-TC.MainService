@@ -769,14 +769,4 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     return true;
   }
-
-
-  async findMethbyName(methName: string) {
-    // console.log("methName",methName)
-    const methodologyIndicators = await this.methIndicatorRepository.findOneBy({
-      name: methName,
-  })
-  // console.log("methodologyIndicators",methodologyIndicators)
-return methodologyIndicators;
-  }
 }

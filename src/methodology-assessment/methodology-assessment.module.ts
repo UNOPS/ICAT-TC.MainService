@@ -62,7 +62,7 @@ import { CalcParameters } from './entities/calcParameters.entity';
     ParameterRequest,
     BarriersCharacteristics,
     User,
-    UserType,,
+    UserType,
     MethodologyParameters,
     CalcParameters,
     Country
