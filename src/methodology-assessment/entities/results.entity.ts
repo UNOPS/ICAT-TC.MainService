@@ -20,7 +20,10 @@ export class Results {
     averageProcess : number;
 
     @Column({type: 'double', nullable: true })
-    averageOutcome : number;   
+    averageOutcome : number;  
+    
+    @Column({ nullable: true, default: false })
+    isAcceptedByVerifier: boolean;
     
   
 }

@@ -28,8 +28,14 @@ import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 import { getConnection } from 'typeorm';
+import { MethodologyParameters } from './entities/methodologyParameters.entity';
+import { User } from 'src/users/entity/user.entity';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
+  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -48,6 +54,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
+    @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
+    private userService: UsersService,
+    private emaiService: EmailNotificationService
 
    ) {
     super(repo)
@@ -116,10 +125,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.assessment_method = MethData.assessment_method,
     assessement.from = MethData.date1,
     assessement.to  = MethData.date2
-
+  
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
-
+   console.log("wwwwwwww")
    assessement.id = assessementId
 
     console.log("assessRes : ",(await assessRes).id)
@@ -191,6 +200,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     //assessementId
     console.log("iddd", assessementId)
     return assessementId;
+  }
+
+  async saveAssessment(assessment: Assessment){
+    return await this.assessmentRepository.save(assessment)
   }
 
   async barrierCharacteristics(dataArr : any){
@@ -463,6 +476,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      });
    }
 
+   async getResultByAssessment(assessmentId: number){
+    return await this.resultRepository.findOne({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment']
+    })
+   }
+
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
   //  return await this.repo.find();
     return this.repo.find({
@@ -492,7 +512,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   
     return policyBarriers.map((pb) => ({
       id: pb.id,
-      policyName: pb.climateAction.policyName,
+      policyName: pb.climateAction?.policyName,
       barriers: pb.barriers,
       editedBy: pb.editedBy,
     }));
@@ -519,6 +539,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         .leftJoinAndSelect('methodology_indicators.indicator', 'indicator')
         .getMany();
     return methodologyIndicators;
+  }
+
+  async findAllMethParameters():Promise<MethodologyParameters[]> {
+    const methodologyParamaeters = await this.methParameterRepo.createQueryBuilder('methodology_parameters')
+        .leftJoinAndSelect('methodology_parameters.methodology', 'methodology')
+        .getMany();
+    return methodologyParamaeters;
   }
   
   findAllCategories(): Promise<Category[]> {
@@ -636,9 +663,117 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     }
   }
 
+  async updateResult(id: number, result: Results){
+    try{
+      let update = await this.resultRepository.update(id, result)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error) {
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
+  }
+
   async allParam(
     options: IPaginationOptions,
     filterText: string[]){
       let filter: string = '';
+  }
+
+  async getAssessmentForAssignVerifier(
+    options: IPaginationOptions,
+    filterText: string,
+    QAstatusId: number,
+    countryIdFromTocken:number
+  ): Promise<any> {
+
+    console.log("getAssessmentForAssignVerifier")
+
+    let data = this.assessmentRepository
+      .createQueryBuilder('assessment')
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .leftJoinAndMapOne(
+        'assessment.verificationUser',
+        User,
+        'u',
+        'assessment.verificationUser = u.id',
+      )
+      .where(
+        (
+          (QAstatusId != 0
+            ? `assessment.verificationStatus=${QAstatusId} AND `
+            : `assessment.verificationStatus in (2,3,4,5,6,7) AND `) +
+          `assessment.qaStatus in (4) AND ` +
+          (filterText != ''
+            ? `(p.policyName LIKE '%${filterText}%' OR assessment.assessmentType LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
+           )`
+            : '')
+        ).replace(/AND $/, ''),
+      )
+      .orderBy('assessment.verificationDeadline', 'DESC')
+      .groupBy('assessment.id');
+
+    console.log('AssessmentFor Verifier', data.getSql());
+
+    let result = await paginate(data, options);
+    return result;
+  }
+
+  async acceptDataVerifiersForIds(
+    updateDataRequestDto: DataVerifierDto,
+  ): Promise<boolean> {
+    // let dataRequestItemList = new Array<ParameterRequest>();
+
+    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+      const id = updateDataRequestDto.ids[index];
+      let dataRequestItem = await this.assessmentRepository.findOne({ where: { id: id } });
+      let originalStatus = dataRequestItem.verificationStatus;
+      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
+      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
+      dataRequestItem.verificationUser = updateDataRequestDto.userId;
+
+      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
+      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
+      var template: any;
+        template =
+          'Dear ' +
+          user.firstName + ' ' + user.lastName+
+          ' <br/> Data request with following information has shared with you.' +
+          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
+          // '<br/> value -:' + dataRequestItem.parameter.value +
+          // '<br> comment -: ' + updateDataRequestDto.comment;
+      
+          this.emaiService.sendMail(
+            user.email,
+            'Assign verifier',
+            '',
+            template,
+          );
+      // dataRequestItemList.push(dataRequestItem);
+      this.assessmentRepository.save(dataRequestItem).then((res) => {
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.AssignVerifier,
+        //   'AssignVerifier',
+        //   '',
+        //   res.verificationStatus.toString(),
+        //   originalStatus.toString(),
+        // );
+      });
+    }
+
+    // this.repo.save(dataRequestItemList);
+
+    return true;
+  }
+
+
+  async findMethbyName(methName:string){
+    let meth = this.methIndicatorRepository.findOneBy({meth_code:methName})
+    return meth;
+
   }
 }

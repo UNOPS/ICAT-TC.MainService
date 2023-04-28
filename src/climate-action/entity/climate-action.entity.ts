@@ -23,7 +23,7 @@ import {
 import { ActionArea } from 'src/master-data/action-area/entity/action-area.entity';
 import { PolicyBarriers } from './policy-barriers.entity';
 
-@Entity({ name: 'climateAction'})
+@Entity({ name: 'climateaction'})
 export class ClimateAction extends BaseTrackingEntity {
   /**
    *
@@ -223,6 +223,8 @@ export class ClimateAction extends BaseTrackingEntity {
   
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
+  @Column({ length: 500, default: null, nullable: true })
+  justification: string;
 
   @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction)
   @JoinColumn()
