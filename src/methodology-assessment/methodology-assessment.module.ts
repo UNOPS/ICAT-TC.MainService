@@ -28,6 +28,9 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { User } from 'src/users/entity/user.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { Country } from 'src/country/entity/country.entity';
+import { AssessmentCategory } from './entities/assessmentCategory.entity';
+import { Objectives } from './entities/objectives.entity';
+import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 
 
 @Module({
@@ -58,10 +61,8 @@ import { Country } from 'src/country/entity/country.entity';
     Results,
     Institution,
     ParameterRequest,
-    BarriersCharacteristics,
-    User,
-    UserType,
-    Country
+    BarriersCharacteristics
+    
   ])],
   exports: [
     MethodologyAssessmentService,

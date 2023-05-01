@@ -64,7 +64,7 @@ export class MethodologyAssessmentParameters {
     fileName?: string;
 
     @Column({ type:"mediumtext" ,nullable: true })
-    comment?: string;
+    scoreOrInstitutionJusti?: string;
 
     @Column({ nullable: true, default: false })
     isAcceptedByVerifier: boolean;
@@ -73,5 +73,12 @@ export class MethodologyAssessmentParameters {
     @Column({ type: 'double', nullable: true })
     weight : number
 
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaDescription?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaRelJustification?: string;
+
+   
     
 }

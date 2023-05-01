@@ -71,6 +71,9 @@ import { AggregatedAction } from './master-data/aggregated-action/entity/aggrega
 import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
+import { AssessmentCategory } from './methodology-assessment/entities/assessmentCategory.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
+import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 
 @Module({
@@ -106,8 +109,10 @@ import { CarbonMarketModule } from './carbon-market/carbon-market.module';
       MethodologyIndicators,
       Results,
       BarriersCharacteristics,
-
-      Assessment
+      AssessmentCategory,
+      Assessment,
+      Objectives,
+      AssessmentObjectives
     ]),
     UsersModule,
     UserTypeModule,
