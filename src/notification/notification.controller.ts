@@ -25,10 +25,17 @@ export class NotificationController implements CrudController<Notification> {
       this.service.saveNotification(req);
     }
 
-    @Get("findById/:id")
-    async findById(@Param('id') id: number){
-        return await this.service.findById(id);
+    @Post("updateNoti")
+    async updateNoti(@Body() req:Notification){
+      console.log("+++++++++++++++",req);
+      
+      this.notificationRepository.save(req);
     }
+
+    // @Get("findById/:id")
+    // async findById(@Param('id') id: number):Promise<any>{
+    //     return await this.service.findById(id);
+    // }
     @Get("findById/:id")
     async findByUserId(@Param('id') id: number){
         return await this.service.findById(id);

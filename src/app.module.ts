@@ -72,6 +72,7 @@ import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
 import { NotificationModule } from './notification/notification.module';
+import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 
 @Module({
   imports: [
@@ -163,7 +164,8 @@ import { NotificationModule } from './notification/notification.module';
     ParameterHistoryModule,
     DefaultValueModule,
     VerificationModule,
-    NotificationModule
+    NotificationModule,
+    CarbonMarketModule,
 
   ],
   controllers: [

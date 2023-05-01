@@ -8,6 +8,8 @@ import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
 import { Assessment } from './entities/assessment.entity';
+import { AuditDto } from 'src/audit/dto/audit-dto';
+import { Crud, CrudController } from '@nestjsx/crud';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -15,7 +17,6 @@ export class AssessmentController {
     public assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails,
   ) { }
-
 
 
   @Post()
@@ -118,4 +119,7 @@ export class AssessmentController {
       userName,
     );
   }
+
+
+
 }

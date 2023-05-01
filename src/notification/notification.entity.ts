@@ -16,7 +16,7 @@ export class Notification extends BaseTrackingEntity{
     @Column({ nullable: false })
     sendAt : string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     viewAt : string;
 
     @Column({ nullable: false,default:false })
