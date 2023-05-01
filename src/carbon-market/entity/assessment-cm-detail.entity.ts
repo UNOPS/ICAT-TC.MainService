@@ -28,5 +28,5 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
 
   @ManyToOne((type) => Assessment)
   @JoinColumn()
-  assessment: Assessment
+  cmassessment: Assessment
 }

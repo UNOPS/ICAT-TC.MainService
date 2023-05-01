@@ -3,7 +3,7 @@ import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { BarriersCategory } from "./barrierscategory.entity";
 
-@Entity({ name: 'barriers' })
+@Entity()
 
 export class Barriers {
 

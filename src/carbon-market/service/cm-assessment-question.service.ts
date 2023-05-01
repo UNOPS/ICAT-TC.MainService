@@ -5,9 +5,7 @@ import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMResultDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
-import { Repository } from "typeorm-next";
-import { CMQuestion } from "../entity/cm-question.entity";
-import { In } from "typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -98,6 +96,82 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     } else {
       return 'No questions found for this assessment'
     }
+  }
+
+  async getResults(assessmentId: number){
+    let result = []
+    let questions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .where('assessment.id = :id', { id: assessmentId })
+      .getMany()
+
+      if (questions.length > 0) {
+        let qIds: number[] = questions.map((q) => q.id)
+        console.log(qIds)
+        let answers = await this.assessmentAnswerRepo
+          .createQueryBuilder('ans')
+          .innerJoinAndSelect(
+            'ans.assessment_question',
+            'question',
+            'question.id = ans.assessmentQuestionId'
+          )
+          .innerJoinAndSelect(
+            'ans.answer',
+            'answer',
+            'answer.id = ans.answerId'
+          )
+          .innerJoinAndSelect(
+            'question.question',
+            'cmquestion',
+            'cmquestion.id = question.questionId'
+          )
+          .innerJoinAndSelect(
+            'cmquestion.criteria',
+            'criteria',
+            'criteria.id = cmquestion.criteriaId'
+          )
+          .innerJoinAndSelect(
+            'criteria.section',
+            'section',
+            'section.id = criteria.sectionId'
+          )
+          .where('question.id In (:id)', { id: qIds })
+          .getMany()
+
+          let criteria = []
+
+          answers.forEach(ans => {
+            let obj = {
+              section: ans.assessment_question.question.criteria.section.name,
+              criteria: ans.assessment_question.question.criteria.name,
+              question: ans.assessment_question.question.label,
+              answer: ans.answer.label,
+              comment: ans.assessment_question.comment
+            }
+            criteria.push(ans.assessment_question.question.criteria.name)
+            result.push(obj)
+          })
+
+
+          result = this.group(result, 'section')
+
+          return {
+            result: result,
+            criteria: criteria
+          }
+      } 
+  }
+
+  group(list: any[], prop: string | number){
+    return list.reduce((groups, item) => ({
+      ...groups,
+      [item[prop]]: [...(groups[item[prop]] || []), item]
+    }), {});
   }
 
 

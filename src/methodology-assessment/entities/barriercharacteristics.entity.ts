@@ -39,5 +39,8 @@ export class BarriersCharacteristics {
     @ManyToOne((type) => Institution, { cascade: false, eager:false})
     @JoinColumn({ name: 'institution_id' })
     institution?: Institution;
+
+    @Column({ nullable: true })
+    barrier_target : string;
 }
 

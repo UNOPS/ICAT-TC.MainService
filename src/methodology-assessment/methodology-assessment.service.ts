@@ -28,6 +28,9 @@ import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
 import { getConnection } from 'typeorm';
+import { AssessmentCategory } from './entities/assessmentCategory.entity';
+import { Objectives } from './entities/objectives.entity';
+import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 import { User } from 'src/users/entity/user.entity';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { UsersService } from 'src/users/users.service';
@@ -52,7 +55,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
-    private userService: UsersService,
+    @InjectRepository(AssessmentCategory) private readonly assessCategoryRepo: Repository<AssessmentCategory>,
+    @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
+    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    private userService: UsersService,
     private emaiService: EmailNotificationService
 
    ) {
@@ -118,10 +123,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.year = y
     assessement.tool = MethData.tool
     assessement.assessmentType = MethData.assessment_type
-    assessement.assessment_approach = MethData.assessment_approach,
-    assessement.assessment_method = MethData.assessment_method,
-    assessement.from = MethData.date1,
+    assessement.assessment_approach = MethData.assessment_approach
+    assessement.assessment_method = MethData.assessment_method
+    assessement.from = MethData.date1
     assessement.to  = MethData.date2
+    assessement.person = MethData.person
+    assessement.opportunities = MethData.opportunities
+    assessement.impactsCovered = MethData.impactsCovered
+    assessement.assessBoundry = MethData.assessBoundry
+    assessement.audience = MethData.audience
 
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
@@ -141,6 +151,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
       await this.assessRepository.save(assessmentBarriers);
     } 
+
+    let createdAssessment = new Assessment();
+    createdAssessment.id = assessementId
+
+    for(let objectives of MethData.selectedObjectives){
+      let assessObj = new AssessmentObjectives()
+      assessObj.assessment = createdAssessment
+      assessObj.objectives = objectives
+      await this.assessObjRepo.save(assessObj);
+    }
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
@@ -158,7 +178,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.methodology = methodology
       dataForCategory.isCategory = 1
       dataForCategory.institution = categoryData.categoryInstitution
-      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
       dataForCategory.fileName = categoryData.categoryFile
      
      // category.categoryScore = categoryData.categoryScore;
@@ -181,9 +201,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
         data.fileName = characteristic.filename;
-        data.comment = characteristic.comment;
+        data.scoreOrInstitutionJusti = characteristic.comment;
         data.isCategory = 0;
         data.institution = characteristic.institution;
+        data.chaDescription = characteristic.chaDescription;
+        data.chaRelJustification = characteristic.chaRelJustification;
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
@@ -230,6 +252,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     savedAssessment.to = data.date2;
     savedAssessment.tool = data.tool;
     savedAssessment.year = y
+    savedAssessment.person = data.person
+    savedAssessment.opportunities = data.opportunities
+    savedAssessment.impactsCovered = data.impactsCovered
+    savedAssessment.assessBoundry = data.assessBoundry
+    savedAssessment.audience = data.audience
 
     let assessRes =  this.assessmentRepository.save(savedAssessment);
     let assessementId = (await assessRes).id
@@ -250,6 +277,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
        await this.assessRepository.save(assessmentBarriers);
      } 
 
+     let createdAssessment = new Assessment();
+    createdAssessment.id = assessementId
+
+    for(let objectives of data.selectedObjectives){
+      let assessObj = new AssessmentObjectives()
+      assessObj.assessment = createdAssessment
+      assessObj.objectives = objectives
+      await this.assessObjRepo.save(assessObj);
+    }
+
 
      for(let barrierCharacteristic of dataArr.dataArray){
       let obj = new BarriersCharacteristics()
@@ -263,6 +300,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       obj.barriers = barrierdata
       obj.characteristics = barrierCharacteristic.chaId
       obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.barrier_target = barrierCharacteristic.barrierTarget
       obj.bscore_comment = barrierCharacteristic.barrierComment
       obj.barrier_weight = barrierCharacteristic.barrierWeight
       obj.bweight_comment = barrierCharacteristic.bWeightComment
@@ -288,13 +326,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.methodology = methodology
       dataForCategory.isCategory = 1
       dataForCategory.institution = categoryData.categoryInstitution
-      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
       dataForCategory.fileName = categoryData.categoryFile
       dataForCategory.weight = categoryData.categoryWeight
      
      // category.categoryScore = categoryData.categoryScore;
      // console.log("Category: ", category);
   
+     if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
+      await this.repo.save(dataForCategory);
+    }
       for (let characteristic of categoryData.characteristics) {
         let characteristics = new Characteristics();
         characteristics.name = characteristic.name;
@@ -312,17 +353,17 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
         data.fileName = characteristic.filename;
-        data.comment = characteristic.comment;
+        data.scoreOrInstitutionJusti = characteristic.comment;
         data.isCategory = 0;
         data.institution = characteristic.institution;
-        data.weight = characteristic.weight
+        data.weight = characteristic.weight,
+        data.chaDescription = characteristic.chaDescription;
+        data.chaRelJustification = characteristic.chaRelJustification;
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
       }
-      if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
-        await this.repo.save(dataForCategory);
-      }
+    
       
 
     }
@@ -347,6 +388,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       obj.barriers = barrierdata
       obj.characteristics = barrierCharacteristic.chaId
       obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.barrier_target = barrierCharacteristic.barrierTarget
       obj.bscore_comment = barrierCharacteristic.barrierComment
       obj.barrier_weight = barrierCharacteristic.barrierWeight
       obj.bweight_comment = barrierCharacteristic.bWeightComment
@@ -384,6 +426,38 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return charAssessData
   }
 
+
+  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
+    let paras = await this.repo.find({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
+    })
+    return paras
+  }
+  
+  async assessCategory(resData :any){
+    console.log("yyyyyyyyy", resData)
+    for(let item of resData.result.categoryCalculatedProcess){
+      let data = new AssessmentCategory ()
+      data.assessment = resData.assesId
+      data.category = item.categoryId
+     data.categoryScore = item.score
+     data.categoryWeight = item.weight
+      await this.assessCategoryRepo.save(data);
+    }
+
+    for(let item of resData.result.categoryCalculatedoutcome){
+      let data = new AssessmentCategory ()
+      data.assessment = resData.assesId
+      data.category = item.categoryId
+     data.categoryScore = item.score
+     data.categoryWeight = item.weight
+      await this.assessCategoryRepo.save(data);
+    }
+
+  }
+
+
   async createResults(result :any){
     let data = new Results ()
     data.assessment = result.assessment_id
@@ -411,6 +485,24 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return characteristics;
   }
 
+  async findByAssessIdBarrierData(assessId: number): Promise<BarriersCharacteristics[]> {
+    const barriersIds = await this.repo
+      .createQueryBuilder('map')
+      .select('barriers_characteristics.id', 'id')
+      .leftJoin('map.barriers', 'barriers')
+      .leftJoin('barriers.barriersCharacteristics', 'barriers_characteristics')
+      .leftJoin('barriers_characteristics.characteristics', 'characteristics')
+      .where('map.assessment.id = :assessId', { assessId })
+      .getRawMany();
+  
+    const barriersdata = await this.barrierCharacterRepo
+      .createQueryBuilder('barriers_characteristics')
+      .where('barriers_characteristics.id IN (:...ids)', { ids: barriersIds.map((c) => c.id) })
+      .getMany();
+  
+    return barriersdata;
+}
+
 
 /*   findAll(): Promise<Category[]> {
     return this.methodologyRepository.find();
@@ -425,6 +517,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   findAllMethodologies(): Promise<Methodology[]> {
     return this.methodologyRepository.find();
+  }
+
+  async findAllObjectives(): Promise<Objectives[]> {
+    return await this.objectivesRepo.find();
   }
 
   async findAllBarriers(): Promise<Barriers[]> {
@@ -545,20 +641,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .getMany();
   }
 
-  findAllCharacteristics(): Promise<Characteristics[]> {
+  async findAllCharacteristics(): Promise<Characteristics[]> {
   //  return this.characteristicsRepository.find();
     return this.characteristicsRepository.createQueryBuilder('characteristics')
     .leftJoinAndSelect('characteristics.category', 'category')
     .where('characteristics.category_id = category.id')
     .getMany();
-  }
-
-  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
-    let paras = await this.repo.find({
-      where: {assessment: {id: assessmentId}},
-      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
-    })
-    return paras
   }
 
 
