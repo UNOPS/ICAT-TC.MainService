@@ -3,9 +3,9 @@ import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { Criteria } from "../entity/criteria.entity";
-import { Repository } from "typeorm-next";
 import { Section } from "../entity/section.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
@@ -63,6 +63,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
 
     return await data.getMany()
   }
+
 }
 
 
