@@ -91,10 +91,12 @@ export class ReportController {
         TokenReqestType.countryId,
       ]);
 
-    const createReportDto = new CreateReportDto();
-    createReportDto.assessmentId = req.assessmentId;
+    // const createReportDto = new CreateReportDto();
+    // createReportDto.assessmentId = req.assessmentId;
+    req.reportTitle = req.reportName
+    req.reportName = req.reportName + '.pdf'
     const reprtDto: ReportDto = await this.reportService.genarateReportDto(
-      createReportDto,
+      req,
     );
     let report = await this.reportGenarateService.reportGenarate(
       reprtDto.reportName,

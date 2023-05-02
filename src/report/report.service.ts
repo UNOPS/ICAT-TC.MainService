@@ -177,22 +177,24 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
         'process',''
       );
       let catagoryProcess = [];
-      for (let parameter of asssCharacProcess.parameters) {
-        // console.log(parameter);
-        let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
-        if (cat) {
+      if (asssCharacProcess){
+        for (let parameter of asssCharacProcess.parameters) {
+          // console.log(parameter);
+          let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
+          if (cat) {
+           
+            cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
+            cat.rows=cat.characteristics.length;
+          } else {
+            catagoryProcess.push({
+              rows:1,
+              name: parameter.category.name,
+              characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
+            });
+          }
+        
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
-          cat.rows=cat.characteristics.length;
-        } else {
-          catagoryProcess.push({
-            rows:1,
-            name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
-          });
         }
-      
-       
       }
 
       let asssCharacOutcome = await this.assessmentService.getCharacteristicasforReport(
@@ -200,22 +202,24 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
         'outcome',''
       );
       let catagoryOutcome = [];
-      for (let parameter of asssCharacOutcome.parameters) {
-        // console.log(parameter);
-        let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
-        if (cat) {
+      if (asssCharacOutcome) {
+        for (let parameter of asssCharacOutcome.parameters) {
+          // console.log(parameter);
+          let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
+          if (cat) {
+           
+            cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
+            cat.rows=cat.characteristics.length;
+          } else {
+            catagoryOutcome.push({
+              rows:1,
+              name: parameter.category.name,
+              characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
+            });
+          }
+        
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
-          cat.rows=cat.characteristics.length;
-        } else {
-          catagoryOutcome.push({
-            rows:1,
-            name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
-          });
         }
-      
-       
       }
       // for(let cat of catagoryProcess){
       //   console.log(cat);
