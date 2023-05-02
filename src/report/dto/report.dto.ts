@@ -48,5 +48,26 @@ export class ReportContentOne {
 
 }
 export class ReportContentTwo {
+    assesmentType:string;
+//    2.1
+    prossesAssesmentStartingSituation:object[]=[];
+    outcomeAssesmentStartingSituation:object[]=[];
+
+    //2.2
+    prossesExAnteAssesment:object[]=[];
+    outcomeExAnteAssesment:object[]=[];
+    prossesExAnteAnalysis:object[]=[]; 
+    outcomeExAnteAnalysis:object[]=[];
+
+//2.3
+    prossesExPostAssesment:object[]=[];
+    outcomeExPostAssesment:object[]=[];
+    prossesExPostAnalysis:object[]=[]; 
+    outcomeExPostAnalysis:object[]=[];
+
+
+
+
+
 
 }

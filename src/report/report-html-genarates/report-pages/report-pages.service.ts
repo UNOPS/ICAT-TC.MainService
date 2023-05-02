@@ -400,7 +400,7 @@ export class ReportPagesService {
     contentTwo: ReportContentTwo,
   ): string {
     let pageNumber = 5;
-    const assessment = [];
+    const prossesAssesmentStartingSituation = contentTwo.prossesAssesmentStartingSituation;
 
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
@@ -426,65 +426,30 @@ export class ReportPagesService {
     </tr>
   </thead>
   <tbody class="table-active">
-   <tr>
-    <td rowspan="3" >Technology</td>
-    <td>Research and development</td>
-    <td>test indicators</td>
-   
+  ${prossesAssesmentStartingSituation
+    .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      a.characteristics
+        .map((b, index) => {
+          if (!index) {
+            return `<tr>
+      <td rowspan="${a.rows}" >${a.name}</td>
+      <td>${b.name?b.name:'-'}</td>
+      <td>${b.indicator?b.indicator:"-"}</td>
     
-  </tr>
-  <tr>
-  <td>Adoption</td>
-  <td>test indicators</td>
-  </tr>
-   <tr>
-  <td>Scale up</td>
-  <td>test indicators</td>
-  </tr>
+     </tr>`;
+          } else {
+            return `<tr>
+            <td>${b.name?b.name:'-'}</td>
+            <td>${b.indicator?b.indicator:"-"}</td>
+            </tr>`;
+          }
+        })
+        .join(''),
+    )
+    .join('')}
+  
 
-
-  <tr>
-
-  <td rowspan="3" >Agents  </td>
-  <td>Entrepreneurs</td>
-  <td>test indicators</td>
- </tr>
-<tr>
-<td>Coalition of advocates </td>
-<td>test indicators</td>
-</tr>
- <tr>
-<td>Beneficiaries</td>
-<td>test indicators</td>
-</tr>
-<tr>
-
-<td rowspan="3" >Incentives </td>
-<td>Economic and non-economic incentives</td>
-<td>test indicators</td>
-</tr>
-<tr>
-<td>Disincentives</td>
-<td>test indicators</td>
-</tr>
-<tr>
-<td>Institutions and regulations</td>
-<td>test indicators</td>
-</tr>
-<tr>
-
-<td rowspan="3" >Norms </td>
-<td>Awareness</td>
-<td>test indicators</td>
-</tr>
-<tr>
-<td>Behaviour</td>
-<td>test indicators</td>
-</tr>
-<tr>
-<td>Social norms</td>
-<td>test indicators</td>
-</tr>
+  </tbody>
 
 
   </tbody>
@@ -503,6 +468,8 @@ export class ReportPagesService {
   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
   
    </div>`;
+
+   const outcomeAssesmentStartingSituation = contentTwo.outcomeAssesmentStartingSituation;
     const page_2 = `  <div id="page_5" class="page text-center" >
    ${header}
    <div class="content">
@@ -527,65 +494,27 @@ export class ReportPagesService {
      </tr>
    </thead>
    <tbody class="table-active">
-    <tr>
-     <td rowspan="3" >Scale of outcome - GHGs </td>
-     <td>Macro level</td>
-     <td>test indicators</td>
+   ${outcomeAssesmentStartingSituation
+    .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      a.characteristics
+        .map((b, index) => {
+          if (!index) {
+            return `<tr>
+      <td rowspan="${a.rows}" >${a.name}</td>
+      <td>${b.name?b.name:'-'}</td>
+      <td>${b.indicator?b.indicator:"-"}</td>
     
-     
-   </tr>
-   <tr>
-   <td>Medium level</td>
-   <td>test indicators</td>
-   </tr>
-    <tr>
-   <td>Micro level</td>
-   <td>test indicators</td>
-   </tr>
- 
- 
-   <tr>
- 
-   <td rowspan="3" >Scale of outcome – sustainable development  </td>
-   <td>Macro level</td>
-   <td>test indicators</td>
-  </tr>
- <tr>
- <td>Medium level </td>
- <td>test indicators</td>
- </tr>
-  <tr>
- <td>Micro level</td>
- <td>test indicators</td>
- </tr>
- <tr>
- 
- <td rowspan="3" >Outcome sustained over time - GHGs </td>
- <td>Macro level</td>
- <td>test score</td>
- </tr>
- <tr>
- <td>Medium level </td>
- <td>test indicators</td>
- </tr>
-  <tr>
- <td>Micro level</td>
- <td>test indicators</td>
- </tr>
- <tr>
- 
- <td rowspan="3" >Outcome sustained over time – sustainable development </td>
- <td>Macro level</td>
- <td>test indicators</td>
- </tr>
- <tr>
- <td>Medium level </td>
- <td>test indicators</td>
- </tr>
-  <tr>
- <td>Micro level</td>
- <td>test indicators</td>
- </tr>
+     </tr>`;
+          } else {
+            return `<tr>
+            <td>${b.name?b.name:'-'}</td>
+            <td>${b.indicator?b.indicator:"-"}</td>
+            </tr>`;
+          }
+        })
+        .join(''),
+    )
+    .join('')}
  
  
    </tbody>
@@ -599,10 +528,12 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
+
+    const prossesExAnteAssesment = contentTwo.prossesExAnteAssesment;
     const page_3 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
-    <div  class="main_header_sub text-start">2.2	Ex-ante assessment </div> 
+    <div  class="main_header_sub text-start">2.2	${contentTwo.assesmentType} assessment </div> 
     <blockquote class=" paragraph blockquote text-start ">
     <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
@@ -621,106 +552,37 @@ export class ReportPagesService {
         <th scope="col">Score</th>
         <th scope="col">Rationale justifying the score </th>
         <th scope="col">Indicator value at starting situation</th>
-        <th scope="col">Indicator value for expected transformation </th>
+        <th scope="col">Indicator value observed  </th>
       </tr>
     </thead>
     <tbody class="table-active">
-     <tr>
-      <td rowspan="3" >Technology</td>
-      <td>Research and development</td>
-      <td>test value</td>
-      <td>test value</td>
-      <td>test value</td>
-      <td>test value</td>
+    ${prossesExAnteAssesment
+      .map((a: { rows: number; name: string; characteristics: any[] }) =>
+        a.characteristics
+          .map((b, index) => {
+            if (!index) {
+              return `<tr>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td>${b.name?b.name:'-'}</td>
+        <td>${b.score?b.score:"-"}</td>
+        <td>${b.justifying_score?b.justifying_score:"-"}</td>
+        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
+        <td>${b.indicator_value?b.indicator_value:"-"}</td>
       
-     
-      
-    </tr>
-    <tr>
-    <td>Adoption</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    </tr>
-     <tr>
-    <td>Scale up</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    </tr>
-  
-  
-    <tr>
-  
-    <td rowspan="3" >Agents  </td>
-    <td>Entrepreneurs</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-   </tr>
-  <tr>
-  <td>Coalition of advocates </td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-   <tr>
-  <td>Beneficiaries</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  
-  <td rowspan="3" >Incentives </td>
-  <td>Economic and non-economic incentives</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Disincentives</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Institutions and regulations</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  
-  <td rowspan="3" >Norms </td>
-  <td>Awareness</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Behaviour</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Social norms</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
+       </tr>`;
+            } else {
+              return `<tr>
+              <td>${b.name?b.name:'-'}</td>
+              <td>${b.score?b.score:"-"}</td>
+        <td>${b.justifying_score?b.justifying_score:"-"}</td>
+        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
+        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+              </tr>`;
+            }
+          })
+          .join(''),
+      )
+      .join('')}
   
   
     </tbody>
@@ -734,6 +596,10 @@ export class ReportPagesService {
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
+
+
+     const outcomeExAnteAssesment = contentTwo.outcomeExAnteAssesment;
+
     const page_4 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
@@ -757,105 +623,37 @@ export class ReportPagesService {
         <th scope="col">Score</th>
         <th scope="col">Rationale justifying the score </th>
         <th scope="col">Indicator value at starting situation </th>
-        <th scope="col">Indicator value for expected transformation  </th>
+        <th scope="col">Indicator value observed </th>
       </tr>
     </thead>
     <tbody class="table-active">
-     <tr>
-      <td rowspan="3" >Scale of outcome - GHGs </td>
-      <td>Macro level</td>
-      <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-     
+    ${outcomeExAnteAssesment
+      .map((a: { rows: number; name: string; characteristics: any[] }) =>
+        a.characteristics
+          .map((b, index) => {
+            if (!index) {
+              return `<tr>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td>${b.name?b.name:'-'}</td>
+        <td>${b.score?b.score:"-"}</td>
+        <td>${b.justifying_score?b.justifying_score:"-"}</td>
+        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
+        <td>${b.indicator_value?b.indicator_value:"-"}</td>
       
-    </tr>
-    <tr>
-    <td>Adoption</td>
-    <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-    </tr>
-     <tr>
-    <td>Scale up</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td>
-    </tr>
-  
-  
-    <tr>
-  
-    <td rowspan="3" >Agents  </td>
-    <td>Entrepreneurs</td>
-    <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-   </tr>
-  <tr>
-  <td>Coalition of advocates </td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-   <tr>
-  <td>Beneficiaries</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  
-  <td rowspan="3" >Incentives </td>
-  <td>Economic and non-economic incentives</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Disincentives</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Institutions and regulations</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  
-  <td rowspan="3" >Norms </td>
-  <td>Awareness</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Behaviour</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
-  <tr>
-  <td>Social norms</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  </tr>
+       </tr>`;
+            } else {
+              return `<tr>
+              <td>${b.name?b.name:'-'}</td>
+              <td>${b.score?b.score:"-"}</td>
+        <td>${b.justifying_score?b.justifying_score:"-"}</td>
+        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
+        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+              </tr>`;
+            }
+          })
+          .join(''),
+      )
+      .join('')}
   
   
     </tbody>

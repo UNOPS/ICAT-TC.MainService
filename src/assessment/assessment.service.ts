@@ -17,12 +17,13 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
-import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -283,7 +284,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
 
-  async getCharacteristicasforReport(assessmentId: number,catagoryType:string) {
+  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,assessmentType:string) {
     let filter: string = 'asse.id=:assessmentId and   parameters.characteristics_id is not null';
 
     if(catagoryType){
@@ -291,6 +292,13 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         filter=`${filter} and category.type= :catagoryType `
       }else{
         filter='category.type= :catagoryType '
+      }
+    }
+    if(assessmentType){
+      if(filter){
+        filter=`${filter} and asse.type= :assessmentType `
+      }else{
+        filter='asse.type= :assessmentType '
       }
     }
     let data = await this.repo
@@ -315,7 +323,13 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'characteristics',
         `characteristics.id = parameters.characteristics_id`,
       )
-      .where(filter,{ assessmentId,catagoryType });
+      .leftJoinAndMapOne(
+        'parameters.indicator',
+        Indicators,
+        'indicator',
+        `indicator.id = parameters.indicator_id`,
+      )
+      .where(filter,{ assessmentId,catagoryType,assessmentType });
     console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }

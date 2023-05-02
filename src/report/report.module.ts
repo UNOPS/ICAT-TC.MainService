@@ -15,6 +15,7 @@ import { AssessmentModule } from 'src/assessment/assessment.module';
 import { Country } from 'src/country/entity/country.entity';
 import { CountryModule } from 'src/country/country.module';
 import { TokenDetails } from 'src/utills/token_details';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { TokenDetails } from 'src/utills/token_details';
     CountryModule
   ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails],
-  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService],
+  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService],
 })
 export class ReportModule {}

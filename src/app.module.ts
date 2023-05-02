@@ -79,7 +79,6 @@ import { UsersService } from './users/users.service';
 import { UserType } from './users/entity/user.type.entity';
 import { ReportModule } from './report/report.module';
 
-
 @Module({
   imports: [
     AuditModule,

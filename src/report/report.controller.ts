@@ -137,13 +137,13 @@ export class ReportController {
   async testReportDto(@Query('id') id: number): Promise<any> {
     // console.log("reprtDto",id)
     const createReportDto = new CreateReportDto();
-    createReportDto.assessmentId = 1;
+    createReportDto.assessmentId = 338;
     // const reprtDto:ReportDto= await this.reportService.genarateReportDto(createReportDto);
     // this.assessmentService.getCharacteristicasforReport(338,"")
     // console.log("reprtDto",await this.assessmentService.getCharacteristicasforReport(338,""))
     let asssCharac = await this.assessmentService.getCharacteristicasforReport(
       id,
-      'outcome',
+      'outcome',''
     );
     let catagory = [];
     for (let parameter of asssCharac.parameters) {
@@ -162,9 +162,9 @@ export class ReportController {
      
      
     }
-    for(let cat of catagory){
-      console.log(cat);
-    }
+    // for(let cat of catagory){
+    //   console.log(cat);
+    // }
     // console.log("reprtDto",reprtDto)
   }
 }
