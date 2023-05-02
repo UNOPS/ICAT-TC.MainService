@@ -8,6 +8,7 @@ import { Characteristics } from "./characteristics.entity";
 import { Methodology } from "./methodology.entity";
 import { ParameterStatus } from "./parameterStatus.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
+import { Indicators } from "./indicators.entity";
 
 
 @Entity()
@@ -46,6 +47,10 @@ export class MethodologyAssessmentParameters {
     @ManyToOne((type) => ParameterStatus, { cascade: false })
     @JoinColumn({ name: 'status_id' })
     status?: ParameterStatus;
+
+    @ManyToOne((type) => Indicators, { cascade: false })
+    @JoinColumn({ name: 'indicator_id' })
+    indicator?: Indicators;
 
     @Column({ nullable: true })
     isCategory: number;

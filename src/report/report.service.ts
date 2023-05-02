@@ -186,6 +186,10 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
   }
   genarateReportDtoContentTwo(): ReportContentTwo {
     const reportContentTwo = new ReportContentTwo();
+
+
+
+    
     
     return reportContentTwo;
   }

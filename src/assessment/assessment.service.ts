@@ -22,6 +22,7 @@ import { ProjectStatus } from 'src/master-data/project-status/project-status.ent
 import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -310,6 +311,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         Characteristics,
         'characteristics',
         `characteristics.id = parameters.characteristics_id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.indicator',
+        Indicators,
+        'indicator',
+        `indicator.id = parameters.indicator_id`,
       )
       .where(filter,{ assessmentId,catagoryType });
     console.log("qqqqqqq", data.getQueryAndParameters())
