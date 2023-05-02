@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -26,6 +26,15 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
+import { getConnection } from 'typeorm';
+import { AssessmentCategory } from './entities/assessmentCategory.entity';
+import { Objectives } from './entities/objectives.entity';
+import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
+import { User } from 'src/users/entity/user.entity';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -44,8 +53,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    @InjectRepository(Institution) private readonly institutionRepository: Repository<Institution>, 
     @InjectRepository(PolicyBarriers) private readonly policyBarrierRepository: Repository<PolicyBarriers>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
-    @InjectRepository(ParameterRequest)
-    private readonly parameterRequestRepository: Repository<ParameterRequest>,
+    @InjectRepository(ParameterRequest) private readonly parameterRequestRepository: Repository<ParameterRequest>,
+    @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
+    @InjectRepository(AssessmentCategory) private readonly assessCategoryRepo: Repository<AssessmentCategory>,
+    @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
+    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    private userService: UsersService,
+    private emaiService: EmailNotificationService
+
    ) {
     super(repo)
   }
@@ -109,10 +123,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.year = y
     assessement.tool = MethData.tool
     assessement.assessmentType = MethData.assessment_type
-    assessement.assessment_approach = MethData.assessment_approach,
-    assessement.assessment_method = MethData.assessment_method,
-    assessement.from = MethData.date1,
+    assessement.assessment_approach = MethData.assessment_approach
+    assessement.assessment_method = MethData.assessment_method
+    assessement.from = MethData.date1
     assessement.to  = MethData.date2
+    assessement.person = MethData.person
+    assessement.opportunities = MethData.opportunities
+    assessement.impactsCovered = MethData.impactsCovered
+    assessement.assessBoundry = MethData.assessBoundry
+    assessement.audience = MethData.audience
 
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
@@ -132,6 +151,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
       await this.assessRepository.save(assessmentBarriers);
     } 
+
+    let createdAssessment = new Assessment();
+    createdAssessment.id = assessementId
+
+    for(let objectives of MethData.selectedObjectives){
+      let assessObj = new AssessmentObjectives()
+      assessObj.assessment = createdAssessment
+      assessObj.objectives = objectives
+      await this.assessObjRepo.save(assessObj);
+    }
   
     for (let categoryData of MethData.categoryData) {
       let category = new Category();
@@ -149,7 +178,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.methodology = methodology
       dataForCategory.isCategory = 1
       dataForCategory.institution = categoryData.categoryInstitution
-      dataForCategory.comment = categoryData.categoryComment
+      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
       dataForCategory.fileName = categoryData.categoryFile
      
      // category.categoryScore = categoryData.categoryScore;
@@ -172,9 +201,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.relevance = characteristic.relevance;
         data.assessment = savedAssessment
         data.fileName = characteristic.filename;
-        data.comment = characteristic.comment;
+        data.scoreOrInstitutionJusti = characteristic.comment;
         data.isCategory = 0;
         data.institution = characteristic.institution;
+        data.chaDescription = characteristic.chaDescription;
+        data.chaRelJustification = characteristic.chaRelJustification;
       //  console.log("Data: ", data);
   
        await this.repo.save(data);
@@ -188,6 +219,186 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     //assessementId
     console.log("iddd", assessementId)
     return assessementId;
+  }
+
+  async saveAssessment(assessment: Assessment){
+    return await this.assessmentRepository.save(assessment)
+  }
+
+  async barrierCharacteristics(dataArr : any){
+
+    let methodology = new Methodology();
+    let policy = new ClimateAction();
+     methodology.id = dataArr.alldata.methodology;
+  //  console.log("MethName: ", methodology.id);
+    policy.id = dataArr.alldata.policyId;
+
+
+    let data = dataArr.alldata
+    console.log("dattaaaa",data)
+    let  date  = new Date()
+     const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    let y = `${year}-${month}-${day}`;
+
+    let savedAssessment = new Assessment();
+    savedAssessment.assessmentType = data.assessment_type;
+    savedAssessment.assessment_approach = data.assessment_approach;
+    savedAssessment.assessment_method = data.assessment_method;
+    savedAssessment.climateAction = data.policyId;
+    savedAssessment.methodology = data.methodology;
+    savedAssessment.from = data.date1;
+    savedAssessment.to = data.date2;
+    savedAssessment.tool = data.tool;
+    savedAssessment.year = y
+    savedAssessment.person = data.person
+    savedAssessment.opportunities = data.opportunities
+    savedAssessment.impactsCovered = data.impactsCovered
+    savedAssessment.assessBoundry = data.assessBoundry
+    savedAssessment.audience = data.audience
+
+    let assessRes =  this.assessmentRepository.save(savedAssessment);
+    let assessementId = (await assessRes).id
+ 
+    savedAssessment.id = assessementId
+ 
+     console.log("assessRes : ",(await assessRes).id)
+ 
+    for(let y of data.selectedBarriers){
+       let assessmentBarriers = new AssessmentBarriers()
+       let barrier = new Barriers();
+       barrier.id = y.id,
+       barrier.barrier = y.barrier
+ 
+       assessmentBarriers.barriers = barrier
+       assessmentBarriers.assessment = savedAssessment
+ 
+       await this.assessRepository.save(assessmentBarriers);
+     } 
+
+     let createdAssessment = new Assessment();
+    createdAssessment.id = assessementId
+
+    for(let objectives of data.selectedObjectives){
+      let assessObj = new AssessmentObjectives()
+      assessObj.assessment = createdAssessment
+      assessObj.objectives = objectives
+      await this.assessObjRepo.save(assessObj);
+    }
+
+
+     for(let barrierCharacteristic of dataArr.dataArray){
+      let obj = new BarriersCharacteristics()
+    //  let assessmentBarriers = new AssessmentBarriers()
+      let barrierdata = new Barriers()
+      barrierdata.id = barrierCharacteristic.barrier
+      let assess = new Assessment();
+      assess.id = assessementId
+    
+      obj.assessment = assess
+      obj.barriers = barrierdata
+      obj.characteristics = barrierCharacteristic.chaId
+      obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.barrier_target = barrierCharacteristic.barrierTarget
+      obj.bscore_comment = barrierCharacteristic.barrierComment
+      obj.barrier_weight = barrierCharacteristic.barrierWeight
+      obj.bweight_comment = barrierCharacteristic.bWeightComment
+      obj.institution = barrierCharacteristic.barrierScoreInstitution
+
+      await this.barrierCharacterRepo.save(obj);
+     }
+
+
+     for (let categoryData of dataArr.categoryData) {
+      let category = new Category();
+      category.id = categoryData.categoryId;
+      category.name = categoryData.category;
+
+      let savedAssessmentnew = new Assessment();
+
+      savedAssessmentnew.id = assessementId
+
+      let dataForCategory = new MethodologyAssessmentParameters();
+      dataForCategory.score = categoryData.categoryScore
+      dataForCategory.category = category
+      dataForCategory.assessment = savedAssessmentnew
+      dataForCategory.methodology = methodology
+      dataForCategory.isCategory = 1
+      dataForCategory.institution = categoryData.categoryInstitution
+      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
+      dataForCategory.fileName = categoryData.categoryFile
+      dataForCategory.weight = categoryData.categoryWeight
+     
+     // category.categoryScore = categoryData.categoryScore;
+     // console.log("Category: ", category);
+  
+     if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
+      await this.repo.save(dataForCategory);
+    }
+      for (let characteristic of categoryData.characteristics) {
+        let characteristics = new Characteristics();
+        characteristics.name = characteristic.name;
+        characteristics.id = characteristic.id;
+     //   console.log("Characteristics: ", characteristics);
+  
+  
+       
+        let data = new MethodologyAssessmentParameters();
+        data.methodology = methodology;
+        data.category = category;
+      //  data.category_score = categoryData.categoryScore;
+        data.characteristics = characteristics;
+        data.score = characteristic.score;
+        data.relevance = characteristic.relevance;
+        data.assessment = savedAssessment
+        data.fileName = characteristic.filename;
+        data.scoreOrInstitutionJusti = characteristic.comment;
+        data.isCategory = 0;
+        data.institution = characteristic.institution;
+        data.weight = characteristic.weight,
+        data.chaDescription = characteristic.chaDescription;
+        data.chaRelJustification = characteristic.chaRelJustification;
+      //  console.log("Data: ", data);
+  
+       await this.repo.save(data);
+      }
+    
+      
+
+    }
+
+
+    return assessementId
+  } 
+
+
+  async barrierCharSave(dataArr : any){
+
+    console.log("barrierCharSave", dataArr)
+    for(let barrierCharacteristic of dataArr.dataArray){
+      let obj = new BarriersCharacteristics()
+    //  let assessmentBarriers = new AssessmentBarriers()
+      let barrierdata = new Barriers()
+      barrierdata.id = barrierCharacteristic.barrier
+      let savedAssessment = new Assessment();
+      savedAssessment.id = dataArr.assessmentId
+    
+      obj.assessment = savedAssessment
+      obj.barriers = barrierdata
+      obj.characteristics = barrierCharacteristic.chaId
+      obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.barrier_target = barrierCharacteristic.barrierTarget
+      obj.bscore_comment = barrierCharacteristic.barrierComment
+      obj.barrier_weight = barrierCharacteristic.barrierWeight
+      obj.bweight_comment = barrierCharacteristic.bWeightComment
+      
+
+
+      await this.barrierCharacterRepo.save(obj);
+     }
+
+    return dataArr
   }
 
 
@@ -214,6 +425,46 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     return charAssessData
   }
+
+
+  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
+    let paras = await this.repo.find({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
+    })
+    return paras
+  }
+  
+
+  async assessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]> {
+    return this.repo.find({
+      relations: ['characteristics','assessment','category'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async assessCategory(resData :any){
+    console.log("yyyyyyyyy", resData)
+    for(let item of resData.result.categoryCalculatedProcess){
+      let data = new AssessmentCategory ()
+      data.assessment = resData.assesId
+      data.category = item.categoryId
+     data.categoryScore = item.score
+     data.categoryWeight = item.weight
+      await this.assessCategoryRepo.save(data);
+    }
+
+    for(let item of resData.result.categoryCalculatedoutcome){
+      let data = new AssessmentCategory ()
+      data.assessment = resData.assesId
+      data.category = item.categoryId
+     data.categoryScore = item.score
+     data.categoryWeight = item.weight
+      await this.assessCategoryRepo.save(data);
+    }
+
+  }
+
 
   async createResults(result :any){
     let data = new Results ()
@@ -242,6 +493,24 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return characteristics;
   }
 
+  async findByAssessIdBarrierData(assessId: number): Promise<BarriersCharacteristics[]> {
+    const barriersIds = await this.repo
+      .createQueryBuilder('map')
+      .select('barriers_characteristics.id', 'id')
+      .leftJoin('map.barriers', 'barriers')
+      .leftJoin('barriers.barriersCharacteristics', 'barriers_characteristics')
+      .leftJoin('barriers_characteristics.characteristics', 'characteristics')
+      .where('map.assessment.id = :assessId', { assessId })
+      .getRawMany();
+  
+    const barriersdata = await this.barrierCharacterRepo
+      .createQueryBuilder('barriers_characteristics')
+      .where('barriers_characteristics.id IN (:...ids)', { ids: barriersIds.map((c) => c.id) })
+      .getMany();
+  
+    return barriersdata;
+}
+
 
 /*   findAll(): Promise<Category[]> {
     return this.methodologyRepository.find();
@@ -258,8 +527,18 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return this.methodologyRepository.find();
   }
 
+  async findAllObjectives(): Promise<Objectives[]> {
+    return await this.objectivesRepo.find();
+  }
+
   async findAllBarriers(): Promise<Barriers[]> {
     return await this.barriersRepository.find();
+  }
+
+  async findAllBarriersCharacter(): Promise<BarriersCharacteristics[]> {
+    return await this.barrierCharacterRepo.find({
+      relations: ['assessment', 'barriers','characteristics'],
+    });
   }
 
   async findByAllCategories(): Promise<BarriersCategory[]> {
@@ -275,10 +554,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     });
 
   }
+
+
+
+
+
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
     // const ass =await  this.assessmentRepository.findOne({where:{id:id}})
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
+    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
     .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
     .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
     .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
@@ -297,6 +582,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      });
    }
 
+   async getResultByAssessment(assessmentId: number){
+    return await this.resultRepository.findOne({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment']
+    })
+   }
+
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
   //  return await this.repo.find();
     return this.repo.find({
@@ -311,6 +603,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       });
     }
 
+    
 
   async findAllPolicyBarriers(): Promise<any[]> {
     const policyBarriers = await this.policyBarrierRepository.find({
@@ -339,6 +632,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   } */
 
+  async findAllBarrierData(assessmentId: number): Promise<BarriersCharacteristics[]> {
+    return this.barrierCharacterRepo.find({
+      relations: ['barriers', 'characteristics', 'assessment'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async getAssessCategory(assessmentId: number): Promise<AssessmentCategory[]> {
+    return this.assessCategoryRepo.find({
+      relations: [ 'assessment','category'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  
   async findAllIndicators(): Promise<Indicators[]> {
    // return this.indicatorRepository.find();
 
@@ -362,7 +670,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .getMany();
   }
 
-  findAllCharacteristics(): Promise<Characteristics[]> {
+  async findAllCharacteristics(): Promise<Characteristics[]> {
   //  return this.characteristicsRepository.find();
     return this.characteristicsRepository.createQueryBuilder('characteristics')
     .leftJoinAndSelect('characteristics.category', 'category')
@@ -370,6 +678,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     .getMany();
   }
 
+  async assessmentData(assessmentId: number): Promise<Assessment[]> {
+    return this.assessmentRepository.find({
+      relations: ['climateAction'],
+      where: { id: assessmentId  },
+    });
+  }
 
   update(id: number, updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return `This action updates a #${id} methodologyAssessment`;
@@ -377,6 +691,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   remove(id: number) {
     return `This action removes a #${id} methodologyAssessment`;
+  }
+
+
+
+  async barriesByassessId(assessmentId: number): Promise<AssessmentBarriers[]> {
+    return this.assessRepository.find({
+      relations: ['assessment','barriers'],
+      where: {  assessment: { id: assessmentId } },
+    });
   }
 
 
@@ -448,9 +771,124 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return true;
   }
 
+  async updateParameter(id: number, parameter: MethodologyAssessmentParameters){
+    try {
+      let update = await this.repo.update(id, parameter)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error){
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async updateResult(id: number, result: Results){
+    try{
+      let update = await this.resultRepository.update(id, result)
+      if (update.affected === 1){
+        return update
+      } else {
+        throw new InternalServerErrorException()
+      }
+    } catch(error) {
+      console.log(error)
+      throw new InternalServerErrorException()
+    }
+  }
+
   async allParam(
     options: IPaginationOptions,
     filterText: string[]){
       let filter: string = '';
+  }
+
+  async getAssessmentForAssignVerifier(
+    options: IPaginationOptions,
+    filterText: string,
+    QAstatusId: number,
+    countryIdFromTocken:number
+  ): Promise<any> {
+
+    console.log("getAssessmentForAssignVerifier")
+
+    let data = this.assessmentRepository
+      .createQueryBuilder('assessment')
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .leftJoinAndMapOne(
+        'assessment.verificationUser',
+        User,
+        'u',
+        'assessment.verificationUser = u.id',
+      )
+      .where(
+        (
+          (QAstatusId != 0
+            ? `assessment.verificationStatus=${QAstatusId} AND `
+            : `assessment.verificationStatus in (2,3,4,5,6,7) AND `) +
+          `assessment.qaStatus in (4) AND ` +
+          (filterText != ''
+            ? `(p.policyName LIKE '%${filterText}%' OR assessment.assessmentType LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
+           )`
+            : '')
+        ).replace(/AND $/, ''),
+      )
+      .orderBy('assessment.verificationDeadline', 'DESC')
+      .groupBy('assessment.id');
+
+    console.log('AssessmentFor Verifier', data.getSql());
+
+    let result = await paginate(data, options);
+    return result;
+  }
+
+  async acceptDataVerifiersForIds(
+    updateDataRequestDto: DataVerifierDto,
+  ): Promise<boolean> {
+    // let dataRequestItemList = new Array<ParameterRequest>();
+
+    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+      const id = updateDataRequestDto.ids[index];
+      let dataRequestItem = await this.assessmentRepository.findOne({ where: { id: id } });
+      let originalStatus = dataRequestItem.verificationStatus;
+      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
+      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
+      dataRequestItem.verificationUser = updateDataRequestDto.userId;
+
+      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
+      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
+      var template: any;
+        template =
+          'Dear ' +
+          user.firstName + ' ' + user.lastName+
+          ' <br/> Data request with following information has shared with you.' +
+          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
+          // '<br/> value -:' + dataRequestItem.parameter.value +
+          // '<br> comment -: ' + updateDataRequestDto.comment;
+      
+          this.emaiService.sendMail(
+            user.email,
+            'Assign verifier',
+            '',
+            template,
+          );
+      // dataRequestItemList.push(dataRequestItem);
+      this.assessmentRepository.save(dataRequestItem).then((res) => {
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.AssignVerifier,
+        //   'AssignVerifier',
+        //   '',
+        //   res.verificationStatus.toString(),
+        //   originalStatus.toString(),
+        // );
+      });
+    }
+
+    // this.repo.save(dataRequestItemList);
+
+    return true;
   }
 }

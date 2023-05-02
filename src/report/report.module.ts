@@ -12,11 +12,12 @@ import { AssessmentService } from 'src/assessment/assessment.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
 import { AssessmentModule } from 'src/assessment/assessment.module';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Report,Assessment]),UsersModule],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService,AssessmentService],
-  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService,AssessmentService,EmailNotificationService],
+  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService,EmailNotificationService],
 })
 export class ReportModule {}

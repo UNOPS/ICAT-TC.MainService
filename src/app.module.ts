@@ -68,9 +68,17 @@ import { DefaultValue } from './default-value/entity/defaultValue.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 import { Results } from './methodology-assessment/entities/results.entity';
 import { AggregatedAction } from './master-data/aggregated-action/entity/aggregated-action.entity';
+import { VerificationModule } from './verification/verification.module';
+import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
 import { ReportModule } from './report/report.module';
 
+import { AssessmentCategory } from './methodology-assessment/entities/assessmentCategory.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
+import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
+import { CarbonMarketModule } from './carbon-market/carbon-market.module';
+import { UsersService } from './users/users.service';
+import { UserType } from './users/entity/user.type.entity';
 
 @Module({
   imports: [
@@ -104,7 +112,12 @@ import { ReportModule } from './report/report.module';
       ParameterHistory,
       MethodologyIndicators,
       Results,
-      Assessment
+      BarriersCharacteristics,
+      AssessmentCategory,
+      Assessment,
+      Objectives,
+      AssessmentObjectives,
+      UserType
     ]),
     UsersModule,
     UserTypeModule,
@@ -160,7 +173,8 @@ import { ReportModule } from './report/report.module';
     QualityCheckModule,
     ParameterHistoryModule,
     DefaultValueModule,
-    
+    VerificationModule,
+    CarbonMarketModule
 
   ],
   controllers: [
@@ -176,6 +190,7 @@ import { ReportModule } from './report/report.module';
     // InstitutionCategoryController,
     // UserController,
   ],
-  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService, ParameterHistoryService, DefaultValueService],
+  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
+     ParameterHistoryService, DefaultValueService],
 })
 export class AppModule { }

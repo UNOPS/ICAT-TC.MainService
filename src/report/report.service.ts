@@ -37,17 +37,17 @@ export class ReportService {
 
   async genarateReportDto(createReportDto: CreateReportDto): Promise<ReportDto> {
     const reportDto = new ReportDto();
-    reportDto.reportName = 'reportPDF.pdf';
-    reportDto.coverPage = this.genarateReportDtoCoverPage();
+    reportDto.reportName = createReportDto.reportName;
+    reportDto.coverPage = this.genarateReportDtoCoverPage(createReportDto.reportTitle);
     reportDto.contentOne=await this.genarateReportDtoContentOne(createReportDto.assessmentId);
-    reportDto.contentTwo=this.genarateReportDtoContentTwo()
+    reportDto.contentTwo=await this.genarateReportDtoContentTwo(createReportDto.assessmentId)
 
     return reportDto;
   }
 
-  genarateReportDtoCoverPage(): ReportCoverPage {
+  genarateReportDtoCoverPage(title:string): ReportCoverPage {
     const coverPage = new ReportCoverPage();
-    coverPage.generateReportName = 'Report Title';
+    coverPage.generateReportName = title;
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink="http://localhost:7080/report/cover/icatlogo.jpg"
@@ -133,21 +133,21 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
 
       let asssCharacProcess = await this.assessmentService.getCharacteristicasforReport(
         assessmentId,
-        'process',
+        'process',''
       );
       let catagoryProcess = [];
       for (let parameter of asssCharacProcess.parameters) {
-        console.log(parameter);
+        // console.log(parameter);
         let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
         if (cat) {
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
           cat.rows=cat.characteristics.length;
         } else {
           catagoryProcess.push({
             rows:1,
             name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
           });
         }
       
@@ -156,21 +156,21 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
 
       let asssCharacOutcome = await this.assessmentService.getCharacteristicasforReport(
         assessmentId,
-        'outcome',
+        'outcome',''
       );
       let catagoryOutcome = [];
       for (let parameter of asssCharacOutcome.parameters) {
-        console.log(parameter);
+        // console.log(parameter);
         let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
         if (cat) {
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
           cat.rows=cat.characteristics.length;
         } else {
           catagoryOutcome.push({
             rows:1,
             name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
           });
         }
       
@@ -184,12 +184,105 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
     
     return reportContentOne;
   }
-  genarateReportDtoContentTwo(): ReportContentTwo {
+  async genarateReportDtoContentTwo(assessmentId:number): Promise<ReportContentTwo> {
     const reportContentTwo = new ReportContentTwo();
-
-
-
     
+    let asssIndicatorsProcess = await this.assessmentService.getCharacteristicasforReport(
+      assessmentId,
+      'process',''
+    );
+    reportContentTwo.assesmentType=asssIndicatorsProcess.assessmentType;
+    let catagoryProcess = [];
+    for (let parameter of asssIndicatorsProcess.parameters) {
+      // console.log(parameter);
+      let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
+      if (cat) {
+       
+        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator.name});
+        cat.rows=cat.characteristics.length;
+      } else {
+        catagoryProcess.push({
+          rows:1,
+          name: parameter.category.name,
+          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator.name}],
+        });
+      }
+    
+     
+    }
+
+    let asssIndicatorOutcome = await this.assessmentService.getCharacteristicasforReport(
+      assessmentId,
+      'outcome',''
+    );
+    let catagoryOutcome = [];
+    for (let parameter of asssIndicatorOutcome.parameters) {
+      // console.log(parameter);
+      let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
+      if (cat) {
+       
+        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator.name});
+        cat.rows=cat.characteristics.length;
+      } else {
+        catagoryOutcome.push({
+          rows:1,
+          name: parameter.category.name,
+          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator.name}],
+        });
+      }
+    
+     
+    }
+
+
+
+
+    reportContentTwo.prossesAssesmentStartingSituation=catagoryProcess;
+    reportContentTwo.outcomeAssesmentStartingSituation=catagoryOutcome;
+
+
+
+
+    let catagoryProcessExAnteAssesment = [];
+    for (let parameter of asssIndicatorsProcess.parameters) {
+      console.log(parameter);
+      let cat = catagoryProcessExAnteAssesment.find((a) => a.name == parameter.category.name);
+      if (cat) {
+       
+        cat.characteristics.push({name:parameter.characteristics.name, score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue});
+        cat.rows=cat.characteristics.length;
+      } else {
+        catagoryProcessExAnteAssesment.push({
+          rows:1,
+          name: parameter.category.name,
+          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue}],
+        });
+      }
+    
+     
+    }
+
+   let catagoryOutcomeExAnteAssesment = [];
+    for (let parameter of asssIndicatorOutcome.parameters) {
+      console.log(parameter);
+      let cat = catagoryOutcomeExAnteAssesment.find((a) => a.name == parameter.category.name);
+      if (cat) {
+       
+        cat.characteristics.push({name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_starting_value:"-",indicator_value:parameter.indicatorValue});
+        cat.rows=cat.characteristics.length;
+      } else {
+        catagoryOutcomeExAnteAssesment.push({
+          rows:1,
+          name: parameter.category.name,
+          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue}],
+        });
+      }
+    
+     
+    }
+    reportContentTwo.prossesExAnteAssesment=catagoryProcessExAnteAssesment;
+    
+    reportContentTwo.outcomeExAnteAssesment=catagoryOutcomeExAnteAssesment;
     
     return reportContentTwo;
   }
