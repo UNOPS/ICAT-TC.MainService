@@ -75,6 +75,7 @@ import { AssessmentCategory } from './methodology-assessment/entities/assessment
 import { Objectives } from './methodology-assessment/entities/objectives.entity';
 import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -184,6 +185,7 @@ import { CarbonMarketModule } from './carbon-market/carbon-market.module';
     // InstitutionCategoryController,
     // UserController,
   ],
-  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService, ParameterHistoryService, DefaultValueService],
+  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
+     ParameterHistoryService, DefaultValueService],
 })
 export class AppModule { }

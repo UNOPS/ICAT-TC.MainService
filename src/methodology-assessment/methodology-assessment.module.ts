@@ -61,13 +61,15 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
     Results,
     Institution,
     ParameterRequest,
-    BarriersCharacteristics
+    BarriersCharacteristics,
+    AssessmentCategory,
+    Objectives,
+    AssessmentObjectives,
     
   ])],
   exports: [
     MethodologyAssessmentService,
     ProjectService ,
-    
   ]
 })
 export class MethodologyAssessmentModule { }
