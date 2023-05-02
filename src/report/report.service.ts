@@ -6,14 +6,19 @@ import { AssessmentDto } from './dto/assessment.dto';
 import { ReportDto, ReportCoverPage, ReportContentOne, ReportContentTwo } from './dto/report.dto';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { AssessmentService } from 'src/assessment/assessment.service';
+import { Report } from './entities/report.entity';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { Country } from 'src/country/entity/country.entity';
 
 @Injectable()
-export class ReportService {
-  constructor( 
-  public  assessmentService:AssessmentService  ){
-
+export class ReportService extends TypeOrmCrudService<Report>{
+  constructor(
+    @InjectRepository(Report) repo,
+    @InjectRepository(Country) private countryRepo: Repository<Country>,
+    public assessmentService: AssessmentService) {
+    super(repo)
   }
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';
@@ -23,9 +28,9 @@ export class ReportService {
     return `This action returns all report`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} report`;
+  // }
 
   update(id: number, updateReportDto: UpdateReportDto) {
     return `This action updates a #${id} report`;
@@ -54,6 +59,42 @@ export class ReportService {
     return coverPage;
   }
 
+  async saveReport(name: string, fileName:string, countryId: number, climateAction: string){
+    let country = await this.countryRepo.createQueryBuilder('country').where('id = :id', {id: countryId}).getOne()
+    let report = new Report();
+    report.reportName = name;
+    report.generateReportName = fileName;
+    report.savedLocation = './public/' + fileName;
+    report.thumbnail = 'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg'
+    report.country = country
+    return await this.repo.save(report)
+  }
+
+  async getReports(
+    climateAction: string,
+    reportName: string,
+    countryIdFromTocken: number
+  ) {
+    let res = [];
+    if (!climateAction && !reportName) {
+      res = await this.repo.find({
+        where: {
+          country: {id: countryIdFromTocken}
+        },
+      });
+    } else {
+      res = await this.repo.find({
+        where: {
+          climateAction: {policyName: Like(`%${climateAction}%`)},
+          reportName: Like(`%${reportName}%`),
+          country: {id: countryIdFromTocken}
+        },
+      });
+    }
+
+    //console.log("===== get file data ndcNameId",sectorname);
+    return res;
+  }
 
 
   async genarateReportDtoContentOne(assessmentId:number): Promise<ReportContentOne> {
@@ -141,13 +182,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
         let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
         if (cat) {
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
           cat.rows=cat.characteristics.length;
         } else {
           catagoryProcess.push({
             rows:1,
             name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
           });
         }
       
@@ -164,13 +205,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
         let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
         if (cat) {
          
-          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+          cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
           cat.rows=cat.characteristics.length;
         } else {
           catagoryOutcome.push({
             rows:1,
             name: parameter.category.name,
-            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+            characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
           });
         }
       

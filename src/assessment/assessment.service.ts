@@ -30,7 +30,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     private readonly userService: UsersService,
-    private readonly emaiService: EmailNotificationService,
+    // private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }

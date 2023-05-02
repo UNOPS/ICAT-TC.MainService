@@ -12,11 +12,22 @@ import { AssessmentService } from 'src/assessment/assessment.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
 import { AssessmentModule } from 'src/assessment/assessment.module';
+import { Country } from 'src/country/entity/country.entity';
+import { CountryModule } from 'src/country/country.module';
+import { TokenDetails } from 'src/utills/token_details';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Report,Assessment]),UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([
+      Report,
+      Assessment,
+      Country
+    ]), 
+    UsersModule,
+    CountryModule
+  ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService,AssessmentService],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService],
 })
 export class ReportModule {}

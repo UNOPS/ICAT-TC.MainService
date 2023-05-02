@@ -8,6 +8,7 @@ import {
   Delete,
   Response,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
@@ -18,6 +19,8 @@ import { ReportDto } from './dto/report.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AssessmentDto } from './dto/assessment.dto';
 import { AssessmentService } from 'src/assessment/assessment.service';
+import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('report')
 @ApiTags('report')
@@ -27,6 +30,7 @@ export class ReportController {
     private readonly reportGenarateService: ReportGenaratesService,
     private readonly reportHtmlGenarateService: ReportHtmlGenaratesService,
     private readonly assessmentService: AssessmentService,
+    private readonly tokenDetails: TokenDetails
   ) {}
 
   @Post()
@@ -73,6 +77,45 @@ export class ReportController {
     );
   }
 
+  @UseGuards(JwtAuthGuard )
+  @Post('generate-report')
+  async generateReport(
+    @Body() req: CreateReportDto,
+    @Response() res
+  ): Promise<any> {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline;filename=yolo.pdf');
+    let countryIdFromTocken: number
+    [countryIdFromTocken] =
+      this.tokenDetails.getDetails([
+        TokenReqestType.countryId,
+      ]);
+
+    const createReportDto = new CreateReportDto();
+    createReportDto.assessmentId = req.assessmentId;
+    const reprtDto: ReportDto = await this.reportService.genarateReportDto(
+      createReportDto,
+    );
+    let report = await this.reportGenarateService.reportGenarate(
+      reprtDto.reportName,
+      await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
+    )
+    this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction.policyName)
+    res.send(report)
+  }
+
+  @UseGuards(JwtAuthGuard )
+  @Get('get-reports')
+  async getReportData(
+  @Query('climateAction') climateAction: string,
+  @Query('reportName') reportName: string,){
+
+    let countryIdFromTocken: number;
+    [countryIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId])
+
+    return await this.reportService.getReports(climateAction, reportName, countryIdFromTocken)
+  }
+
   @Get('assessmentPDF')
   async getAssessment(@Response() res): Promise<any> {
     res.setHeader('Content-Type', 'application/pdf');
@@ -107,13 +150,13 @@ export class ReportController {
       // console.log(parameter);
       let cat = catagory.find((a) => a.name == parameter.category.name);
       if (cat) {
-        cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment});
+        cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
         cat.rows=cat.characteristics.length;
       } else {
         catagory.push({
           rows:1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.comment}],
+          characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
         });
       }
      
