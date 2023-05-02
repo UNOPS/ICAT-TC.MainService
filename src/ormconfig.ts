@@ -38,11 +38,12 @@ import { MethodologyIndicators } from './methodology-assessment/entities/methodo
 import { ParameterStatus } from './methodology-assessment/entities/parameterStatus.entity';
 import { ParameterHistoryAction } from './parameter-history/entity/parameter-history-action-history.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
-import { Report } from './report/entity/report.entity';
+
 import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Report } from './report/entities/report.entity';
 
 
 export const config: ConnectionOptions = {
