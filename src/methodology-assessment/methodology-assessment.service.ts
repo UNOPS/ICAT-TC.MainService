@@ -435,6 +435,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return paras
   }
   
+
+  async assessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]> {
+    return this.repo.find({
+      relations: ['characteristics','assessment','category'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
   async assessCategory(resData :any){
     console.log("yyyyyyyyy", resData)
     for(let item of resData.result.categoryCalculatedProcess){
@@ -546,6 +554,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     });
 
   }
+
+
+
+
+
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
     // const ass =await  this.assessmentRepository.findOne({where:{id:id}})
     let result=await this.repo.createQueryBuilder('param')
@@ -590,6 +603,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       });
     }
 
+    
 
   async findAllPolicyBarriers(): Promise<any[]> {
     const policyBarriers = await this.policyBarrierRepository.find({
@@ -618,6 +632,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   } */
 
+  async findAllBarrierData(assessmentId: number): Promise<BarriersCharacteristics[]> {
+    return this.barrierCharacterRepo.find({
+      relations: ['barriers', 'characteristics', 'assessment'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async getAssessCategory(assessmentId: number): Promise<AssessmentCategory[]> {
+    return this.assessCategoryRepo.find({
+      relations: [ 'assessment','category'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  
   async findAllIndicators(): Promise<Indicators[]> {
    // return this.indicatorRepository.find();
 
@@ -649,6 +678,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     .getMany();
   }
 
+  async assessmentData(assessmentId: number): Promise<Assessment[]> {
+    return this.assessmentRepository.find({
+      relations: ['climateAction'],
+      where: { id: assessmentId  },
+    });
+  }
 
   update(id: number, updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return `This action updates a #${id} methodologyAssessment`;
@@ -656,6 +691,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   remove(id: number) {
     return `This action removes a #${id} methodologyAssessment`;
+  }
+
+
+
+  async barriesByassessId(assessmentId: number): Promise<AssessmentBarriers[]> {
+    return this.assessRepository.find({
+      relations: ['assessment','barriers'],
+      where: {  assessment: { id: assessmentId } },
+    });
   }
 
 

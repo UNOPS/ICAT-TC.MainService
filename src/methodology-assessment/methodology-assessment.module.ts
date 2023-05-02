@@ -31,6 +31,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
+import { Audit } from 'src/audit/entity/audit.entity';
 
 
 @Module({
@@ -41,7 +42,7 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
     PolicyBarriers,
     TokenDetails,
     UsersService,
-    EmailNotificationService
+    EmailNotificationService,
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -61,13 +62,16 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
     Results,
     Institution,
     ParameterRequest,
-    BarriersCharacteristics
-    
+    BarriersCharacteristics,
+    AssessmentCategory,
+    Objectives,
+    AssessmentObjectives,
+    User, UserType, Institution, Country,Audit
+
   ])],
   exports: [
     MethodologyAssessmentService,
     ProjectService ,
-    
   ]
 })
 export class MethodologyAssessmentModule { }

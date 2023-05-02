@@ -24,8 +24,8 @@ const { v4: uuidv4 } = require('uuid');
 export class UsersService extends TypeOrmCrudService<User> {
   constructor(
     @InjectRepository(User) repo,
-    // @InjectRepository(User)
-    // private readonly usersRepository: Repository<User>,
+     @InjectRepository(User)
+     private readonly usersRepository: Repository<User>,
     @InjectRepository(Institution)
     private readonly institutionRepository: Repository<Institution>,
     @InjectRepository(UserType)
