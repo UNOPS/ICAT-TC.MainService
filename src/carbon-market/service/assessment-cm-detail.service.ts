@@ -11,6 +11,18 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   ) {
     super(repo);
   }
+
+  getAssessmentCMDetailByAssessmentId(assessmentId: number){
+    let data = this.repo.createQueryBuilder('detail')
+    .innerJoin(
+      'detail.cmassessment',
+      'assessment',
+      'assessment.id = detail.cmassessmentId'
+    )
+    .where('assessment.id = :id', {id: assessmentId})
+
+    return data.getOne()
+  }
 }
 
 
