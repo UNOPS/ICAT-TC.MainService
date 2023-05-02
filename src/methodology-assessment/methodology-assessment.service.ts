@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -31,10 +31,6 @@ import { getConnection } from 'typeorm';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
-import { User } from 'src/users/entity/user.entity';
-import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
-import { UsersService } from 'src/users/users.service';
-import { EmailNotificationService } from 'src/notifications/email.notification.service';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
 
@@ -57,9 +53,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
     @InjectRepository(AssessmentCategory) private readonly assessCategoryRepo: Repository<AssessmentCategory>,
     @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
-    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    private userService: UsersService,
-    private emaiService: EmailNotificationService
-
+    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,
    ) {
     super(repo)
   }
@@ -219,10 +213,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     //assessementId
     console.log("iddd", assessementId)
     return assessementId;
-  }
-
-  async saveAssessment(assessment: Assessment){
-    return await this.assessmentRepository.save(assessment)
   }
 
   async barrierCharacteristics(dataArr : any){
@@ -427,14 +417,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
 
-  async findAssessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]>{
-    let paras = await this.repo.find({
-      where: {assessment: {id: assessmentId}},
-      relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status']
-    })
-    return paras
-  }
-  
   async assessCategory(resData :any){
     console.log("yyyyyyyyy", resData)
     for(let item of resData.result.categoryCalculatedProcess){
@@ -569,13 +551,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      });
    }
 
-   async getResultByAssessment(assessmentId: number){
-    return await this.resultRepository.findOne({
-      where: {assessment: {id: assessmentId}},
-      relations: ['assessment']
-    })
-   }
-
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
   //  return await this.repo.find();
     return this.repo.find({
@@ -649,6 +624,50 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     .getMany();
   }
 
+/*   async findAllBarrierData(): Promise<BarriersCharacteristics[]> {
+    return this.barrierCharacterRepo.find({
+      relations: [ 'barriers', 'characteristics', 'assessment'],
+    });
+
+    } */
+
+    async findAllBarrierData(assessmentId: number): Promise<BarriersCharacteristics[]> {
+      return this.barrierCharacterRepo.find({
+        relations: ['barriers', 'characteristics', 'assessment'],
+        where: { assessment: { id: assessmentId } },
+      });
+    }
+
+    
+        async getAssessCategory(assessmentId: number): Promise<AssessmentCategory[]> {
+      return this.assessCategoryRepo.find({
+        relations: [ 'assessment','category'],
+        where: { assessment: { id: assessmentId } },
+      });
+    }
+
+    async assessmentParameters(assessmentId: number): Promise<MethodologyAssessmentParameters[]> {
+      return this.repo.find({
+        relations: ['characteristics','assessment','category'],
+        where: { assessment: { id: assessmentId } },
+      });
+    }
+
+
+    async assessmentData(assessmentId: number): Promise<Assessment[]> {
+      return this.assessmentRepository.find({
+        relations: ['climateAction'],
+        where: { id: assessmentId  },
+      });
+    }
+
+  
+    async barriesByassessId(assessmentId: number): Promise<AssessmentBarriers[]> {
+      return this.assessRepository.find({
+        relations: ['assessment','barriers'],
+        where: {  assessment: { id: assessmentId } },
+      });
+    }
 
   update(id: number, updateMethodologyAssessmentDto: UpdateMethodologyAssessmentDto) {
     return `This action updates a #${id} methodologyAssessment`;
@@ -727,124 +746,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return true;
   }
 
-  async updateParameter(id: number, parameter: MethodologyAssessmentParameters){
-    try {
-      let update = await this.repo.update(id, parameter)
-      if (update.affected === 1){
-        return update
-      } else {
-        throw new InternalServerErrorException()
-      }
-    } catch(error){
-      console.log(error)
-      throw new InternalServerErrorException()
-    }
-  }
-
-  async updateResult(id: number, result: Results){
-    try{
-      let update = await this.resultRepository.update(id, result)
-      if (update.affected === 1){
-        return update
-      } else {
-        throw new InternalServerErrorException()
-      }
-    } catch(error) {
-      console.log(error)
-      throw new InternalServerErrorException()
-    }
-  }
-
   async allParam(
     options: IPaginationOptions,
     filterText: string[]){
       let filter: string = '';
-  }
-
-  async getAssessmentForAssignVerifier(
-    options: IPaginationOptions,
-    filterText: string,
-    QAstatusId: number,
-    countryIdFromTocken:number
-  ): Promise<any> {
-
-    console.log("getAssessmentForAssignVerifier")
-
-    let data = this.assessmentRepository
-      .createQueryBuilder('assessment')
-      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
-      .leftJoinAndMapOne(
-        'assessment.verificationUser',
-        User,
-        'u',
-        'assessment.verificationUser = u.id',
-      )
-      .where(
-        (
-          (QAstatusId != 0
-            ? `assessment.verificationStatus=${QAstatusId} AND `
-            : `assessment.verificationStatus in (2,3,4,5,6,7) AND `) +
-          `assessment.qaStatus in (4) AND ` +
-          (filterText != ''
-            ? `(p.policyName LIKE '%${filterText}%' OR assessment.assessmentType LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
-           )`
-            : '')
-        ).replace(/AND $/, ''),
-      )
-      .orderBy('assessment.verificationDeadline', 'DESC')
-      .groupBy('assessment.id');
-
-    console.log('AssessmentFor Verifier', data.getSql());
-
-    let result = await paginate(data, options);
-    return result;
-  }
-
-  async acceptDataVerifiersForIds(
-    updateDataRequestDto: DataVerifierDto,
-  ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
-
-    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
-      const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.assessmentRepository.findOne({ where: { id: id } });
-      let originalStatus = dataRequestItem.verificationStatus;
-      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
-      dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
-      dataRequestItem.verificationUser = updateDataRequestDto.userId;
-
-      let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
-      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
-      var template: any;
-        template =
-          'Dear ' +
-          user.firstName + ' ' + user.lastName+
-          ' <br/> Data request with following information has shared with you.' +
-          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-          // '<br/> value -:' + dataRequestItem.parameter.value +
-          // '<br> comment -: ' + updateDataRequestDto.comment;
-      
-          this.emaiService.sendMail(
-            user.email,
-            'Assign verifier',
-            '',
-            template,
-          );
-      // dataRequestItemList.push(dataRequestItem);
-      this.assessmentRepository.save(dataRequestItem).then((res) => {
-        // this.parameterHistoryService.SaveParameterHistory(
-        //   res.id,
-        //   ParameterHistoryAction.AssignVerifier,
-        //   'AssignVerifier',
-        //   '',
-        //   res.verificationStatus.toString(),
-        //   originalStatus.toString(),
-        // );
-      });
-    }
-
-    // this.repo.save(dataRequestItemList);
-
-    return true;
   }
 }
