@@ -76,6 +76,7 @@ import { Objectives } from './methodology-assessment/entities/objectives.entity'
 import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 import { UsersService } from './users/users.service';
+import { UserType } from './users/entity/user.type.entity';
 
 @Module({
   imports: [
@@ -113,7 +114,8 @@ import { UsersService } from './users/users.service';
       AssessmentCategory,
       Assessment,
       Objectives,
-      AssessmentObjectives
+      AssessmentObjectives,
+      UserType
     ]),
     UsersModule,
     UserTypeModule,
