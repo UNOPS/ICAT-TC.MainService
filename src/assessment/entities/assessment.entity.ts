@@ -60,19 +60,20 @@ export class Assessment extends BaseTrackingEntity{
     @Column({ type:"mediumtext" ,nullable: true })
     impactsCovered?: string;
 
-  
-
     @Column({ nullable: true })
     verificationStatus?: VerificationStatus;
 
     @Column({nullable: true})
     verificationUser?: number
     
-  //  @Column({ nullable: true })
-  //  qaAssighnDate?: string;
+    @Column({ nullable: true })
+    qaAssighnDate?: string;
 
    @Column({ nullable: true })
     qaDeadline?: Date;
+
+    @Column({ nullable: true })
+    verificationDeadline?: Date;
 
    // @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
    //     cascade: false,
