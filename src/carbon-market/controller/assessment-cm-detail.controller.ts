@@ -30,7 +30,7 @@ export class AssessmentCMDetailController
     return this;
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-by-assessment-id')
   async getAssessmentCMDetailByAssessmentId(@Query('assessmentId') assessmnetId: number){
     return await this.service.getAssessmentCMDetailByAssessmentId(assessmnetId)
