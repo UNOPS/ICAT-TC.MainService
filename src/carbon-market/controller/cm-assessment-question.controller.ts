@@ -29,25 +29,25 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return this;
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async save(@Body() assessmentQuestion: CMAssessmentQuestion){
     return await this.service.create(assessmentQuestion)
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('save-result')
   async saveResult(@Body() req: SaveCMResultDto){
     return await this.service.saveResult(req.result, req.assessment)
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('calculate')
   async calculateResult(@Body() req: CalculateDto){
     return await this.service.calculateResult(req.assessmentId)
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('get-result')
   async getResults(@Query('assessmentId') assessmentId: number): Promise<any>{
     return await this.service.getResults(assessmentId)

@@ -29,7 +29,7 @@ export class CMAssessmentAnswerController implements CrudController<CMAssessment
     return this;
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async save(@Body() assessmentQuestion: CMAssessmentAnswer){
     return await this.service.create(assessmentQuestion)
