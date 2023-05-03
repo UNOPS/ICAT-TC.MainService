@@ -36,11 +36,14 @@ export class ReportContentOne {
     policyName:string="";
     assesmentPersonOrOrganization:string="";
     assessmentYear:string="";
-    objectives:string[]=[];
-    intendedAudience:string[]=[];
-    opportunities:string[]=[];
+    objectives:any[]=[];
+    intendedAudience:string="";
+    opportunities:string="";
     assessmetType:string="";
-    assessmentBoundary:string[]=[];
+    assessmentBoundary:string="";
+    impactCoverd:string=""
+
+
     policyOrActionsDetails:object[]=[];
     contextOfPolicy :object[]=[];
     prossescharacteristics:object[]=[];

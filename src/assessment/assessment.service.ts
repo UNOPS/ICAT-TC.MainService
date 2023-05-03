@@ -24,12 +24,16 @@ import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
+import { Repository } from 'typeorm';
+import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
   constructor(
     @InjectRepository(Assessment) repo,
+    @InjectRepository(AssessmentObjectives) private assessmentObjectivesRepo: Repository<AssessmentObjectives>,
     private readonly userService: UsersService,
     // private readonly emaiService: EmailNotificationService,
   ) {
@@ -332,5 +336,22 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where(filter,{ assessmentId,catagoryType,assessmentType });
     // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
+  }
+  async getAssessmentObjectiveforReport(assessmentId: number) {
+    let filter: string = 'asseobj.assessment_id=:assessmentId';
+
+
+    let data = await this.assessmentObjectivesRepo
+      .createQueryBuilder('asseobj') 
+      .leftJoinAndMapOne(
+        'asseobj.objectives',
+        Objectives,
+        'objectives',
+        `objectives.id = asseobj.objective_id`,
+      )
+      
+      .where(filter,{ assessmentId });
+    // console.log("qqqqqqq", data.getQueryAndParameters())
+    return await data.getMany();
   }
 }

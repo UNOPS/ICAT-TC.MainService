@@ -11,12 +11,14 @@ import { AssessmentService } from 'src/assessment/assessment.service';
 import { Report } from './entities/report.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Country } from 'src/country/entity/country.entity';
+import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report>{
   constructor(
     @InjectRepository(Report) repo,
     @InjectRepository(Country) private countryRepo: Repository<Country>,
+
     public assessmentService: AssessmentService) {
     super(repo)
   }
@@ -64,7 +66,8 @@ export class ReportService extends TypeOrmCrudService<Report>{
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    report.savedLocation = './public/' + fileName;
+    // report.savedLocation = './public/' + fileName;
+    report.savedLocation = './dist/public/' + fileName;
     report.thumbnail = 'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg'
     report.country = country
     return await this.repo.save(report)
@@ -105,11 +108,14 @@ export class ReportService extends TypeOrmCrudService<Report>{
 let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       console.log(asse)
       reportContentOne.policyName=asse.climateAction.policyName;
-      reportContentOne.assesmentPersonOrOrganization=asse.climateAction.contactPersoFullName;
+      reportContentOne.assesmentPersonOrOrganization=asse.person;
       reportContentOne.assessmentYear=asse.year;
-      
+      reportContentOne.intendedAudience=asse.audience;
+      reportContentOne.opportunities=asse.opportunities;
+      reportContentOne.objectives=await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
       reportContentOne.assessmetType=asse.assessmentType;
-      // reportContentOne.assessmentBoundary=asse.climateAction.policyName;
+      reportContentOne.assessmentBoundary=asse.assessBoundry;
+      reportContentOne.impactCoverd=asse.impactsCovered;
       reportContentOne.policyOrActionsDetails=[
         {
           information: 'Name',

@@ -108,48 +108,44 @@ export class ReportPagesService {
   <div class="list">  
   <ul>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Name of Policy: ${contentOne.policyName}</p>
+    <p class="mb-0 lh-base">Name of Policy: ${contentOne.policyName?contentOne.policyName:'-'}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
     <p class="mb-0 lh-base">Assesment done by: ${
-      contentOne.assesmentPersonOrOrganization
+      contentOne.assesmentPersonOrOrganization? contentOne.assesmentPersonOrOrganization:'-'
     }</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesmet Year: ${contentOne.assessmentYear}</p>
+    <p class="mb-0 lh-base">Assesmet Year: ${contentOne.assessmentYear?contentOne.assessmentYear:'-'}</p>
   </blockquote></li>
   <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesment type: ${contentOne.assessmetType}</p>
+  <p class="mb-0 lh-base">Audience: ${contentOne.intendedAudience?contentOne.intendedAudience:'-'}</p>
+</blockquote>
+</li>
+<li><blockquote class="blockquote  ">
+<p class="mb-0 lh-base">Objectives: ${contentOne.objectives.length>0?'':'-'}</p>
+</blockquote>${contentOne.objectives.length>0?`<ul>${contentOne.objectives.map(a=>`<li><i class="bi bi-dash"></i><blockquote class="blockquote  ">
+<p class="mb-0 lh-base">${a.objectives.name}</p>
+</blockquote></li>`).join('')}
+</ul>`:''}
+
+</li>
+<li><blockquote class="blockquote  ">
+<p class="mb-0 lh-base">Opportunities : ${contentOne.opportunities?contentOne.opportunities:'-'}</p>
+</blockquote></li>
+  <li><blockquote class="blockquote  ">
+    <p class="mb-0 lh-base">Assesment type: ${contentOne.assessmetType?contentOne.assessmetType:'-'}</p>
   </blockquote></li>
- 
+  <li><blockquote class="blockquote  ">
+  <p class="mb-0 lh-base">Boundary : ${contentOne.assessmentBoundary?contentOne.assessmentBoundary:'-'}</p>
+</blockquote></li>
+<li><blockquote class="blockquote  ">
+<p class="mb-0 lh-base">Impacts covered: ${contentOne.impactCoverd?contentOne.impactCoverd:'-'}</p>
+</blockquote></li>
 </ul>
 </div>
 
-<div  class="main_header_sub text-start">1.2	Describe the policy or action </div> 
-       <div class="report-table-sm">
-       <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
-       <table class="table  table-bordered border-dark">
-         <thead class="table-primary  border-dark">
-           <tr>
-             <th scope="col">Information</th>
-             <th scope="col">Description</th>
-             
-           </tr>
-         </thead>
-         <tbody class="table-active ">
-         ${policyOrActionsDetails
-           .map(
-             (a: { information: string; description: string }) =>
-               '<tr><td>' +
-               a.information +
-               '</td><td>' +
-               a.description +
-               '</td></tr>',
-           )
-           .join('')}
-         </tbody>
-       </table>
-     </div>
+
 
   
   </div>
@@ -157,6 +153,47 @@ export class ReportPagesService {
   ${footer.replace('#pageNumber#', pageNumber.toString())}
   
    </div>`;
+
+
+
+
+   const page_2 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+  
+ 
+ <div  class="main_header_sub text-start">1.2	Describe the policy or action </div> 
+        <div class="report-table-sm">
+        <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${policyOrActionsDetails
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', pageNumber.toString())}
+   
+    </div>`;
     const understanPolicyOrActions = [
       {
         Time_periods: 'Long-term (≥15 years)',
@@ -191,7 +228,7 @@ export class ReportPagesService {
         barrier_directly_targeted: 'test barrier_directly_targeted',
       },
     ];
-    const page_2 = `  <div id="page_9" class="page text-center" >
+    const page_3 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    
@@ -277,7 +314,7 @@ export class ReportPagesService {
 
     const catagory_out = contentOne.outcomecharacteristics;
 
-    const page_3 = `  <div id="page_9" class="page text-center" >
+    const page_4 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
   
@@ -335,7 +372,7 @@ export class ReportPagesService {
      </div>`;
 
      const catagory_process = contentOne.prossescharacteristics;
-     const page_4= `  <div id="page_9" class="page text-center" >
+     const page_5= `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
    
@@ -391,7 +428,7 @@ export class ReportPagesService {
      ${footer.replace('#pageNumber#', pageNumber.toString())}
      
       </div>`;
-    return page_1 + page_2 + page_3+page_4;
+    return page_1 + page_2 + page_3+page_4+page_5;
   }
 
   contentTwo(
@@ -1286,10 +1323,10 @@ export class ReportPagesService {
       page_4 +
       page_5 +
       page_6 +
-      page_7 +
-      page_8 +
-      page_9 +
-      page_10 +
+      // page_7 +
+      // page_8 +
+      // page_9 +
+      // page_10 +
       page_11
     );
   }

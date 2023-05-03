@@ -11,9 +11,10 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Country } from 'src/country/entity/country.entity';
+import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country]),UsersModule],
+  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,AssessmentObjectives]),UsersModule],
   controllers: [AssessmentController],
   providers: [AssessmentService,TokenDetails,UsersService,EmailNotificationService]
 })
