@@ -17,6 +17,12 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { User } from 'src/users/entity/user.entity';
+import { Sector } from 'src/master-data/sector/entity/sector.entity';
+import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
+import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Injectable()
@@ -25,7 +31,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     private readonly userService: UsersService,
-    private readonly emaiService: EmailNotificationService,
+    // private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
@@ -242,4 +248,89 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
 
 
+  async findbyIDforReport(id: number) {
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        Methodology,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .leftJoinAndMapOne(
+        'proj.sector',
+        Sector,
+        'sec',
+        `sec.id = proj.sectorId`,
+      )
+      .leftJoinAndMapOne(
+        'proj.projectStatus',
+        ProjectStatus,
+        'prostatus',
+        `prostatus.id = proj.projectStatusId`,
+      )
+      .where({ id: id })
+      .getOne();
+    console.log("qqqqqqq", data)
+    return data;
+  }
+
+
+  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,assessmentType:string) {
+    let filter: string = 'asse.id=:assessmentId and   parameters.characteristics_id is not null';
+
+    if(catagoryType){
+      if(filter){
+        filter=`${filter} and category.type= :catagoryType `
+      }else{
+        filter='category.type= :catagoryType '
+      }
+    }
+    if(assessmentType){
+      if(filter){
+        filter=`${filter} and asse.type= :assessmentType `
+      }else{
+        filter='asse.type= :assessmentType '
+      }
+    }
+    let data = await this.repo
+      .createQueryBuilder('asse') 
+
+    
+      .leftJoinAndMapMany(
+        'asse.parameters',
+        MethodologyAssessmentParameters,
+        'parameters',
+        `parameters.assessment_id = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.category',
+        Category,
+        'category',
+        `category.id = parameters.category_id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = parameters.characteristics_id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.indicator',
+        Indicators,
+        'indicator',
+        `indicator.id = parameters.indicator_id`,
+      )
+      .where(filter,{ assessmentId,catagoryType,assessmentType });
+    console.log("qqqqqqq", data.getQueryAndParameters())
+    return await data.getOne();
+  }
 }

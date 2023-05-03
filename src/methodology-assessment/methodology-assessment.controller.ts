@@ -216,6 +216,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.getResultByAssessment(assessmentId);
   }
 
+  @Get('get-assessments-by-climate-action')
+  async getAssessmentByClimateAction(@Query('climateActionId') climateActionId: number){
+    return await this.methodologyAssessmentService.getAssessmentsByClimateAction(climateActionId)
+  }
+
 
   @Get('findByAllAssessmentData')
   async findByAllAssessmentData() {

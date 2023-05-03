@@ -38,11 +38,12 @@ import { MethodologyIndicators } from './methodology-assessment/entities/methodo
 import { ParameterStatus } from './methodology-assessment/entities/parameterStatus.entity';
 import { ParameterHistoryAction } from './parameter-history/entity/parameter-history-action-history.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
-import { Report } from './report/entity/report.entity';
+
 import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Report } from './report/entities/report.entity';
 
 
 export const config: ConnectionOptions = {
@@ -56,10 +57,12 @@ export const config: ConnectionOptions = {
  password: 'pradeep123#',
  database: 'tc-main',  */  // password: '1997',
   // database: 'tc-main-new',
-   username: 'sqluser',
-   password: 'password',
-   database: 'tc-main-new3',
-
+  //  username: 'sqluser',
+  //  password: 'password',
+  //  database: 'tc-main-new3',
+  username: 'root',
+   database: 'tc-main', 
+   password: '7860150',
   autoLoadEntities: true,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
