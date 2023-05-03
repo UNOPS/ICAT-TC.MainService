@@ -30,25 +30,25 @@ export class CMQuestionController implements CrudController<CMQuestion>
     return this;
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-all-section')
   async getAllSection(){
     return await this.service.getAllSection()
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-criteria-by-section')
   async getCriteriaBySectionId(@Query('sectionId') sectionId: number){
     return await this.service.getCriteriaBySectionId(sectionId)
   }
 
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-question-by-criteria')
   async getQuestionsByCriteria(@Query('criteriaId') criteriaId: number){
     return await this.service.getQuestionsByCriteria(criteriaId)
   }
   
-  @UseGuards(LocalAuthGuard,JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('get-answers-by-question')
   async getAnswersByQuestion(@Query('questionId') questionId: number){
     return await this.service.getAnswersByQuestion(questionId)
