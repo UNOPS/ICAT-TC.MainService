@@ -160,7 +160,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `as.id = ${assessmentId} AND par.dataRequestStatus in (9,-9,11)`,
       );
     let result = await data.getOne();
-    console.log('qqqqqqqqqq111qqqqqq', result)
+    // console.log('qqqqqqqqqq111qqqqqq', result)
     return result;
   }
 
@@ -279,7 +279,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    console.log("qqqqqqq", data)
+    // console.log("qqqqqqq", data)
     return data;
   }
 
@@ -330,7 +330,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `indicator.id = parameters.indicator_id`,
       )
       .where(filter,{ assessmentId,catagoryType,assessmentType });
-    console.log("qqqqqqq", data.getQueryAndParameters())
+    // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }
 }

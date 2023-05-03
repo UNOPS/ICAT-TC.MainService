@@ -243,13 +243,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       let cat = catagoryProcess.find((a) => a.name == parameter.category.name);
       if (cat) {
        
-        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator.name});
+        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator?parameter.indicator.name:'-'});
         cat.rows=cat.characteristics.length;
       } else {
         catagoryProcess.push({
           rows:1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator.name}],
+          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator?parameter.indicator.name:'-'}],
         });
       }
     
@@ -266,13 +266,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       let cat = catagoryOutcome.find((a) => a.name == parameter.category.name);
       if (cat) {
        
-        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator.name});
+        cat.characteristics.push({name:parameter.characteristics.name,indicator:parameter.indicator?parameter.indicator.name:'-'});
         cat.rows=cat.characteristics.length;
       } else {
         catagoryOutcome.push({
           rows:1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator.name}],
+          characteristics: [{name:parameter.characteristics.name,indicator:parameter.indicator?parameter.indicator.name:'-'}],
         });
       }
     
@@ -294,13 +294,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       let cat = catagoryProcessExAnteAssesment.find((a) => a.name == parameter.category.name);
       if (cat) {
        
-        cat.characteristics.push({name:parameter.characteristics.name, score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue});
+        cat.characteristics.push({name:parameter.characteristics.name, score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator?parameter.indicator.name:'-',indicator_value:parameter.indicatorValue});
         cat.rows=cat.characteristics.length;
       } else {
         catagoryProcessExAnteAssesment.push({
           rows:1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue}],
+          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator?parameter.indicator.name:'-',indicator_value:parameter.indicatorValue}],
         });
       }
     
@@ -313,13 +313,13 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
       let cat = catagoryOutcomeExAnteAssesment.find((a) => a.name == parameter.category.name);
       if (cat) {
        
-        cat.characteristics.push({name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_starting_value:"-",indicator_value:parameter.indicatorValue});
+        cat.characteristics.push({name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator?parameter.indicator.name:'-',indicator_starting_value:"-",indicator_value:parameter.indicatorValue});
         cat.rows=cat.characteristics.length;
       } else {
         catagoryOutcomeExAnteAssesment.push({
           rows:1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator.name,indicator_value:parameter.indicatorValue}],
+          characteristics: [{name:parameter.characteristics.name,score:parameter.score,justifying_score:parameter.scoreOrInstitutionJusti,indicator:parameter.indicator?parameter.indicator.name:'-',indicator_value:parameter.indicatorValue}],
         });
       }
     
