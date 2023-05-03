@@ -30,9 +30,28 @@ async function bootstrap() {
   //   res.header('X-Content-Type-Options', 'nosniff');
   //   next();
   // });
-  app.use(helmet());
+  app.use(helmet({
+    // noSniff: false,
+    // contentSecurityPolicy: false,
+    // crossOriginEmbedderPolicy: false,
+    // crossOriginOpenerPolicy: false,
+    // crossOriginResourcePolicy: false,
+    // dnsPrefetchControl: false,
+    // expectCt: false,
+    // frameguard: false,
+    // hidePoweredBy: false,
+    // hsts: false,
+    // ieNoOpen: false,
+    // originAgentCluster: false,
+    // permittedCrossDomainPolicies: false,
+    // referrerPolicy: false,
+    // xssFilter: false,
+
+
+  }));
+  app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
   // app.use(helmet1.hidePoweredBy());
-  // app.enableCors();
+  app.enableCors();
   // app.use(helmet.contentSecurityPolicy({
   //   // useDefaults: false,
   //   directives: {
@@ -45,6 +64,7 @@ async function bootstrap() {
   // }));
   app.enableCors({
     "origin": ["http://3.108.9.184/","http://localhost:4200","http://3.108.9.184:4200","http://3.108.9.184:7100","http://3.108.9.184:7000","http://3.108.9.184:7090","http://3.108.9.184:7080"],
+    // "origin": "http://3.108.9.184",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
     "optionsSuccessStatus": 204

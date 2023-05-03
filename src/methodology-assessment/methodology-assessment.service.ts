@@ -891,4 +891,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     return true;
   }
+
+  async getAssessmentsByClimateAction(climateActionId: number) {
+    return await this.assessmentRepository.createQueryBuilder('assessment')
+    .innerJoinAndSelect(
+      'assessment.climateAction',
+      'climateAction',
+      'climateAction.id = assessment.climateAction_id'
+    ).where('climateAction.id = :id', {id: climateActionId})
+    .getMany()
+  }
 }

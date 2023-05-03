@@ -78,6 +78,7 @@ export class ClimateAction extends BaseTrackingEntity {
  
 
   @ManyToOne(() => AggregatedAction, { cascade: false })
+  @JoinColumn({ name: 'aggregatedActionId' })
   aggregatedAction: AggregatedAction; //ndc
 
   @ManyToOne(() => ActionArea, { cascade: false })
