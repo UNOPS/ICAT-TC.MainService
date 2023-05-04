@@ -72,6 +72,8 @@ import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
+import { InvestorToolModule } from './investor-tool/investor-tool.module';
+import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
 
 @Module({
   imports: [
@@ -107,7 +109,8 @@ import { CarbonMarketModule } from './carbon-market/carbon-market.module';
       Results,
       BarriersCharacteristics,
 
-      Assessment
+      Assessment,
+      InvestorTool
     ]),
     UsersModule,
     UserTypeModule,
@@ -163,7 +166,8 @@ import { CarbonMarketModule } from './carbon-market/carbon-market.module';
     ParameterHistoryModule,
     DefaultValueModule,
     VerificationModule,
-    CarbonMarketModule
+    CarbonMarketModule,
+    InvestorToolModule
 
   ],
   controllers: [

@@ -11,9 +11,10 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Country } from 'src/country/entity/country.entity';
+import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country]),UsersModule],
+  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,InvestorTool]),UsersModule],
   controllers: [AssessmentController],
   providers: [AssessmentService,TokenDetails,UsersService,EmailNotificationService]
 })
