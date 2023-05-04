@@ -16,13 +16,15 @@ import { Country } from 'src/country/entity/country.entity';
 import { CountryModule } from 'src/country/country.module';
 import { TokenDetails } from 'src/utills/token_details';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Report,
       Assessment,
-      Country
+      Country,
+      AssessmentObjectives
     ]), 
     UsersModule,
     CountryModule
