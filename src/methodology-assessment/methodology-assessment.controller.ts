@@ -453,10 +453,7 @@ async uploadFile2(
     );
   }
 
-  @Get('get-results-by-assessment/:assessmentId')
-  async getResultByAssessment(@Param('assessmentId') assessmentId: number) {
-    return await this.methodologyAssessmentService.getResultByAssessment(assessmentId);
-  }
+ 
   @Patch('update-result/:id')
   updateResult(@Param('id') id: number, @Body() result: Results){
     return this.methodologyAssessmentService.updateResult(+id, result);

@@ -68,7 +68,8 @@ import { Audit } from 'src/audit/entity/audit.entity';
     AssessmentCategory,
     Objectives,
     AssessmentObjectives,
-    User, UserType, Institution, Country,Audit
+    User, UserType, Institution, Country,Audit,
+    MethodologyParameters,
 
   ])],
   exports: [

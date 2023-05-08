@@ -59,7 +59,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
     @InjectRepository(AssessmentCategory) private readonly assessCategoryRepo: Repository<AssessmentCategory>,
     @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
-    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
+    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    
+    @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
     private userService: UsersService,
     private emaiService: EmailNotificationService
 
