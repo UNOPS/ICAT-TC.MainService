@@ -26,7 +26,7 @@ import { ProjectStatusModule } from './master-data/project-status/project-status
 import { SectorModule } from './master-data/sector/sector.module';
 import { UserTypeModule } from './master-data/user-type/user-type.module';
 import { ReportController } from './report/report.controller';
-import { ReportModule } from './report/report.module';
+
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -71,7 +71,13 @@ import { AggregatedAction } from './master-data/aggregated-action/entity/aggrega
 import { VerificationModule } from './verification/verification.module';
 import { BarriersCharacteristics } from './methodology-assessment/entities/barriercharacteristics.entity';
 import { Assessment } from './assessment/entities/assessment.entity';
+import { AssessmentCategory } from './methodology-assessment/entities/assessmentCategory.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
+import { AssessmentObjectives } from './methodology-assessment/entities/assessmentobjectives.entity';
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
+import { UsersService } from './users/users.service';
+import { UserType } from './users/entity/user.type.entity';
+import { ReportModule } from './report/report.module';
 import { InvestorToolModule } from './investor-tool/investor-tool.module';
 import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
 
@@ -108,8 +114,11 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
       MethodologyIndicators,
       Results,
       BarriersCharacteristics,
-
+      AssessmentCategory,
       Assessment,
+      Objectives,
+      AssessmentObjectives,
+      UserType,
       InvestorTool
     ]),
     UsersModule,
@@ -131,13 +140,13 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
     AssessmentModule,
     
     InstitutionModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../static-files'),
-      renderPath: 'icatcountryportal',
-      exclude: ['/api*'],
-      serveStaticOptions: { index: false },
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', '../static-files'),
+    //   renderPath: 'icatcountryportal',
+    //   exclude: ['/api*'],
+    //   serveStaticOptions: { index: false },
 
-    }),
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -161,6 +170,7 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    // MulterModule.register({dest: './public'}),
     ParameterRequestModule,
     QualityCheckModule,
     ParameterHistoryModule,
@@ -183,6 +193,7 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
     // InstitutionCategoryController,
     // UserController,
   ],
-  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService, ParameterHistoryService, DefaultValueService],
+  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
+     ParameterHistoryService, DefaultValueService],
 })
 export class AppModule { }

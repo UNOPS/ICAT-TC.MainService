@@ -9,6 +9,7 @@ import { Methodology } from "./methodology.entity";
 import { ParameterStatus } from "./parameterStatus.entity";
 import { VerificationDetail } from "src/verification/entity/verification-detail.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
+import { Indicators } from "./indicators.entity";
 
 
 @Entity()
@@ -48,6 +49,11 @@ export class MethodologyAssessmentParameters {
     @JoinColumn({ name: 'status_id' })
     status?: ParameterStatus;
 
+    @ManyToOne((type) => Indicators, { cascade: false })
+    @JoinColumn({ name: 'indicator_id' })
+    indicator?: Indicators;
+    @Column({ nullable: true })
+    indicatorValue: number;
     @Column({ nullable: true })
     isCategory: number;
 
@@ -64,7 +70,7 @@ export class MethodologyAssessmentParameters {
     fileName?: string;
 
     @Column({ type:"mediumtext" ,nullable: true })
-    comment?: string;
+    scoreOrInstitutionJusti?: string;
 
     @Column({ nullable: true, default: false })
     isAcceptedByVerifier: boolean;
@@ -73,5 +79,12 @@ export class MethodologyAssessmentParameters {
     @Column({ type: 'double', nullable: true })
     weight : number
 
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaDescription?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    chaRelJustification?: string;
+
+   
     
 }

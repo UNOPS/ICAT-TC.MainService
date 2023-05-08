@@ -47,25 +47,41 @@ export class Assessment extends BaseTrackingEntity{
     qaStatus?: QuAlityCheckStatus;
 
     @Column({ nullable: true })
+    person: string;
+
+    @Column({type: 'longtext', nullable: true })
+    opportunities: string;
+    
+    @Column({ type:"mediumtext" ,nullable: true })
+    audience?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    assessBoundry?: string;
+
+    @Column({ type:"mediumtext" ,nullable: true })
+    impactsCovered?: string;
+
+    @Column({ nullable: true })
     verificationStatus?: VerificationStatus;
 
     @Column({nullable: true})
     verificationUser?: number
     
-  //  @Column({ nullable: true })
-  //  qaAssighnDate?: string;
+    @Column({ nullable: true })
+    qaAssighnDate?: string;
 
    @Column({ nullable: true })
     qaDeadline?: Date;
-    
+
     @Column({ nullable: true })
     verificationDeadline?: Date;
-   // @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
-   //     cascade: false,
-   //     nullable: true,
-   //     eager: true,
-   //   })
-  //    @JoinColumn()
-     // parameters: MethodologyAssessmentParameters[];
+
+   @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+       cascade: false,
+       nullable: true,
+       eager: true,
+     })
+     @JoinColumn()
+     parameters: MethodologyAssessmentParameters[];
 
 }
