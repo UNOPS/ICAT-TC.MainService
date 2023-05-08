@@ -12,10 +12,11 @@ import { UsersService } from './users.service';
 import { UserTypeModule } from './user-type/user-type.module';
 import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
 import { ConfigService } from '@nestjs/config';
+import { TokenDetails } from 'src/utills/token_details';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserType, Institution, Country,Audit]), UserTypeModule],
-  providers: [UsersService, EmailNotificationService,AuditService, ConfigService],
+  providers: [UsersService, EmailNotificationService,AuditService, ConfigService, TokenDetails],
   controllers: [UsersController],
   exports: [UsersService],
 })

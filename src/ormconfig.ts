@@ -43,6 +43,7 @@ import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
 
 
 export const config: ConnectionOptions = {
@@ -66,7 +67,7 @@ export const config: ConnectionOptions = {
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User, Objectives  ,MethodologyIndicators, Assessment,],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,

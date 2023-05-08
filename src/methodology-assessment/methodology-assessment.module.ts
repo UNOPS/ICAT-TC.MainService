@@ -43,6 +43,7 @@ import { Audit } from 'src/audit/entity/audit.entity';
     TokenDetails,
     UsersService,
     EmailNotificationService,
+
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,

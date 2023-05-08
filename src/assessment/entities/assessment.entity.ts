@@ -75,12 +75,13 @@ export class Assessment extends BaseTrackingEntity{
     @Column({ nullable: true })
     verificationDeadline?: Date;
 
-   // @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
-   //     cascade: false,
-   //     nullable: true,
-   //     eager: true,
-   //   })
-  //    @JoinColumn()
-     // parameters: MethodologyAssessmentParameters[];
+    @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+        cascade: false,
+        nullable: true,
+        eager: true,
+      })
+      @JoinColumn()
+      parameters: MethodologyAssessmentParameters[];
 
 }
+

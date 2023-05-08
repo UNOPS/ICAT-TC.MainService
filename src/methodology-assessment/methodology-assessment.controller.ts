@@ -22,9 +22,11 @@ import { getConnection } from 'typeorm';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { UsersService } from 'src/users/users.service';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
+const auditlogURL = 'http://localhost:7000/audit';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -38,6 +40,7 @@ export class MethodologyAssessmentController {
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly climateService: ProjectService,
     private readonly tokenDetails: TokenDetails,
+    private readonly userService : UsersService
 
   ) {
   }
@@ -206,8 +209,30 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findAllBarriersCharacter();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('results')
   async results() {
+
+    //for audit log
+    let user =  this.userService.userDetailsForAudit()
+    console.log("ppppuserr :",(await user).userType )
+    let audit2 = {
+      description: (await user).userName + " Is View Results",
+      userName: (await user).userName,
+      actionStatus: "View Results",
+      userType: (await user).userType,
+      uuId: (await user).uuId,
+      institutionId: (await user).institutionId,
+  }
+    console.log("userrrr",audit2)
+   
+    try {
+      const response = axios.post(auditlogURL + '/createCountry' , audit2); 
+  } catch (error) {
+      console.log('Error while sending audit log:', error);
+  }
+  //end of the data for audit log
+
     return await this.methodologyAssessmentService.results();
   }
 
