@@ -26,7 +26,7 @@ import { ProjectStatusModule } from './master-data/project-status/project-status
 import { SectorModule } from './master-data/sector/sector.module';
 import { UserTypeModule } from './master-data/user-type/user-type.module';
 import { ReportController } from './report/report.controller';
-import { ReportModule } from './report/report.module';
+
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -77,6 +77,9 @@ import { AssessmentObjectives } from './methodology-assessment/entities/assessme
 import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 import { UsersService } from './users/users.service';
 import { UserType } from './users/entity/user.type.entity';
+import { ReportModule } from './report/report.module';
+import { InvestorToolModule } from './investor-tool/investor-tool.module';
+import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
 
 @Module({
   imports: [
@@ -115,7 +118,8 @@ import { UserType } from './users/entity/user.type.entity';
       Assessment,
       Objectives,
       AssessmentObjectives,
-      UserType
+      UserType,
+      InvestorTool
     ]),
     UsersModule,
     UserTypeModule,
@@ -136,13 +140,13 @@ import { UserType } from './users/entity/user.type.entity';
     AssessmentModule,
     
     InstitutionModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../static-files'),
-      renderPath: 'icatcountryportal',
-      exclude: ['/api*'],
-      serveStaticOptions: { index: false },
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', '../static-files'),
+    //   renderPath: 'icatcountryportal',
+    //   exclude: ['/api*'],
+    //   serveStaticOptions: { index: false },
 
-    }),
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -166,12 +170,14 @@ import { UserType } from './users/entity/user.type.entity';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    // MulterModule.register({dest: './public'}),
     ParameterRequestModule,
     QualityCheckModule,
     ParameterHistoryModule,
     DefaultValueModule,
     VerificationModule,
-    CarbonMarketModule
+    CarbonMarketModule,
+    InvestorToolModule
 
   ],
   controllers: [

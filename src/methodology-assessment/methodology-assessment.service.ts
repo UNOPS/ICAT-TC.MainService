@@ -31,12 +31,14 @@ import { getConnection } from 'typeorm';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
+import { MethodologyParameters } from './entities/methodologyParameters.entity';
 import { User } from 'src/users/entity/user.entity';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
+  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -57,7 +59,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(BarriersCharacteristics) private readonly barrierCharacterRepo: Repository<BarriersCharacteristics>,
     @InjectRepository(AssessmentCategory) private readonly assessCategoryRepo: Repository<AssessmentCategory>,
     @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
-    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    private userService: UsersService,
+    @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    
+    @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
+    private userService: UsersService,
     private emaiService: EmailNotificationService
 
    ) {
@@ -135,7 +139,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
    let assessRes =  this.assessmentRepository.save(assessement);
    let assessementId = (await assessRes).id
-
+   console.log("wwwwwwww")
    assessement.id = assessementId
 
     console.log("assessRes : ",(await assessRes).id)
@@ -619,7 +623,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   
     return policyBarriers.map((pb) => ({
       id: pb.id,
-      policyName: pb.climateAction.policyName,
+      policyName: pb.climateAction?.policyName,
       barriers: pb.barriers,
       editedBy: pb.editedBy,
     }));
@@ -661,6 +665,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         .leftJoinAndSelect('methodology_indicators.indicator', 'indicator')
         .getMany();
     return methodologyIndicators;
+  }
+
+  async findAllMethParameters():Promise<MethodologyParameters[]> {
+    const methodologyParamaeters = await this.methParameterRepo.createQueryBuilder('methodology_parameters')
+        .leftJoinAndSelect('methodology_parameters.methodology', 'methodology')
+        .getMany();
+    return methodologyParamaeters;
   }
   
   findAllCategories(): Promise<Category[]> {
@@ -890,5 +901,22 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     // this.repo.save(dataRequestItemList);
 
     return true;
+  }
+
+  async getAssessmentsByClimateAction(climateActionId: number) {
+    return await this.assessmentRepository.createQueryBuilder('assessment')
+    .innerJoinAndSelect(
+      'assessment.climateAction',
+      'climateAction',
+      'climateAction.id = assessment.climateAction_id'
+    ).where('climateAction.id = :id', {id: climateActionId})
+    .getMany()
+  }
+
+
+  async findMethbyName(methName:string){
+    let meth = this.methIndicatorRepository.findOneBy({meth_code:methName})
+    return meth;
+
   }
 }

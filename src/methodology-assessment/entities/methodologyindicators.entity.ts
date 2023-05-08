@@ -17,5 +17,8 @@ export class MethodologyIndicators {
     @ManyToOne((type) => Indicators, { cascade: false })
     @JoinColumn({ name: 'indicator_id' })
     indicator ?: Indicators;
+
+    @Column({ nullable: true,unique:true })
+    meth_code : string;
   
 }

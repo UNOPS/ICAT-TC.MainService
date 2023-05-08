@@ -16,17 +16,18 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entities/file-upload.utils';
 import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
-import { Results } from './entities/results.entity';
-import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
-import { getConnection } from 'typeorm';
-import { AuditDto } from 'src/audit/dto/audit-dto';
+import { RequestDto } from './dto/request.dto';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Results } from './entities/results.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { UsersService } from 'src/users/users.service';
 var multer = require('multer');
 
 const MainMethURL = 'http://localhost:7100/methodology';
 const auditlogURL = 'http://localhost:7000/audit';
+import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
+import { AuditDto } from 'src/audit/dto/audit-dto';
+const MainCalURL = 'http://localhost:7100/indicator_calculation';
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -59,9 +60,9 @@ export class MethodologyAssessmentController {
     this.resData = ''
 
     let newData : any = MethAssignParam
-
+    console.log("MethAssignParam", MethAssignParam)
     const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
-    console.log("resss", response.data)
+    // console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
 
@@ -86,12 +87,6 @@ export class MethodologyAssessmentController {
 
     return this.resData
 
-  }
-
-
-  @Post('save-assessment')
-  async saveAssessment(@Body() assessment: Assessment){
-    return await this.methodologyAssessmentService.saveAssessment(assessment)
   }
   
 
@@ -158,11 +153,35 @@ export class MethodologyAssessmentController {
 
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
-
+ console.log("AssessCharData", AssessCharData)
     let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
 
     return newRes
 
+  }
+  @Post('assessParameterSave')
+  async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
+    console.log("assesParameterData",assesParameterData)
+    let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
+    let request= new RequestDto();
+    request.equation =meth?.meth_code;
+    let params = this.toObject(assesParameterData.parameters)
+    const obj = { ...assesParameterData.parameters }
+    
+    console.log("before",assesParameterData.parameters, "after",obj)
+
+    // request.data = 
+    const response = await axios.post(MainCalURL + '/calculate',request);
+
+    return response
+
+  }
+
+  toObject(arr) {
+    var rv = {};
+    for (var i = 0; i < arr.length; ++i)
+      rv[i] = arr[i];
+    return rv;
   }
 
 
@@ -241,6 +260,11 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.getResultByAssessment(assessmentId);
   }
 
+  @Get('get-assessments-by-climate-action')
+  async getAssessmentByClimateAction(@Query('climateActionId') climateActionId: number){
+    return await this.methodologyAssessmentService.getAssessmentsByClimateAction(climateActionId)
+  }
+
 
   @Get('findByAllAssessmentData')
   async findByAllAssessmentData() {
@@ -251,6 +275,14 @@ export class MethodologyAssessmentController {
   async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
     return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
   }
+
+  @Get('findMethbyName')
+  async findMethbyName(@Param('methName') methName: string) {
+    // console.log("methName",methName)
+    return await this.methodologyAssessmentService.findMethbyName(methName);
+  }
+
+  
 
   @Post('uploadtest')
 @UseInterceptors(
@@ -347,6 +379,9 @@ async uploadFile2(
   @Get('findAllObjectives')
   findAllObjectives() {
     return this.methodologyAssessmentService.findAllObjectives();
+  }  @Get('findAllMethParameters')
+  findAllMethParameters() {
+    return this.methodologyAssessmentService.findAllMethParameters();
   }
 
   @Get('dataCollectionInstitution')
@@ -377,11 +412,6 @@ async uploadFile2(
   @Patch('update-parameter/:id')
   updateParameter(@Param('id') id: number, @Body() parameter: MethodologyAssessmentParameters){
     return this.methodologyAssessmentService.updateParameter(+id, parameter);
-  }
-
-  @Patch('update-result/:id')
-  updateResult(@Param('id') id: number, @Body() result: Results){
-    return this.methodologyAssessmentService.updateResult(+id, result);
   }
 
   @Delete(':id')
@@ -421,7 +451,6 @@ async uploadFile2(
       filterText,
     )
   }
-
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
   @Get('get-assessments-for-assign-verifier')
   async getAssessmentForAssignVerifier(
@@ -449,6 +478,16 @@ async uploadFile2(
     );
   }
 
+ 
+  @Patch('update-result/:id')
+  updateResult(@Param('id') id: number, @Body() result: Results){
+    return this.methodologyAssessmentService.updateResult(+id, result);
+  }
+
+  @Post('save-assessment')
+  async saveAssessment(@Body() assessment: Assessment){
+    return await this.methodologyAssessmentService.saveAssessment(assessment)
+  }
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
   @Put('update-assign-verifiers')
   async updateAssignVerifiers(
@@ -478,4 +517,7 @@ async uploadFile2(
     // }
 
   }
+  
+
+
 }
