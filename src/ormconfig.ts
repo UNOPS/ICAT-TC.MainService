@@ -46,6 +46,11 @@ import { UserType } from './users/entity/user.type.entity';
 import { Report } from './report/entities/report.entity';
 import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
 import { CalcParameters } from './methodology-assessment/entities/calcParameters.entity';
+import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
+import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
+import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
+import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
+import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 
 
 export const config: ConnectionOptions = {
@@ -74,7 +79,7 @@ export const config: ConnectionOptions = {
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,
