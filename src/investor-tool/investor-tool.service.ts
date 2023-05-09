@@ -94,9 +94,9 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
       relations: ['assessment','characteristics','category'],
       where: { assessment: { id: assessmentId } },
     });
-
-  async createFinalAssessment(InvestorAssessment:  InvestorAssessment) {
-    let a = await this.investorAssessmentRepo.save(InvestorAssessment)
   }
-  
+    async createFinalAssessment(InvestorAssessment : InvestorAssessment) {
+      let a = await this.investorAssessmentRepo.save(InvestorAssessment)
+    }
+    
 }

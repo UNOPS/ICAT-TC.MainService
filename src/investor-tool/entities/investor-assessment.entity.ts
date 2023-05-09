@@ -86,5 +86,11 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     indicator: string;
 
+    @Column({ type: 'double', nullable: true })
+    indicatorStartingVal: number;
+
+    @Column({ type: 'double', nullable: true })
+    indicatorExpectedVal: number;
+
 
 }
