@@ -55,6 +55,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let investorImpacts = new InvestorImpacts();
         investorImpacts.investorTool = result;
         investorImpacts.assessment = assessment;
+        investorImpacts.name=impacts.name;
         let a = await this.investorImpactRepo.save(investorImpacts)
       }
       console.log("created investor tool,", createInvestorToolDto)
