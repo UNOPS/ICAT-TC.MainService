@@ -70,6 +70,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
   async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
+    console.log("request",request)
     for (let req of request) {
       for (let assess of req.data) {
 
@@ -81,6 +82,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
 
     }
+    return 0
 
   }
 
