@@ -12,11 +12,12 @@ import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
+import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 
 @Injectable()
-export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
-  
-  
+export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
+
+
   constructor(
     @InjectRepository(InvestorTool) repo,
     @InjectRepository(ImpactCovered) private readonly impactCoveredRepo: Repository<ImpactCovered>,
@@ -25,46 +26,46 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
 
-    
-  ){
+
+  ) {
     super(repo)
   }
 
 
-  async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto):Promise<any> {
-    
-    if(createInvestorToolDto.investortool){
-      let assessment=createInvestorToolDto.investortool.assessment;
-      console.log("investor......",createInvestorToolDto.investortool.level_of_implemetation)
-      let investor =new InvestorTool();
-      investor.assessment =assessment;
-      investor.geographical_areas_covered =createInvestorToolDto.investortool.geographical_areas_covered;
-      investor.level_of_implemetation =createInvestorToolDto.investortool.level_of_implemetation;
+  async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto): Promise<any> {
+
+    if (createInvestorToolDto.investortool) {
+      let assessment = createInvestorToolDto.investortool.assessment;
+      console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
+      let investor = new InvestorTool();
+      investor.assessment = assessment;
+      investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
+      investor.level_of_implemetation = createInvestorToolDto.investortool.level_of_implemetation;
       let result = await this.repo.save(investor)
-      console.log("result",result)
-      if(createInvestorToolDto)
-     for await (let sector of createInvestorToolDto.sectors) {
-      let investorSector= new InvestorSector();
-      investorSector.investorTool=result;
-      investorSector.assessment = assessment;
-      investorSector.sector = sector
-      let a = await this.investorSectorRepo.save(investorSector)
-     }
-     for await(let impacts of createInvestorToolDto.impacts) {
-      let investorImpacts= new InvestorImpacts();
-      investorImpacts.investorTool=result;
-      investorImpacts.assessment = assessment;
-      let a = await this.investorImpactRepo.save(investorImpacts)
-     }
-     console.log("created investor tool," ,createInvestorToolDto)
-     return result;
+      console.log("result", result)
+      if (createInvestorToolDto)
+        for await (let sector of createInvestorToolDto.sectors) {
+          let investorSector = new InvestorSector();
+          investorSector.investorTool = result;
+          investorSector.assessment = assessment;
+          investorSector.sector = sector
+          let a = await this.investorSectorRepo.save(investorSector)
+        }
+      for await (let impacts of createInvestorToolDto.impacts) {
+        let investorImpacts = new InvestorImpacts();
+        investorImpacts.investorTool = result;
+        investorImpacts.assessment = assessment;
+        let a = await this.investorImpactRepo.save(investorImpacts)
+      }
+      console.log("created investor tool,", createInvestorToolDto)
+      return result;
     }
-    else{
+    else {
       throw new error('No data')
     }
-    
+
   }
-  async findAllImpactCovered():Promise<ImpactCovered[]> {
+  async findAllImpactCovered(): Promise<ImpactCovered[]> {
     return this.impactCoveredRepo.find()
   }
 
@@ -95,8 +96,22 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
       where: { assessment: { id: assessmentId } },
     });
   }
-    async createFinalAssessment(InvestorAssessment : InvestorAssessment) {
-      let a = await this.investorAssessmentRepo.save(InvestorAssessment)
+   
+   
+    async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
+      console.log("request",request)
+      for (let req of request) {
+        for (let assess of req.data) {
+  
+          assess.category.id = req.categoryID;
+          assess.type = req.type;
+          let a = await this.investorAssessmentRepo.save(assess)
+          console.log("saved")
+  
+        }
+  
+      }
+      return 0
+  
     }
-    
 }

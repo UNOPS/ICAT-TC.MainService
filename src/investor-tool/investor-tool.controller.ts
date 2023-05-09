@@ -4,6 +4,7 @@ import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
+import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -37,7 +38,7 @@ export class InvestorToolController {
 
 
   @Post('createFinalAssessment')
-  createFinalAssessment(@Body() req: InvestorAssessment) {
+  createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
     return this.investorToolService.createFinalAssessment(req);
   }
 
