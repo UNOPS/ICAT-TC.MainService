@@ -43,7 +43,15 @@ import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Objectives } from './methodology-assessment/entities/objectives.entity';
 import { Report } from './report/entities/report.entity';
+import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
+import { CalcParameters } from './methodology-assessment/entities/calcParameters.entity';
+import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
+import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
+import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
+import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
+import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 
 
 export const config: ConnectionOptions = {
@@ -53,23 +61,26 @@ export const config: ConnectionOptions = {
   port: 3306,
 
 
-/*  username: 'root',
+/* username: 'root',
  password: 'pradeep123#',
- database: 'tc-main',  */  // password: '1997',
-  // database: 'tc-main-new',
-  //  username: 'sqluser',
-  //  password: 'password',
-  //  database: 'tc-main-new3',
-  username: 'root',
-   database: 'tc-main', 
-   password: '7860150',
+ database: 'tc-main',  */ 
+ username: 'root',
+ password: '1997',
+  database: 'tc_new', 
+    // username: 'sqluser',
+    // password: 'password',
+    // database: 'tc-main-new3',
+  // username: 'root',
+  //  database: 'tc-main', 
+  //  password: '7860150',  // database: 'tc-main-new3',
+
   autoLoadEntities: true,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,

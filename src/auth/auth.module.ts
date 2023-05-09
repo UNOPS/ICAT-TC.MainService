@@ -20,6 +20,7 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { AuditService } from 'src/audit/audit.service';
 import { HttpService } from '@nestjs/axios';
 import { HttpModule } from '@nestjs/axios';
+import { TokenDetails } from 'src/utills/token_details';
 @Module({
   imports: [
     HttpModule,
@@ -38,6 +39,7 @@ import { HttpModule } from '@nestjs/axios';
     UsersService,
     ConfigService,
     AuditService,
+    TokenDetails
   ],
   exports: [AuthService],
   controllers: [AuthController],

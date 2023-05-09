@@ -79,9 +79,9 @@ export class SectorService extends TypeOrmCrudService<Sector> {
 
 
 
-  async getCountrySector(countryId: number) {
+  async getCountrySector(countryId: number):Promise<Sector[]> {
     // console.log('countryId', countryId);
-    let resualt = new Array()
+    let resualt : Sector[] =[];
     let ids = await this.CountrySectorRepo.find({ where: { countryId: countryId } });
      console.log('ids', ids);
 

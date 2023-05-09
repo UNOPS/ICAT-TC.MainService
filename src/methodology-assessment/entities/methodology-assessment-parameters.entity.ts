@@ -52,6 +52,7 @@ export class MethodologyAssessmentParameters {
     @ManyToOne((type) => Indicators, { cascade: false })
     @JoinColumn({ name: 'indicator_id' })
     indicator?: Indicators;
+
     @Column({ nullable: true })
     indicatorValue: number;
     @Column({ nullable: true })
@@ -68,6 +69,7 @@ export class MethodologyAssessmentParameters {
 
     @Column({ nullable: true })
     fileName?: string;
+    
 
     @Column({ type:"mediumtext" ,nullable: true })
     scoreOrInstitutionJusti?: string;
