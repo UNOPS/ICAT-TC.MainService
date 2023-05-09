@@ -16,12 +16,15 @@ import { InvestorAssessment } from './entities/investor-assessment.entity';
 @Injectable()
 export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
   
+  
   constructor(
     @InjectRepository(InvestorTool) repo,
     @InjectRepository(ImpactCovered) private readonly impactCoveredRepo: Repository<ImpactCovered>,
     @InjectRepository(InvestorSector) private readonly investorSectorRepo: Repository<InvestorSector>,
     @InjectRepository(InvestorImpacts) private readonly investorImpactRepo: Repository<InvestorImpacts>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
+    @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
+
     
   ){
     super(repo)
@@ -91,6 +94,9 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
       relations: ['assessment','characteristics','category'],
       where: { assessment: { id: assessmentId } },
     });
+
+  async createFinalAssessment(InvestorAssessment:  InvestorAssessment) {
+    let a = await this.investorAssessmentRepo.save(InvestorAssessment)
   }
   
 }

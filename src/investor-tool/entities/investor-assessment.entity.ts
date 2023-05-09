@@ -83,5 +83,8 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @JoinColumn({ name: 'assessment_id' })
     assessment?: Assessment;
 
+    @Column({ nullable: true })
+    indicator: string;
+
 
 }

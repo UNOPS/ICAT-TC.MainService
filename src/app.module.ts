@@ -80,6 +80,9 @@ import { UserType } from './users/entity/user.type.entity';
 import { ReportModule } from './report/report.module';
 import { InvestorToolModule } from './investor-tool/investor-tool.module';
 import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
+import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
+import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
+import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 
 @Module({
@@ -120,8 +123,7 @@ import { InvestorAssessment } from './investor-tool/entities/investor-assessment
       Objectives,
       AssessmentObjectives,
       UserType,
-      InvestorTool,
-      InvestorAssessment
+      InvestorTool
     ]),
     UsersModule,
     UserTypeModule,
