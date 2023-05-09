@@ -47,6 +47,7 @@ import { Objectives } from './methodology-assessment/entities/objectives.entity'
 import { Report } from './report/entities/report.entity';
 import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
 import { CalcParameters } from './methodology-assessment/entities/calcParameters.entity';
+import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 
 
 export const config: ConnectionOptions = {
@@ -59,12 +60,12 @@ export const config: ConnectionOptions = {
 /* username: 'root',
  password: 'pradeep123#',
  database: 'tc-main',  */ 
- username: 'root',
+/*  username: 'root',
  password: '1997',
-  database: 'tc_new',
-  //  username: 'sqluser',
-  //  password: 'password',
-  //  database: 'tc-main-new3',
+  database: 'tc_new', */
+    username: 'sqluser',
+    password: 'password',
+    database: 'tc-main-new3',
   // username: 'root',
   //  database: 'tc-main', 
   //  password: '7860150',  // database: 'tc-main-new3',
@@ -75,7 +76,7 @@ export const config: ConnectionOptions = {
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User, Objectives  ,MethodologyIndicators, Assessment,MethodologyParameters,CalcParameters],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User, Objectives  ,MethodologyIndicators, Assessment,MethodologyParameters,CalcParameters,InvestorAssessment],
 
 
   // We are using migrations, synchronize should be set to false.

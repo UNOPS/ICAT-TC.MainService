@@ -80,6 +80,7 @@ import { UserType } from './users/entity/user.type.entity';
 import { ReportModule } from './report/report.module';
 import { InvestorToolModule } from './investor-tool/investor-tool.module';
 import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
+import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 
 @Module({
   imports: [
@@ -119,7 +120,8 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
       Objectives,
       AssessmentObjectives,
       UserType,
-      InvestorTool
+      InvestorTool,
+      InvestorAssessment
     ]),
     UsersModule,
     UserTypeModule,

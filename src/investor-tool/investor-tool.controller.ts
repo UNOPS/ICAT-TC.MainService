@@ -9,6 +9,26 @@ ApiTags('investor-tool')
 export class InvestorToolController {
   constructor(private readonly investorToolService: InvestorToolService) {}
 
+  @Get('get-results-by-assessment/:assessmentId')
+  async getResultByAssessment(@Param('assessmentId') assessmentId: number) {
+    return await this.investorToolService.getResultByAssessment(assessmentId);
+  }
+
+  @Get('findAllSectorData/:assessmentId')
+  async findAllSectorData(@Param('assessmentId') assessmentId: number) {
+    return await this.investorToolService.findAllSectorData(assessmentId);
+  }
+
+  @Get('findAllImpactCoverData/:assessmentId')
+  async findAllImpactCoverData(@Param('assessmentId') assessmentId: number) {
+    return await this.investorToolService.findAllImpactCoverData(assessmentId);
+  }
+
+  @Get('findAllAssessData/:assessmentId')
+  async findAllAssessData(@Param('assessmentId') assessmentId: number) {
+    return await this.investorToolService.findAllAssessData(assessmentId);
+  }
+
   @Post('createinvestorToolAssessment')
   createinvestorToolAssessment(@Body() createInvestorToolDto: CreateInvestorToolDto) {
     return this.investorToolService.createinvestorToolAssessment(createInvestorToolDto);
@@ -18,5 +38,6 @@ export class InvestorToolController {
   findAllImpactCovered() {
     return this.investorToolService.findAllImpactCovered();
   }
+
 
 }

@@ -11,6 +11,7 @@ import { error } from 'console';
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { InvestorAssessment } from './entities/investor-assessment.entity';
 
 @Injectable()
 export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
@@ -20,6 +21,7 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
     @InjectRepository(ImpactCovered) private readonly impactCoveredRepo: Repository<ImpactCovered>,
     @InjectRepository(InvestorSector) private readonly investorSectorRepo: Repository<InvestorSector>,
     @InjectRepository(InvestorImpacts) private readonly investorImpactRepo: Repository<InvestorImpacts>,
+    @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     
   ){
     super(repo)
@@ -61,6 +63,34 @@ export class InvestorToolService  extends TypeOrmCrudService <InvestorTool>{
   }
   async findAllImpactCovered():Promise<ImpactCovered[]> {
     return this.impactCoveredRepo.find()
+  }
+
+  async getResultByAssessment(assessmentId: number){
+    return await this.repo.findOne({
+      where: {assessment: {id: assessmentId}},
+      relations: ['assessment']
+    })
+   }
+
+   async findAllSectorData(assessmentId: number){
+    return this.investorSectorRepo.find({
+      relations: ['assessment','sector'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async findAllImpactCoverData(assessmentId: number){
+    return this.investorImpactRepo.find({
+      relations: ['assessment'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async findAllAssessData(assessmentId: number){
+    return this.investorAssessRepo.find({
+      relations: ['assessment','characteristics','category'],
+      where: { assessment: { id: assessmentId } },
+    });
   }
   
 }
