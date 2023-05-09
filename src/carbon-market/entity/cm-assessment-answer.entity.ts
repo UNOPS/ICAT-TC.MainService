@@ -1,6 +1,6 @@
 
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CMAssessmentQuestion } from './cm-assessment-question.entity';
 import { CMAnswer } from './cm-answer.entity';
 
@@ -11,7 +11,7 @@ export class CMAssessmentAnswer extends BaseTrackingEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({type: "double"})
   score: number
 
   @ManyToOne((type) => CMAssessmentQuestion)
