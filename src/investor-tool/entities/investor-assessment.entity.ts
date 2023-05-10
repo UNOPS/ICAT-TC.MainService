@@ -54,6 +54,11 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     question04: string; //is the project first of its kind for the local project developer
 
+    @Column({ nullable: true })
+    question05: string;
+
+    @Column({ nullable: true })
+    question06: string; // outcome-scale GHGs- question 1
    
 
     @Column({ nullable: true })
@@ -62,10 +67,10 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     likelihood_justification: string;
 
-    @Column({ nullable: true })
+    @Column({ type: 'double', nullable: true })
     relevance_weight: number;
 
-    @Column({ nullable: true })
+    @Column({ type: 'double', nullable: true })
     likelihood_weight: number;
 
     @Column({ nullable: true })
@@ -90,6 +95,9 @@ export class InvestorAssessment extends BaseTrackingEntity {
 
     @Column({ type: 'double', nullable: true })
     indicatorExpectedVal: number;
+
+    @Column({ type: 'double', nullable: true })
+    expected_ghg_mitigation: number;
 
 
 }
