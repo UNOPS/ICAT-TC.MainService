@@ -67,10 +67,10 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     likelihood_justification: string;
 
-    @Column({ nullable: true })
+    @Column({ type: 'double', nullable: true })
     relevance_weight: number;
 
-    @Column({ nullable: true })
+    @Column({ type: 'double', nullable: true })
     likelihood_weight: number;
 
     @Column({ nullable: true })
