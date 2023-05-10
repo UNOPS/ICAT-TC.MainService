@@ -306,7 +306,7 @@ export const answers = [
         code: 'S-2-C-1-Q-5-A-1',
         weight: 0,
         score_portion: 100,
-        isPassing: false,
+        isPassing: true,
         question: 'S-2-C-1-Q-5'
     },
     {
@@ -314,7 +314,7 @@ export const answers = [
         code: 'S-2-C-1-Q-5-A-2',
         weight: 0,
         score_portion: 100,
-        isPassing: true,
+        isPassing: false,
         question: 'S-2-C-1-Q-5'
     },
     {
