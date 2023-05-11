@@ -78,6 +78,12 @@ import { CarbonMarketModule } from './carbon-market/carbon-market.module';
 import { UsersService } from './users/users.service';
 import { UserType } from './users/entity/user.type.entity';
 import { ReportModule } from './report/report.module';
+import { InvestorToolModule } from './investor-tool/investor-tool.module';
+import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
+import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
+import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
+import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
+import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 
 @Module({
   imports: [
@@ -116,7 +122,8 @@ import { ReportModule } from './report/report.module';
       Assessment,
       Objectives,
       AssessmentObjectives,
-      UserType
+      UserType,
+      InvestorTool
     ]),
     UsersModule,
     UserTypeModule,
@@ -173,7 +180,8 @@ import { ReportModule } from './report/report.module';
     ParameterHistoryModule,
     DefaultValueModule,
     VerificationModule,
-    CarbonMarketModule
+    CarbonMarketModule,
+    InvestorToolModule
 
   ],
   controllers: [

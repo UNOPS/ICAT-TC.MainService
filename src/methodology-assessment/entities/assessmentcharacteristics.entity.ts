@@ -5,6 +5,7 @@ import { Characteristics } from "./characteristics.entity";
 
 @Entity()
 export class AssessmentCharacteristics {
+    [x: string]: any;
 
     @PrimaryGeneratedColumn()
     id : number;
