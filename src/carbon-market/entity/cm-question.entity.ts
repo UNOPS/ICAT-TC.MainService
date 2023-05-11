@@ -17,7 +17,7 @@ export class CMQuestion extends BaseTrackingEntity {
   @Column()
   code: string
 
-  @Column()
+  @Column( { type: "varchar",length: 3000 })
   label: string
 
   @Column()
