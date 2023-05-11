@@ -13,6 +13,7 @@ constructor(){}
       format: 'A4',
       margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
       path: '/home/ubuntu/code/Main/main/public/' + fileName,
+      // path:  './public/' + fileName,
       printBackground: true
     };
     return await html_to_pdf.generatePdf(file, options);
