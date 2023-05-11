@@ -3,7 +3,7 @@ import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessm
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { MethodologyAssessmentParameters } from './entities/methodology-assessment-parameters.entity';
 import { Methodology } from './entities/methodology.entity';
 import { Category } from './entities/category.entity';
@@ -36,8 +36,10 @@ import { User } from 'src/users/entity/user.entity';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
+ 
   
 
    constructor(
@@ -918,5 +920,26 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let meth = this.methIndicatorRepository.findOneBy({meth_code:methName})
     return meth;
 
+  }
+
+  async updateIndicatorValue(req: UpdateIndicatorDto) {
+    // console.log("data1",req)
+    let data =req.data
+    for (let x of data) {
+      console.log("data",x)
+      await this.repo
+    .createQueryBuilder()
+    .update(MethodologyAssessmentParameters)
+    .set({ indicatorValue: x.indicatorValue,indicator:x.indicator})
+    .where("assessment_id = :id", { id: req.assessmentId })
+    .andWhere(new Brackets(qb => {
+      qb.where("characteristics_id = :char_id", { char_id: x.id })
+    }))
+    // .andWhere("characteristics_id = :id", { id: x.id })
+    .execute()
+      
+    }
+    return 0;
+    
   }
 }
