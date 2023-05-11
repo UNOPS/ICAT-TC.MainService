@@ -704,6 +704,9 @@ export class ReportPagesService {
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
+
+
+     const prossesDescribeResult = contentTwo.prossesDescribeResult;
     const page_5 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
@@ -730,30 +733,24 @@ export class ReportPagesService {
        </tr>
      </thead>
      <tbody class="table-active">
-      <tr>
-       <td   >Technology</td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td> 
-     </tr>
-     <tr>
-     <td   >Agents</td>
- <td>test value</td>
- <td>test value</td>
- <td>test value</td> 
-   </tr>
-   <tr>
-   <td   >Incentives</td>
-<td>test value</td>
-<td>test value</td>
-<td>test value</td> 
- </tr>
- <tr>
- <td   >Norms </td>
-<td>test value</td>
-<td>test value</td>
-<td>test value</td> 
-</tr>
+     ${prossesDescribeResult
+      .map((a: {
+        relative_importance: any;
+        score: any;
+        justifying_score: any;  name: string;  
+}) =>
+        {
+           
+              return `<tr>
+              <td>${a.name?a.name:'-'}</td>
+              <td>${a.score?a.score:"-"}</td>
+             <td>${a.justifying_score?a.justifying_score:"-"}</td>
+             <td>${a.relative_importance?a.relative_importance:"-"}</td>
+              </tr>`;
+            
+          }
+      )
+      .join('')}
     
    
      </tbody>
@@ -767,6 +764,8 @@ export class ReportPagesService {
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
+
+      const outcomeDescribeResult = contentTwo.outcomeDescribeResult;
     const page_6 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
@@ -793,30 +792,24 @@ export class ReportPagesService {
     </tr>
   </thead>
   <tbody class="table-active">
-   <tr>
-    <td   >Scale of outcome-GHGs</td>
-<td>test value</td>
-<td>test value</td>
- 
-  </tr>
-  <tr>
-  <td   >Scale of outcome – sustainable development</td>
-<td>test value</td>
-<td>test value</td>
- 
-</tr>
-<tr>
-<td   >Outcome sustained over time – GHGs</td>
-<td>test value</td>
-<td>test value</td>
- 
-</tr>
-<tr>
-<td   >Outcome sustainable over time – sustainable development </td>
-<td>test value</td>
-<td>test value</td>
- 
-</tr>
+  ${outcomeDescribeResult
+    .map((a: {
+      relative_importance: any;
+      score: any;
+      justifying_score: any;  name: string;  
+}) =>
+      {
+         
+            return `<tr>
+            <td>${a.name?a.name:'-'}</td>
+            <td>${a.score?a.score:"-"}</td>
+           <td>${a.justifying_score?a.justifying_score:"-"}</td>
+          
+            </tr>`;
+          
+        }
+    )
+    .join('')}
  
     
       </tbody>

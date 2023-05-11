@@ -23,10 +23,10 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @Column()
   impact_types: string
 
-  @Column()
+  @Column( { type: "varchar",length: 2000 })
   impact_categories: string
 
-  @Column()
+  @Column( { type: "varchar",length: 2000 })
   impact_characteristics: string
 
   @Column()
