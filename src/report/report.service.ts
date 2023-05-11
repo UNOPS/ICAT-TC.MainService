@@ -66,8 +66,8 @@ export class ReportService extends TypeOrmCrudService<Report>{
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    // report.savedLocation = './public/' + fileName;
-    report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
+    report.savedLocation = './public/' + fileName;
+    // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail = 'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg'
     report.country = country
     return await this.repo.save(report)
@@ -334,7 +334,66 @@ let asse= await this.assessmentService.findbyIDforReport(assessmentId);
     reportContentTwo.prossesExAnteAssesment=catagoryProcessExAnteAssesment;
     
     reportContentTwo.outcomeExAnteAssesment=catagoryOutcomeExAnteAssesment;
+
+
+
+
+  
+    let asssResulrProcess = await this.assessmentService.getCharacteristicasforReport(
+      assessmentId,
+      'process',''
+    );
+    let prossesDescribeResult = [];
+ 
+    for (let parameter of asssResulrProcess.parameters) {
+      console.log(parameter);
+      let cat = prossesDescribeResult.find((a) => a.name == parameter.category.name);
+      if (cat) {
+        cat.score=parameter.score,
+        cat.justifying_score=parameter.scoreOrInstitutionJusti,
+        cat.relative_importance=''
+      } else {
+        prossesDescribeResult.push({
+          name: parameter.category.name,
+          score:parameter.score,
+          justifying_score:parameter.scoreOrInstitutionJusti,
+          relative_importance:'' });
+      }
     
+     
+    }
+    let asssResultOutcome = await this.assessmentService.getResultforReport(
+      assessmentId,
+      'outcome',''
+    );
+    let outcomeDescribeResult = [];
+    
+    for (let parameter of asssResultOutcome.parameters) {
+      console.log(parameter);
+      let cat = outcomeDescribeResult.find((a) => a.name == parameter.category.name);
+      if (cat) {
+       
+        cat.score=parameter.score,
+        cat.justifying_score=parameter.scoreOrInstitutionJusti,
+        cat.relative_importance=''
+      } else {
+        outcomeDescribeResult.push({
+          name: parameter.category.name,
+          score:parameter.score,
+          justifying_score:parameter.scoreOrInstitutionJusti,
+          relative_importance:''
+        });
+      }
+    
+     
+    }
+     reportContentTwo.prossesDescribeResult=prossesDescribeResult;
+    
+
+    reportContentTwo.outcomeDescribeResult=outcomeDescribeResult;
+ 
+
+
     return reportContentTwo;
   }
 
