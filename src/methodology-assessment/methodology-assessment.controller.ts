@@ -27,6 +27,7 @@ const MainMethURL = 'http://localhost:7100/methodology';
 const auditlogURL = 'http://localhost:7000/audit';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
+import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 const MainCalURL = 'http://localhost:7100/indicator_calculation';
 
 @ApiTags('methodology-assessment')
@@ -518,6 +519,21 @@ async uploadFile2(
 
   }
   
+  @Post('updateIndicatorValue')
+  async updateIndicatorValue(@Body() data: UpdateIndicatorDto): Promise<any> {
+    // console.log("data1",data)
 
+    let result:any
+    //const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
+    // console.log("resss", response.data)
+    if(data){
+      result = await this.methodologyAssessmentService.updateIndicatorValue(data)
+
+      return result;
+
+    }
+  
+
+  }
 
 }

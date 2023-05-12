@@ -67,8 +67,9 @@ export class ReportContentTwo {
     outcomeExPostAssesment:object[]=[];
     prossesExPostAnalysis:object[]=[]; 
     outcomeExPostAnalysis:object[]=[];
-
-
+    
+    prossesDescribeResult:object[]=[];
+    outcomeDescribeResult:object[]=[];
 
 
 
