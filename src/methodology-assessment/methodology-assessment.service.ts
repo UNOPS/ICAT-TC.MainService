@@ -947,7 +947,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         // .andWhere("characteristics_id = :id", { id: x.id })
         .execute()
       }
-      if(!x.indicatorValue && x.parameters.length!==0){
+      if(x.indicator && !x.indicatorValue && x.parameters.length!==0){
         console.log("data with param",x)
         let assessID = req.assessmentId
         let a= await this.assessmentRepository.findOneBy({id:assessID});
