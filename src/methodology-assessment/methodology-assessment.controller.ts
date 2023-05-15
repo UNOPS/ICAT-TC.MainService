@@ -28,7 +28,7 @@ const auditlogURL = 'http://localhost:7000/audit';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
-const MainCalURL = 'http://localhost:7100/indicator_calculation';
+
 
 @ApiTags('methodology-assessment')
 @Controller('methodology-assessment')
@@ -160,30 +160,30 @@ export class MethodologyAssessmentController {
     return newRes
 
   }
-  @Post('assessParameterSave')
-  async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
-    console.log("assesParameterData",assesParameterData)
-    let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
-    let request= new RequestDto();
-    request.equation =meth?.meth_code;
-    let params = this.toObject(assesParameterData.parameters)
-    const obj = { ...assesParameterData.parameters }
+  // @Post('assessParameterSave')
+  // async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
+  //   console.log("assesParameterData",assesParameterData)
+  //   let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
+  //   let request= new RequestDto();
+  //   request.equation =meth?.meth_code;
+  //   let params = this.toObject(assesParameterData.parameters)
+  //   const obj = { ...assesParameterData.parameters }
     
-    console.log("before",assesParameterData.parameters, "after",obj)
+  //   console.log("before",assesParameterData.parameters, "after",obj)
 
-    // request.data = 
-    const response = await axios.post(MainCalURL + '/calculate',request);
+  //   // request.data = 
+  //   const response = await axios.post(MainCalURL + '/calculate',request);
 
-    return response
+  //   return response
 
-  }
+  // }
 
-  toObject(arr) {
-    var rv = {};
-    for (var i = 0; i < arr.length; ++i)
-      rv[i] = arr[i];
-    return rv;
-  }
+  // toObject(arr) {
+  //   var rv = {};
+  //   for (var i = 0; i < arr.length; ++i)
+  //     rv[i] = arr[i];
+  //   return rv;
+  // }
 
 
   
