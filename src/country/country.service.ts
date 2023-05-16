@@ -82,7 +82,7 @@ export class CountryService extends TypeOrmCrudService<Country>{
   }
   async getCountrySector(countryId: number){
      const countrySector = await this.CountrySectorRepo.find({
-      where:{countryId: countryId,}
+      where:{ country:{id:countryId}}
   })
   console.log("countrySector",countrySector)
   return countrySector;

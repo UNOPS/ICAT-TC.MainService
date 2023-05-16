@@ -22,7 +22,7 @@ export class ActionArea extends MasterData{
   
 
   @ManyToOne(() => AggregatedAction, aggregatedAction => aggregatedAction.actionArea)
-  @JoinColumn()
+  @JoinColumn({ name: 'aggregatedActionId' })
   aggregatedAction: AggregatedAction;
 
 
