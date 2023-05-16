@@ -77,11 +77,10 @@ export class ClimateAction extends BaseTrackingEntity {
 
  
 
-  @ManyToOne(() => AggregatedAction, { cascade: false })
-  @JoinColumn({ name: 'aggregatedActionId' })
+  @ManyToOne(() => AggregatedAction, { cascade: false, nullable: true })
   aggregatedAction: AggregatedAction; //ndc
 
-  @ManyToOne(() => ActionArea, { cascade: false })
+  @ManyToOne(() => ActionArea, { cascade: false, nullable: true })
   actionArea: ActionArea; // subndc
 
   
@@ -206,7 +205,7 @@ export class ClimateAction extends BaseTrackingEntity {
   //For mistgation actions - related to climate action table in future
 
 
-  @ManyToOne((type) => ProjectApprovalStatus, { cascade: false })
+  @ManyToOne((type) => ProjectApprovalStatus, { cascade: false,nullable: true })
   @JoinColumn()
   projectApprovalStatus?: ProjectApprovalStatus;
 
