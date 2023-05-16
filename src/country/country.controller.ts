@@ -64,7 +64,7 @@ export class CountryController implements CrudController<Country>{
 
     // sec.forEach((a) => this.CountrySectorRepo.delete(a.id));
     let coun = await this.base.updateOneBase(req, dto);
-    coun_sec.forEach((a) => { a.countryId = dto.id, this.CountrySectorRepo.save(a) })
+    coun_sec.forEach((a) => { a.country.id = dto.id, this.CountrySectorRepo.save(a) })
 
    
     return coun;
@@ -129,6 +129,11 @@ export class CountryController implements CrudController<Country>{
   ): Promise<any> {
     console.log("country")
     return await this.service.getCountrySector(countryId);
+  }
+
+  @Get('find-All')
+  async findall():Promise<any>{
+    return await this.CountryRepo.find();
   }
 
   

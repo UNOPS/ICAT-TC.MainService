@@ -95,6 +95,9 @@ export class User extends BaseTrackingEntity {
 
   fullName: string;
 
+  // @OneToMany(() => Notification, (notification) => notification.t)
+  // notifications: Notification[]
+
   updateFullName() {
     this.fullName = this.firstName + (this.lastName ? ' ' + this.lastName : '');
   }

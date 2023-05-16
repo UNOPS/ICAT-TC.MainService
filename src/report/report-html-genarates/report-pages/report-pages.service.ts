@@ -357,7 +357,7 @@ export class ReportPagesService {
             </tr>`;
           }
         })
-        .join(''),
+        .join('')
     )
     .join('')}
   

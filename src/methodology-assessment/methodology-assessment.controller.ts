@@ -55,6 +55,7 @@ export class MethodologyAssessmentController {
      return this.methodologyAssessmentService.create(createMethodologyAssessmentDto);
    } */
 
+   @UseGuards(JwtAuthGuard)
   @Post('methAssignDataSave')
   async methAssignDataSave(@Body() MethAssignParam: MethodologyAssessmentParameters): Promise<any> {
     this.res2 = 0
@@ -83,6 +84,25 @@ export class MethodologyAssessmentController {
       await this.methodologyAssessmentService.createResults(result)
     }
   
+    if(this.res2){
+      let user =  this.userService.userDetailsForAudit()
+      console.log("ppppuserr :",(await user).userType )
+      let audit2 = {
+        description: (await user).userName + " Create Assessment in Portfolio Tool",
+        userName: (await user).userName,
+        actionStatus: "Create Assessment",
+        userType: (await user).userType,
+        uuId: (await user).uuId,
+        institutionId: (await user).institutionId,
+    }
+      console.log("userrrr",audit2)
+     
+      try {
+        const response = axios.post(auditlogURL + '/createCountry' , audit2); 
+    } catch (error) {
+        console.log('Error while sending audit log:', error);
+    }
+    }
     
     console.log("resData", this.resData)
 
@@ -91,7 +111,7 @@ export class MethodologyAssessmentController {
   }
   
 
-
+  @UseGuards(JwtAuthGuard)
   @Post('barrier-characteristics')
   async barrierCharacteristics(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
     this.resData = ''
@@ -113,6 +133,28 @@ export class MethodologyAssessmentController {
     }
     //console.log("resData", this.resData)
   
+
+    if(res){
+      let user =  this.userService.userDetailsForAudit()
+      console.log("ppppuserr :",(await user).userType )
+      let audit2 = {
+        description: (await user).userName + " Create Assessment in Portfolio Tool track 2",
+        userName: (await user).userName,
+        actionStatus: "Create Assessment",
+        userType: (await user).userType,
+        uuId: (await user).uuId,
+        institutionId: (await user).institutionId,
+    }
+      console.log("userrrr",audit2)
+     
+      try {
+        const response = axios.post(auditlogURL + '/createCountry' , audit2); 
+    } catch (error) {
+        console.log('Error while sending audit log:', error);
+    }
+    }
+
+
     let result : any = {
       averageProcess : response.data.averageProcess,
       averageOutcome:  response.data.averageOutcome,
@@ -185,7 +227,6 @@ export class MethodologyAssessmentController {
   //   return rv;
   // }
 
-
   
   @Get('findParam/:assessId')
   async findByAssemeId(@Param('assessId') assessId: number) {
@@ -229,12 +270,12 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findAllBarriersCharacter();
   }
 
-  @UseGuards(JwtAuthGuard)
+  
   @Get('results')
   async results() {
 
     //for audit log
-    let user =  this.userService.userDetailsForAudit()
+   /*  let user =  this.userService.userDetailsForAudit()
     console.log("ppppuserr :",(await user).userType )
     let audit2 = {
       description: (await user).userName + " Is View Results",
@@ -250,7 +291,7 @@ export class MethodologyAssessmentController {
       const response = axios.post(auditlogURL + '/createCountry' , audit2); 
   } catch (error) {
       console.log('Error while sending audit log:', error);
-  }
+  } */
   //end of the data for audit log
 
     return await this.methodologyAssessmentService.results();
