@@ -337,6 +337,55 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }
+  async getResultforReport(assessmentId: number,catagoryType:string,assessmentType:string) {
+    let filter: string = 'asse.id=:assessmentId and parameters.isCategory=true';
+
+    if(catagoryType){
+      if(filter){
+        filter=`${filter} and category.type= :catagoryType `
+      }else{
+        filter='category.type= :catagoryType '
+      }
+    }
+    if(assessmentType){
+      if(filter){
+        filter=`${filter} and asse.type= :assessmentType `
+      }else{
+        filter='asse.type= :assessmentType '
+      }
+    }
+    let data = await this.repo
+      .createQueryBuilder('asse') 
+
+    
+      .leftJoinAndMapMany(
+        'asse.parameters',
+        MethodologyAssessmentParameters,
+        'parameters',
+        `parameters.assessment_id = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.category',
+        Category,
+        'category',
+        `category.id = parameters.category_id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = parameters.characteristics_id`,
+      )
+      .leftJoinAndMapOne(
+        'parameters.indicator',
+        Indicators,
+        'indicator',
+        `indicator.id = parameters.indicator_id`,
+      )
+      .where(filter,{ assessmentId,catagoryType,assessmentType });
+    // console.log("qqqqqqq", data.getQueryAndParameters())
+    return await data.getOne();
+  }
   async getAssessmentObjectiveforReport(assessmentId: number) {
     let filter: string = 'asseobj.assessment_id=:assessmentId';
 

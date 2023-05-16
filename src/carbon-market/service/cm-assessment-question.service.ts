@@ -6,6 +6,7 @@ import { CMResultDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
+import { Results } from "src/methodology-assessment/entities/results.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -14,7 +15,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(CMAssessmentAnswer) 
     private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
     @InjectRepository(CMAssessmentQuestion)
-    private assessmentQuestionRepo: Repository<CMAssessmentQuestion>
+    private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    @InjectRepository(Results)
+    private resultsRepo: Repository<Results>
   ) {
     super(repo);
   }
@@ -62,6 +65,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           answers.push(ass_answer)
         }
         a_ans = await this.assessmentAnswerRepo.save(answers)
+        let result = new Results()
+        result.assessment = assessment;
+        await this.resultsRepo.save(result)
       }
 
     }
