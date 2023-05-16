@@ -13,6 +13,7 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
@@ -25,6 +26,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorImpacts) private readonly investorImpactRepo: Repository<InvestorImpacts>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
+    @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
 
 
   ) {
@@ -101,6 +103,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    
     async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
       console.log("request",request)
+    
       for (let req of request) {
         for (let assess of req.data) {
   
@@ -112,7 +115,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
   
       }
+      let data = new Results ()
+      data.assessment = request[0].data[0].assessment;
+      await this.resultRepository.save(data);
       return 0
   
     }
+
 }

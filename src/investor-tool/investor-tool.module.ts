@@ -8,9 +8,10 @@ import { InvestorTool } from './entities/investor-tool.entity';
 import { InvestorSector } from './entities/investor-sector.entity';
 import { InvestorImpacts } from './entities/investor-impact.entity';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment])],
+  imports: [TypeOrmModule.forFeature([Assessment,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment, Results])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService]
 })

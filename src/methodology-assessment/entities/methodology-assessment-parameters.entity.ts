@@ -53,8 +53,9 @@ export class MethodologyAssessmentParameters {
     @JoinColumn({ name: 'indicator_id' })
     indicator?: Indicators;
 
-    @Column({ nullable: true })
+    @Column({type: "double", nullable: true })
     indicatorValue: number;
+
     @Column({ nullable: true })
     isCategory: number;
 

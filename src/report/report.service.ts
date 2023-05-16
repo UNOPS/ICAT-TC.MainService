@@ -66,8 +66,8 @@ export class ReportService extends TypeOrmCrudService<Report>{
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    report.savedLocation = './public/' + fileName;
-    // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
+    // report.savedLocation = './public/' + fileName;
+    report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail = 'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg'
     report.country = country
     return await this.repo.save(report)
