@@ -230,5 +230,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction)
   @JoinColumn()
   policyBarriers: PolicyBarriers[];
+
+  
   
 }

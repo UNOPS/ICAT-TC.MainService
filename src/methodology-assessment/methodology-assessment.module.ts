@@ -28,6 +28,8 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { User } from 'src/users/entity/user.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { Country } from 'src/country/entity/country.entity';
+import { MethodologyParameters } from './entities/methodologyParameters.entity';
+import { CalcParameters } from './entities/calcParameters.entity';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
@@ -43,6 +45,7 @@ import { Audit } from 'src/audit/entity/audit.entity';
     TokenDetails,
     UsersService,
     EmailNotificationService,
+
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -66,7 +69,8 @@ import { Audit } from 'src/audit/entity/audit.entity';
     AssessmentCategory,
     Objectives,
     AssessmentObjectives,
-    User, UserType, Institution, Country,Audit
+    User, UserType, Institution, Country,Audit,
+    MethodologyParameters,
 
   ])],
   exports: [

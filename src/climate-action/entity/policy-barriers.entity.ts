@@ -6,11 +6,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity({ name: 'policy-barriers' })
 export class PolicyBarriers extends BaseTrackingEntity {
 
-    constructor() {
+ /*    constructor() {
         super();
         this.createdBy = '';
         this.editedBy = '';
-      }
+      } */
 
     @PrimaryGeneratedColumn()
     id: number;

@@ -12,15 +12,21 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   id: number;
 
   @Column()
-  boundraries: string;
+  sectoral_boundary: string;
+
+  @Column()
+  temporal_boundary: string;
+
+  @Column()
+  geographical_boundary: string;
 
   @Column()
   impact_types: string
 
-  @Column()
+  @Column( { type: "varchar",length: 2000 })
   impact_categories: string
 
-  @Column()
+  @Column( { type: "varchar",length: 2000 })
   impact_characteristics: string
 
   @Column()

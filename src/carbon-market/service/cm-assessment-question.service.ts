@@ -47,7 +47,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             let ass_answer = new CMAssessmentAnswer()
             ass_answer.answer = ans
             ass_answer.assessment_question = q_res
-            ass_answer.score = score * ans.score_portion * ans.weight
+            ass_answer.score = score * ans.score_portion/100 * ans.weight/100
   
             answers.push(ass_answer)
           })
@@ -55,7 +55,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           let ass_answer = new CMAssessmentAnswer()
           ass_answer.answer = res.answer
           ass_answer.assessment_question = q_res
-          ass_answer.score = score * res.answer.score_portion * res.answer.weight
+          ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
+
+          console.log("ans: ",ass_answer.score)
   
           answers.push(ass_answer)
         }
@@ -92,7 +94,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       answers.forEach(ans => {
         tc_score += ans.score
       })
-      return tc_score
+      let score = tc_score * 100
+      let res
+      if (score > 70 || score === 70){
+        res =  score + '% - Highly transformational activity'
+      } else if (score > 30 || score === 30 || score < 69 || score === 69){
+        res =  score + '% - Mild/medium transformation potential'
+      } else {
+        res =  score + '% - Low transformation potential'
+      }
+      return {score: res}
     } else {
       return 'No questions found for this assessment'
     }

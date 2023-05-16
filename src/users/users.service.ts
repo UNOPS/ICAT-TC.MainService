@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { count } from 'console';
 import { Repository } from 'typeorm';
@@ -17,6 +17,8 @@ import { Country } from 'src/country/entity/country.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { InstitutionCategory } from 'src/institution/entity/institution.category.entity';
 import { InstitutionType } from 'src/institution/entity/institution.type.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -34,6 +36,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     private configService: ConfigService,
     @InjectRepository(Country)
     private readonly countryRepo: Repository<Country>,
+    private readonly tokenDetails: TokenDetails,
   ) {
     super(repo);
   }
@@ -225,6 +228,32 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findByUserName(userName: string): Promise<User> {
     return await  this.repo.findOne({ where:{username:userName}});
+  }
+
+  @UseGuards(JwtAuthGuard)
+  async userDetailsForAudit() {
+    let countryIdFromTocken: number;
+    let InstitutionIdFromTocken: number;
+    let userNameFromTocken : string;
+    let role : any;
+    [countryIdFromTocken, InstitutionIdFromTocken, userNameFromTocken, role] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.InstitutionId, TokenReqestType.username , TokenReqestType.role])
+   let user = this.findByUserName(userNameFromTocken)
+   console.log("countryIdFromTocken :" ,countryIdFromTocken )
+   console.log("InstitutionIdFromTocken :" ,InstitutionIdFromTocken[0] )
+   console.log("userIdFromTocken :" ,userNameFromTocken )
+   console.log("role :" ,role )
+   let uuId = (await user).userType.id 
+   console.log("userrrr :" ,uuId )
+
+   let userDetails = {
+    countryId : countryIdFromTocken,
+    institutionId : InstitutionIdFromTocken[0],
+    userName : userNameFromTocken,
+    userType : role,
+    uuId : uuId
+   }
+
+   return userDetails
   }
 
   async validateUser(userName: string, password: string): Promise<boolean> {

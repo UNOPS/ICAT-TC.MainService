@@ -7,6 +7,7 @@ import { QuAlityCheckStatus } from "src/quality-check/entity/quality-check-statu
 import { VerificationStatus } from "src/verification/entity/verification-status.entity";
 import { User } from "src/users/entity/user.entity";
 import { MethodologyAssessmentParameters } from "src/methodology-assessment/entities/methodology-assessment-parameters.entity";
+// import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
 @Entity()
 export class Assessment extends BaseTrackingEntity{
 
@@ -75,12 +76,14 @@ export class Assessment extends BaseTrackingEntity{
     @Column({ nullable: true })
     verificationDeadline?: Date;
 
-   @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
-       cascade: false,
-       nullable: true,
-       eager: true,
-     })
-     @JoinColumn()
-     parameters: MethodologyAssessmentParameters[];
+    @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+        cascade: false,
+        nullable: true,
+        eager: true,
+      })
+      @JoinColumn()
+      parameters: MethodologyAssessmentParameters[];
 
 }
+
+
