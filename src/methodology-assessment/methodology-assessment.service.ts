@@ -37,6 +37,10 @@ import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
+import { ParameterRequestDto } from './dto/parameter-request.dto';
+const MainCalURL = 'http://localhost:7100/indicator_calculation';
+import axios from 'axios';
+import { CalculationResults } from './entities/calculationResults.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
  
@@ -63,6 +67,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     @InjectRepository(Objectives) private readonly objectivesRepo: Repository<Objectives>,
     @InjectRepository(AssessmentObjectives) private readonly assessObjRepo: Repository<AssessmentObjectives>,    
     @InjectRepository(MethodologyParameters ) private readonly methParameterRepo: Repository<MethodologyParameters>,
+    @InjectRepository(CalculationResults ) private readonly calculationResultsRepo: Repository<CalculationResults>,
+    
     private userService: UsersService,
     private emaiService: EmailNotificationService
 
@@ -911,13 +917,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       'assessment.climateAction',
       'climateAction',
       'climateAction.id = assessment.climateAction_id'
-    ).where('climateAction.id = :id', {id: climateActionId})
+    ).where("climateAction.id = :id and assessment.assessment_method ='Track 3'", {id: climateActionId})
     .getMany()
   }
 
 
   async findMethbyName(methName:string){
-    let meth = this.methIndicatorRepository.findOneBy({meth_code:methName})
+    let meth = this.methIndicatorRepository.findOneBy({name:methName})
     return meth;
 
   }
@@ -927,16 +933,59 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let data =req.data
     for (let x of data) {
       console.log("data",x)
-      await this.repo
-    .createQueryBuilder()
-    .update(MethodologyAssessmentParameters)
-    .set({ indicatorValue: x.indicatorValue,indicator:x.indicator})
-    .where("assessment_id = :id", { id: req.assessmentId })
-    .andWhere(new Brackets(qb => {
-      qb.where("characteristics_id = :char_id", { char_id: x.id })
-    }))
-    // .andWhere("characteristics_id = :id", { id: x.id })
-    .execute()
+      
+      if(x.indicatorValue && !x.parameter){
+        console.log("data",x)
+        await this.repo
+        .createQueryBuilder()
+        .update(MethodologyAssessmentParameters)
+        .set({ indicatorValue: x.indicatorValue,indicator:x.indicator})
+        .where("assessment_id = :id", { id: req.assessmentId })
+        .andWhere(new Brackets(qb => {
+          qb.where("characteristics_id = :char_id", { char_id: x.id })
+        }))
+        // .andWhere("characteristics_id = :id", { id: x.id })
+        .execute()
+      }
+      if(x.indicator && !x.indicatorValue && x.parameters.length!==0){
+        console.log("data with param",x)
+        let assessID = req.assessmentId
+        let a= await this.assessmentRepository.findOneBy({id:assessID});
+        let meth = x.selectedMethodology
+        let request = new ParameterRequestDto()
+        console.log("meth_code",meth.meth_code)
+        request.equation =meth.meth_code;
+        request.data = x.parameters;
+        let response = await axios.post(MainCalURL + '/calculate', request);
+        console.log("======== response", response.data.result)
+        let indicatorValue:number = response.data.result;
+        for (let paramData of x.parameters) {
+          console.log("pramdata",paramData.id)
+          let  paramResult = new CalculationResults ();
+          
+          paramResult.assessment=a;
+          paramResult.characteristics =x.id;
+          // paramResult.parameter =await this.methParameterRepo.findOneBy({id:paramData.id});
+          paramResult.parameter = paramData.id;
+          paramResult.result= indicatorValue;
+          paramResult.value =paramData.value;
+          paramResult.methodology =x.selectedMethodology;
+          this.calculationResultsRepo.save(paramResult)
+          
+        }
+
+        await this.repo
+        .createQueryBuilder()
+        .update(MethodologyAssessmentParameters)
+        .set({ indicatorValue: indicatorValue,indicator:x.indicator})
+        .where("assessment_id = :id", { id: req.assessmentId })
+        .andWhere(new Brackets(qb => {
+          qb.where("characteristics_id = :char_id", { char_id: x.id })
+        }))
+        // .andWhere("characteristics_id = :id", { id: x.id })
+        .execute()
+      }
+     
       
     }
     return 0;

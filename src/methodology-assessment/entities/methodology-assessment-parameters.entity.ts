@@ -53,8 +53,9 @@ export class MethodologyAssessmentParameters {
     @JoinColumn({ name: 'indicator_id' })
     indicator?: Indicators;
 
-    @Column({ nullable: true })
+    @Column({type: "double", nullable: true })
     indicatorValue: number;
+
     @Column({ nullable: true })
     isCategory: number;
 
@@ -74,9 +75,9 @@ export class MethodologyAssessmentParameters {
     @Column({ type:"mediumtext" ,nullable: true })
     scoreOrInstitutionJusti?: string;
 
-    @Column({ nullable: true, default: false })
+     @Column({ nullable: true, default: false })
     isAcceptedByVerifier: boolean;
-    parameterRequest?: ParameterRequest;
+    parameterRequest?: ParameterRequest; 
 
     @Column({ type: 'double', nullable: true })
     weight : number

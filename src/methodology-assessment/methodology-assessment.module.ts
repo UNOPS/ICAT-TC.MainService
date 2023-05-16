@@ -34,6 +34,7 @@ import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
+import { CalculationResults } from './entities/calculationResults.entity';
 
 
 @Module({
@@ -71,6 +72,7 @@ import { Audit } from 'src/audit/entity/audit.entity';
     AssessmentObjectives,
     User, UserType, Institution, Country,Audit,
     MethodologyParameters,
+    CalculationResults
 
   ])],
   exports: [

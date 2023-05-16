@@ -43,6 +43,7 @@ import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
 import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
+import { Notification } from './notification/notification.entity';
 import { Objectives } from './methodology-assessment/entities/objectives.entity';
 import { Report } from './report/entities/report.entity';
 import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
@@ -61,15 +62,19 @@ export const config: ConnectionOptions = {
   port: 3306,
 
 
+/*  username: 'root',
+ password: 'pradeep123#',
+ database: 'tc-main',   */
 /* username: 'root',
  password: 'pradeep123#',
  database: 'tc-main',  */ 
- username: 'root',
+ /* username: 'root',
  password: '1997',
-  database: 'tc_new', 
-    // username: 'sqluser',
-    // password: 'password',
-    // database: 'tc-main-new3',
+  database: 'tc_new', */ 
+     username: 'sqluser',
+     password: 'password',
+     database: 'tc-main-new3',
+     
   // username: 'root',
   //  database: 'tc-main', 
   //  password: '7860150',  // database: 'tc-main-new3',
@@ -80,7 +85,7 @@ export const config: ConnectionOptions = {
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment],
+ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,

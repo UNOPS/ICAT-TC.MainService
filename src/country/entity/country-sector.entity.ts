@@ -22,11 +22,11 @@ export class CountrySector extends BaseTrackingEntity {
     @ManyToOne(() => Sector, sector => sector.countrysector)
      sector: Sector;
 
-    @Column("countryId")
-    countryId:number;
+    // @Column("countryId")
+    // countryId:number;
 
-    @Column("sectorId")
-    sectorId:number;
+    // @Column("sectorId")
+    // sectorId:number;
 
     @Column()
     @Generated("uuid")

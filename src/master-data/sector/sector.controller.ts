@@ -39,21 +39,29 @@ export class SectorController implements CrudController<Sector> {
     return this;
   }
 
+  @Get('sectorAll')
+  async  findAllSector() :Promise<Sector[]>{
+    return this.service.find();
+  }
   @Override()
   async getMany(
     @ParsedRequest() req: CrudRequest,
     @Request() req2,
   ): Promise<GetManyDefaultResponse<Sector> | Sector[]> {
+    console.log(req);
     try {
+      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
       let res = await this.base.getManyBase(req);
       // console.log('*********************************************');
       // console.log(res);
       // console.log('*********************************************');
       // console.log(req);
+      
       return res;
     } catch (error) {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      console.log(error);
+    
+      console.log(req);
+      // console.log(error);
     }
   }
 
