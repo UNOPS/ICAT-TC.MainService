@@ -128,4 +128,30 @@ export class CMSeedService {
             return "All the answers are saved"
         }
     }
+
+    async updateQuestionSeed() {
+        let response = {}
+        let _questions: CMQuestion[] = []
+        for await (let question of questions){
+            let q = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: question.code}).getOne()
+            if (q){
+                q.message = question.message
+                _questions.push(q)
+            } else {
+                response[question.code] = 'Not found'
+            }
+        }
+
+        if (_questions.length > 0){
+            let res = this.questionRepo.save(_questions)
+            if (res) {
+                return {res: response, status: "saved"}
+            } else { 
+                return {res: response, status: "failed to save"}
+            }
+        }  else {
+            return {res: response, status: "Nothing to save"}
+        }
+        
+    }
 }
