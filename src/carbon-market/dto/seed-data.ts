@@ -277,6 +277,14 @@ export const answers = [
         question: 'S-2-C-1-Q-1'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-1-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-1'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-2-A-1',
         weight: 0,
@@ -293,6 +301,14 @@ export const answers = [
         question: 'S-2-C-1-Q-2'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-2-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-2'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-3-A-1',
         weight: 0,
@@ -303,6 +319,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-1-Q-3-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-3'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-3-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
@@ -325,6 +349,14 @@ export const answers = [
         question: 'S-2-C-1-Q-4'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-4-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-4'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-5-A-1',
         weight: 0,
@@ -338,6 +370,14 @@ export const answers = [
         weight: 0,
         score_portion: 100,
         isPassing: false,
+        question: 'S-2-C-1-Q-5'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-5-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
         question: 'S-2-C-1-Q-5'
     },
     {
@@ -357,6 +397,14 @@ export const answers = [
         question: 'S-2-C-1-Q-6'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-6-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-6'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-2-Q-1-A-1',
         weight: 0,
@@ -367,6 +415,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-2-Q-1-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-2-Q-1'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-2-Q-1-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
@@ -389,6 +445,14 @@ export const answers = [
         question: 'S-2-C-2-Q-2'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-2-Q-2-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-2-Q-2'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-3-Q-1-A-1',
         weight: 0,
@@ -405,6 +469,14 @@ export const answers = [
         question: 'S-2-C-3-Q-1'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-3-Q-1-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-3-Q-1'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-3-Q-2-A-1',
         weight: 0,
@@ -415,6 +487,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-3-Q-2-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-3-Q-2'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-3-Q-2-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
