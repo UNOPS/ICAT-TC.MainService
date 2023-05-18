@@ -123,10 +123,11 @@ export class MethodologyAssessmentController {
     if(methdata.alldata.assessment_approach === 'Direct'){
 
       const response = await axios.post(MainMethURL + '/assessmentDataTrack3', BarrierCharData);
-    console.log("reeesss", response.data)
+    console.log("reeesssaa", response.data)
 
     let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
 
+    console.log("resbb", res)
     this.resData = {
       result: response.data,
       assesId: res
@@ -134,7 +135,7 @@ export class MethodologyAssessmentController {
     //console.log("resData", this.resData)
   
 
-    if(res){
+     if(res){
       let user =  this.userService.userDetailsForAudit()
       console.log("ppppuserr :",(await user).userType )
       let audit2 = {
@@ -152,7 +153,7 @@ export class MethodologyAssessmentController {
     } catch (error) {
         console.log('Error while sending audit log:', error);
     }
-    }
+    } 
 
 
     let result : any = {
@@ -160,6 +161,9 @@ export class MethodologyAssessmentController {
       averageOutcome:  response.data.averageOutcome,
       assessment_id :  res
     }
+
+    console.log("resulttt", result)
+    console.log("resData", this.resData)
      this.methodologyAssessmentService.assessCategory(this.resData)
 
     await this.methodologyAssessmentService.createResults(result)

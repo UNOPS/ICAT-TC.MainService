@@ -24,6 +24,4 @@ export class AssessmentCategory {
     @Column({ type: 'double', nullable: true })
     categoryWeight : number
 
-    
-    
 }
