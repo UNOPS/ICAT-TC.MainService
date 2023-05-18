@@ -22,7 +22,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
 ) {
     super(repo);
   }
-  async postOne(req:ClimateAction){
+  async create(req:ClimateAction){
     await this.repo.save(req)
   }
 

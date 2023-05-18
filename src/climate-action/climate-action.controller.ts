@@ -57,9 +57,9 @@ var multer = require('multer');
       // mappedInstitution: {
       //   eager: true,
       // },
-      // country: {
-      //   eager: true,
-      // },
+      country: {
+        eager: true,
+      },
       mitigationActionType: {
         eager: true,
       },
@@ -108,7 +108,7 @@ export class ProjectController implements CrudController<ClimateAction> {
 
       console.log(dto);
 
-      let newplData = await this.base.createOneBase(req, dto);
+      let newplData = await this.service.create(dto);
 
       return newplData;
     } catch (error) {
@@ -120,9 +120,10 @@ export class ProjectController implements CrudController<ClimateAction> {
     // await this.service.ceateSelfConvertion(dto.unitOfMeasure);
     // await this.service.ceateReverseConvertion(dto);
   }
-  @Post('postOne')
-  async postOneClimateAction(req:ClimateAction){
-    await this.service.postOne(req)
+  @Post('createNewCA')
+  async createNewCA(req:ClimateAction){
+    console.log("req",req)
+    await this.service.create(req)
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 

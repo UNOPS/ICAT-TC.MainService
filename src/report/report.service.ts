@@ -12,6 +12,7 @@ import { Report } from './entities/report.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Country } from 'src/country/entity/country.entity';
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
+import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report>{
@@ -61,7 +62,7 @@ export class ReportService extends TypeOrmCrudService<Report>{
     return coverPage;
   }
 
-  async saveReport(name: string, fileName:string, countryId: number, climateAction: string){
+  async saveReport(name: string, fileName:string, countryId: number, climateAction: ClimateAction){
     let country = await this.countryRepo.createQueryBuilder('country').where('id = :id', {id: countryId}).getOne()
     let report = new Report();
     report.reportName = name;
@@ -70,6 +71,7 @@ export class ReportService extends TypeOrmCrudService<Report>{
     report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail = 'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg'
     report.country = country
+    report.climateAction = climateAction
     return await this.repo.save(report)
   }
 
@@ -78,6 +80,7 @@ export class ReportService extends TypeOrmCrudService<Report>{
     reportName: string,
     countryIdFromTocken: number
   ) {
+    console.log(climateAction)
     let res = [];
     if (!climateAction && !reportName) {
       res = await this.repo.find({
@@ -85,7 +88,9 @@ export class ReportService extends TypeOrmCrudService<Report>{
           country: {id: countryIdFromTocken}
         },
       });
+      console.log("if res", res.length)
     } else {
+      console.log("else")
       res = await this.repo.find({
         where: {
           climateAction: {policyName: Like(`%${climateAction}%`)},
@@ -93,6 +98,15 @@ export class ReportService extends TypeOrmCrudService<Report>{
           country: {id: countryIdFromTocken}
         },
       });
+      // res = await this.repo.createQueryBuilder('report')
+      // .innerJoin(
+      //   'report.climateAction',
+      //   'ca',
+      //   'ca.id = report.climateActionId'
+      // )
+      // .where('ca.policyName = :name AND', {name: climateAction})
+      // .getMany()
+      console.log("res", res)
     }
 
     //console.log("===== get file data ndcNameId",sectorname);

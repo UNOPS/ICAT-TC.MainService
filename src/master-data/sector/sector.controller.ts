@@ -56,6 +56,7 @@ export class SectorController implements CrudController<Sector> {
       // console.log(res);
       // console.log('*********************************************');
       // console.log(req);
+      
       return res;
     } catch (error) {
     
