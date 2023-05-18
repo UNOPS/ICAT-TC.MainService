@@ -43,6 +43,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       investor.assessment = assessment;
       investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
       investor.level_of_implemetation = createInvestorToolDto.investortool.level_of_implemetation;
+      investor.national_country = createInvestorToolDto.investortool?.national_country;
+      investor.subnational_region = createInvestorToolDto.investortool?.subnational_region;
       let result = await this.repo.save(investor)
       console.log("result", result)
       if (createInvestorToolDto)
