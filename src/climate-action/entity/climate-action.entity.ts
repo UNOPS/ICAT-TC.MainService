@@ -230,6 +230,48 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn()
   policyBarriers: PolicyBarriers[];
 
+
+  // new fields (2023/05/17)
+
+  @Column({ default: null , nullable: true})
+  intervention_id: string;
+
+  @Column({ default: null , nullable: true})
+  levelofImplemenation: string;
+
+  @Column({ default: null })
+  dateOfImplementation: Date;
+
+  @Column({ default: null })
+  dateOfCompletion: Date;
+
+  //vision for design
+  @Column({ length: 500, default: null, nullable: true })
+  vision_long: string;
+
+  @Column({ length: 500, default: null, nullable: true })
+  vision_medium: string;
+
+  @Column({ length: 500, default: null, nullable: true })
+  vision_short: string;
+
+  //location
+
+  @Column({ length: 100, default: null, nullable: true })
+  location_country: string;
+
+  //bottom
+  @Column({ length: 500, default: null, nullable: true })
+  related_policies: string;
+
+  @Column({ length: 500, default: null, nullable: true })
+  reference: string;
+
+
+
+
+
+
   
   
 }
