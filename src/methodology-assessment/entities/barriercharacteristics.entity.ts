@@ -44,3 +44,4 @@ export class BarriersCharacteristics {
     barrier_target : string;
 }
 
+
