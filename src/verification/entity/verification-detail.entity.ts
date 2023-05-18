@@ -14,7 +14,7 @@ import { VerificationStatus } from './verification-status.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 
-@Entity({ name: 'verificationDetail' })
+@Entity({ name: 'verificationdetail' })
 export class VerificationDetail extends BaseTrackingEntity {
   constructor() {
     super();
