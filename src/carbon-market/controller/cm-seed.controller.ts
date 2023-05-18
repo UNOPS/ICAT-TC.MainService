@@ -32,4 +32,9 @@ export class CMSeedController {
     async updateQuestionSeed(){
         return await this.service.updateQuestionSeed()
     }
+
+    @Post('update-answer-seed')
+    async updateAnswerSeed(){
+        return await this.service.updateAnswerSeed()
+    }
 }

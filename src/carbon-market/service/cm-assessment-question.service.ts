@@ -103,11 +103,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let score = tc_score * 100
       let res
       if (score > 70 || score === 70){
-        res =  score + '% - Highly transformational activity'
+        res =  score.toFixed(3) + '% - Highly transformational activity'
       } else if (score > 30 || score === 30 || score < 69 || score === 69){
-        res =  score + '% - Mild/medium transformation potential'
+        res =  score.toFixed(3) + '% - Mild/medium transformation potential'
       } else {
-        res =  score + '% - Low transformation potential'
+        res =  score.toFixed(3) + '% - Low transformation potential'
       }
       return {score: res}
     } else {
