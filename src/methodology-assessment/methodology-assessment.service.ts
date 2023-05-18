@@ -308,17 +308,19 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       let assess = new Assessment();
       assess.id = assessementId
     
+      let cha = new Characteristics()
+      cha.id = barrierCharacteristic.chaId
       obj.assessment = assess
       obj.barriers = barrierdata
-      obj.characteristics = barrierCharacteristic.chaId
-      obj.barrier_score = barrierCharacteristic.barrierScore
+      obj.characteristics = cha
+      obj.barrier_score = Number(barrierCharacteristic.barrierScore)
       obj.barrier_target = barrierCharacteristic.barrierTarget
       obj.bscore_comment = barrierCharacteristic.barrierComment
       obj.barrier_weight = barrierCharacteristic.barrierWeight
       obj.bweight_comment = barrierCharacteristic.bWeightComment
       obj.institution = barrierCharacteristic.barrierScoreInstitution
 
-      await this.barrierCharacterRepo.save(obj);
+     await this.barrierCharacterRepo.save(obj);
      }
 
 
@@ -340,12 +342,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.institution = categoryData.categoryInstitution
       dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
       dataForCategory.fileName = categoryData.categoryFile
-      dataForCategory.weight = categoryData.categoryWeight
+      dataForCategory.weight = Number(categoryData.categoryWeight)
      
      // category.categoryScore = categoryData.categoryScore;
      // console.log("Category: ", category);
   
      if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
+      console.log("bbbb",dataForCategory)
       await this.repo.save(dataForCategory);
     }
       for (let characteristic of categoryData.characteristics) {
@@ -368,11 +371,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.scoreOrInstitutionJusti = characteristic.comment;
         data.isCategory = 0;
         data.institution = characteristic.institution;
-        data.weight = characteristic.weight,
+        data.weight = Number(characteristic.weight),
         data.chaDescription = characteristic.chaDescription;
         data.chaRelJustification = characteristic.chaRelJustification;
+        
       //  console.log("Data: ", data);
   
+      console.log("kkkk",data)
        await this.repo.save(data);
       }
     
