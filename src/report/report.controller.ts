@@ -80,11 +80,10 @@ export class ReportController {
   @UseGuards(JwtAuthGuard )
   @Post('generate-report')
   async generateReport(
-    @Body() req: CreateReportDto,
-    @Response() res
+    @Body() req: CreateReportDto
   ): Promise<any> {
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline;filename=yolo.pdf');
+    // res.setHeader('Content-Type', 'application/pdf');
+    // res.setHeader('Content-Disposition', 'inline;filename=yolo.pdf');
     let countryIdFromTocken: number
     [countryIdFromTocken] =
       this.tokenDetails.getDetails([
@@ -102,8 +101,10 @@ export class ReportController {
       reprtDto.reportName,
       await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
     )
-    this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction.policyName)
-    res.send(report)
+    let response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+    console.log(response)
+    // res.send(report)
+    return response
   }
 
   @UseGuards(JwtAuthGuard )

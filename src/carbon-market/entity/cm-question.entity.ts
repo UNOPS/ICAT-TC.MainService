@@ -23,6 +23,9 @@ export class CMQuestion extends BaseTrackingEntity {
   @Column()
   order: number
 
+  @Column( { type: "varchar",length: 10000, default: '' })
+  message: string
+
   @ManyToOne((type) => Criteria, { eager: true}) 
   @JoinColumn()
   criteria: Criteria; 
