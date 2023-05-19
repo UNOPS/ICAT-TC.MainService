@@ -319,7 +319,7 @@ export class InstitutionController implements CrudController<Institution> {
    
   }
 
-  // @UseGuards(JwtAuthGuard)
+   @UseGuards(JwtAuthGuard)
   @Get('getInstitutionForManageUsers')
   async getInstitutionForManageUsers(
     @Request() request,

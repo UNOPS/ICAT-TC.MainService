@@ -163,6 +163,8 @@ export class CMSeedService {
             let a = await this.answerRepo.createQueryBuilder('an').where('an.code = :code', {code: ans.code}).getOne()
             if (a){
                 a.label = ans.label
+                a.score_portion = ans.score_portion
+                a.weight = ans.weight
                 _answers.push(a)
             } else {
                 response[ans.code] = 'Not found'

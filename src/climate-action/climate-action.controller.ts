@@ -126,7 +126,7 @@ export class ProjectController implements CrudController<ClimateAction> {
     console.log("req",req)
     await this.service.create(req)
   }
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+ // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
   @Get('findAllPolicies')
 async findAllPolicies() {
