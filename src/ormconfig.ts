@@ -88,7 +88,7 @@ Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessm
 ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: true,
+  synchronize: false,
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
