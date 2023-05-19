@@ -78,7 +78,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-1',
-        message: 'Test'
+        message: 'The activity is not additional, will result in “hot air” and undermine the country’s NDC, clearly not enabling transformational change'
     },
     {
         label: 'Q2: Is the Article 6 activity financially additional?',
@@ -86,7 +86,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-1',
-        message: ''
+        message: 'The activity cannot be considered additional, clearly not enabling transformational change.'
     },
     {
         label: 'Q3: Does the envisaged Article 6 activity occur entirely outside the scope of the country’s NDC, meaning both its conditional and unconditional NDC targets? ',
@@ -94,7 +94,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 3,
         criteria: 'S-2-CRITERIA-1',
-        message: ''
+        message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
     },
     {
         label: 'Q4: Does the envisaged Article 6 activity involve emission reductions or removals that are not included in the GHG inventory used to assess unconditional NDC progress?',
@@ -102,7 +102,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 4,
         criteria: 'S-2-CRITERIA-1',
-        message: ''
+        message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
     },
     {
         label: 'Q5: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target? ',
@@ -110,7 +110,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 5,
         criteria: 'S-2-CRITERIA-1',
-        message: ''
+        message: 'The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition.'
     },
     {
         label: 'Q6: Does the Article 6 activity feature on the host country’s positive list or has the host country stated its intention to promote the envisaged activity type?',
@@ -118,7 +118,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 6,
         criteria: 'S-2-CRITERIA-1',
-        message: ''
+        message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
     },
     {
         label: 'Q1: Is the activity listed on any negative list adopted by the host country? ',
@@ -126,7 +126,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-2',
-        message: ''
+        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
         label: 'Q2: Is the activity in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ',
@@ -134,7 +134,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-2',
-        message: ''
+        message: 'The Article 6 activity should not be implemented, as it cannot be ensured that emissions lock-in is avoided.'
     },
     {
         label: 'Q1: Does the implementation of the Article 6 activity result in any negative environmental impacts (i.e., release of pollutants or unmanaged waste, increased GHG emissions, introduction of genetically modified organisms, etc.)?  ',
@@ -142,7 +142,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-3',
-        message: ''
+        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
         label: 'Q2: Does the implementation of the Article 6 activity result in any negative social impacts (i.e. displacement, forced evictions, violation of rights of indigenous people and local communities, damage or alteration of cultural heritage sites, etc.)? ',
@@ -150,7 +150,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-3',
-        message: ''
+        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies? ',
@@ -277,6 +277,14 @@ export const answers = [
         question: 'S-2-C-1-Q-1'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-1-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-1'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-2-A-1',
         weight: 0,
@@ -293,6 +301,14 @@ export const answers = [
         question: 'S-2-C-1-Q-2'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-2-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-2'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-3-A-1',
         weight: 0,
@@ -303,6 +319,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-1-Q-3-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-3'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-3-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
@@ -325,6 +349,14 @@ export const answers = [
         question: 'S-2-C-1-Q-4'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-4-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-4'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-1-Q-5-A-1',
         weight: 0,
@@ -338,6 +370,14 @@ export const answers = [
         weight: 0,
         score_portion: 100,
         isPassing: false,
+        question: 'S-2-C-1-Q-5'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-5-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
         question: 'S-2-C-1-Q-5'
     },
     {
@@ -357,6 +397,14 @@ export const answers = [
         question: 'S-2-C-1-Q-6'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-1-Q-6-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-1-Q-6'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-2-Q-1-A-1',
         weight: 0,
@@ -367,6 +415,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-2-Q-1-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-2-Q-1'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-2-Q-1-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
@@ -389,6 +445,14 @@ export const answers = [
         question: 'S-2-C-2-Q-2'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-2-Q-2-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-2-Q-2'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-3-Q-1-A-1',
         weight: 0,
@@ -405,6 +469,14 @@ export const answers = [
         question: 'S-2-C-3-Q-1'
     },
     {
+        label: 'Not sure',
+        code: 'S-2-C-3-Q-1-A-3',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-3-Q-1'
+    },
+    {
         label: 'Yes',
         code: 'S-2-C-3-Q-2-A-1',
         weight: 0,
@@ -415,6 +487,14 @@ export const answers = [
     {
         label: 'No',
         code: 'S-2-C-3-Q-2-A-2',
+        weight: 0,
+        score_portion: 100,
+        isPassing: true,
+        question: 'S-2-C-3-Q-2'
+    },
+    {
+        label: 'Not sure',
+        code: 'S-2-C-3-Q-2-A-3',
         weight: 0,
         score_portion: 100,
         isPassing: true,
@@ -485,7 +565,7 @@ export const answers = [
         question: 'S-3-C-2-Q-1'
     },
     {
-        label: 'Yes, the project contributes significantly to at least 1 SDG',
+        label: 'Yes, the project makes at least minor contributions to multiple SDGs',
         code: 'S-3-C-2-Q-1-A-3',
         weight: 10,
         score_portion: 50,
