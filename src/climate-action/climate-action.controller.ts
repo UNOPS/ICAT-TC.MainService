@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -92,13 +92,14 @@ export class ProjectController implements CrudController<ClimateAction> {
     return this;
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
-  @Override()
+  // @Override()
   @Post('createOne')
   async createOne(
-    @Request() request,
-    @ParsedRequest() req: CrudRequest,
-    @ParsedBody() dto: ClimateAction,
-  ) {
+    // @Request() request,
+    // @ParsedRequest() req: CrudRequest,
+    // @ParsedBody() 
+    dto: ClimateAction,
+  ): Promise<ClimateAction>{
     try {
       console.log(
         '-----------------------------------------------------------',
@@ -133,6 +134,12 @@ async findAllPolicies() {
   console.log("aaaaa",policies)
   return policies;
 }
+@Get('getIntervention')
+async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
+  let  intervention = await this.service.getIntervention(id);
+  console.log("aaaaa",intervention)
+  return intervention;
+  }
 
 
   @Get(
@@ -365,7 +372,7 @@ async findAllPolicies() {
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Post("policybar")
   async policyBar(@Body() req:PolicyBarriers[]){
-    this.service.save(req);
+   return await this.service.save(req);
   }
 
   

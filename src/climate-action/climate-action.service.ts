@@ -22,8 +22,10 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
 ) {
     super(repo);
   }
-  async create(req:ClimateAction){
-    await this.repo.save(req)
+  async create(req:ClimateAction):Promise<ClimateAction>{
+    console.log( "req",req)
+    return await this.repo.save(req)
+     
   }
 
   async getProjectDetails(  
@@ -101,8 +103,10 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
   }
 async save(req:PolicyBarriers[]){
   for(let re of req){
-    this.PolicyBarriersRepo.save(re);
+    console.log("barrier", re)
+    await this.PolicyBarriersRepo.save(re);
   }
+  return req;
 }
 
 
@@ -129,6 +133,15 @@ async allProject(
       console.log("bbbb",policies)
 
     return policies;
+  }
+
+  async getIntervention(id:number):Promise<ClimateAction> {
+    const policy = await this.repo
+          .createQueryBuilder("intervetion")
+          .where("intervetion.id = :id", { id: id })
+          .getOne()
+
+    return policy;
   }
   
 
