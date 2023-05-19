@@ -62,7 +62,7 @@ export class User extends BaseTrackingEntity {
   @Column()
   mobile: string;
 
-  @Column({default: true})
+  @Column({nullable: true})
   admin: string; // added by
 
   // @Column({ nullable: true })
@@ -84,7 +84,7 @@ export class User extends BaseTrackingEntity {
   @Column()
   resetToken: string;
 
-  @Column()
+  @Column({nullable: true})
   loginProfile: string;
 
   @DeleteDateColumn()

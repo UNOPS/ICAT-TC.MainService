@@ -40,7 +40,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
-        '(dr.climateActionName LIKE :filterText OR dr.contactPersoFullName LIKE :filterText OR sec.name LIKE :filterText OR mit.name LIKE :filterText OR pst.name LIKE :filterText OR dr.editedOn LIKE :filterText)';
+        '(dr.policyName LIKE :filterText OR dr.contactPersoFullName LIKE :filterText OR sec.name LIKE :filterText OR mit.name LIKE :filterText OR pst.name LIKE :filterText OR dr.editedOn LIKE :filterText)';
     }
 
     if (sectorId != 0) {
@@ -122,15 +122,11 @@ async allProject(
 
 
   async findAllPolicies(): Promise<ClimateAction[]> {
-    const policies = await this.repo.createQueryBuilder('climateAction')
-      .select(['climateAction.id', 'climateAction.policyName'])
-      .getMany();
-
-      console.log("bbbb",policies)
-
-    return policies;
+      return this.repo.find({
+        relations: [],
+      });
   }
-  
+
 
   async getAllCAList(
     options: IPaginationOptions,
@@ -145,7 +141,7 @@ async allProject(
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(dr.climateActionName LIKE :filterText OR asse.assessmentType LIKE :filterText OR para.AssessmentYear LIKE :filterText OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
+        '(dr.policyName LIKE :filterText  LIKE :filterText OR para.AssessmentYear LIKE :filterText OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
     }
    // console.log("hello");
     if (projectStatusId != 0) {
@@ -261,7 +257,7 @@ async allProject(
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(dr.climateActionName LIKE :filterText  OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
+        '(dr.policyName LIKE :filterText  OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
     }
 
     if (projectStatusId !=0) {
