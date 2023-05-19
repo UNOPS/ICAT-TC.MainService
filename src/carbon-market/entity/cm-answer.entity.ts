@@ -1,5 +1,5 @@
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CMQuestion } from './cm-question.entity';
 
 
@@ -15,10 +15,10 @@ export class CMAnswer extends BaseTrackingEntity {
   @Column()
   code: string;
 
-  @Column({default: 0})
+  @Column({default: 0, type: "double"})
   weight: number
 
-  @Column({default: 100})
+  @Column({default: 100, type: "double"})
   score_portion: number
 
   @Column({default: true})
