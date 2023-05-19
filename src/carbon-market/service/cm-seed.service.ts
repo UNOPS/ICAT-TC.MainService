@@ -136,6 +136,7 @@ export class CMSeedService {
             let q = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: question.code}).getOne()
             if (q){
                 q.message = question.message
+                q.label = question.label
                 _questions.push(q)
             } else {
                 response[question.code] = 'Not found'
@@ -144,6 +145,32 @@ export class CMSeedService {
 
         if (_questions.length > 0){
             let res = this.questionRepo.save(_questions)
+            if (res) {
+                return {res: response, status: "saved"}
+            } else { 
+                return {res: response, status: "failed to save"}
+            }
+        }  else {
+            return {res: response, status: "Nothing to save"}
+        }
+        
+    }
+
+    async updateAnswerSeed() {
+        let response = {}
+        let _answers: CMAnswer[] = []
+        for await (let ans of answers){
+            let a = await this.answerRepo.createQueryBuilder('an').where('an.code = :code', {code: ans.code}).getOne()
+            if (a){
+                a.label = ans.label
+                _answers.push(a)
+            } else {
+                response[ans.code] = 'Not found'
+            }
+        }
+
+        if (_answers.length > 0){
+            let res = this.answerRepo.save(_answers)
             if (res) {
                 return {res: response, status: "saved"}
             } else { 
