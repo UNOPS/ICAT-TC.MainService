@@ -21,6 +21,7 @@ import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { PolicySector } from './entity/policy-sectors.entity';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -375,6 +376,14 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
    return await this.service.save(req);
   }
 
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  @Post("policySectors")
+  async policySectors(@Body() req:PolicySector[]){
+   return await this.service.savepolicySectors(req);
+  }
+
+  
+
   
   // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('allProjectApprove')
@@ -395,7 +404,15 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
  
+  @Get('findPolicySectorData/:policyID')
+  async findPolicySectorData(@Param('policyID') policyID: number) {
+    return await this.service.findPolicySectorData(policyID);
+  }
 
+  @Get('findPolicyBarrierData/:policyID')
+  async findPolicyBarrierData(@Param('policyID') policyID: number) {
+    return await this.service.findPolicyBarrierData(policyID);
+  }
   
 }
 
