@@ -12,18 +12,22 @@ import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/p
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { PolicySector } from './entity/policy-sectors.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
+ 
   constructor(
     @InjectRepository(ClimateAction) repo,
-    @InjectRepository(PolicyBarriers)
-    public PolicyBarriersRepo: Repository<PolicyBarriers>,
+    @InjectRepository(PolicyBarriers) public PolicyBarriersRepo: Repository<PolicyBarriers>,
+    @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
 ) {
     super(repo);
   }
-  async create(req:ClimateAction){
-    await this.repo.save(req)
+  async create(req:ClimateAction):Promise<ClimateAction>{
+    console.log( "req",req)
+    return await this.repo.save(req)
+     
   }
 
   async getProjectDetails(  
@@ -101,9 +105,20 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
   }
 async save(req:PolicyBarriers[]){
   for(let re of req){
-    this.PolicyBarriersRepo.save(re);
+    console.log("barrier", re)
+    await this.PolicyBarriersRepo.save(re);
   }
+  return req;
 }
+
+async savepolicySectors(req:PolicySector[]){
+  for(let re of req){
+    console.log("sector", re)
+    await this.PolicySectorsRepo.save(re);
+  }
+  return req;
+}
+
 
 
 async allProject(
@@ -127,6 +142,15 @@ async allProject(
       });
   }
 
+  async getIntervention(id:number):Promise<ClimateAction> {
+    const policy = await this.repo
+          .createQueryBuilder("intervetion")
+          .where("intervetion.id = :id", { id: id })
+          .getOne()
+
+    return policy;
+  }
+  
 
   async getAllCAList(
     options: IPaginationOptions,
@@ -373,7 +397,19 @@ async allProject(
     }
   }
 
-
+  async findPolicySectorData(policyID: number){
+    return this.PolicySectorsRepo.find({
+      relations: ['sector'],
+      where: { intervention: { id: policyID } },
+    });
+  }
+  
+  async findPolicyBarrierData(policyID: number){
+    return this.PolicyBarriersRepo.find({
+      relations: ['barriers','characteristics'],
+      where: { climateAction: { id: policyID } },
+    });
+  }
   
 
 

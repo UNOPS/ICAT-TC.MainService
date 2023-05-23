@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -21,6 +21,7 @@ import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { PolicySector } from './entity/policy-sectors.entity';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -92,13 +93,14 @@ export class ProjectController implements CrudController<ClimateAction> {
     return this;
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
-  @Override()
+  // @Override()
   @Post('createOne')
   async createOne(
-    @Request() request,
-    @ParsedRequest() req: CrudRequest,
-    @ParsedBody() dto: ClimateAction,
-  ) {
+    // @Request() request,
+    // @ParsedRequest() req: CrudRequest,
+    // @ParsedBody() 
+    dto: ClimateAction,
+  ): Promise<ClimateAction>{
     try {
       console.log(
         '-----------------------------------------------------------',
@@ -133,6 +135,12 @@ async findAllPolicies() {
   console.log("aaaaa",policies)
   return policies;
 }
+@Get('getIntervention')
+async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
+  let  intervention = await this.service.getIntervention(id);
+  console.log("aaaaa",intervention)
+  return intervention;
+  }
 
 
   @Get(
@@ -365,8 +373,16 @@ async findAllPolicies() {
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Post("policybar")
   async policyBar(@Body() req:PolicyBarriers[]){
-    this.service.save(req);
+   return await this.service.save(req);
   }
+
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  @Post("policySectors")
+  async policySectors(@Body() req:PolicySector[]){
+   return await this.service.savepolicySectors(req);
+  }
+
+  
 
   
   // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
@@ -388,7 +404,15 @@ async findAllPolicies() {
   }
 
  
+  @Get('findPolicySectorData/:policyID')
+  async findPolicySectorData(@Param('policyID') policyID: number) {
+    return await this.service.findPolicySectorData(policyID);
+  }
 
+  @Get('findPolicyBarrierData/:policyID')
+  async findPolicyBarrierData(@Param('policyID') policyID: number) {
+    return await this.service.findPolicyBarrierData(policyID);
+  }
   
 }
 

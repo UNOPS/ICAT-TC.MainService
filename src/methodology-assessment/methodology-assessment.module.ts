@@ -35,6 +35,7 @@ import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
 import { CalculationResults } from './entities/calculationResults.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 
 
 @Module({
@@ -72,7 +73,8 @@ import { CalculationResults } from './entities/calculationResults.entity';
     AssessmentObjectives,
     User, UserType, Institution, Country,Audit,
     MethodologyParameters,
-    CalculationResults
+    CalculationResults,
+    PolicySector
 
   ])],
   exports: [
