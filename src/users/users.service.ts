@@ -390,7 +390,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     if(filterText != null && filterText != undefined && filterText != ''){
       filter = 
-      '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText OR user.telephone LIKE :filterText OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
+      '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText  OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
     }
 
     if(userTypeId !=0){
