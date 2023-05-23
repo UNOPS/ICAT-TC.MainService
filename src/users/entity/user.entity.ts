@@ -52,7 +52,7 @@ export class User extends BaseTrackingEntity {
   @Column({ unique: true })
   username: string;
 
-  @ManyToOne((type) => Institution, { eager: false })
+  @ManyToOne((type) => Institution, { eager: true })
   @JoinColumn()
   institution: Institution;
 
