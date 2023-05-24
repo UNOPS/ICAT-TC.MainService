@@ -47,6 +47,7 @@ import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
       country: {
         eager: true,
       },
+      
     },
 
     // this works
@@ -204,7 +205,7 @@ export class UsersController implements CrudController<User> {
   @Override()
   async getMany(@ParsedRequest() req: CrudRequest, @Request() req2) {
     
-    
+    console.log("======",req)
     console.log(req.parsed.filter.length, req.parsed.search['$and'][0]);
 
     let userList = await this.base.getManyBase(req);

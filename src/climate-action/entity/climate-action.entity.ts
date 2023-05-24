@@ -223,8 +223,9 @@ export class ClimateAction extends BaseTrackingEntity {
   
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
+  
   @Column({ length: 500, default: null, nullable: true })
-  justification: string;
+  actionJustification: string;
 
   @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction)
   @JoinColumn()
@@ -266,6 +267,19 @@ export class ClimateAction extends BaseTrackingEntity {
 
   @Column({ length: 500, default: null, nullable: true })
   reference: string;
+
+  @Column({type: 'int', nullable: true,})
+  likelyhood: number;
+
+  @Column({type: 'int', nullable: true,})
+  politicalPreference: number;
+  
+  @Column({type: 'int', nullable: true,})
+  financialFecialbility: number;
+  
+  @Column({type: 'int', nullable: true,})
+  availabilityOfTechnology: number;
+  
 
 
 
