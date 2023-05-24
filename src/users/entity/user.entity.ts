@@ -77,11 +77,11 @@ export class User extends BaseTrackingEntity {
   salt: string;
 
   @Exclude()
-  @Column()
+  @Column({default: null, nullable: true })
   password: string;
 
   @Exclude()
-  @Column()
+  @Column({default: null, nullable: true })
   resetToken: string;
 
   @Column({nullable: true})
