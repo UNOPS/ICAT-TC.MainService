@@ -370,7 +370,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
         filter = `${filter}  and ins.countryId = :countryIdFromTocken`;
       } else {
-        console.log('yyyyyyyyyyyyyyyyy')
+        console.log('yyyyyyyyyyyyyyyyyuuuyy')
 
         filter = `ins.countryId = :countryIdFromTocken`;
       }
