@@ -65,12 +65,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           answers.push(ass_answer)
         }
         a_ans = await this.assessmentAnswerRepo.save(answers)
-        let result = new Results()
+      /*   let result = new Results()
         result.assessment = assessment;
-        await this.resultsRepo.save(result)
+        await this.resultsRepo.save(result)  */
       }
 
     }
+
+    let resultObj = new Results()
+    resultObj.assessment = assessment;
+    await this.resultsRepo.save(resultObj) 
     return a_ans
   }
 
