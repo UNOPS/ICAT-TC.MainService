@@ -283,41 +283,41 @@ export class InstitutionController implements CrudController<Institution> {
     }
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
-  @Override()
-  async updateOne(
-    @Request() request,
-    @ParsedRequest() req: CrudRequest,
-    @ParsedBody() dto: Institution,
-  ): Promise<Institution> {
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+  // @Override()
+  // async updateOne(
+  //   @Request() request,
+  //   @ParsedRequest() req: CrudRequest,
+  //   @ParsedBody() dto: Institution,
+  // ): Promise<Institution> {
+  //   console.log("request",dto)
+  //   const queryRunner = getConnection().createQueryRunner();
+  //   await queryRunner.startTransaction();
 
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.startTransaction();
-
-    try {
-      dto.editedOn= new Date()
-      let updateInstitution= await queryRunner.manager.save(Institution,dto);
-      if (updateInstitution.status == 0) {
-        let audit: AuditDto = new AuditDto();
-        audit.action = updateInstitution.name + ' Institution Updated';
-        audit.comment = 'Institution Updated';
-        audit.actionStatus = 'Updated';
-        // this.auditService.create(audit);
-        console.log('Institution Updated');
-      }
-      await queryRunner.commitTransaction();
-      return updateInstitution;
-    }
-    catch (err) {
-      console.log("worktran2")
-      console.log(err);
-      await queryRunner.rollbackTransaction();
-      return err;
-    } finally {
-      await queryRunner.release();
-    }
+  //   try {
+  //     dto.editedOn= new Date()
+  //     let updateInstitution= await queryRunner.manager.save(Institution,dto);
+  //     if (updateInstitution.status == 0) {
+  //       let audit: AuditDto = new AuditDto();
+  //       audit.action = updateInstitution.name + ' Institution Updated';
+  //       audit.comment = 'Institution Updated';
+  //       audit.actionStatus = 'Updated';
+  //       // this.auditService.create(audit);
+  //       console.log('Institution Updated');
+  //     }
+  //     await queryRunner.commitTransaction();
+  //     return updateInstitution;
+  //   }
+  //   catch (err) {
+  //     console.log("worktran2")
+  //     console.log(err);
+  //     await queryRunner.rollbackTransaction();
+  //     return err;
+  //   } finally {
+  //     await queryRunner.release();
+  //   }
    
-  }
+  // }
 
    @UseGuards(JwtAuthGuard)
   @Get('getInstitutionForManageUsers')
