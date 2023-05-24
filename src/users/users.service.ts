@@ -109,18 +109,18 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
     newUser.userType = userType;
-    newUser.password = createUserDto.password;
+    // newUser.password = createUserDto.password;
     newUser.institution = createUserDto.institution;
     // newUser.salt = createUserDto.salt;
     newUser.loginProfile = createUserDto.loginProfile;
     newUser.admin = ''
     let newUUID = uuidv4();
-    let newPassword = ('' + newUUID).substr(0, 6);
+    let newPassword = createUserDto.password;
     // createUserDto.password = newPassword;
-    // newUser.password = await this.hashPassword(
-    //   createUserDto.password,
-    //   newUser.salt,
-    // );
+    newUser.password = await this.hashPassword(
+      newPassword,
+      newUser.salt,
+    );
     newUser.resetToken = '';
 
     var newUserDb = await this.repo.save(newUser);
@@ -135,27 +135,27 @@ export class UsersService extends TypeOrmCrudService<User> {
       systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
     }
 
-    var template =
-      'Dear ' +
-      newUserDb.firstName +
-      ' ' +
-      newUserDb.lastName +
-      ' <br/>Your username is ' +
-      newUserDb.email +
-      ' and your login password is : ' +
-      newUser.password +
-      ' <br/>System login url is' + ' <a href="' + systemLoginUrl + '">' + systemLoginUrl + '</a>' +
-      '<br/>' +
-      '<br/>Best regards' +
-      '<br/>Software support team';
+    // var template =
+    //   'Dear ' +
+    //   newUserDb.firstName +
+    //   ' ' +
+    //   newUserDb.lastName +
+    //   ' <br/>Your username is ' +
+    //   newUserDb.email +
+    //   ' and your login password is : ' +
+    //   newUser.password +
+    //   ' <br/>System login url is' + ' <a href="' + systemLoginUrl + '">' + systemLoginUrl + '</a>' +
+    //   '<br/>' +
+    //   '<br/>Best regards' +
+    //   '<br/>Software support team';
 
     // sned email with new password
-    this.emaiService.sendMail(
-      newUserDb.email,
-      'Your credentials for ICAT system',
-      '',
-      template,
-    );
+    // this.emaiService.sendMail(
+    //   newUserDb.email,
+    //   'Your credentials for ICAT system',
+    //   '',
+    //   template,
+    // );
 
     // newUserDb.password = '';
     // newUserDb.salt = '';
