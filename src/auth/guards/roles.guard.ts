@@ -39,6 +39,8 @@ export function RoleGuard(roles?: LoginRole[]): Type<CanActivate>{
         }
      
       // return user.user.roles.includes(role);
+      console.log("++++++++++++++",user.user.role.code)
+      return user.user.role.code
       return  user.user.role.some(r=> roles.includes(r)) ;
     }
   }
