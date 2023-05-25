@@ -165,7 +165,7 @@ async allProject(
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(dr.policyName LIKE :filterText   OR dr.contactPersonDesignation LIKE :filterText OR dr.email LIKE :filterText )';
+        '(dr.policyName LIKE :filterText OR pas.description LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText OR dr.projectStatus LIKE :filterText  OR dr.contactPersonDesignation LIKE :filterText OR dr.email LIKE :filterText )';
     }
    // console.log("hello");
     if (projectStatusId != 0) {
@@ -229,7 +229,10 @@ async allProject(
         ProjectApprovalStatus,
         'pas',
         'pas.id = dr.projectApprovalStatusId',
+        
+
       )
+      
       
     /* 
       .leftJoinAndMapMany(
