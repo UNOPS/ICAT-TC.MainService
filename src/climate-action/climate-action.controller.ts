@@ -156,7 +156,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
-    console.log("heelo controler");
+    console.log("heelo controler",page,limit,filterText,projectStatusId,projectApprovalStatusId,countryId,sectorId);
 
     return await this.service.getAllCAList(
       {
