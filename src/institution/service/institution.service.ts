@@ -194,7 +194,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         //status
       })
       .orderBy('ins.status', 'ASC')
-      .groupBy('ins.id');
+      // .groupBy('ins.id');
     // .addOrderBy('ins.createdOn','DESC')
     // console.log('data........',data)
     // console.log('data////////',data)
