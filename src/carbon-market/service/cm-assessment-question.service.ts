@@ -7,6 +7,7 @@ import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
 import { Results } from "src/methodology-assessment/entities/results.entity";
+import { Approach } from "../enum/answer-type.enum";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -45,24 +46,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let answers = []
 
       if (res.answer){
-        if (Array.isArray(res.answer)) {
-          res.answer.forEach(async ans => {
-            let ass_answer = new CMAssessmentAnswer()
-            ass_answer.answer = ans
-            ass_answer.assessment_question = q_res
-            ass_answer.score = score * ans.score_portion/100 * ans.weight/100
-  
-            answers.push(ass_answer)
-          })
-        } else {
+        if (res.type === 'INDIRECT'){
           let ass_answer = new CMAssessmentAnswer()
-          ass_answer.answer = res.answer
+          ass_answer.institution = res.institution
           ass_answer.assessment_question = q_res
-          ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
-
-          console.log("ans: ",ass_answer.score)
+          ass_answer.approach = Approach.INDIRECT
+        } else {
+          if (Array.isArray(res.answer)) {
+            res.answer.forEach(async ans => {
+              let ass_answer = new CMAssessmentAnswer()
+              ass_answer.answer = ans
+              ass_answer.assessment_question = q_res
+              ass_answer.score = score * ans.score_portion/100 * ans.weight/100
+              ass_answer.approach = Approach.DIRECT
+    
+              answers.push(ass_answer)
+            })
+          } else {
+            let ass_answer = new CMAssessmentAnswer()
+            ass_answer.answer = res.answer
+            ass_answer.assessment_question = q_res
+            ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
+            ass_answer.approach = Approach.DIRECT
   
-          answers.push(ass_answer)
+            console.log("ans: ",ass_answer.score)
+    
+            answers.push(ass_answer)
+          }
         }
         a_ans = await this.assessmentAnswerRepo.save(answers)
       /*   let result = new Results()
