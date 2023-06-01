@@ -9,6 +9,7 @@ import { Category } from "src/methodology-assessment/entities/category.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 import { InvestorQuestions } from "./investor-questions.entity";
 import { IndicatorDetails } from "./indicator-details.entity";
+import { Institution } from "src/institution/entity/institution.entity";
 
 @Entity()
 export class InvestorAssessment extends BaseTrackingEntity {
@@ -44,23 +45,23 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     justification: string;
 
-    @Column({ nullable: true })
-    question01: string; // does the project have a local R&D
+    // @Column({ nullable: true })
+    // question01: string; // does the project have a local R&D
 
-    @Column({ nullable: true })
-    question02: string; // does the project have a significant training component
+    // @Column({ nullable: true })
+    // question02: string; // does the project have a significant training component
 
-    @Column({ nullable: true })
-    question03: string; //is the project first of its kind for the local project developer
+    // @Column({ nullable: true })
+    // question03: string; //is the project first of its kind for the local project developer
 
-    @Column({ nullable: true })
-    question04: string; //is the project first of its kind for the local project developer
+    // @Column({ nullable: true })
+    // question04: string; //is the project first of its kind for the local project developer
 
-    @Column({ nullable: true })
-    question05: string;
+    // @Column({ nullable: true })
+    // question05: string;
 
-    @Column({ nullable: true })
-    question06: string; // outcome-scale GHGs- question 1
+    // @Column({ nullable: true })
+    // question06: string; // outcome-scale GHGs- question 1
    
 
     @Column({ nullable: true })
@@ -103,8 +104,10 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ type: 'double', nullable: true })
     expected_ghg_mitigation: number;
 
-    @Column({  nullable: true })
-    institution: number;
+    @ManyToOne((type) => Institution, { cascade: false,eager:true })
+    @JoinColumn({ name: 'institution_id' })
+    institution?: Institution;
+    
 
     @Column({  nullable: true })
     institutionDescription: string;

@@ -118,6 +118,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           assess.category.id = req.categoryID;
           assess.type = req.type;
           // assess.indicator_details=[]
+          if(assess.indicator_details){
+            for (let detail of assess.indicator_details) {
+              let obj4 = new InvestorAssessment()
+              obj4.category = assess.category
+              obj4.type = req.type
+              obj4.characteristics = assess.characteristics
+              obj4.relevance_weight = assess.relevance_weight
+              obj4.description = assess.description
+              obj4.starting_situation = assess.starting_situation
+              obj4.likelihood_weight = assess.likelihood_weight
+              obj4.institutionDescription = (detail.question)?detail.question.id.toString():''
+              obj4.likelihood_justification = assess.likelihood_justification
+              obj4.justification = assess.justification
+              obj4.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj4)
+              
+              }
+            }
+
           let a = await this.investorAssessmentRepo.save(assess)
           console.log("saved")
   
@@ -140,7 +159,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     
       for (let req of request) {
         for (let assess of req.data) {
-  
+         
           let category = new Category()
           category.id = req.categoryID
           if(req.type === 'process'){
@@ -216,6 +235,26 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               let a = await this.investorAssessmentRepo.save(obj4)
               console.log("saved4")
             }
+            if(assess.indicator_details){
+              for (let detail of assess.indicator_details) {
+                let obj4 = new InvestorAssessment()
+                obj4.category = category
+                obj4.type = req.type
+                obj4.characteristics = assess.characteristics
+                obj4.relevance_weight = assess.relevance_weight
+                obj4.description = assess.description
+                obj4.starting_situation = assess.starting_situation
+                obj4.likelihood_weight = assess.likelihood_weight
+                obj4.institution = (detail.value)?detail.value:null
+                obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.likelihood_justification = assess.likelihood_justification
+                obj4.justification = assess.justification
+                obj4.indicator = assess.indicator
+                let a = await this.investorAssessmentRepo.save(obj4)
+                
+            }
+              }
+              
           }
           else if(req.type === 'outcome'){
           
