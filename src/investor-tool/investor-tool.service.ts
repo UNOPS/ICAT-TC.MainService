@@ -252,9 +252,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
   
       }
-      let data = new Results ()
-      data.assessment = request[0].data[0].assessment;
-      await this.resultRepository.save(data);
+    //  let data = new Results ()
+    //  data.assessment = request[0].data[0].assessment;
+    //  await this.resultRepository.save(data);
       return 0
   
     }
