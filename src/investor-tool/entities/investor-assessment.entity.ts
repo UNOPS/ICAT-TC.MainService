@@ -103,5 +103,12 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ type: 'double', nullable: true })
     expected_ghg_mitigation: number;
 
+    @Column({  nullable: true })
+    institution: number;
+
+    @Column({  nullable: true })
+    institutionDescription: string;
+
+
 
 }
