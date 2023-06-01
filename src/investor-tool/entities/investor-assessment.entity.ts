@@ -7,6 +7,8 @@ import { InvestorTool } from "./investor-tool.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
+import { InvestorQuestions } from "./investor-questions.entity";
+import { IndicatorDetails } from "./indicator-details.entity";
 
 @Entity()
 export class InvestorAssessment extends BaseTrackingEntity {
@@ -81,7 +83,9 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @JoinColumn({ name: 'investortool_id' })
     investorTool?: InvestorTool;
 
-    
+    @OneToMany(() => IndicatorDetails, (indicatorDetails) => indicatorDetails.investorAssessment)
+   
+    indicator_details:IndicatorDetails[]
 
     @ManyToOne((type) => Assessment, { cascade: false })
     @JoinColumn({ name: 'assessment_id' })

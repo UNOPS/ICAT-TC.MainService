@@ -54,6 +54,8 @@ import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
 import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
 import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 import { PolicySector } from './climate-action/entity/policy-sectors.entity';
+import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
+import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
 
 
 export const config: ConnectionOptions = {
@@ -87,7 +89,7 @@ export const config: ConnectionOptions = {
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
 ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification,
-PolicySector],
+PolicySector,InvestorQuestions,IndicatorDetails],
 
   // We are using migrations, synchronize should be set to false.
   synchronize: false,

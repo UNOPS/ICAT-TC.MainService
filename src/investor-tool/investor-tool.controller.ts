@@ -5,6 +5,7 @@ import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
+import { InvestorQuestions } from './entities/investor-questions.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -32,21 +33,26 @@ export class InvestorToolController {
   }
 
   @Post('createinvestorToolAssessment')
-  createinvestorToolAssessment(@Body() createInvestorToolDto: CreateInvestorToolDto) {
-    return this.investorToolService.createinvestorToolAssessment(createInvestorToolDto);
+  async createinvestorToolAssessment(@Body() createInvestorToolDto: CreateInvestorToolDto) {
+    return await this.investorToolService.createinvestorToolAssessment(createInvestorToolDto);
   }
 
 
   @Post('createFinalAssessment')
-  createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
-    return this.investorToolService.createFinalAssessment(req);
+  async createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
+    return await this.investorToolService.createFinalAssessment(req);
   }
 
   
 
   @Get('findAllImpactCovered')
-  findAllImpactCovered() {
-    return this.investorToolService.findAllImpactCovered();
+  async findAllImpactCovered() {
+    return await this.investorToolService.findAllImpactCovered();
+  }
+
+  @Get('findAllIndicatorquestions')
+  async findAllIndicatorquestions():Promise<InvestorQuestions[]> {
+    return await this.investorToolService.findAllIndicatorquestions();
   }
 
 

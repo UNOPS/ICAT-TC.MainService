@@ -14,9 +14,12 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { InvestorQuestions } from './entities/investor-questions.entity';
+import { IndicatorDetails } from './entities/indicator-details.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
+  
 
 
   constructor(
@@ -27,6 +30,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
+    @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
+    @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
 
 
   ) {
@@ -111,6 +116,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
           assess.category.id = req.categoryID;
           assess.type = req.type;
+          // assess.indicator_details=[]
           let a = await this.investorAssessmentRepo.save(assess)
           console.log("saved")
   
@@ -122,6 +128,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       await this.resultRepository.save(data);
       return 0
   
+    }
+
+    async findAllIndicatorquestions(): Promise<InvestorQuestions[]> {
+      return this.investorQuestionRepo.find()
     }
 
 }
