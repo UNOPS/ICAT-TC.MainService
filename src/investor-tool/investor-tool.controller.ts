@@ -42,6 +42,10 @@ export class InvestorToolController {
     return this.investorToolService.createFinalAssessment(req);
   }
 
+  @Post('createFinalAssessmentIndirect')
+  createFinalAssessmentIndirect(@Body() req: FinalInvestorAssessmentDto[]) {
+    return this.investorToolService.createFinalAssessmentIndirect(req);
+  }
   
 
   @Get('findAllImpactCovered')

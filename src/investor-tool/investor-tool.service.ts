@@ -14,6 +14,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
@@ -113,6 +114,140 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           assess.type = req.type;
           let a = await this.investorAssessmentRepo.save(assess)
           console.log("saved")
+  
+        }
+  
+      }
+      let data = new Results ()
+      data.assessment = request[0].data[0].assessment;
+      await this.resultRepository.save(data);
+      return 0
+  
+    }
+
+    async createFinalAssessmentIndirect(request: any):Promise<any> {
+      console.log("request",request)
+    
+      for (let req of request) {
+        for (let assess of req.data) {
+  
+          let category = new Category()
+          category.id = req.categoryID
+          if(req.type === 'process'){
+
+          //  assess.category.id = req.categoryID;
+          //  assess.type = req.type;
+  
+            if(assess.indicatorExpectedVal){
+              let obj1 = new InvestorAssessment()
+              obj1.category= category
+              obj1.type = req.type
+              obj1.characteristics = assess.characteristics
+              obj1.relevance_weight = assess.relevance_weight
+              obj1.description = assess.description
+              obj1.starting_situation = assess.starting_situation
+              obj1.likelihood_weight = assess.likelihood_weight
+              obj1.institution = assess.indicatorExpectedVal
+              obj1.institutionDescription = 'indicatorExpectedVal'
+              obj1.likelihood_justification = assess.likelihood_justification
+              obj1.justification = assess.justification
+              obj1.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj1)
+              console.log("saved1")
+            }
+            if(assess.indicatorStartingVal){
+              let obj2 = new InvestorAssessment()
+              obj2.category = category
+              obj2.type = req.type
+              obj2.characteristics = assess.characteristics
+              obj2.relevance_weight = assess.relevance_weight
+              obj2.description = assess.description
+              obj2.starting_situation = assess.starting_situation
+              obj2.likelihood_weight = assess.likelihood_weight
+              obj2.institution = assess.indicatorStartingVal
+              obj2.institutionDescription = 'indicatorStartingVal'
+              obj2.likelihood_justification = assess.likelihood_justification
+              obj2.justification = assess.justification
+              obj2.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj2)
+              console.log("saved2")
+            }
+            if(assess.likelihood){
+              let obj3 = new InvestorAssessment()
+              obj3.category = category
+              obj3.type = req.type
+              obj3.characteristics = assess.characteristics
+              obj3.relevance_weight = assess.relevance_weight
+              obj3.description = assess.description
+              obj3.starting_situation = assess.starting_situation
+              obj3.likelihood_weight = assess.likelihood_weight
+              obj3.institution = assess.likelihood
+              obj3.institutionDescription = 'likelihood'
+              obj3.likelihood_justification = assess.likelihood_justification
+              obj3.justification = assess.justification
+              obj3.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj3)
+              console.log("saved3")
+            }
+            if(assess.relavance){
+              let obj4 = new InvestorAssessment()
+              obj4.category = category
+              obj4.type = req.type
+              obj4.characteristics = assess.characteristics
+              obj4.relevance_weight = assess.relevance_weight
+              obj4.description = assess.description
+              obj4.starting_situation = assess.starting_situation
+              obj4.likelihood_weight = assess.likelihood_weight
+              obj4.institution = assess.relavance
+              obj4.institutionDescription = 'relavance'
+              obj4.likelihood_justification = assess.likelihood_justification
+              obj4.justification = assess.justification
+              obj4.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj4)
+              console.log("saved4")
+            }
+          }
+          else if(req.type === 'outcome'){
+          
+            if(assess.indicatorExpectedVal){
+              let obj1 = new InvestorAssessment()
+              obj1.category = category
+              obj1.type = req.type
+              obj1.characteristics = assess.characteristics
+              obj1.institution = assess.indicatorExpectedVal
+              obj1.institutionDescription = 'indicatorExpectedVal'
+              obj1.justification = assess.justification
+              obj1.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj1)
+              console.log("saved5")
+            }
+            if(assess.indicatorStartingVal){
+              let obj2 = new InvestorAssessment()
+              obj2.category = category
+              obj2.type = req.type
+              obj2.characteristics = assess.characteristics
+              obj2.institution = assess.indicatorStartingVal
+              obj2.institutionDescription = 'indicatorStartingVal'
+              obj2.justification = assess.justification
+              obj2.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj2)
+              console.log("saved6")
+            }
+
+            if(assess.score){
+              let obj3 = new InvestorAssessment()
+              obj3.category = category
+              obj3.type = req.type
+              obj3.characteristics = assess.characteristics
+              obj3.institution = assess.score
+              obj3.institutionDescription = 'score'
+              obj3.justification = assess.justification
+              obj3.indicator = assess.indicator
+              let a = await this.investorAssessmentRepo.save(obj3)
+              console.log("saved7")
+            }
+          }
+         
   
         }
   
