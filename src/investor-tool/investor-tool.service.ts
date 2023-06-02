@@ -14,10 +14,13 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { InvestorQuestions } from './entities/investor-questions.entity';
+import { IndicatorDetails } from './entities/indicator-details.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
+  
 
 
   constructor(
@@ -28,6 +31,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
+    @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
+    @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
 
 
   ) {
@@ -106,12 +111,44 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    
     async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
       console.log("request",request)
-    
+      let mitigation:number;
+      for (let req of request) {
+        for (let assess of req.data) {
+          if(assess.expected_ghg_mitigation){
+           mitigation =assess.expected_ghg_mitigation
+           
+          }
+        }
+      }
+
       for (let req of request) {
         for (let assess of req.data) {
   
           assess.category.id = req.categoryID;
           assess.type = req.type;
+          assess.expected_ghg_mitigation=mitigation
+          // assess.indicator_details=[]
+          if(assess.indicator_details){
+            for (let detail of assess.indicator_details) {
+              let obj4 = new InvestorAssessment()
+              obj4.category = assess.category
+              obj4.type = req.type
+              obj4.characteristics = assess.characteristics
+              obj4.relevance_weight = assess.relevance_weight
+              obj4.description = assess.description
+              obj4.starting_situation = assess.starting_situation
+              obj4.likelihood_weight = assess.likelihood_weight
+              obj4.institutionDescription = (detail.question)?detail.question.id.toString():''
+              obj4.likelihood_justification = assess.likelihood_justification
+              obj4.justification = assess.justification
+              obj4.indicator = assess.indicator
+              obj4.expected_ghg_mitigation=mitigation
+              obj4.assessment = request[0].data[0].assessment
+              let a = await this.investorAssessmentRepo.save(obj4)
+              
+              }
+            }
+
           let a = await this.investorAssessmentRepo.save(assess)
           console.log("saved")
   
@@ -125,12 +162,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
     }
 
+    async findAllIndicatorquestions(): Promise<InvestorQuestions[]> {
+      return this.investorQuestionRepo.find()
+    }
+
     async createFinalAssessmentIndirect(request: any):Promise<any> {
       console.log("request",request)
     
       for (let req of request) {
         for (let assess of req.data) {
-  
           let category = new Category()
           category.id = req.categoryID
           if(req.type === 'process'){
@@ -152,6 +192,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj1.likelihood_justification = assess.likelihood_justification
               obj1.justification = assess.justification
               obj1.indicator = assess.indicator
+              obj1.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj1)
               console.log("saved1")
             }
@@ -169,6 +210,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj2.likelihood_justification = assess.likelihood_justification
               obj2.justification = assess.justification
               obj2.indicator = assess.indicator
+              obj2.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj2)
               console.log("saved2")
             }
@@ -186,6 +228,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj3.likelihood_justification = assess.likelihood_justification
               obj3.justification = assess.justification
               obj3.indicator = assess.indicator
+              obj3.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj3)
               console.log("saved3")
             }
@@ -203,9 +246,50 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj4.likelihood_justification = assess.likelihood_justification
               obj4.justification = assess.justification
               obj4.indicator = assess.indicator
+              obj4.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj4)
               console.log("saved4")
             }
+            if(assess.indicator_details){
+              for (let detail of assess.indicator_details) {
+                let obj4 = new InvestorAssessment()
+                obj4.category = category
+                obj4.type = req.type
+                obj4.characteristics = assess.characteristics
+                obj4.relevance_weight = assess.relevance_weight
+                obj4.description = assess.description
+                obj4.starting_situation = assess.starting_situation
+                obj4.likelihood_weight = assess.likelihood_weight
+                obj4.institution = (detail.value)?detail.value:null
+                obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.likelihood_justification = assess.likelihood_justification
+                obj4.justification = assess.justification
+                obj4.indicator = assess.indicator
+                obj4.assessment = request[0].data[0].assessment
+                let a = await this.investorAssessmentRepo.save(obj4)
+                
+               }
+              }
+
+              if(assess.expected_ghg_mitigation){
+                let obj4 = new InvestorAssessment()
+                obj4.category = category
+                obj4.type = req.type
+                obj4.characteristics = assess.characteristics
+                obj4.relevance_weight = assess.relevance_weight
+                obj4.description = assess.description
+                obj4.starting_situation = assess.starting_situation
+                obj4.likelihood_weight = assess.likelihood_weight
+                obj4.institution = assess.expected_ghg_mitigation
+                obj4.institutionDescription = 'expected_ghg_mitigation'
+                obj4.likelihood_justification = assess.likelihood_justification
+                obj4.justification = assess.justification
+                obj4.indicator = assess.indicator
+                obj4.assessment = request[0].data[0].assessment
+                let a = await this.investorAssessmentRepo.save(obj4)
+                console.log("savd mitigation action")
+              }
+              
           }
           else if(req.type === 'outcome'){
           
@@ -218,6 +302,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj1.institutionDescription = 'indicatorExpectedVal'
               obj1.justification = assess.justification
               obj1.indicator = assess.indicator
+              obj1.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj1)
               console.log("saved5")
             }
@@ -230,6 +315,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj2.institutionDescription = 'indicatorStartingVal'
               obj2.justification = assess.justification
               obj2.indicator = assess.indicator
+              obj2.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj2)
               console.log("saved6")
             }
@@ -243,8 +329,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj3.institutionDescription = 'score'
               obj3.justification = assess.justification
               obj3.indicator = assess.indicator
+              obj3.assessment = request[0].data[0].assessment
               let a = await this.investorAssessmentRepo.save(obj3)
               console.log("saved7")
+            }
+            if(assess.expected_ghg_mitigation){
+              let obj4 = new InvestorAssessment()
+              obj4.category = category
+              obj4.type = req.type
+              obj4.characteristics = assess.characteristics
+              obj4.institution = assess.expected_ghg_mitigation
+              obj4.institutionDescription = 'expected_ghg_mitigation'
+              obj4.indicator = assess.indicator
+              obj4.assessment = request[0].data[0].assessment
+              let a = await this.investorAssessmentRepo.save(obj4)
+              console.log("savd mitigation action")
             }
           }
          
