@@ -190,8 +190,11 @@ export class ClimateAction extends BaseTrackingEntity {
   // @Column({ length: 300, default: null })
   // fundingOrganization: string;
 
-  // @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-  // initialInvestment?: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
+  initialInvestment?: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
+  tc_value?: number;
 
   // @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
   // annualFunding?: number;
