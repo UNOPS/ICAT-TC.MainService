@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
+import { query } from 'express';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -57,6 +58,11 @@ export class InvestorToolController {
   @Get('findAllIndicatorquestions')
   async findAllIndicatorquestions():Promise<InvestorQuestions[]> {
     return await this.investorToolService.findAllIndicatorquestions();
+  }
+
+  @Get('findSectorCount')
+  async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
+    return await this.investorToolService.findSectorCount(tool);
   }
 
 

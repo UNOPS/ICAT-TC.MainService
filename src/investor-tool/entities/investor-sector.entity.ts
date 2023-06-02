@@ -18,7 +18,7 @@ export class InvestorSector extends BaseTrackingEntity {
     @JoinColumn({ name: 'investortool_id' })
     investorTool?: InvestorTool;
 
-    @ManyToOne((type) => Sector, { cascade: false })
+    @ManyToOne((type) => Sector, { cascade: false,eager:true })
     @JoinColumn({ name: 'sector_id' })
     sector?: Sector;
 
