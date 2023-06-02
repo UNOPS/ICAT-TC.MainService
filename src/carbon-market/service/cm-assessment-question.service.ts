@@ -33,9 +33,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * @param assessment 
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
-
+  
   async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
     let a_ans: any[]
+    console.log("hittt")
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -45,12 +46,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let q_res = await this.repo.save(ass_question)
       let answers = []
 
-      if (res.answer){
+      console.log("typeeee", res.type)
+      if (res.answer || res.institution){
         if (res.type === 'INDIRECT'){
+          console.log("ooooppp")
           let ass_answer = new CMAssessmentAnswer()
           ass_answer.institution = res.institution
           ass_answer.assessment_question = q_res
           ass_answer.approach = Approach.INDIRECT
+          answers.push(ass_answer)
+          console.log("anss", ass_answer)
         } else {
           if (Array.isArray(res.answer)) {
             res.answer.forEach(async ans => {
@@ -74,17 +79,24 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             answers.push(ass_answer)
           }
         }
+        console.log("answerrppp: ",answers)
         a_ans = await this.assessmentAnswerRepo.save(answers)
       /*   let result = new Results()
         result.assessment = assessment;
         await this.resultsRepo.save(result)  */
+
+        
       }
 
     }
 
-    let resultObj = new Results()
-    resultObj.assessment = assessment;
-    await this.resultsRepo.save(resultObj) 
+    if(assessment.assessment_approach=== 'DIRECT'){
+      let resultObj = new Results()
+      resultObj.assessment = assessment;
+      await this.resultsRepo.save(resultObj) 
+      
+    }
+    
     return a_ans
   }
 

@@ -12,7 +12,7 @@ export class CMAssessmentAnswer extends BaseTrackingEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: "double"})
+  @Column({type: "double", nullable: true})
   score: number
 
   @Column()
