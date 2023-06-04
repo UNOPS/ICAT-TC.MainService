@@ -132,13 +132,13 @@ export class ProjectController implements CrudController<ClimateAction> {
   @Get('findAllPolicies')
 async findAllPolicies() {
   const policies = await this.service.findAllPolicies();
-  console.log("aaaaa",policies)
+  // console.log("aaaaa",policies)
   return policies;
 }
 @Get('getIntervention')
 async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   let  intervention = await this.service.getIntervention(id);
-  console.log("aaaaa",intervention)
+  // console.log("aaaaa",intervention)
   return intervention;
   }
 

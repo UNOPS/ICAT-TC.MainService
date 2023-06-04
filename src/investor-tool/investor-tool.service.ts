@@ -358,4 +358,24 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
     }
 
+    
+
+    async  findSectorCount(tool:string): Promise<any[]> {
+      console.log(tool)
+      const sectorSum = await this.investorSectorRepo
+        .createQueryBuilder('investorSector')
+        .leftJoinAndSelect('investorSector.assessment', 'assessment')
+        .where('assessment.tool = :value', { value: tool })
+        .leftJoinAndSelect('investorSector.sector', 'sector')
+        // .where('sector.name IS NOT NULL')
+        .select('sector.name', 'sector')
+        .addSelect('COUNT(investorSector.id)', 'count')
+        .groupBy('sector.name')
+        .having('sector IS NOT NULL')
+        .getRawMany();
+    
+    return sectorSum;
+    }
+    
+
 }
