@@ -20,4 +20,7 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @ManyToOne((type) => CMQuestion)
   @JoinColumn()
   question: CMQuestion
+
+
+  
 }

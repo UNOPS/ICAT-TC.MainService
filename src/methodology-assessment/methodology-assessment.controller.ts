@@ -581,4 +581,13 @@ async uploadFile2(
 
   }
 
+
+  @Get('getResultForTool/:tool')
+  async getResultForTool(@Param('tool') tool: string): Promise<any[]> {
+  let res  = await this.methodologyAssessmentService.getResultForTool(tool);
+    return res;
+   
+  }
+
+
 }

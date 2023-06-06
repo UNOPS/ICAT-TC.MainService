@@ -17,7 +17,7 @@ export class Assessment extends BaseTrackingEntity{
     @Column({ nullable: true })
     year: string;
 
-    @ManyToOne((type) => ClimateAction, { cascade: false })
+    @ManyToOne((type) => ClimateAction, { cascade: false, eager: true, })
     @JoinColumn({ name: 'climateAction_id' })
     climateAction?: ClimateAction;
 
@@ -83,6 +83,9 @@ export class Assessment extends BaseTrackingEntity{
       })
       @JoinColumn()
       parameters: MethodologyAssessmentParameters[];
+
+      @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
+      tc_value?: number;
 
 }
 

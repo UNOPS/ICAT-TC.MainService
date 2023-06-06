@@ -85,6 +85,8 @@ import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
 import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
 import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
+import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
+import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
 
 @Module({
   imports: [
@@ -124,7 +126,9 @@ import { InvestorAssessment } from './investor-tool/entities/investor-assessment
       Objectives,
       AssessmentObjectives,
       UserType,
-      InvestorTool
+      InvestorTool,
+      IndicatorDetails,
+      InvestorQuestions
     ]),
     UsersModule,
     UserTypeModule,

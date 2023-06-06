@@ -12,7 +12,7 @@ export class Results {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @ManyToOne((type) => Assessment, { cascade: false })
+    @ManyToOne((type) => Assessment, { cascade: false , nullable: true, eager: true,})
     @JoinColumn({ name: 'assessment_id' })
     assessment?: Assessment;
 
