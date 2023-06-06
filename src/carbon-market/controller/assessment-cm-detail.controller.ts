@@ -36,4 +36,21 @@ export class AssessmentCMDetailController
     return await this.service.getAssessmentCMDetailByAssessmentId(assessmnetId)
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get('getPrerequisite')
+  async getPrerequisite(): Promise<any>{
+    return await this.service.getPrerequisite()
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('getSectorCount')
+  async getSectorCount(): Promise<any>{
+    return await this.service.getSectorCount()
+  }
+
+
+
+
+
+
 }

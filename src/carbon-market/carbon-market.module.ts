@@ -18,6 +18,7 @@ import { CMAssessmentAnswerService } from "./service/cm-assessment-answer.servic
 import { CMSeedController } from "./controller/cm-seed.controller";
 import { CMSeedService } from "./service/cm-seed.service";
 import { Results } from "src/methodology-assessment/entities/results.entity";
+import { Assessment } from "src/assessment/entities/assessment.entity";
 
 
 @Module({
@@ -30,7 +31,8 @@ import { Results } from "src/methodology-assessment/entities/results.entity";
       Criteria,
       CMAssessmentQuestion,
       CMAssessmentAnswer,
-      Results
+      Results,
+      Assessment
     ]),
   ],
   controllers: [
