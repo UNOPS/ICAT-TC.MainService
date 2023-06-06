@@ -1014,6 +1014,27 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   
     return formattedResults;
   }
+
+
+
+  async getTCForTool(tool: string): Promise<any[]> {
+    const results = await this.assessmentRepository.find({
+      relations: ['climateAction'],
+    });
+  
+     const filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+  
+    const formattedResults = filteredResults.map(result => {
+      return {
+        id : result.id,
+        data: result.climateAction.policyName,
+        y: result.tc_value,
+        x: result.climateAction.intervention_id
+      };
+    }); 
+  
+    return formattedResults;
+  }
   
   
 }
