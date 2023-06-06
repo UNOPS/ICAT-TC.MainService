@@ -589,5 +589,12 @@ async uploadFile2(
    
   }
 
+  @Get('getTCForTool/:tool')
+  async getTCForTool(@Param('tool') tool: string): Promise<any[]> {
+  let res  = await this.methodologyAssessmentService.getTCForTool(tool);
+    return res;
+   
+  }
+
 
 }
