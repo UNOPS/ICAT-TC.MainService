@@ -151,6 +151,17 @@ async allProject(
     return policy;
   }
   
+  async findTypeofAction(): Promise<any[]> {
+    const actions = await this.repo
+      .createQueryBuilder('entity')
+      .select('entity.typeofAction', 'name')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('entity.typeofAction')
+      .getRawMany();
+
+    return actions.map(({ name, count }) => ({ name, count }));
+  }
+
 
   async getAllCAList(
     options: IPaginationOptions,

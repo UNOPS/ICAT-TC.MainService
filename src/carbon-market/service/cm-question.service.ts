@@ -46,6 +46,12 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       'criteria',
       'criteria.id = question.criteriaId'
     )
+    .innerJoinAndMapOne(
+      'criteria.section',
+      Section,
+      'section',
+      'section.id = criteria.sectionId'
+    )
     .where('criteria.id = :criteriaId', {criteriaId: criteriaId})
 
     return data.getMany()

@@ -17,7 +17,7 @@ export class Assessment extends BaseTrackingEntity{
     @Column({ nullable: true })
     year: string;
 
-    @ManyToOne((type) => ClimateAction, { cascade: false })
+    @ManyToOne((type) => ClimateAction, { cascade: false, eager: true, })
     @JoinColumn({ name: 'climateAction_id' })
     climateAction?: ClimateAction;
 

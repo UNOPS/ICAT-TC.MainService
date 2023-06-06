@@ -143,6 +143,14 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
 
+  @Get('typeofAction')
+  async findTypeofAction(): Promise<any[]> {
+  let res  = await this.service.findTypeofAction();
+    return res;
+   
+  }
+
+
   @Get(
     'AllClimateAction/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:countryId/:sectorId',
   )
