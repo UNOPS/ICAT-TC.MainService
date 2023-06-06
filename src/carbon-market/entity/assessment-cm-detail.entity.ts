@@ -36,7 +36,4 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @JoinColumn()
   cmassessment: Assessment
 
-  //need to implement and save here
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-  tc_value?: number;
 }
