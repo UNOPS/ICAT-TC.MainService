@@ -1002,7 +1002,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       relations: ['assessment'],
     });
   
-    const filteredResults = results.filter(result => result.assessment.tool === tool && result.averageProcess !== null && result.averageOutcome !== null);
+    const filteredResults = results.filter(result => result.assessment?.tool === tool && result.averageProcess !== null && result.averageOutcome !== null);
   
     const formattedResults = filteredResults.map(result => {
       return {
