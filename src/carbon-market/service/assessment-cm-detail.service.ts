@@ -59,7 +59,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
       
     let failedCount=totolCount-passedCount
       
-    return[ {sector:'passed',count:totolCount},
+    return[ {sector:'passed',count:passedCount},
             {sector:'failed',count:failedCount}]
           
     

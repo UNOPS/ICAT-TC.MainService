@@ -84,6 +84,9 @@ export class Assessment extends BaseTrackingEntity{
       @JoinColumn()
       parameters: MethodologyAssessmentParameters[];
 
+      @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
+      tc_value?: number;
+
 }
 
 
