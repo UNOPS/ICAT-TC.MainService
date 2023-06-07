@@ -64,6 +64,10 @@ export class InvestorToolController {
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.findSectorCount(tool);
   }
+  @Get('getTCValueByAssessment')
+  async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
+    return await this.investorToolService.getTCValueByAssessment(tool);
+  }
 
 
 }

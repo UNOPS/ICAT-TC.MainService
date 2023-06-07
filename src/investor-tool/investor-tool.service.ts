@@ -17,9 +17,11 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { IndicatorDetails } from './entities/indicator-details.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
+  
   
 
 
@@ -33,6 +35,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
     @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
+    @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
 
 
   ) {
@@ -375,6 +378,22 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         .getRawMany();
     
     return sectorSum;
+    }
+
+   async  getTCValueByAssessment(tool: string): Promise<any> {
+        const sectorSum = await this.assessmentRepo
+          .createQueryBuilder('assessment')
+          .leftJoinAndSelect('assessment.climateAction', 'intervention')
+          .where('assessment.tool = :value', { value: tool })
+          .select(['assessment.id', 'intervention.id', 'intervention.initialInvestment','intervention.policyName','assessment.tc_value'])
+          // // .where('sector.name IS NOT NULL')
+          // .select('sector.name', 'sector')
+          // .addSelect('COUNT(investorSector.id)', 'count')
+          // .groupBy('sector.name')
+          // .having('sector IS NOT NULL')
+          .getMany();
+
+        return sectorSum;
     }
     
 
