@@ -18,6 +18,7 @@ import { InvestorQuestions } from './entities/investor-questions.entity';
 import { IndicatorDetails } from './entities/indicator-details.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
@@ -36,6 +37,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
     @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
+    @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
 
 
   ) {
@@ -131,26 +133,26 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           assess.type = req.type;
           assess.expected_ghg_mitigation=mitigation
           // assess.indicator_details=[]
-          if(assess.indicator_details){
-            for (let detail of assess.indicator_details) {
-              let obj4 = new InvestorAssessment()
-              obj4.category = assess.category
-              obj4.type = req.type
-              obj4.characteristics = assess.characteristics
-              obj4.relevance_weight = assess.relevance_weight
-              obj4.description = assess.description
-              obj4.starting_situation = assess.starting_situation
-              obj4.likelihood_weight = assess.likelihood_weight
-              obj4.institutionDescription = (detail.question)?detail.question.id.toString():''
-              obj4.likelihood_justification = assess.likelihood_justification
-              obj4.justification = assess.justification
-              obj4.indicator = assess.indicator
-              obj4.expected_ghg_mitigation=mitigation
-              obj4.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj4)
+          // if(assess.indicator_details){
+          //   for (let detail of assess.indicator_details) {
+          //     let obj4 = new InvestorAssessment()
+          //     obj4.category = assess.category
+          //     obj4.type = req.type
+          //     obj4.characteristics = assess.characteristics
+          //     obj4.relevance_weight = assess.relevance_weight
+          //     obj4.description = assess.description
+          //     obj4.starting_situation = assess.starting_situation
+          //     obj4.likelihood_weight = assess.likelihood_weight
+          //     obj4.institutionDescription = (detail.question)?detail.question.id.toString():''
+          //     obj4.likelihood_justification = assess.likelihood_justification
+          //     obj4.justification = assess.justification
+          //     obj4.indicator = assess.indicator
+          //     obj4.expected_ghg_mitigation=mitigation
+          //     obj4.assessment = request[0].data[0].assessment
+          //     let a = await this.investorAssessmentRepo.save(obj4)
               
-              }
-            }
+          //     }
+          //   }
 
           let a = await this.investorAssessmentRepo.save(assess)
           console.log("saved")
@@ -394,6 +396,183 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           .getMany();
 
         return sectorSum;
+    }
+
+    async calculateAssessmentResults(tool: string): Promise<any> {
+      let results = await this.assessmentRepo
+        .createQueryBuilder('assessment')
+        .leftJoinAndSelect('assessment.climateAction', 'intervention')
+        .where('assessment.tool = :value', { value: tool })
+        .orderBy('assessment.id', 'DESC')
+        .getMany();
+      let finalDataArray:{
+        assesment:Assessment,
+        likelihood:number,
+        relevance:number
+        scaleScore:number,
+        sustainedScore:number
+      } []=[]
+
+      // let finalOutcomeArray:{
+      //   assesment:Assessment,
+        
+      // } []=[]
+  
+        for await  (let obj of  results) {
+         let assessment= await this.findAllAssessData(obj.id);
+         let categories =await this.findAllCategories();
+        //  console.log(categories.meth1Process)
+        let finalLikelihood=0
+        let finalrelevance=0
+        let scaleScore =0;
+        let sustainedScore=0;
+        let  categoryDataArray : any = []
+            for(let category of categories.meth1Process){
+           
+              let categoryData: any = {
+                categoryName: category.name ,
+                characteristics: [],
+                categotyRelevance : 0,
+                categoryLikelihood : 0
+              };
+      
+              let totalRel = 0
+              let countRel = 0
+              let totalLikelihood = 0
+              let countLikelihood = 0
+              for(let x of assessment ){
+                if(category.name === x.category.name){
+                  categoryData.categoryName = category.name;
+                  categoryData.characteristics.push(
+                    {
+                      relevance: x.relavance ==null ? 0 : x.relavance,
+                      likelihood: !x.likelihood ? '-' : x.likelihood,
+                      name : x.characteristics.name
+                    }
+                  )
+      
+                  totalRel = totalRel +  x.relavance
+                  countRel ++
+      
+                  totalLikelihood = totalLikelihood + x.likelihood
+                  countLikelihood ++
+      
+                }
+              }
+      
+              categoryData.categotyRelevance = (totalRel/countRel).toFixed(3)
+              categoryData.categoryLikelihood = (totalLikelihood/countLikelihood).toFixed(3)
+              categoryDataArray.push(categoryData)
+      
+            }
+            categoryDataArray.forEach((obj2) => {
+              console.log(obj.id,obj2.categotyRelevance,finalrelevance)
+              finalrelevance  += Number(obj2.categotyRelevance);
+              finalLikelihood += Number(obj2.categoryLikelihood);
+              console.log("========")
+            });
+           
+
+
+            let  outcomeArray : any = []
+            for(let category of categories.meth1Outcomes){
+              let categoryData: any = {
+                categoryName: category.name ,
+                characteristics: [],
+                categotyRelevance : 0,
+                categoryLikelihood : 0,
+                categoryScaleScore : 0,
+                categorySustainedScore : 0
+              };
+      
+              let totalScale = 0
+              let countScale = 0
+              let totalSustained = 0
+              let countSustained = 0
+              for(let x of assessment ){
+                if(category.name === x.category.name && (x.category.name === 'Scale GHGs' || x.category.name === 'Scale SD' )){
+                  categoryData.categoryName = category.name;
+                  categoryData.characteristics.push(
+                    {
+                      
+                      scaleScore : x.score,
+                      sustainedScore : '-',
+                      name : x.characteristics.name
+                    }
+                  )
+      
+                  totalScale = totalScale +  x.score
+                  countScale ++
+      
+                }
+                if(category.name === x.category.name && (x.category.name === 'Sustained nature-GHGs' || x.category.name === 'Sustained nature-SD' )){
+                  categoryData.categoryName = category.name;
+                  categoryData.characteristics.push(
+                    {
+                      scaleScore : '-',
+                      sustainedScore : x.score,
+                      name : x.characteristics.name
+                    }
+                  )
+      
+                  totalSustained = totalSustained +  x.score
+                  countSustained ++
+      
+                }
+              }
+      
+              if(category.name === 'Scale GHGs' || category.name === 'Scale SD' ){
+                categoryData.categoryScaleScore = (totalScale/countScale).toFixed(3)
+                categoryData.categorySustainedScore = '-'
+              }
+      
+              if(category.name === 'Sustained nature-GHGs' || category.name === 'Sustained nature-SD'  ){
+                categoryData.categorySustainedScore = (totalSustained/countSustained).toFixed(3)
+                categoryData.categoryScaleScore  = '-'
+              }
+      
+              outcomeArray.push(categoryData)
+            }
+           
+            outcomeArray.forEach((obj3) => {
+              // console.log(obj.id,obj3.categoryScaleScore,":",scaleScore,sustainedScore)
+              scaleScore += Number(obj3.categoryScaleScore);
+              sustainedScore += Number(obj3.categorySustainedScore);
+            });
+            console.log(scaleScore)
+            finalDataArray.push({
+              assesment:obj,
+              likelihood:(finalLikelihood/4),
+              relevance:(finalrelevance/4),
+              scaleScore:(scaleScore/2),
+              sustainedScore:(sustainedScore/2)
+            })
+            
+        }
+
+        
+        return[ finalDataArray];
+  
+    }
+    async findAllCategories(): Promise<any> {
+      let categories = await this.categotyRepository.createQueryBuilder('category')
+        .leftJoinAndSelect('category.methodology', 'methodology')
+        .where('category.methodology_id = methodology.id')
+        .getMany();
+        // console.log("categoryList", categories)
+       let meth1Process : any = []
+        let  meth1Outcomes : any = []
+        for (let x of categories) {
+          //this.categotyList.push(x);
+            if(x.type === 'process'){
+              meth1Process.push(x)
+            }
+            if(x.type === 'outcome'){
+              meth1Outcomes.push(x)
+            }
+        }
+        return {meth1Process,meth1Outcomes}
+      
     }
     
 
