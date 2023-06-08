@@ -53,6 +53,12 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return await this.service.getResults(assessmentId)
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('saveTcValue')
+  async saveTcValue(@Query('assessmentId') assessmentId: number){
+    return await this.service.saveTcValue(assessmentId)
+  }
+
  
 
 }

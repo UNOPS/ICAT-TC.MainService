@@ -11,6 +11,7 @@ import { Approach } from "../enum/answer-type.enum";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
+ 
   constructor(
     @InjectRepository(CMAssessmentQuestion) repo,
     @InjectRepository(CMAssessmentAnswer) 
@@ -18,7 +19,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(CMAssessmentQuestion)
     private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
     @InjectRepository(Results)
-    private resultsRepo: Repository<Results>
+    private resultsRepo: Repository<Results>,
+    @InjectRepository(Assessment)
+    private assessmentRepo: Repository<Assessment>
   ) {
     super(repo);
   }
@@ -215,6 +218,50 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ...groups,
       [item[prop]]: [...(groups[item[prop]] || []), item]
     }), {});
+  }
+
+
+  async saveTcValue(assessmentId: number) {
+    console.log("called saveTcValue",assessmentId)
+    let tc_score = 0
+    let questions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .where('assessment.id = :id', { id: assessmentId })
+      .getMany()
+    if (questions.length > 0) {
+      
+      let qIds: number[] = questions.map((q) => q.id)
+      console.log(qIds)
+      let answers = await this.assessmentAnswerRepo
+        .createQueryBuilder('ans')
+        .innerJoin(
+          'ans.assessment_question',
+          'question',
+          'question.id = ans.assessmentQuestionId'
+        )
+        .where('question.id In (:id)', { id: qIds })
+        .getMany()
+      answers.forEach(ans => {
+        tc_score += ans.score
+      })
+      let score = tc_score * 100
+      
+      await this.assessmentRepo
+        .createQueryBuilder()
+        .update(Assessment)
+        .set({ tc_value: score})
+        .where("id = :id", { id: assessmentId })
+        .execute()
+
+        console.log("updated tc value ",score, "for id",assessmentId)
+      
+    }
+
   }
 
 

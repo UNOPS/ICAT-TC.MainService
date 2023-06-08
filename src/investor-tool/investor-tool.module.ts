@@ -11,9 +11,21 @@ import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { IndicatorDetails } from './entities/indicator-details.entity';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment, Results,InvestorQuestions,IndicatorDetails])],
+  imports: [TypeOrmModule.forFeature([
+    Assessment,
+    ImpactCovered,
+    InvestorTool,
+    InvestorSector,
+    InvestorImpacts,
+    InvestorAssessment, 
+    Results,
+    InvestorQuestions,
+    IndicatorDetails,
+    Category,
+  ])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService]
 })
