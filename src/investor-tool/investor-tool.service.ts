@@ -424,8 +424,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         //  console.log(categories.meth1Process)
         let finalLikelihood=0
         let finalrelevance=0
-        let scaleScore =0;
-        let sustainedScore=0;
+        let scaleScoreTotal =0;
+        let sustainedScoreTotal=0;
         let  categoryDataArray : any = []
             for(let category of categories.meth1Process){
            
@@ -445,12 +445,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                   categoryData.categoryName = category.name;
                   categoryData.characteristics.push(
                     {
-                      relevance: x.relavance ==null ? 0 : x.relavance,
-                      likelihood: !x.likelihood ? '-' : x.likelihood,
+                      relevance:  x.relavance,
+                      likelihood:  x.likelihood,
                       name : x.characteristics.name
                     }
                   )
-      
                   totalRel = totalRel +  x.relavance
                   countRel ++
       
@@ -466,10 +465,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       
             }
             categoryDataArray.forEach((obj2) => {
-              console.log(obj.id,obj2.categotyRelevance,finalrelevance)
+              // console.log(obj.id,obj2.categotyRelevance,finalrelevance)
+              // console.log(obj.id,obj2.categotyRelevance,":","finalrelevance",finalrelevance,obj2.categoryLikelihood,"finalLikelihood",finalLikelihood)
               finalrelevance  += Number(obj2.categotyRelevance);
               finalLikelihood += Number(obj2.categoryLikelihood);
-              console.log("========")
+              // console.log("========")
             });
            
 
@@ -535,17 +535,22 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             }
            
             outcomeArray.forEach((obj3) => {
-              // console.log(obj.id,obj3.categoryScaleScore,":",scaleScore,sustainedScore)
-              scaleScore += Number(obj3.categoryScaleScore);
-              sustainedScore += Number(obj3.categorySustainedScore);
+              // console.log(obj.id,obj3.categoryScaleScore,":","scaleScoreTotal",scaleScoreTotal,obj3.categorySustainedScore,"sustainedScoreTotal",sustainedScoreTotal)
+              if (obj3.categoryScaleScore!=='-'){
+                scaleScoreTotal += Number(obj3.categoryScaleScore);
+              }
+              if (obj3.categorySustainedScore!=='-'){ 
+                sustainedScoreTotal += Number(obj3.categorySustainedScore);
+              }
+             
             });
-            console.log(scaleScore)
+            // console.log(scaleScoreTotal)
             finalDataArray.push({
               assesment:obj,
               likelihood:(finalLikelihood/4),
               relevance:(finalrelevance/4),
-              scaleScore:(scaleScore/2),
-              sustainedScore:(sustainedScore/2)
+              scaleScore:(scaleScoreTotal/2),
+              sustainedScore:(sustainedScoreTotal/2)
             })
             
         }
