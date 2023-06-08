@@ -99,6 +99,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       await this.resultsRepo.save(resultObj) 
       
     }
+    this.saveTcValue(assessment.id)
+
+
     
     return a_ans
   }
