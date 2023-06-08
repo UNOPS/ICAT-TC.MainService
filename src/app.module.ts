@@ -87,6 +87,7 @@ import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity
 import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
 import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
+import { PortfolioModule } from './portfolio/portfolio.module';
 
 @Module({
   imports: [
@@ -188,7 +189,8 @@ import { InvestorQuestions } from './investor-tool/entities/investor-questions.e
     NotificationModule,
     CarbonMarketModule,
     CarbonMarketModule,
-    InvestorToolModule
+    InvestorToolModule,
+    PortfolioModule
 
   ],
   controllers: [

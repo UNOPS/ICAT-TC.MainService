@@ -70,10 +70,17 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
   async getSectorCount(): Promise<any> {
     const result = await this.assessmentCMDetailsRepo
+    // .createQueryBuilder('assessment_cm_detail')
+    // .select('assessment_cm_detail.sectoral_boundary', 'sectoral_boundary')
+    // .addSelect('ROUND(AVG(assessment_cm_detail.tc_value), 2)', 'average_tc_value')
+    // .groupBy('assessment_cm_detail.sectoral_boundary')
+    // .getRawMany();
     .createQueryBuilder('assessment_cm_detail')
+    .leftJoin('assessment_cm_detail.cmassessment', 'assessment')
     .select('assessment_cm_detail.sectoral_boundary', 'sectoral_boundary')
-    .addSelect('ROUND(AVG(assessment_cm_detail.tc_value), 2)', 'average_tc_value')
+    .addSelect('ROUND(AVG(assessment.tc_value),2)', 'average_tc_value')
     .groupBy('assessment_cm_detail.sectoral_boundary')
+    .having('average_tc_value IS NOT NULL')
     .getRawMany();
 
     // console.log(result);
