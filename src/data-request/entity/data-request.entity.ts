@@ -13,6 +13,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DataRequestStatus } from './data-request-status.entity';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { Tool } from '../enum/tool.enum';
 
 @Entity({ name: 'datarequest' })
 export class ParameterRequest extends BaseTrackingEntity {
@@ -94,4 +96,12 @@ export class ParameterRequest extends BaseTrackingEntity {
 
   @Column({ nullable: true })
   qcUserName: string;
+
+  @ManyToOne((type) => CMAssessmentAnswer, {nullable: true})
+  @JoinColumn()
+  cmAssessmentAnswer: CMAssessmentAnswer
+
+  @Column()
+  tool: Tool
+
 }
