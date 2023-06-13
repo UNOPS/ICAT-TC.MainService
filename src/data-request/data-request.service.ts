@@ -30,6 +30,8 @@ import { Tool } from './enum/tool.enum';
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { InvestorQuestions } from 'src/investor-tool/entities/investor-questions.entity';
+import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-question.entity';
+import { CMQuestion } from 'src/carbon-market/entity/cm-question.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -107,13 +109,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     let data = this.repo
       .createQueryBuilder('dr')
       .where('dr.tool = :value', { value: tool })
-      // .leftJoinAndMapOne(
-      //   'dr.parameter',
-      //   Parameter,
-      //   'para',
-      //   'para.id = dr.parameterId',
-      // )
-      if(tool ===Tool.Investor_tool|| Tool.Portfolio_tool ){
+      
+      if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
         data.leftJoinAndMapOne(
           'dr.investmentParameter',
           InvestorAssessment,
@@ -173,43 +170,50 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         
       }
     
-      // .innerJoinAndMapOne('p.Sector', Sector, 'sec', `p.sectorId = sec.id and p.sectorId = ${sectorIdFromTocken}`)
-      // data.leftJoinAndMapOne(
-      //   'para.institution',
-      //   Institution,
-      //   'i',
-      //   'i.id = para.institution_id',
-      // )
-      // .where(whereCond)
-      else if(tool ===Tool.CM_tool ){
+      
+       if(tool ===Tool.CM_tool ){
+        console.log("called",tool)
         data.leftJoinAndMapOne(
           'dr.cmAssessmentAnswer',
-          InvestorAssessment,
+          CMAssessmentAnswer,
           'cmAssessmentAnswer',
-          'cmAssessmentAnswer.id = dr.cmAssessmentAnswerId',
+          'cmAssessmentAnswer.id = dr.cmAssessmentAnswerID',
         )
-        .leftJoinAndMapOne(
-          'cmAssessmentAnswer.assessment_question',
-          InvestorQuestions,
-          'assessment_question',
-          'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
-        )
-        .leftJoinAndMapOne(
-          'investmentAssessment.assessment',
-          Assessment,
-          'assessment',
-          'assessment.id = investmentAssessment.assessment_id',
-        )
-       
+        
         .leftJoinAndMapOne(
           'cmAssessmentAnswer.institution',
           Institution,
           'ins',
           'ins.id = cmAssessmentAnswer.institutionId',
         )
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.assessment_question',
+           CMAssessmentQuestion,
+          'assessment_question',
+          'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
+        )
+        .leftJoinAndMapOne(
+          'assessment_question.question',
+           CMQuestion,
+          'cmQuestion',
+          'cmQuestion.id = assessment_question.questionId',
+        )
+       
+        .leftJoinAndMapOne(
+          'assessment_question.assessment',
+           Assessment,
+          'assessment',
+          'assessment.id = assessment_question.assessmentId',
+        )
+       
        
         
-        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        .leftJoinAndMapOne(
+          'assessment.climateAction',
+           ClimateAction, 
+          'intervention', 
+          'intervention.id = assessment.climateAction_id'
+         )
         // .innerJoinAndMapOne(
         //   'p.Country',
         //   Country,
