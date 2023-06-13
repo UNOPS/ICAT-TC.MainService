@@ -108,7 +108,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     // console.log(whereCond);
     let data = this.repo
       .createQueryBuilder('dr')
-      .where('dr.tool = :value', { value: tool })
+      .where('dr.tool = :value AND (dr.dataRequestStatus !=:status OR dr.dataRequestStatus IS NULL )', { value: tool,status:2})
+      // .andWhere('dr.dataRequestStatus :value',{value: DataRequestStatus.Assign_Data_Request_Sent})
       
       if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
         data.leftJoinAndMapOne(
@@ -123,18 +124,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment',
           'assessment.id = investmentAssessment.assessment_id',
         )
-        // if(tool ===Tool.Investor_tool){
-        //   console.log("called",tool)
-        //   data
-        //   .where('assessment.tool = :value', { value: 'Investment & Private Sector Tool' })
-        // }
-        // else if( Tool.Portfolio_tool){
-        //   console.log("called",tool)
-        //   data
-        //   .where('assessment.tool = :value', { value: 'Portfolio Tool' })
-
-        // }
-        // data
+        
         .leftJoinAndMapOne(
           'investmentAssessment.category',
           Category,
@@ -648,27 +638,27 @@ console.log("=========11",result)
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id } });
 
-      let ss = await this.paramterRepo.findByIds([
-        dataRequestItem.parameter.id,
-      ]);
-      if (ss[0].institution != null) {
-        console.log('sssssss', ss);
-        var template =
-          'Dear ' +
-          ss[0].institution.name +
-          '<br/>Data request with following information has shared with you.' +
-        //   ' <br/> parameter name' +
-        //   ss[0].name +
-          '<br/> deadline ' +
-          updateDataRequestDto.deadline;
+      // let ss = await this.paramterRepo.findByIds([
+      //   dataRequestItem.parameter.id,
+      // ]);
+      // if (ss[0].institution != null) {
+      //   console.log('sssssss', ss);
+      //   var template =
+      //     'Dear ' +
+      //     ss[0].institution.name +
+      //     '<br/>Data request with following information has shared with you.' +
+      //   //   ' <br/> parameter name' +
+      //   //   ss[0].name +
+      //     '<br/> deadline ' +
+      //     updateDataRequestDto.deadline;
 
-        this.emaiService.sendMail(
-          ss[0].institution.email,
-          'Assign Deadline request',
-          '',
-          template,
-        );
-      }
+      //   this.emaiService.sendMail(
+      //     ss[0].institution.email,
+      //     'Assign Deadline request',
+      //     '',
+      //     template,
+      //   );
+      // }
 
       let originalStatus = dataRequestItem.dataRequestStatus;
       dataRequestItem.deadline = updateDataRequestDto.deadline;
@@ -683,7 +673,7 @@ console.log("=========11",result)
           'DataRequest',
           '',
           res.dataRequestStatus.toString(),
-          originalStatus.toString(),
+          originalStatus?.toString(),
         );
       });
     }
@@ -1074,6 +1064,7 @@ console.log("=========11",result)
           res.noteDataRequest,
           res.dataRequestStatus.toString(),
           originalStatus.toString(),
+          
         );
       });
       //  dataRequestItemList.push(dataRequestItem);
@@ -1133,5 +1124,27 @@ console.log("=========11",result)
     let result = await data.getMany();
 
     return result;
+  }
+
+  async updateInstitution(
+    updateValueDto: ParameterRequest,
+  ): Promise<boolean> {
+    let institutionItem = await this.institutionRepo.findOne({
+      where: { id: updateValueDto.institutionId }
+    });
+   let data= this.parameterRequestRepository.findOne({
+    where: { id: updateValueDto.id }
+  });
+    let dataEnterItem = await this.repo.findOne({
+      where: { id: (await data).parameter.id }
+    });
+    // dataEnterItem.value = updateValueDto.value;  // not comming value
+    dataEnterItem.institution = institutionItem;
+    console.log('updateValueDto', updateValueDto);
+    console.log('institutionItem', institutionItem);
+    this.repo.save(dataEnterItem);
+
+    
+    return true;
   }
 }

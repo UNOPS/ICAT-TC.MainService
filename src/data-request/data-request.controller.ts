@@ -31,6 +31,12 @@ import { Tool } from './enum/tool.enum';
       parameter: {
         eager: true,
       },
+      cmAssessmentAnswer: {
+        eager: true,
+      },
+      investmentParameter: {
+        eager: true,
+      },
     },
   },
 })
@@ -355,6 +361,16 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return await this.service.getClimateActionByDataRequestStatusSix(
      
     );
+  }
+
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
+
+  @Put('update-institution')
+  updateInstitution(
+    @Body() updateValueDto: ParameterRequest,
+  ): Promise<boolean> {
+    console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
+    return this.service.updateInstitution(updateValueDto);
   }
 
 

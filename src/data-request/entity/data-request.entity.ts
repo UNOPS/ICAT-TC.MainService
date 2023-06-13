@@ -99,11 +99,11 @@ export class ParameterRequest extends BaseTrackingEntity {
   @Column({ nullable: true })
   qcUserName: string;
 
-  @ManyToOne((type) => CMAssessmentAnswer, {nullable: true})
+  @ManyToOne((type) => CMAssessmentAnswer, {nullable: true,eager:true})
   @JoinColumn()
   cmAssessmentAnswer: CMAssessmentAnswer
 
-  @ManyToOne((type) => InvestorAssessment, {nullable: true})
+  @ManyToOne((type) => InvestorAssessment, {nullable: true, eager:true})
   @JoinColumn()
   investmentParameter: InvestorAssessment
 

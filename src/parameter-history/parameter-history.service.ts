@@ -6,6 +6,9 @@ import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-ass
 import { ParameterHistory } from './entity/parameter-history.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { ParameterHistoryAction } from './entity/parameter-history-action-history.entity';
+import { Tool } from 'src/data-request/enum/tool.enum';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 
 @Injectable()
 export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory>  {
@@ -32,16 +35,29 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
     
         let data = this.parameterRequestRepo
         .createQueryBuilder('paraReq')
-        .innerJoinAndMapOne(
-          'paraReq.parameter',
-          Parameter,
-          'para',
-          `paraReq.ParameterId = para.id and paraReq.id = ${dataReqestId}`,
-        )
+        if(datareqest.tool==Tool.CM_tool){
+          data.innerJoinAndMapOne(
+            'paraReq.cmAssessmentAnswer',
+             CMAssessmentAnswer,
+            'para',
+            `paraReq.cmAssessmentAnswerID = para.id and paraReq.id = ${dataReqestId}`,
+          )
+         
+        }
+        else if(datareqest.tool==Tool.Investor_tool||Tool.Portfolio_tool){
+          data.innerJoinAndMapOne(
+            'paraReq.investmentParameter',
+             InvestorAssessment,
+            'para',
+            `paraReq.investmentParameterId = para.id and paraReq.id = ${dataReqestId}`,
+          )
+        }
+        
         //.where('paraHis.id = dataReqestId')
     
         let result1 = await data.getOne();
-        console.log("my parameter111..",result1)
+        // console.log("my parameter111..",result1)
+
     
     
        // let parameter = await this.parameterRepo.findOne(datareqest.parameter.id);
@@ -51,7 +67,15 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
         let parameterHistory = new ParameterHistory();
         parameterHistory.description = description;
         parameterHistory.comment = comment;
-        parameterHistory.parameterId = result1.parameter.id;
+        if(datareqest.tool==Tool.CM_tool){
+          parameterHistory.parameterId = result1.cmAssessmentAnswer.id;
+         
+        }
+        else if(datareqest.tool==Tool.Investor_tool||Tool.Portfolio_tool){
+          parameterHistory.parameterId = result1.investmentParameter.id;
+         
+        }
+        
         // parameterHistory.parameterName = result1.parameter?.name;
         parameterHistory.parameterCreatedDate = datareqest.createdOn;
         parameterHistory.parameterAllocatedDate = datareqest.deadline;
