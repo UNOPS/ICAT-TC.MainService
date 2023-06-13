@@ -76,5 +76,10 @@ export class InvestorToolController {
    
   }
 
+  @Get('get-investor-question-by-id')
+  async getInvestorQuestionById(@Query('id') id: number){
+    return await this.investorToolService.getInvestorQuestionById(id)
+  }
+
 
 }

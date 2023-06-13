@@ -112,6 +112,9 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({  nullable: true })
     institutionDescription: string;
 
+    @Column({  nullable: true })
+    parameter_value: string;
+
 
 
 }

@@ -36,7 +36,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
-    @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
+    @InjectRepository(InvestorQuestions) private  investorQuestionRepo: Repository<InvestorQuestions>,
     @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
@@ -651,6 +651,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
         return {meth1Process,meth1Outcomes}
       
+    }
+
+    async getInvestorQuestionById(id: number){
+      return await (this.investorQuestionRepo.createQueryBuilder('qu').where('id = :id', {id:id})).getOne()
     }
     
 

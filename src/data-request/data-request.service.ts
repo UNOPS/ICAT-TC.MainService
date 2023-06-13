@@ -456,38 +456,22 @@ console.log("=========11",result)
     let insId = userItem ? userItem.institution.id : 0;
     climateActionId = Number(climateActionId)
 
-    let filter
-    if (filterText){
-      if (filter) {
-        filter = filter + 'project.climateActionName LIKE %:filterText% '
-      } else {
-        filter = 'project.climateActionName LIKE %:filterText% '
-      }
-    } 
+    let filter = 'request.dataRequestStatus in (4,5,-8) AND  request.tool = :tool '
 
-    if (climateActionId !== 0){
-      if (filter){
-        filter = filter + 'AND climateAction.id = :climateActionId ';
-      } else {
-        filter = 'climateAction.id = :climateActionId '
-      }
-    } 
-    if (insId){
-      if (filter){
-        filter = filter + 'AND assessmentAnswer.institutionId = :insId '
-      } else {
-        filter = 'assessmentAnswer.institutionId = :insId '
-      }
-    } 
-    if (filter){
-      filter = filter + 'AND request.dataRequestStatus in (4,5,-8) '
-    } else {
-      filter = 'request.dataRequestStatus in (4,5,-8) '
+    if (filterText){
+      filter = filter + 'AND project.climateActionName LIKE %:filterText% '
     }
 
+    if (climateActionId !== 0) {
+      filter = filter + 'AND climateAction.id = :climateActionId ';
+    }
+    if (insId) {
+      filter = filter + 'AND assessmentAnswer.institutionId = :insId '
+    } 
+
+    data = this.repo.createQueryBuilder('request')
     if (tool === Tool.CM_tool) {
-      data = this.repo.createQueryBuilder('request')
-      .leftJoinAndSelect(
+      data.leftJoinAndSelect(
         'request.cmAssessmentAnswer',
         'assessmentAnswer',
         'request.cmAssessmentAnswerId = assessmentAnswer.id'
@@ -507,18 +491,52 @@ console.log("=========11",result)
         'assessmentQuestion.assessment',
         'assessment',
         'assessment.id = assessmentQuestion.assessmentId'
-      ).leftJoinAndSelect(
-        'assessment.climateAction',
-        'climateAction',
-        'climateAction.id = assessment.climateAction_id'
-      ).where(
-        filter, {climateActionId: climateActionId, insId: insId, filterText: filterText}
       )
     } else if (tool === Tool.Investor_tool) {
-
+      data.leftJoinAndSelect(
+        'request.investmentParameter',
+        'investmentParameter',
+        'request.investmentParameterId = investmentParameter.id'
+      ).leftJoinAndSelect(
+        'investmentParameter.assessment',
+        'assessment',
+        'assessment.id = investmentParameter.assessment_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.category',
+        'category',
+        'assessment.id = investmentParameter.category_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.characteristics',
+        'characteristics',
+        'assessment.id = investmentParameter.characteristic_id'
+      )
     } else if (tool === Tool.Portfolio_tool) {
-
+      data.leftJoinAndSelect(
+        'request.investmentParameter',
+        'investmentParameter',
+        'request.investmentParameterId = investmentParameter.id'
+      ).leftJoinAndSelect(
+        'investmentParameter.assessment',
+        'assessment',
+        'assessment.id = investmentParameter.assessment_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.category',
+        'category',
+        'assessment.id = investmentParameter.category_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.characteristics',
+        'characteristics',
+        'assessment.id = investmentParameter.characteristic_id'
+      )
     }
+
+    data.leftJoinAndSelect(
+      'assessment.climateAction',
+      'climateAction',
+      'climateAction.id = assessment.climateAction_id'
+    ).where(
+      filter, {climateActionId: climateActionId, insId: insId, filterText: filterText, tool: tool}
+    )
 
     console.log(data.getQuery())
 
