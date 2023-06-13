@@ -18,7 +18,7 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { Country } from 'src/country/entity/country.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
-import { ClimateAction as Project } from 'src/climate-action/entity/climate-action.entity';
+import { ClimateAction, ClimateAction as Project } from 'src/climate-action/entity/climate-action.entity';
 import { ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
 import { DefaultValue } from 'src/default-value/entity/defaultValue.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
@@ -26,6 +26,9 @@ import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-h
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
+import { Tool } from './enum/tool.enum';
+import { InvestorQuestions } from 'src/investor-tool/entities/investor-questions.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -83,64 +86,87 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     countryIdFromTocken: number,
     sectorIdFromTocken: number,
   ): Promise<Pagination<any>> {
-    let whereCond = (
-      (climateActionId != 0
-        ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
-        : '') +
-      (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
-      (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
-      // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
-      `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
-      (filterText != ''
-        ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
-           )`
-        : '')
-    ).replace(/AND $/, '');
+    // let whereCond = (
+    //   (climateActionId != 0
+    //     ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
+    //     : '') +
+    //   (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
+    //   (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
+    //   // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
+    //   `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
+    //   (filterText != ''
+    //     ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
+    //        )`
+    //     : '')
+    // ).replace(/AND $/, '');
 
-    console.log(whereCond);
-
+    // console.log(whereCond);
+    let tool =Tool.Investor_tool
     let data = this.repo
       .createQueryBuilder('dr')
-      .leftJoinAndMapOne(
-        'dr.parameter',
-        Parameter,
-        'para',
-        'para.id = dr.parameterId',
-      )
-      .leftJoinAndMapOne(
-        'para.category',
-        Category,
-        'cat',
-        'cat.id = para.category_id',
-      )
-      .leftJoinAndMapOne(
-        'para.characteristics',
-        Characteristics,
-        'chara',
-        'chara.id = para.characteristics_id',
-      )
-      .leftJoinAndMapOne(
-        'para.Assessment',
-        Assessment,
-        'a',
-        'a.id = para.assessment_id',
-      )
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
-      .innerJoinAndMapOne(
-        'p.Country',
-        Country,
-        'cou',
-        `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
-      )
+      // .leftJoinAndMapOne(
+      //   'dr.parameter',
+      //   Parameter,
+      //   'para',
+      //   'para.id = dr.parameterId',
+      // )
+      if(tool ==Tool.Investor_tool ||Tool.Portfolio_tool){
+        data.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'investmentAssessment',
+          'investmentAssessment.id = dr.investmentParameterId',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.category',
+          Category,
+          'cat',
+          'cat.id = investmentAssessment.category_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.characteristics',
+          Characteristics,
+          'chara',
+          'chara.id = investmentAssessment.characteristic_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.institution',
+          Institution,
+          'ins',
+          'ins.id = investmentAssessment.institution_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = investmentAssessment.assessment_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.question',
+          InvestorQuestions,
+          'question',
+          'question.id = investmentAssessment.institutionDescription',
+        )
+        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        // .innerJoinAndMapOne(
+        //   'p.Country',
+        //   Country,
+        //   'cou',
+        //   `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
+        // )
+        
+      }
+    
       // .innerJoinAndMapOne('p.Sector', Sector, 'sec', `p.sectorId = sec.id and p.sectorId = ${sectorIdFromTocken}`)
-      .leftJoinAndMapOne(
-        'para.institution',
-        Institution,
-        'i',
-        'i.id = para.institution_id',
-      )
-      .where(whereCond)
-      .orderBy('dr.createdOn', 'DESC')
+      // data.leftJoinAndMapOne(
+      //   'para.institution',
+      //   Institution,
+      //   'i',
+      //   'i.id = para.institution_id',
+      // )
+      // .where(whereCond)
+      data
+      .orderBy('dr.id', 'DESC')
       .groupBy('dr.id');
     let result = await paginate(data, options);
     if (result) {

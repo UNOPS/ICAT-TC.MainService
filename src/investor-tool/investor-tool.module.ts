@@ -12,6 +12,7 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { IndicatorDetails } from './entities/indicator-details.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -25,6 +26,7 @@ import { Category } from 'src/methodology-assessment/entities/category.entity';
     InvestorQuestions,
     IndicatorDetails,
     Category,
+    ParameterRequest,
   ])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService]
