@@ -85,7 +85,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     dataProvider: number,
     countryIdFromTocken: number,
     sectorIdFromTocken: number,
+    tool:string,
   ): Promise<Pagination<any>> {
+    console.log("tool :",tool)
     // let whereCond = (
     //   (climateActionId != 0
     //     ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
@@ -101,22 +103,40 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     // ).replace(/AND $/, '');
 
     // console.log(whereCond);
-    let tool =Tool.Investor_tool
     let data = this.repo
       .createQueryBuilder('dr')
+      .where('dr.tool = :value', { value: tool })
       // .leftJoinAndMapOne(
       //   'dr.parameter',
       //   Parameter,
       //   'para',
       //   'para.id = dr.parameterId',
       // )
-      if(tool ==Tool.Investor_tool ||Tool.Portfolio_tool){
+      if(tool ===Tool.Investor_tool|| Tool.Portfolio_tool ){
         data.leftJoinAndMapOne(
           'dr.investmentParameter',
           InvestorAssessment,
           'investmentAssessment',
           'investmentAssessment.id = dr.investmentParameterId',
         )
+        .leftJoinAndMapOne(
+          'investmentAssessment.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = investmentAssessment.assessment_id',
+        )
+        // if(tool ===Tool.Investor_tool){
+        //   console.log("called",tool)
+        //   data
+        //   .where('assessment.tool = :value', { value: 'Investment & Private Sector Tool' })
+        // }
+        // else if( Tool.Portfolio_tool){
+        //   console.log("called",tool)
+        //   data
+        //   .where('assessment.tool = :value', { value: 'Portfolio Tool' })
+
+        // }
+        // data
         .leftJoinAndMapOne(
           'investmentAssessment.category',
           Category,
@@ -135,12 +155,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'ins',
           'ins.id = investmentAssessment.institution_id',
         )
-        .leftJoinAndMapOne(
-          'investmentAssessment.assessment',
-          Assessment,
-          'assessment',
-          'assessment.id = investmentAssessment.assessment_id',
-        )
+       
         .leftJoinAndMapOne(
           'investmentAssessment.question',
           InvestorQuestions,
@@ -165,6 +180,65 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       //   'i.id = para.institution_id',
       // )
       // .where(whereCond)
+      else if(tool ===Tool.CM_tool ){
+        data.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'investmentAssessment',
+          'investmentAssessment.id = dr.investmentParameterId',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = investmentAssessment.assessment_id',
+        )
+        // if(tool ===Tool.Investor_tool){
+        //   console.log("called",tool)
+        //   data
+        //   .where('assessment.tool = :value', { value: 'Investment & Private Sector Tool' })
+        // }
+        // else if( Tool.Portfolio_tool){
+        //   console.log("called",tool)
+        //   data
+        //   .where('assessment.tool = :value', { value: 'Portfolio Tool' })
+
+        // }
+        // data
+        .leftJoinAndMapOne(
+          'investmentAssessment.category',
+          Category,
+          'cat',
+          'cat.id = investmentAssessment.category_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.characteristics',
+          Characteristics,
+          'chara',
+          'chara.id = investmentAssessment.characteristic_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.institution',
+          Institution,
+          'ins',
+          'ins.id = investmentAssessment.institution_id',
+        )
+       
+        .leftJoinAndMapOne(
+          'investmentAssessment.question',
+          InvestorQuestions,
+          'question',
+          'question.id = investmentAssessment.institutionDescription',
+        )
+        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        // .innerJoinAndMapOne(
+        //   'p.Country',
+        //   Country,
+        //   'cou',
+        //   `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
+        // )
+        
+      }
       data
       .orderBy('dr.id', 'DESC')
       .groupBy('dr.id');

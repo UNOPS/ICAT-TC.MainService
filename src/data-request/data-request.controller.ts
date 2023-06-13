@@ -57,7 +57,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
   @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get(
-    'getNewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:dataProvider',
+    'getNewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:dataProvider/:tool',
   )
   @ApiHeader({
     name: 'api-key',
@@ -73,6 +73,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     @Query('climateActionId') climateActionId: number,
     @Query('year') year: string,
     @Query('dataProvider') dataProvider: number,
+    @Query('tool') tool: string,
   ): Promise<any> {
 
     let countryIdFromTocken:number;
@@ -91,6 +92,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
       dataProvider,
       countryIdFromTocken,
       sectorIdFromTocken,
+      tool
     );
   }
 
