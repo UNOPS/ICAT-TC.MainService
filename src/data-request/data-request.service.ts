@@ -26,8 +26,9 @@ import { ParameterHistoryAction } from 'src/parameter-history/entity/parameter-h
 import { MethodologyAssessmentParameters as Parameter} from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
-import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { Tool } from './enum/tool.enum';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { InvestorQuestions } from 'src/investor-tool/entities/investor-questions.entity';
 
 @Injectable()
@@ -494,6 +495,88 @@ console.log("=========11",result)
     }
   } 
 
+  async getEnterDataParameters(options: IPaginationOptions,
+    filterText: string,
+    climateActionId: number,
+    year: string,
+    userName: string,
+    tool: Tool
+  ): Promise<Pagination<any>>{
+    let data
+    let userItem = await this.userService.findByUserName(userName);
+    let userId = userItem ? userItem.id : 0;
+    let insId = userItem ? userItem.institution.id : 0;
+    climateActionId = Number(climateActionId)
+
+    let filter
+    if (filterText){
+      if (filter) {
+        filter = filter + 'project.climateActionName LIKE %:filterText% '
+      } else {
+        filter = 'project.climateActionName LIKE %:filterText% '
+      }
+    } 
+
+    if (climateActionId !== 0){
+      if (filter){
+        filter = filter + 'AND climateAction.id = :climateActionId ';
+      } else {
+        filter = 'climateAction.id = :climateActionId '
+      }
+    } 
+    if (insId){
+      if (filter){
+        filter = filter + 'AND assessmentAnswer.institutionId = :insId '
+      } else {
+        filter = 'assessmentAnswer.institutionId = :insId '
+      }
+    } 
+    if (filter){
+      filter = filter + 'AND request.dataRequestStatus in (4,5,-8) '
+    } else {
+      filter = 'request.dataRequestStatus in (4,5,-8) '
+    }
+
+    if (tool === Tool.CM_tool) {
+      data = this.repo.createQueryBuilder('request')
+      .leftJoinAndSelect(
+        'request.cmAssessmentAnswer',
+        'assessmentAnswer',
+        'request.cmAssessmentAnswerId = assessmentAnswer.id'
+      ).leftJoinAndSelect(
+        'assessmentAnswer.assessment_question',
+        'assessmentQuestion',
+        'assessmentAnswer.assessmentQuestionId = assessmentQuestion.id'
+      ).leftJoinAndSelect(
+        'assessmentAnswer.answer',
+        'answer',
+        'assessmentAnswer.answerId = answer.id'
+      ).leftJoinAndSelect(
+        'assessmentQuestion.question',
+        'question',
+        'question.id = assessmentQuestion.questionId'
+      ).leftJoinAndSelect(
+        'assessmentQuestion.assessment',
+        'assessment',
+        'assessment.id = assessmentQuestion.assessmentId'
+      ).leftJoinAndSelect(
+        'assessment.climateAction',
+        'climateAction',
+        'climateAction.id = assessment.climateAction_id'
+      ).where(
+        filter, {climateActionId: climateActionId, insId: insId, filterText: filterText}
+      )
+    } else if (tool === Tool.Investor_tool) {
+
+    } else if (tool === Tool.Portfolio_tool) {
+
+    }
+
+    console.log(data.getQuery())
+
+    return await paginate(data, options)
+  }
+
   async getReviewDataRequest(
     options: IPaginationOptions,
     filterText: string,
@@ -662,6 +745,7 @@ console.log("=========11",result)
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
     // let dataRequestItemList = new Array<ParameterRequest>();
+    let tool = updateDataRequestDto.tool
 
     let insSec: any;
     let inscon: any;
@@ -669,19 +753,32 @@ console.log("=========11",result)
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
 
-
       let para = this.repo.createQueryBuilder('dr')
-       .leftJoinAndMapOne(
-        'dr.parameter',
-        Parameter,
-        'para',
-        'dr.ParameterId = para.id',
-      )
-      .leftJoinAndMapOne(
+
+      if (tool === Tool.CM_tool){
+        para.leftJoinAndMapOne(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'para',
+          'dr.cmAssessmentAnswerId = para.id'
+        )
+      } else if (tool === Tool.Investor_tool){
+
+      } else if (tool === Tool.Portfolio_tool){
+
+      } else {
+        para.leftJoinAndMapOne(
+          'dr.parameter',
+          Parameter,
+          'para',
+          'dr.ParameterId = para.id',
+        )
+      }
+      
+      para.leftJoinAndMapOne(
         'para.institution',
         Institution,
-        'ins',
-        'ins.id = para.institution_id',
+        'ins'
       )
       .leftJoinAndMapOne(
         'ins.country',
@@ -703,35 +800,62 @@ console.log("=========11",result)
         pararesult[0].qaStatus = null;
       }
 
-      inscon = pararesult[0].parameter.institution.country;
-      insSec = pararesult[0].parameter.institution.sector;
+      console.log("tool", tool)
+      if (tool === Tool.CM_tool) inscon = pararesult[0].cmAssessmentAnswer.institution.country;
+      else if (tool === Tool.Investor_tool) inscon = '';
+      else if (tool === Tool.Portfolio_tool) inscon = '';
+      else inscon = pararesult[0].parameter.institution.country
+
+      // inscon = tool === Tool.CM_tool ?  :
+      //   (tool === Tool.Investor_tool ? '' :
+      //     (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.country));
+      insSec = tool === Tool.CM_tool ? pararesult[0].cmAssessmentAnswer.institution.sector :
+        (tool === Tool.Investor_tool ? '' :
+          (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.sector)) ; 
 
       this.repo.save(pararesult[0]).then((res) => {
-        this.parameterHistoryService.SaveParameterHistory(
-          res.id,
-          ParameterHistoryAction.EnterData,
-          'EnterData',
-          '',
-          res.dataRequestStatus.toString(),
-          originalStatus.toString(),
-        );
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.EnterData,
+        //   'EnterData',
+        //   '',
+        //   res.dataRequestStatus.toString(),
+        //   originalStatus.toString(),
+        // );
       });
 
       let filter: string = '';
       filter = `dr.id = :id`;
       let data = this.repo
         .createQueryBuilder('dr')
-        .leftJoinAndMapOne(
+
+      if (tool === Tool.CM_tool){
+        data.leftJoinAndMapOne(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'pm',
+          'dr.cmAssessmentAnswerId = pm.id'
+        )
+      } else if (tool === Tool.Portfolio_tool){
+
+      } else if (tool === Tool.Investor_tool){
+
+      } else {
+        data.leftJoinAndMapOne(
           'dr.parameter',
           Parameter,
           'pm',
           'dr.ParameterId= pm.id',
         )
-        .where(filter, { id });
+
+      }
+        data.where(filter, { id });
       let result = await data.getOne();
       // console.log("data...",result)
 
-      const paraId = result.parameter.id;
+      const paraId = tool === Tool.CM_tool ? result.cmAssessmentAnswer.id:
+      (tool === Tool.Investor_tool ? '' :
+        (tool === Tool.Portfolio_tool ? '' : result.parameter.id)) ;
       console.log('paraid', paraId);
     //   let parameterItem = await this.paramterRepo.findOne({
     //     where: { id: paraId },

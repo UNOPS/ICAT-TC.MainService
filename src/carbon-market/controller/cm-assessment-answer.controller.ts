@@ -10,7 +10,7 @@ import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
 @Crud({
   model: {
-    type: CMAssessmentQuestion,
+    type: CMAssessmentAnswer,
   },
   query: {
     join: {
