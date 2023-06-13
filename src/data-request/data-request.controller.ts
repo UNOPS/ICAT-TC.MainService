@@ -20,6 +20,7 @@ import { ApiHeader } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Tool } from './enum/tool.enum';
 
 @Crud({
   model: {
@@ -186,6 +187,35 @@ export class ParameterRequestController implements CrudController<ParameterReque
       climateActionId,
       year,
       userName,
+    );
+  }
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_ENTRY_OPERATOR]))
+  @Get('getEnterDataRequests/:page/:limit/:filterText/:climateActionId/:year')
+  @ApiHeader({
+    name: 'api-key',
+    schema: { type: 'string', default: '1234'} 
+   
+  }) 	
+  async getEnterDataParameters(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+    @Query('climateActionId') climateActionId: number,
+    @Query('year') year: string,
+    @Query('userName') userName: string,
+    @Query('tool') tool: Tool,
+  ): Promise<any> {
+    return await this.service.getEnterDataParameters(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      climateActionId,
+      year,
+      userName,
+      tool
     );
   }
 

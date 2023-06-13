@@ -19,6 +19,7 @@ import { CMSeedController } from "./controller/cm-seed.controller";
 import { CMSeedService } from "./service/cm-seed.service";
 import { Results } from "src/methodology-assessment/entities/results.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 
 
 @Module({
@@ -32,7 +33,8 @@ import { Assessment } from "src/assessment/entities/assessment.entity";
       CMAssessmentQuestion,
       CMAssessmentAnswer,
       Results,
-      Assessment
+      Assessment,
+      ParameterRequest
     ]),
   ],
   controllers: [

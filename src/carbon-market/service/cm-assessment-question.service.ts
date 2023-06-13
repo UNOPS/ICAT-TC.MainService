@@ -8,6 +8,9 @@ import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
 import { Results } from "src/methodology-assessment/entities/results.entity";
 import { Approach } from "../enum/answer-type.enum";
+import { ParameterRequest } from "src/data-request/entity/data-request.entity";
+import { request } from "http";
+import { Tool } from "src/data-request/enum/tool.enum";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -21,7 +24,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(Results)
     private resultsRepo: Repository<Results>,
     @InjectRepository(Assessment)
-    private assessmentRepo: Repository<Assessment>
+    private assessmentRepo: Repository<Assessment>,
+    @InjectRepository(ParameterRequest)
+    private parameterRequestRepo: Repository<ParameterRequest>
   ) {
     super(repo);
   }
@@ -39,7 +44,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   
   async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
     let a_ans: any[]
-    console.log("hittt")
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -52,13 +56,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       console.log("typeeee", res.type)
       if (res.answer || res.institution){
         if (res.type === 'INDIRECT'){
-          console.log("ooooppp")
           let ass_answer = new CMAssessmentAnswer()
           ass_answer.institution = res.institution
           ass_answer.assessment_question = q_res
           ass_answer.approach = Approach.INDIRECT
           answers.push(ass_answer)
-          console.log("anss", ass_answer)
         } else {
           if (Array.isArray(res.answer)) {
             res.answer.forEach(async ans => {
@@ -76,17 +78,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             ass_answer.assessment_question = q_res
             ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
             ass_answer.approach = Approach.DIRECT
-  
-            console.log("ans: ",ass_answer.score)
     
             answers.push(ass_answer)
           }
         }
-        console.log("answerrppp: ",answers)
         a_ans = await this.assessmentAnswerRepo.save(answers)
       /*   let result = new Results()
         result.assessment = assessment;
         await this.resultsRepo.save(result)  */
+        await this.saveDataRequests(answers)
 
         
       }
@@ -265,6 +265,21 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       
     }
 
+  }
+
+  async saveDataRequests(answers: CMAssessmentAnswer[]){
+    let requests = []
+    answers.forEach(ans => {
+      if (ans.institution !== undefined){
+        let request = new ParameterRequest()
+        request.tool = Tool.CM_tool
+        request.cmAssessmentAnswer = ans
+  
+        requests.push(request)
+      }
+    })
+
+    await this.parameterRequestRepo.save(requests)
   }
 
 
