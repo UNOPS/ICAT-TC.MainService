@@ -182,10 +182,16 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       // .where(whereCond)
       else if(tool ===Tool.CM_tool ){
         data.leftJoinAndMapOne(
-          'dr.investmentParameter',
+          'dr.cmAssessmentAnswer',
           InvestorAssessment,
-          'investmentAssessment',
-          'investmentAssessment.id = dr.investmentParameterId',
+          'cmAssessmentAnswer',
+          'cmAssessmentAnswer.id = dr.cmAssessmentAnswerId',
+        )
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.assessment_question',
+          InvestorQuestions,
+          'assessment_question',
+          'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
         )
         .leftJoinAndMapOne(
           'investmentAssessment.assessment',
@@ -193,43 +199,15 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment',
           'assessment.id = investmentAssessment.assessment_id',
         )
-        // if(tool ===Tool.Investor_tool){
-        //   console.log("called",tool)
-        //   data
-        //   .where('assessment.tool = :value', { value: 'Investment & Private Sector Tool' })
-        // }
-        // else if( Tool.Portfolio_tool){
-        //   console.log("called",tool)
-        //   data
-        //   .where('assessment.tool = :value', { value: 'Portfolio Tool' })
-
-        // }
-        // data
-        .leftJoinAndMapOne(
-          'investmentAssessment.category',
-          Category,
-          'cat',
-          'cat.id = investmentAssessment.category_id',
-        )
-        .leftJoinAndMapOne(
-          'investmentAssessment.characteristics',
-          Characteristics,
-          'chara',
-          'chara.id = investmentAssessment.characteristic_id',
-        )
-        .leftJoinAndMapOne(
-          'investmentAssessment.institution',
-          Institution,
-          'ins',
-          'ins.id = investmentAssessment.institution_id',
-        )
        
         .leftJoinAndMapOne(
-          'investmentAssessment.question',
-          InvestorQuestions,
-          'question',
-          'question.id = investmentAssessment.institutionDescription',
+          'cmAssessmentAnswer.institution',
+          Institution,
+          'ins',
+          'ins.id = cmAssessmentAnswer.institutionId',
         )
+       
+        
         .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
         // .innerJoinAndMapOne(
         //   'p.Country',
