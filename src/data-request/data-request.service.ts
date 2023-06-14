@@ -492,7 +492,7 @@ console.log("=========11",result)
         'assessment',
         'assessment.id = assessmentQuestion.assessmentId'
       )
-    } else if (tool === Tool.Investor_tool) {
+    } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
       data.leftJoinAndSelect(
         'request.investmentParameter',
         'investmentParameter',
@@ -504,31 +504,13 @@ console.log("=========11",result)
       ).leftJoinAndSelect(
         'investmentParameter.category',
         'category',
-        'assessment.id = investmentParameter.category_id'
+        'category.id = investmentParameter.category_id'
       ).leftJoinAndSelect(
         'investmentParameter.characteristics',
         'characteristics',
-        'assessment.id = investmentParameter.characteristic_id'
+        'characteristics.id = investmentParameter.characteristic_id'
       )
-    } else if (tool === Tool.Portfolio_tool) {
-      data.leftJoinAndSelect(
-        'request.investmentParameter',
-        'investmentParameter',
-        'request.investmentParameterId = investmentParameter.id'
-      ).leftJoinAndSelect(
-        'investmentParameter.assessment',
-        'assessment',
-        'assessment.id = investmentParameter.assessment_id'
-      ).leftJoinAndSelect(
-        'investmentParameter.category',
-        'category',
-        'assessment.id = investmentParameter.category_id'
-      ).leftJoinAndSelect(
-        'investmentParameter.characteristics',
-        'characteristics',
-        'assessment.id = investmentParameter.characteristic_id'
-      )
-    }
+    } 
 
     data.leftJoinAndSelect(
       'assessment.climateAction',
@@ -728,10 +710,13 @@ console.log("=========11",result)
           'para',
           'dr.cmAssessmentAnswerId = para.id'
         )
-      } else if (tool === Tool.Investor_tool){
-
-      } else if (tool === Tool.Portfolio_tool){
-
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        para.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'para',
+          'dr.investmentParameterId = para.id'
+        )
       } else {
         para.leftJoinAndMapOne(
           'dr.parameter',
@@ -768,16 +753,12 @@ console.log("=========11",result)
 
       console.log("tool", tool)
       if (tool === Tool.CM_tool) inscon = pararesult[0].cmAssessmentAnswer.institution.country;
-      else if (tool === Tool.Investor_tool) inscon = '';
-      else if (tool === Tool.Portfolio_tool) inscon = '';
+      else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) inscon = pararesult[0].investmentParameter.institution.country;
       else inscon = pararesult[0].parameter.institution.country
 
-      // inscon = tool === Tool.CM_tool ?  :
-      //   (tool === Tool.Investor_tool ? '' :
-      //     (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.country));
-      insSec = tool === Tool.CM_tool ? pararesult[0].cmAssessmentAnswer.institution.sector :
-        (tool === Tool.Investor_tool ? '' :
-          (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.sector)) ; 
+      if (tool === Tool.CM_tool) insSec = pararesult[0].cmAssessmentAnswer.institution.sector;
+      else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) inscon = pararesult[0].investmentParameter.institution.sector;
+      else inscon = pararesult[0].parameter.institution.sector
 
       this.repo.save(pararesult[0]).then((res) => {
         // this.parameterHistoryService.SaveParameterHistory(
@@ -802,10 +783,13 @@ console.log("=========11",result)
           'pm',
           'dr.cmAssessmentAnswerId = pm.id'
         )
-      } else if (tool === Tool.Portfolio_tool){
-
-      } else if (tool === Tool.Investor_tool){
-
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        data.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'pm',
+          'dr.investmentParameterId = pm.id'
+        )
       } else {
         data.leftJoinAndMapOne(
           'dr.parameter',
@@ -820,8 +804,7 @@ console.log("=========11",result)
       // console.log("data...",result)
 
       const paraId = tool === Tool.CM_tool ? result.cmAssessmentAnswer.id:
-      (tool === Tool.Investor_tool ? '' :
-        (tool === Tool.Portfolio_tool ? '' : result.parameter.id)) ;
+      ((tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) ? result.investmentParameter.id : result.parameter.id) ;
       console.log('paraid', paraId);
     //   let parameterItem = await this.paramterRepo.findOne({
     //     where: { id: paraId },

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -79,6 +79,11 @@ export class InvestorToolController {
   @Get('get-investor-question-by-id')
   async getInvestorQuestionById(@Query('id') id: number){
     return await this.investorToolService.getInvestorQuestionById(id)
+  }
+
+  @Put('update-investor-assessmnet')
+  async updateInvestorAssessment(@Body() req: UpdateInvestorToolDto){
+    return await this.investorToolService.updateInvestorAssessment(req)
   }
 
 
