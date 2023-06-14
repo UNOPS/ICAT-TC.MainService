@@ -50,8 +50,10 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     public defaultValRepo: Repository<DefaultValue>,
     @InjectRepository(Project)
     public ProjectRepo: Repository<Project>,
-    // @InjectRepository(CMAssessmentAnswer)
-    // public cmAssessmentAnswerRepo: Repository<CMAssessmentAnswer>,
+    @InjectRepository(InvestorAssessment)
+    public investmentRepo: Repository<InvestorAssessment>,
+    @InjectRepository(CMAssessmentAnswer)
+    public cmAssessmentAnswerRepo: Repository<CMAssessmentAnswer>,
   ) {
     super(repo);
   }
@@ -337,61 +339,136 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     filterText: string,
     climateActionId: number,
     userName: string,
+    tool:string
   ): Promise<Pagination<any>> {
+   
     let userItem = await this.userService.findByUserName(userName);
     let institutionId = userItem.institution ? userItem.institution.id : 0;
-
+    // console.log(userName,"-----",userItem)
+    // console.log(whereCond);
     let data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne(
-        'dr.parameterId',
-        Parameter,
-        'para',
-        'para.id = dr.parameterId',
-      )
-      .leftJoinAndMapOne(
-        'para.characteristics',
-        Characteristics,
-        'cha',
-        'cha.id = para.characteristics_id',
-      )
-      .leftJoinAndMapOne(
-        'para.category',
-        Category,
-        'cat',
-        'cat.id = para.category_id',
-      )
-      .leftJoinAndMapOne(
-        'para.Institution',
-        Institution,
-        'i',
-        'i.id = para.institution_id',
-      )
-      .leftJoinAndMapOne(
-        'para.Assessment',
-        Assessment,
-        'a',
-        'a.id = para.assessment_id',
-      )
-      .leftJoinAndMapOne('a.User', User, 'u', 'u.id = dr.UserDataEntry')
-      .leftJoinAndMapOne('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
-      .where(
+        'dr.UserDataEntry',
+         User, 
+        'user', 
+        'user.id = dr.UserDataEntry'
+       )
+     
+      .where('dr.tool = :value', { value: tool})
+      // .andWhere('dr.dataRequestStatus :value',{value: DataRequestStatus.Assign_Data_Request_Sent})
+      
+      if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
+        console.log("tool",tool);
+        data.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'investmentAssessment',
+          'investmentAssessment.id = dr.investmentParameterId',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = investmentAssessment.assessment_id',
+        )
+        
+        .leftJoinAndMapOne(
+          'investmentAssessment.category',
+          Category,
+          'cat',
+          'cat.id = investmentAssessment.category_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.characteristics',
+          Characteristics,
+          'chara',
+          'chara.id = investmentAssessment.characteristic_id',
+        )
+        .leftJoinAndMapOne(
+          'investmentAssessment.institution',
+          Institution,
+          'ins',
+          'ins.id = investmentAssessment.institution_id',
+        )
+       
+        .leftJoinAndMapOne(
+          'investmentAssessment.question',
+          InvestorQuestions,
+          'question',
+          'question.id = investmentAssessment.institutionDescription',
+        )
+        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        
+        
+      }
+    
+      
+       else if(tool ===Tool.CM_tool ){
+        console.log("called",tool)
+        data.leftJoinAndMapOne(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'cmAssessmentAnswer',
+          'cmAssessmentAnswer.id = dr.cmAssessmentAnswerID',
+        )
+        
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.institution',
+          Institution,
+          'ins',
+          'ins.id = cmAssessmentAnswer.institutionId',
+        )
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.assessment_question',
+           CMAssessmentQuestion,
+          'assessment_question',
+          'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
+        )
+        .leftJoinAndMapOne(
+          'assessment_question.question',
+           CMQuestion,
+          'cmQuestion',
+          'cmQuestion.id = assessment_question.questionId',
+        )
+       
+        .leftJoinAndMapOne(
+          'assessment_question.assessment',
+           Assessment,
+          'assessment',
+          'assessment.id = assessment_question.assessmentId',
+        )
+       
+       
+        
+        .leftJoinAndMapOne(
+          'assessment.climateAction',
+           ClimateAction, 
+          'intervention', 
+          'intervention.id = assessment.climateAction_id'
+         )
+       
+        
+      }
+      data
+      .orderBy('dr.id', 'DESC')
+      .groupBy('dr.id')
+      .andWhere(
         (
-          (institutionId != 0 ? `i.id=${institutionId} AND ` : '') +
-          (climateActionId != 0 ? `p.id=${climateActionId} AND ` : '') +
+          (institutionId != 0 ? `ins.id=${institutionId} AND ` : '') +
+          (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
           `dr.dataRequestStatus in (2,3,-9,-10) AND ` +
           (filterText != ''
-            ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR u.username LIKE '%${filterText}%'
+            ? `(intervention.policyName LIKE '%${filterText}%' 
            )`
             : '')
         ).replace(/AND $/, ''),
       )
-      .orderBy('dr.createdOn', 'DESC')
-      .groupBy('dr.id');
+     
 
     let result = await paginate(data, options);
     if (result) {
-      console.log('ffff',result)
+      // console.log('ffff',result)
       return result;
     }
   }
@@ -638,8 +715,11 @@ console.log("=========11",result)
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-
+      // let dataRequestItem = await this.repo.findOne({ where: { id: id } ,relations:['investmentParameter','cmAssessmentAnswer']},);
+      let dataRequestItem=await this.repo
+      .createQueryBuilder("dataRequestItem")
+      .where("dataRequestItem.id = :id", { id:id })
+      .getOne()
       // let ss = await this.paramterRepo.findByIds([
       //   dataRequestItem.parameter.id,
       // ]);
@@ -1133,14 +1213,24 @@ console.log("=========11",result)
     id:number
   ): Promise<any> {
     if(updateValueDto.tool==Tool.CM_tool){
+      // console.log(updateValueDto,id)
+      let update = await this.cmAssessmentAnswerRepo.createQueryBuilder()
+      .update(CMAssessmentAnswer)
+      .set({institution:updateValueDto?.cmAssessmentAnswer?.institution})
+      .where("id = :id", { id: updateValueDto?.cmAssessmentAnswer?.id })
+      .execute()
+      return update;
+    }
+   else if(updateValueDto.tool==Tool.Investor_tool||Tool.Portfolio_tool){
       console.log(updateValueDto,id)
-      let update = await this.repo.createQueryBuilder()
-      .update(ParameterRequest)
-      .set(updateValueDto.cmAssessmentAnswer.institution)
-      .where("id = :id", { instanceof: id })
+      let update = await this.investmentRepo.createQueryBuilder()
+      .update(InvestorAssessment)
+      .set({institution:updateValueDto?.investmentParameter?.institution})
+      .where("id = :id", { id: updateValueDto?.investmentParameter?.id })
       .execute()
       return update;
     }
     
+
   }
 }

@@ -92,7 +92,9 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
       }
 
       async getHistory(id: number): Promise<any> 
+      
       {
+        console.log("id.....",id)
         let filter: string = 'as.parameterId = :id';
         var data = this.repo
           .createQueryBuilder('as')

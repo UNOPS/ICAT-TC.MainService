@@ -88,6 +88,7 @@ import { InvestorAssessment } from './investor-tool/entities/investor-assessment
 import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
 import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { CMAssessmentAnswer } from './carbon-market/entity/cm-assessment-answer.entity';
 
 @Module({
   imports: [
@@ -129,7 +130,9 @@ import { PortfolioModule } from './portfolio/portfolio.module';
       UserType,
       InvestorTool,
       IndicatorDetails,
-      InvestorQuestions
+      InvestorQuestions,
+      InvestorAssessment,
+      CMAssessmentAnswer,
     ]),
     UsersModule,
     UserTypeModule,

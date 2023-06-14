@@ -31,12 +31,8 @@ import { Tool } from './enum/tool.enum';
       parameter: {
         eager: true,
       },
-      cmAssessmentAnswer: {
-        eager: true,
-      },
-      investmentParameter: {
-        eager: true,
-      },
+      
+      
     },
   },
 })
@@ -144,7 +140,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
   @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
   @Get(
-    'getAssignDateRequest/:page/:limit/:filterText/:climateActionId/:userName',
+    'getAssignDateRequest/:page/:limit/:filterText/:climateActionId/:userName/:tool',
   )
   @ApiHeader({
     name: 'api-key',
@@ -158,6 +154,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     @Query('filterText') filterText: string,
     @Query('climateActionId') climateActionId: number,
     @Query('userName') userName: string,
+    @Query('tool') tool: string,
   ): Promise<any> {
     return await this.service.getAssignDataRequest(
       {
@@ -167,6 +164,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
       filterText,
       climateActionId,
       userName,
+      tool
     );
   }
 
@@ -371,7 +369,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     
     @Body() updateValueDto: ParameterRequest,
   ): Promise<boolean> {
-    console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
+    // console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
     return this.service.updateInstitution(updateValueDto,id);
   }
 
