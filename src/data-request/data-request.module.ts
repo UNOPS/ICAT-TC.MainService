@@ -16,17 +16,18 @@ import { DefaultValue } from 'src/default-value/entity/defaultValue.entity';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { ParameterRequestController as DataRequestController } from './data-request.controller';
 import { DefaultValueModule } from 'src/default-value/default-value.module';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ParameterRequest,User,Audit,MethodologyAssessmentParameters,DefaultValue,ClimateAction,Institution]),
+    TypeOrmModule.forFeature([ParameterRequest,User,Audit,MethodologyAssessmentParameters,DefaultValue,ClimateAction,Institution,CMAssessmentAnswer]),
     UsersModule,
     ParameterHistoryModule,
     DefaultValueModule,
     
   ],
- providers: [ParameterRequestService,AuditService,EmailNotificationService,MethodologyAssessmentParameters,DefaultValue,ClimateAction,Institution,TokenDetails,DefaultValue],
+ providers: [ParameterRequestService,AuditService,EmailNotificationService,MethodologyAssessmentParameters,DefaultValue,ClimateAction,Institution,TokenDetails,DefaultValue,CMAssessmentAnswer],
   controllers: [DataRequestController],
-  exports: [ParameterRequestService,AuditService,EmailNotificationService,MethodologyAssessmentParameters,DefaultValue,DefaultValue,ClimateAction,],
+  exports: [ParameterRequestService,AuditService,EmailNotificationService,MethodologyAssessmentParameters,DefaultValue,DefaultValue,ClimateAction,CMAssessmentAnswer],
 })
 export class ParameterRequestModule {}
