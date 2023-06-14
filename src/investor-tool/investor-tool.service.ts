@@ -294,6 +294,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             }
             if(assess.indicator_details){
               for (let detail of assess.indicator_details) {
+               
                 let obj4 = new InvestorAssessment()
                 obj4.category = category
                 obj4.type = req.type
@@ -302,12 +303,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                 obj4.description = assess.description
                 obj4.starting_situation = assess.starting_situation
                 obj4.likelihood_weight = assess.likelihood_weight
-                obj4.institution = (detail.value)?detail.value:null
+                
                 obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.institution = detail.value
                 obj4.likelihood_justification = assess.likelihood_justification
                 obj4.justification = assess.justification
                 obj4.indicator = assess.indicator
                 obj4.assessment = request[0].data[0].assessment
+                if( detail.value){
+                  obj4.institution = detail.value
                 let a = await this.investorAssessmentRepo.save(obj4).then(
                   async (asess) => {
                     let datarequestParameter= new ParameterRequest()
@@ -315,6 +319,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                     datarequestParameter.tool =tool;
                     await this.dataRequestRepository.save(datarequestParameter)
                   })
+                  console.log("=================",detail.value)
+                }
+                
                 
                }
               }
@@ -405,6 +412,39 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                 })
               console.log("saved7")
             }
+            if(assess.indicator_details){
+              for (let detail of assess.indicator_details) {
+               
+                let obj4 = new InvestorAssessment()
+                obj4.category = category
+                obj4.type = req.type
+                obj4.characteristics = assess.characteristics
+                obj4.relevance_weight = assess.relevance_weight
+                obj4.description = assess.description
+                obj4.starting_situation = assess.starting_situation
+                obj4.likelihood_weight = assess.likelihood_weight
+                
+                obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.institution = detail.value
+                obj4.likelihood_justification = assess.likelihood_justification
+                obj4.justification = assess.justification
+                obj4.indicator = assess.indicator
+                obj4.assessment = request[0].data[0].assessment
+                if( detail.value){
+                  obj4.institution = detail.value
+                let a = await this.investorAssessmentRepo.save(obj4).then(
+                  async (asess) => {
+                    let datarequestParameter= new ParameterRequest()
+                    datarequestParameter.investmentParameter =asess;
+                    datarequestParameter.tool =tool;
+                    await this.dataRequestRepository.save(datarequestParameter)
+                  })
+                  console.log("=================",detail.value)
+                }
+                
+                
+               }
+              }
             if(assess.expected_ghg_mitigation){
               let obj4 = new InvestorAssessment()
               obj4.category = category

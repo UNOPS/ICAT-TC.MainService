@@ -30,6 +30,8 @@ import { Tool } from './enum/tool.enum';
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { InvestorQuestions } from 'src/investor-tool/entities/investor-questions.entity';
+import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-question.entity';
+import { CMQuestion } from 'src/carbon-market/entity/cm-question.entity';
 
 @Injectable()
 export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest> {
@@ -86,7 +88,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     dataProvider: number,
     countryIdFromTocken: number,
     sectorIdFromTocken: number,
+    tool:string,
   ): Promise<Pagination<any>> {
+    console.log("tool :",tool)
     // let whereCond = (
     //   (climateActionId != 0
     //     ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
@@ -102,22 +106,25 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     // ).replace(/AND $/, '');
 
     // console.log(whereCond);
-    let tool =Tool.Investor_tool
     let data = this.repo
       .createQueryBuilder('dr')
-      // .leftJoinAndMapOne(
-      //   'dr.parameter',
-      //   Parameter,
-      //   'para',
-      //   'para.id = dr.parameterId',
-      // )
-      if(tool ==Tool.Investor_tool ||Tool.Portfolio_tool){
+      .where('dr.tool = :value AND (dr.dataRequestStatus !=:status OR dr.dataRequestStatus IS NULL )', { value: tool,status:2})
+      // .andWhere('dr.dataRequestStatus :value',{value: DataRequestStatus.Assign_Data_Request_Sent})
+      
+      if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
         data.leftJoinAndMapOne(
           'dr.investmentParameter',
           InvestorAssessment,
           'investmentAssessment',
           'investmentAssessment.id = dr.investmentParameterId',
         )
+        .leftJoinAndMapOne(
+          'investmentAssessment.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = investmentAssessment.assessment_id',
+        )
+        
         .leftJoinAndMapOne(
           'investmentAssessment.category',
           Category,
@@ -136,12 +143,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'ins',
           'ins.id = investmentAssessment.institution_id',
         )
-        .leftJoinAndMapOne(
-          'investmentAssessment.assessment',
-          Assessment,
-          'assessment',
-          'assessment.id = investmentAssessment.assessment_id',
-        )
+       
         .leftJoinAndMapOne(
           'investmentAssessment.question',
           InvestorQuestions,
@@ -158,14 +160,58 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         
       }
     
-      // .innerJoinAndMapOne('p.Sector', Sector, 'sec', `p.sectorId = sec.id and p.sectorId = ${sectorIdFromTocken}`)
-      // data.leftJoinAndMapOne(
-      //   'para.institution',
-      //   Institution,
-      //   'i',
-      //   'i.id = para.institution_id',
-      // )
-      // .where(whereCond)
+      
+       if(tool ===Tool.CM_tool ){
+        console.log("called",tool)
+        data.leftJoinAndMapOne(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'cmAssessmentAnswer',
+          'cmAssessmentAnswer.id = dr.cmAssessmentAnswerID',
+        )
+        
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.institution',
+          Institution,
+          'ins',
+          'ins.id = cmAssessmentAnswer.institutionId',
+        )
+        .leftJoinAndMapOne(
+          'cmAssessmentAnswer.assessment_question',
+           CMAssessmentQuestion,
+          'assessment_question',
+          'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
+        )
+        .leftJoinAndMapOne(
+          'assessment_question.question',
+           CMQuestion,
+          'cmQuestion',
+          'cmQuestion.id = assessment_question.questionId',
+        )
+       
+        .leftJoinAndMapOne(
+          'assessment_question.assessment',
+           Assessment,
+          'assessment',
+          'assessment.id = assessment_question.assessmentId',
+        )
+       
+       
+        
+        .leftJoinAndMapOne(
+          'assessment.climateAction',
+           ClimateAction, 
+          'intervention', 
+          'intervention.id = assessment.climateAction_id'
+         )
+        // .innerJoinAndMapOne(
+        //   'p.Country',
+        //   Country,
+        //   'cou',
+        //   `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
+        // )
+        
+      }
       data
       .orderBy('dr.id', 'DESC')
       .groupBy('dr.id');
@@ -592,27 +638,27 @@ console.log("=========11",result)
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id } });
 
-      let ss = await this.paramterRepo.findByIds([
-        dataRequestItem.parameter.id,
-      ]);
-      if (ss[0].institution != null) {
-        console.log('sssssss', ss);
-        var template =
-          'Dear ' +
-          ss[0].institution.name +
-          '<br/>Data request with following information has shared with you.' +
-        //   ' <br/> parameter name' +
-        //   ss[0].name +
-          '<br/> deadline ' +
-          updateDataRequestDto.deadline;
+      // let ss = await this.paramterRepo.findByIds([
+      //   dataRequestItem.parameter.id,
+      // ]);
+      // if (ss[0].institution != null) {
+      //   console.log('sssssss', ss);
+      //   var template =
+      //     'Dear ' +
+      //     ss[0].institution.name +
+      //     '<br/>Data request with following information has shared with you.' +
+      //   //   ' <br/> parameter name' +
+      //   //   ss[0].name +
+      //     '<br/> deadline ' +
+      //     updateDataRequestDto.deadline;
 
-        this.emaiService.sendMail(
-          ss[0].institution.email,
-          'Assign Deadline request',
-          '',
-          template,
-        );
-      }
+      //   this.emaiService.sendMail(
+      //     ss[0].institution.email,
+      //     'Assign Deadline request',
+      //     '',
+      //     template,
+      //   );
+      // }
 
       let originalStatus = dataRequestItem.dataRequestStatus;
       dataRequestItem.deadline = updateDataRequestDto.deadline;
@@ -627,7 +673,7 @@ console.log("=========11",result)
           'DataRequest',
           '',
           res.dataRequestStatus.toString(),
-          originalStatus.toString(),
+          originalStatus?.toString(),
         );
       });
     }
@@ -1019,6 +1065,7 @@ console.log("=========11",result)
           res.noteDataRequest,
           res.dataRequestStatus.toString(),
           originalStatus.toString(),
+          
         );
       });
       //  dataRequestItemList.push(dataRequestItem);
@@ -1078,5 +1125,27 @@ console.log("=========11",result)
     let result = await data.getMany();
 
     return result;
+  }
+
+  async updateInstitution(
+    updateValueDto: ParameterRequest,
+  ): Promise<boolean> {
+    let institutionItem = await this.institutionRepo.findOne({
+      where: { id: updateValueDto.institutionId }
+    });
+   let data= this.parameterRequestRepository.findOne({
+    where: { id: updateValueDto.id }
+  });
+    let dataEnterItem = await this.repo.findOne({
+      where: { id: (await data).parameter.id }
+    });
+    // dataEnterItem.value = updateValueDto.value;  // not comming value
+    dataEnterItem.institution = institutionItem;
+    console.log('updateValueDto', updateValueDto);
+    console.log('institutionItem', institutionItem);
+    this.repo.save(dataEnterItem);
+
+    
+    return true;
   }
 }
