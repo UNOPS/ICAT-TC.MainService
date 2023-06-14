@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Post,
   Put,
   Query,
@@ -33,11 +34,14 @@ import { Tool } from './enum/tool.enum';
       },
       cmAssessmentAnswer: {
         eager: true,
+        exclude: ['id']
       },
       investmentParameter: {
         eager: true,
+        exclude: ['id']
       },
     },
+    exclude: ['id']
   },
 })
 @Controller('parameter-request')
@@ -343,7 +347,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
   @Put('reject-review-data')
   rejectReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
-  ): Promise<boolean> {
+  ): Promise<boolean | InternalServerErrorException> {
     let audit: AuditDto=new AuditDto();
     audit.action='Review Data Rejected';
     audit.comment=updateDeadlineDto.comment+' Rejected';

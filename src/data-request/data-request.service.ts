@@ -1,6 +1,6 @@
 import { User } from 'src/users/entity/user.entity';
 import { DataRequestStatus } from './entity/data-request-status.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ParameterRequest } from './entity/data-request.entity';
@@ -514,7 +514,7 @@ console.log("=========11",result)
       filter = filter + 'AND climateAction.id = :climateActionId ';
     }
     if (insId) {
-      filter = filter + 'AND assessmentAnswer.institutionId = :insId '
+      filter = filter + 'AND institution.id = :insId '
     } 
 
     data = this.repo.createQueryBuilder('request')
@@ -523,6 +523,10 @@ console.log("=========11",result)
         'request.cmAssessmentAnswer',
         'assessmentAnswer',
         'request.cmAssessmentAnswerId = assessmentAnswer.id'
+      ).leftJoinAndSelect(
+        'assessmentAnswer.institution',
+        'institution',
+        'assessmentAnswer.institutionId = institution.id'
       ).leftJoinAndSelect(
         'assessmentAnswer.assessment_question',
         'assessmentQuestion',
@@ -545,6 +549,10 @@ console.log("=========11",result)
         'request.investmentParameter',
         'investmentParameter',
         'request.investmentParameterId = investmentParameter.id'
+      ).leftJoinAndSelect(
+        'investmentParameter.institution',
+        'institution',
+        'investmentParameter.institution_id = institution.id'
       ).leftJoinAndSelect(
         'investmentParameter.assessment',
         'assessment',
@@ -655,9 +663,9 @@ console.log("=========11",result)
         .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institutionId')
     } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
       data.leftJoinAndSelect('dr.investmentParameter', 'para', 'para.id = dr.investmentParameterId')
-        .leftJoinAndSelect('para.assessment', 'assessment', 'assessment.id = para.assessmentId')
+        .leftJoinAndSelect('para.assessment', 'assessment', 'assessment.id = para.assessment_id')
         .leftJoinAndSelect('para.category', 'cat', 'cat.id = para.category_id',)
-        .leftJoinAndSelect('para.characteristics', 'chara', 'chara.id = para.characteristics_id',)
+        .leftJoinAndSelect('para.characteristics', 'chara', 'chara.id = para.characteristic_id',)
         .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institution_id')
     }
 
@@ -1047,40 +1055,24 @@ console.log("=========11",result)
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
     // let dataRequestItemList = new Array<ParameterRequest>();
-
-    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
-      const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-      let originalStatus = dataRequestItem.dataRequestStatus;
-
-      let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
-      let template: any;
-
-      if (updateDataRequestDto.status === -9) {
-        let ins = dataRequestItem.parameter;
-        template =
-          'Dear ' +
-          ins.institution.name +
-          ' ' +
-          '<br/>Data request with following information has shared with you.' +
-          ' <br/> We are assign  Data entry' +
-          '<br/> deadline ' +
-          updateDataRequestDto.deadline +
-          '<br> comment' +
-          updateDataRequestDto.comment;
-        this.emaiService.sendMail(
-          ins.institution.email,
-          'Assign  Data Entry',
-          '',
-          template,
-        );
-      } else {
-        if (updateDataRequestDto.comment != undefined) {
+    console.log("rejectReviewDataForIds", updateDataRequestDto)
+    // try{
+      for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+        const id = updateDataRequestDto.ids[index];
+        let dataRequestItem = await this.repo.findOne({ where: { id: id }, relations: ['cmAssessmentAnswer', 'investmentParameter'] });
+        let originalStatus = dataRequestItem.dataRequestStatus;
+        console.log("dataRequestItem", dataRequestItem)
+  
+  
+        let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
+        let template: any;
+  
+        if (updateDataRequestDto.status === -9) {
+          let ins = dataRequestItem.parameter;
           template =
             'Dear ' +
-            user[0].fullName +
+            ins.institution.name +
             ' ' +
-            user[0].lastName +
             '<br/>Data request with following information has shared with you.' +
             ' <br/> We are assign  Data entry' +
             '<br/> deadline ' +
@@ -1088,48 +1080,75 @@ console.log("=========11",result)
             '<br> comment' +
             updateDataRequestDto.comment;
           this.emaiService.sendMail(
-            user[0].email,
+            ins.institution.email,
             'Assign  Data Entry',
             '',
             template,
           );
         } else {
-          template =
-            'Dear ' +
-            user[0].fullName +
-            ' ' +
-            user[0].lastName +
-            '<br/>Data request with following information has shared with you.' +
-            ' <br/> We are assign new Data entry' +
-            '<br/> deadline ' +
-            updateDataRequestDto.deadline;
-
-          this.emaiService.sendMail(
-            user[0].email,
-            'Assign  Data Entry',
-            '',
-            template,
-          );
+          if (updateDataRequestDto.comment != undefined) {
+            template =
+              'Dear ' +
+              user[0].fullName +
+              ' ' +
+              user[0].lastName +
+              '<br/>Data request with following information has shared with you.' +
+              ' <br/> We are assign  Data entry' +
+              '<br/> deadline ' +
+              updateDataRequestDto.deadline +
+              '<br> comment' +
+              updateDataRequestDto.comment;
+            this.emaiService.sendMail(
+              user[0].email,
+              'Assign  Data Entry',
+              '',
+              template,
+            );
+          } else {
+            template =
+              'Dear ' +
+              user[0].fullName +
+              ' ' +
+              user[0].lastName +
+              '<br/>Data request with following information has shared with you.' +
+              ' <br/> We are assign new Data entry' +
+              '<br/> deadline ' +
+              updateDataRequestDto.deadline;
+  
+            this.emaiService.sendMail(
+              user[0].email,
+              'Assign  Data Entry',
+              '',
+              template,
+            );
+          }
         }
+  
+        dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
+        dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
+        dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
+        dataRequestItem.cmAssessmentAnswer = undefined
+        dataRequestItem.investmentParameter = undefined
+        console.log(dataRequestItem)
+        this.repo.save(dataRequestItem).then((res) => {
+          // console.log('res', res);
+          // this.parameterHistoryService.SaveParameterHistory(
+          //   res.id,
+          //   ParameterHistoryAction.ReviewData,
+          //   'ReviewData',
+          //   res.noteDataRequest,
+          //   res.dataRequestStatus.toString(),
+          //   originalStatus.toString(),
+            
+          // );
+        });
+        //  dataRequestItemList.push(dataRequestItem);
       }
-
-      dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
-      dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
-      dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
-      this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
-        this.parameterHistoryService.SaveParameterHistory(
-          res.id,
-          ParameterHistoryAction.ReviewData,
-          'ReviewData',
-          res.noteDataRequest,
-          res.dataRequestStatus.toString(),
-          originalStatus.toString(),
-          
-        );
-      });
-      //  dataRequestItemList.push(dataRequestItem);
-    }
+    // } catch(error){
+    //   console.log(error)
+    //   return new InternalServerErrorException()
+    // }
+   
 
     return true;
   }
