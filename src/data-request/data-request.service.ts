@@ -630,6 +630,64 @@ console.log("=========11",result)
     }
   }
 
+  async getReviewDataRequests(
+    options: IPaginationOptions,
+    filterText: string,
+    climateActionId: number,
+    year: string,
+    type: string,
+    userName: string,
+    tool: Tool
+  ): Promise<Pagination<any>> {
+    let userItem = await this.userService.findByUserName(userName);
+    climateActionId = Number(climateActionId)
+    let institutionId = userItem.institution ? userItem.institution.id : 0;
+    console.log(tool, institutionId)
+
+    let data = this.repo.createQueryBuilder('dr')
+
+    if (tool === Tool.CM_tool) {
+      data.leftJoinAndSelect('dr.cmAssessmentAnswer', 'para', 'para.id = dr.cmAssessmentAnswerId')
+        .leftJoinAndSelect('para.assessment_question', 'assessmentQuestion', 'para.assessmentQuestionId = assessmentQuestion.id')
+        .leftJoinAndSelect('para.answer', 'answer', 'para.answerId = answer.id')
+        .leftJoinAndSelect('assessmentQuestion.question', 'question', 'question.id = assessmentQuestion.questionId')
+        .leftJoinAndSelect('assessmentQuestion.assessment', 'assessment', 'assessment.id = assessmentQuestion.assessmentId')
+        .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institutionId')
+    } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
+      data.leftJoinAndSelect('dr.investmentParameter', 'para', 'para.id = dr.investmentParameterId')
+        .leftJoinAndSelect('para.assessment', 'assessment', 'assessment.id = para.assessmentId')
+        .leftJoinAndSelect('para.category', 'cat', 'cat.id = para.category_id',)
+        .leftJoinAndSelect('para.characteristics', 'chara', 'chara.id = para.characteristics_id',)
+        .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institution_id')
+    }
+
+    data
+      // .leftJoinAndSelect('assessment.User', 'user', 'user.id = dr.UserDataEntryId')
+      .leftJoinAndSelect('assessment.climateAction', 'climateAction', 'climateAction.id = assessment.climateAction_id')
+      .where('dr.dataRequestStatus in (6,7,-6)  AND  dr.tool = :tool', {tool: tool})
+
+    if (institutionId !== 0){
+      data.andWhere('institution.id = :instId', {instId: institutionId})
+    }
+    if (climateActionId !== 0){
+      data.andWhere('climateAction.id = :id', {id: climateActionId})
+    }
+    if (type && type !== ''){
+      data.andWhere('assessment.assessmentType = :type', {type: type})
+    }
+    if (filterText && filterText !== ''){
+      data.andWhere('p.climateActionName LIKE :filterText OR para.name LIKE :filterText OR u.username LIKE :filterText OR a.assessmentType  LIKE :filterText', {filterText: filterText})
+    }
+    data.groupBy('dr.id')
+
+    console.log(data.getQuery())
+    
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
+    }
+  }
+
   async updateDeadlineForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {

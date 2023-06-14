@@ -259,6 +259,39 @@ export class ParameterRequestController implements CrudController<ParameterReque
       userName,
     );
   }
+ 
+  @Get(
+    'getReviewDataRequests/:page/:limit/:filterText/:climateActionId/:year/:type',
+  )
+  @ApiHeader({
+    name: 'api-key',
+    schema: { type: 'string', default: '1234'} 
+   
+  }) 	
+  async getReviewDataRequests(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+    @Query('climateActionId') climateActionId: number,
+    @Query('year') year: string,
+    @Query('type') type: string,
+    @Query('userName') userName: string,
+    @Query('tool') tool: Tool
+  ): Promise<any> {
+    return await this.service.getReviewDataRequests(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      climateActionId,
+      year,
+      type,
+      userName,
+      tool
+    );
+  }
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
   @Put('update-deadline')
