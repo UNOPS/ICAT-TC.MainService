@@ -365,12 +365,14 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
 
-  @Put('update-institution')
+  @Post('update-institution/:id')
   updateInstitution(
+    @Query('id') id: number,
+    
     @Body() updateValueDto: ParameterRequest,
   ): Promise<boolean> {
     console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
-    return this.service.updateInstitution(updateValueDto);
+    return this.service.updateInstitution(updateValueDto,id);
   }
 
 

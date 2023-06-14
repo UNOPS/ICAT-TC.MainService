@@ -50,6 +50,8 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     public defaultValRepo: Repository<DefaultValue>,
     @InjectRepository(Project)
     public ProjectRepo: Repository<Project>,
+    // @InjectRepository(CMAssessmentAnswer)
+    // public cmAssessmentAnswerRepo: Repository<CMAssessmentAnswer>,
   ) {
     super(repo);
   }
@@ -1129,23 +1131,17 @@ console.log("=========11",result)
 
   async updateInstitution(
     updateValueDto: ParameterRequest,
-  ): Promise<boolean> {
-    let institutionItem = await this.institutionRepo.findOne({
-      where: { id: updateValueDto.institutionId }
-    });
-   let data= this.parameterRequestRepository.findOne({
-    where: { id: updateValueDto.id }
-  });
-    let dataEnterItem = await this.repo.findOne({
-      where: { id: (await data).parameter.id }
-    });
-    // dataEnterItem.value = updateValueDto.value;  // not comming value
-    dataEnterItem.institution = institutionItem;
-    console.log('updateValueDto', updateValueDto);
-    console.log('institutionItem', institutionItem);
-    this.repo.save(dataEnterItem);
-
+    id:number
+  ): Promise<any> {
+    if(updateValueDto.tool==Tool.CM_tool){
+      console.log(updateValueDto,id)
+      let update = await this.repo.createQueryBuilder()
+      .update(ParameterRequest)
+      .set(updateValueDto.cmAssessmentAnswer.institution)
+      .where("id = :id", { instanceof: id })
+      .execute()
+      return update;
+    }
     
-    return true;
   }
 }
