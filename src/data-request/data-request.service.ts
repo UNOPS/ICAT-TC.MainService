@@ -1,6 +1,6 @@
 import { User } from 'src/users/entity/user.entity';
 import { DataRequestStatus } from './entity/data-request-status.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ParameterRequest } from './entity/data-request.entity';
@@ -624,41 +624,29 @@ console.log("=========11",result)
     let insId = userItem ? userItem.institution.id : 0;
     climateActionId = Number(climateActionId)
 
-    let filter
-    if (filterText){
-      if (filter) {
-        filter = filter + 'project.climateActionName LIKE %:filterText% '
-      } else {
-        filter = 'project.climateActionName LIKE %:filterText% '
-      }
-    } 
+    let filter = 'request.dataRequestStatus in (4,5,-8) AND  request.tool = :tool '
 
-    if (climateActionId !== 0){
-      if (filter){
-        filter = filter + 'AND climateAction.id = :climateActionId ';
-      } else {
-        filter = 'climateAction.id = :climateActionId '
-      }
-    } 
-    if (insId){
-      if (filter){
-        filter = filter + 'AND assessmentAnswer.institutionId = :insId '
-      } else {
-        filter = 'assessmentAnswer.institutionId = :insId '
-      }
-    } 
-    if (filter){
-      filter = filter + 'AND request.dataRequestStatus in (4,5,-8) '
-    } else {
-      filter = 'request.dataRequestStatus in (4,5,-8) '
+    if (filterText){
+      filter = filter + 'AND project.climateActionName LIKE %:filterText% '
     }
 
+    if (climateActionId !== 0) {
+      filter = filter + 'AND climateAction.id = :climateActionId ';
+    }
+    if (insId) {
+      filter = filter + 'AND institution.id = :insId '
+    } 
+
+    data = this.repo.createQueryBuilder('request')
     if (tool === Tool.CM_tool) {
-      data = this.repo.createQueryBuilder('request')
-      .leftJoinAndSelect(
+      data.leftJoinAndSelect(
         'request.cmAssessmentAnswer',
         'assessmentAnswer',
         'request.cmAssessmentAnswerId = assessmentAnswer.id'
+      ).leftJoinAndSelect(
+        'assessmentAnswer.institution',
+        'institution',
+        'assessmentAnswer.institutionId = institution.id'
       ).leftJoinAndSelect(
         'assessmentAnswer.assessment_question',
         'assessmentQuestion',
@@ -675,18 +663,38 @@ console.log("=========11",result)
         'assessmentQuestion.assessment',
         'assessment',
         'assessment.id = assessmentQuestion.assessmentId'
-      ).leftJoinAndSelect(
-        'assessment.climateAction',
-        'climateAction',
-        'climateAction.id = assessment.climateAction_id'
-      ).where(
-        filter, {climateActionId: climateActionId, insId: insId, filterText: filterText}
       )
-    } else if (tool === Tool.Investor_tool) {
+    } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
+      data.leftJoinAndSelect(
+        'request.investmentParameter',
+        'investmentParameter',
+        'request.investmentParameterId = investmentParameter.id'
+      ).leftJoinAndSelect(
+        'investmentParameter.institution',
+        'institution',
+        'investmentParameter.institution_id = institution.id'
+      ).leftJoinAndSelect(
+        'investmentParameter.assessment',
+        'assessment',
+        'assessment.id = investmentParameter.assessment_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.category',
+        'category',
+        'category.id = investmentParameter.category_id'
+      ).leftJoinAndSelect(
+        'investmentParameter.characteristics',
+        'characteristics',
+        'characteristics.id = investmentParameter.characteristic_id'
+      )
+    } 
 
-    } else if (tool === Tool.Portfolio_tool) {
-
-    }
+    data.leftJoinAndSelect(
+      'assessment.climateAction',
+      'climateAction',
+      'climateAction.id = assessment.climateAction_id'
+    ).where(
+      filter, {climateActionId: climateActionId, insId: insId, filterText: filterText, tool: tool}
+    )
 
     console.log(data.getQuery())
 
@@ -744,6 +752,64 @@ console.log("=========11",result)
       )
       .groupBy('dr.id');
 
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
+    }
+  }
+
+  async getReviewDataRequests(
+    options: IPaginationOptions,
+    filterText: string,
+    climateActionId: number,
+    year: string,
+    type: string,
+    userName: string,
+    tool: Tool
+  ): Promise<Pagination<any>> {
+    let userItem = await this.userService.findByUserName(userName);
+    climateActionId = Number(climateActionId)
+    let institutionId = userItem.institution ? userItem.institution.id : 0;
+    console.log(tool, institutionId)
+
+    let data = this.repo.createQueryBuilder('dr')
+
+    if (tool === Tool.CM_tool) {
+      data.leftJoinAndSelect('dr.cmAssessmentAnswer', 'para', 'para.id = dr.cmAssessmentAnswerId')
+        .leftJoinAndSelect('para.assessment_question', 'assessmentQuestion', 'para.assessmentQuestionId = assessmentQuestion.id')
+        .leftJoinAndSelect('para.answer', 'answer', 'para.answerId = answer.id')
+        .leftJoinAndSelect('assessmentQuestion.question', 'question', 'question.id = assessmentQuestion.questionId')
+        .leftJoinAndSelect('assessmentQuestion.assessment', 'assessment', 'assessment.id = assessmentQuestion.assessmentId')
+        .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institutionId')
+    } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
+      data.leftJoinAndSelect('dr.investmentParameter', 'para', 'para.id = dr.investmentParameterId')
+        .leftJoinAndSelect('para.assessment', 'assessment', 'assessment.id = para.assessment_id')
+        .leftJoinAndSelect('para.category', 'cat', 'cat.id = para.category_id',)
+        .leftJoinAndSelect('para.characteristics', 'chara', 'chara.id = para.characteristic_id',)
+        .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institution_id')
+    }
+
+    data
+      // .leftJoinAndSelect('assessment.User', 'user', 'user.id = dr.UserDataEntryId')
+      .leftJoinAndSelect('assessment.climateAction', 'climateAction', 'climateAction.id = assessment.climateAction_id')
+      .where('dr.dataRequestStatus in (6,7,-6)  AND  dr.tool = :tool', {tool: tool})
+
+    if (institutionId !== 0){
+      data.andWhere('institution.id = :instId', {instId: institutionId})
+    }
+    if (climateActionId !== 0){
+      data.andWhere('climateAction.id = :id', {id: climateActionId})
+    }
+    if (type && type !== ''){
+      data.andWhere('assessment.assessmentType = :type', {type: type})
+    }
+    if (filterText && filterText !== ''){
+      data.andWhere('p.climateActionName LIKE :filterText OR para.name LIKE :filterText OR u.username LIKE :filterText OR a.assessmentType  LIKE :filterText', {filterText: filterText})
+    }
+    data.groupBy('dr.id')
+
+    console.log(data.getQuery())
+    
     let result = await paginate(data, options);
     if (result) {
       return result;
@@ -881,10 +947,13 @@ console.log("=========11",result)
           'para',
           'dr.cmAssessmentAnswerId = para.id'
         )
-      } else if (tool === Tool.Investor_tool){
-
-      } else if (tool === Tool.Portfolio_tool){
-
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        para.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'para',
+          'dr.investmentParameterId = para.id'
+        )
       } else {
         para.leftJoinAndMapOne(
           'dr.parameter',
@@ -921,16 +990,12 @@ console.log("=========11",result)
 
       console.log("tool", tool)
       if (tool === Tool.CM_tool) inscon = pararesult[0].cmAssessmentAnswer.institution.country;
-      else if (tool === Tool.Investor_tool) inscon = '';
-      else if (tool === Tool.Portfolio_tool) inscon = '';
+      else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) inscon = pararesult[0].investmentParameter.institution.country;
       else inscon = pararesult[0].parameter.institution.country
 
-      // inscon = tool === Tool.CM_tool ?  :
-      //   (tool === Tool.Investor_tool ? '' :
-      //     (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.country));
-      insSec = tool === Tool.CM_tool ? pararesult[0].cmAssessmentAnswer.institution.sector :
-        (tool === Tool.Investor_tool ? '' :
-          (tool === Tool.Portfolio_tool ? '' : pararesult[0].parameter.institution.sector)) ; 
+      if (tool === Tool.CM_tool) insSec = pararesult[0].cmAssessmentAnswer.institution.sector;
+      else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) inscon = pararesult[0].investmentParameter.institution.sector;
+      else inscon = pararesult[0].parameter.institution.sector
 
       this.repo.save(pararesult[0]).then((res) => {
         // this.parameterHistoryService.SaveParameterHistory(
@@ -955,10 +1020,13 @@ console.log("=========11",result)
           'pm',
           'dr.cmAssessmentAnswerId = pm.id'
         )
-      } else if (tool === Tool.Portfolio_tool){
-
-      } else if (tool === Tool.Investor_tool){
-
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        data.leftJoinAndMapOne(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'pm',
+          'dr.investmentParameterId = pm.id'
+        )
       } else {
         data.leftJoinAndMapOne(
           'dr.parameter',
@@ -973,8 +1041,7 @@ console.log("=========11",result)
       // console.log("data...",result)
 
       const paraId = tool === Tool.CM_tool ? result.cmAssessmentAnswer.id:
-      (tool === Tool.Investor_tool ? '' :
-        (tool === Tool.Portfolio_tool ? '' : result.parameter.id)) ;
+      ((tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) ? result.investmentParameter.id : result.parameter.id) ;
       console.log('paraid', paraId);
     //   let parameterItem = await this.paramterRepo.findOne({
     //     where: { id: paraId },
@@ -1111,40 +1178,24 @@ console.log("=========11",result)
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
     // let dataRequestItemList = new Array<ParameterRequest>();
-
-    for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
-      const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-      let originalStatus = dataRequestItem.dataRequestStatus;
-
-      let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
-      let template: any;
-
-      if (updateDataRequestDto.status === -9) {
-        let ins = dataRequestItem.parameter;
-        template =
-          'Dear ' +
-          ins.institution.name +
-          ' ' +
-          '<br/>Data request with following information has shared with you.' +
-          ' <br/> We are assign  Data entry' +
-          '<br/> deadline ' +
-          updateDataRequestDto.deadline +
-          '<br> comment' +
-          updateDataRequestDto.comment;
-        this.emaiService.sendMail(
-          ins.institution.email,
-          'Assign  Data Entry',
-          '',
-          template,
-        );
-      } else {
-        if (updateDataRequestDto.comment != undefined) {
+    console.log("rejectReviewDataForIds", updateDataRequestDto)
+    // try{
+      for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
+        const id = updateDataRequestDto.ids[index];
+        let dataRequestItem = await this.repo.findOne({ where: { id: id }, relations: ['cmAssessmentAnswer', 'investmentParameter'] });
+        let originalStatus = dataRequestItem.dataRequestStatus;
+        console.log("dataRequestItem", dataRequestItem)
+  
+  
+        let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
+        let template: any;
+  
+        if (updateDataRequestDto.status === -9) {
+          let ins = dataRequestItem.parameter;
           template =
             'Dear ' +
-            user[0].fullName +
+            ins.institution.name +
             ' ' +
-            user[0].lastName +
             '<br/>Data request with following information has shared with you.' +
             ' <br/> We are assign  Data entry' +
             '<br/> deadline ' +
@@ -1152,48 +1203,75 @@ console.log("=========11",result)
             '<br> comment' +
             updateDataRequestDto.comment;
           this.emaiService.sendMail(
-            user[0].email,
+            ins.institution.email,
             'Assign  Data Entry',
             '',
             template,
           );
         } else {
-          template =
-            'Dear ' +
-            user[0].fullName +
-            ' ' +
-            user[0].lastName +
-            '<br/>Data request with following information has shared with you.' +
-            ' <br/> We are assign new Data entry' +
-            '<br/> deadline ' +
-            updateDataRequestDto.deadline;
-
-          this.emaiService.sendMail(
-            user[0].email,
-            'Assign  Data Entry',
-            '',
-            template,
-          );
+          if (updateDataRequestDto.comment != undefined) {
+            template =
+              'Dear ' +
+              user[0].fullName +
+              ' ' +
+              user[0].lastName +
+              '<br/>Data request with following information has shared with you.' +
+              ' <br/> We are assign  Data entry' +
+              '<br/> deadline ' +
+              updateDataRequestDto.deadline +
+              '<br> comment' +
+              updateDataRequestDto.comment;
+            this.emaiService.sendMail(
+              user[0].email,
+              'Assign  Data Entry',
+              '',
+              template,
+            );
+          } else {
+            template =
+              'Dear ' +
+              user[0].fullName +
+              ' ' +
+              user[0].lastName +
+              '<br/>Data request with following information has shared with you.' +
+              ' <br/> We are assign new Data entry' +
+              '<br/> deadline ' +
+              updateDataRequestDto.deadline;
+  
+            this.emaiService.sendMail(
+              user[0].email,
+              'Assign  Data Entry',
+              '',
+              template,
+            );
+          }
         }
+  
+        dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
+        dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
+        dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
+        dataRequestItem.cmAssessmentAnswer = undefined
+        dataRequestItem.investmentParameter = undefined
+        console.log(dataRequestItem)
+        this.repo.save(dataRequestItem).then((res) => {
+          // console.log('res', res);
+          // this.parameterHistoryService.SaveParameterHistory(
+          //   res.id,
+          //   ParameterHistoryAction.ReviewData,
+          //   'ReviewData',
+          //   res.noteDataRequest,
+          //   res.dataRequestStatus.toString(),
+          //   originalStatus.toString(),
+            
+          // );
+        });
+        //  dataRequestItemList.push(dataRequestItem);
       }
-
-      dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
-      dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
-      dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
-      this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
-        this.parameterHistoryService.SaveParameterHistory(
-          res.id,
-          ParameterHistoryAction.ReviewData,
-          'ReviewData',
-          res.noteDataRequest,
-          res.dataRequestStatus.toString(),
-          originalStatus.toString(),
-          
-        );
-      });
-      //  dataRequestItemList.push(dataRequestItem);
-    }
+    // } catch(error){
+    //   console.log(error)
+    //   return new InternalServerErrorException()
+    // }
+   
 
     return true;
   }

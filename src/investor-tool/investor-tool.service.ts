@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -34,9 +34,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorSector) private readonly investorSectorRepo: Repository<InvestorSector>,
     @InjectRepository(InvestorImpacts) private readonly investorImpactRepo: Repository<InvestorImpacts>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
-    @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
+    @InjectRepository(InvestorAssessment) private investorAssessmentRepo: Repository<InvestorAssessment>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
-    @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
+    @InjectRepository(InvestorQuestions) private  investorQuestionRepo: Repository<InvestorQuestions>,
     @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
@@ -691,6 +691,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
         return {meth1Process,meth1Outcomes}
       
+    }
+
+    async getInvestorQuestionById(id: number){
+      return await (this.investorQuestionRepo.createQueryBuilder('qu').where('id = :id', {id:id})).getOne()
+    }
+
+    async updateInvestorAssessment(req: UpdateInvestorToolDto){
+      try{
+        let invest_assessment = await this.investorAssessmentRepo.findBy({id: req.id})
+        if (invest_assessment){
+          invest_assessment[0].parameter_value = req.parameter_value
+          invest_assessment[0].enterDataAssumption = req.assumption
+        }
+
+        return await this.investorAssessmentRepo.update(invest_assessment[0].id, invest_assessment[0])
+      } catch(error){
+        console.log(error)
+        return new InternalServerErrorException()
+      }
     }
     
 
