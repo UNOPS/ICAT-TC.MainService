@@ -155,6 +155,19 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'question.id = investmentAssessment.institutionDescription',
         )
         .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        .andWhere(
+          (
+            (dataProvider != 0 ? `ins.id=${dataProvider} AND ` : '') +
+            (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
+            (year != '' ? `assessment.assessmentType='${year}' AND ` : '') +
+            `(dr.id IS NOT NULL) AND ` +
+            (filterText != ''
+              ? `(intervention.policyName LIKE '%${filterText}%' OR cat.name LIKE '%${filterText}%' OR chara.name LIKE '%${filterText}%' 
+              OR ins.name LIKE '%${filterText}%'  OR question.name LIKE '%${filterText}%'  OR investmentAssessment.type LIKE '%${filterText}%' 
+             )`
+              : '')
+          ).replace(/AND $/, ''),
+        )
         // .innerJoinAndMapOne(
         //   'p.Country',
         //   Country,
@@ -208,6 +221,19 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'intervention', 
           'intervention.id = assessment.climateAction_id'
          )
+         .andWhere(
+          (
+            (dataProvider != 0 ? `ins.id=${dataProvider} AND ` : '') +
+            (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
+            (year != '' ? `assessment.assessmentType='${year}' AND ` : '') +
+            `(dr.id IS NOT NULL) AND ` +
+            (filterText != ''
+              ? `(intervention.policyName LIKE '%${filterText}%'  OR ins.name LIKE '%${filterText}%' OR cmQuestion.label LIKE '%${filterText}%'
+             
+             )`
+              : '')
+          ).replace(/AND $/, ''),
+        )
         // .innerJoinAndMapOne(
         //   'p.Country',
         //   Country,
@@ -217,8 +243,10 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         
       }
       data
+      
       .orderBy('dr.id', 'DESC')
-      .groupBy('dr.id');
+      .groupBy('dr.id')
+     
     let result = await paginate(data, options);
     if (result) {
       return result;
@@ -399,6 +427,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'question.id = investmentAssessment.institutionDescription',
         )
         .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        .andWhere(
+          (
+            (institutionId != 0 ? `ins.id=${institutionId} AND ` : '') +
+            (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
+            `dr.dataRequestStatus in (2,3,-9,-10) AND ` +
+            (filterText != ''
+                ? `(intervention.policyName LIKE '%${filterText}%' OR cat.name LIKE '%${filterText}%' OR chara.name LIKE '%${filterText}%' 
+                OR user.firstName LIKE '%${filterText}%'  OR question.name LIKE '%${filterText}%'  OR investmentAssessment.type LIKE '%${filterText}%' 
+               )`
+                : '')
+          ).replace(/AND $/, ''),
+        )
         
         
       }
@@ -447,23 +487,26 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'intervention', 
           'intervention.id = assessment.climateAction_id'
          )
+         .andWhere(
+          (
+            (institutionId != 0 ? `ins.id=${institutionId} AND ` : '') +
+            (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
+            `dr.dataRequestStatus in (2,3,-9,-10) AND ` +
+            (filterText != ''
+            ? `(intervention.policyName LIKE '%${filterText}%' OR user.firstName LIKE '%${filterText}%' OR ins.name LIKE '%${filterText}%' OR cmQuestion.label LIKE '%${filterText}%'
+           
+           )`
+            : '')
+          ).replace(/AND $/, ''),
+        )
+         
        
         
       }
       data
       .orderBy('dr.id', 'DESC')
       .groupBy('dr.id')
-      .andWhere(
-        (
-          (institutionId != 0 ? `ins.id=${institutionId} AND ` : '') +
-          (climateActionId != 0 ? `intervention.id=${climateActionId} AND ` : '') +
-          `dr.dataRequestStatus in (2,3,-9,-10) AND ` +
-          (filterText != ''
-            ? `(intervention.policyName LIKE '%${filterText}%' 
-           )`
-            : '')
-        ).replace(/AND $/, ''),
-      )
+     
      
 
     let result = await paginate(data, options);
