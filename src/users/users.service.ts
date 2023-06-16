@@ -439,6 +439,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   ): Promise<Pagination<User>> {
     const user = await this.repo.findOne({ where: { username: userName } });
     let institutionId = user ? user.institution.id : 0;
+    console.log("getUserDetailsByInstitution")
+    console.log(institutionId)
 
     let filter: string = '';
 
@@ -460,7 +462,7 @@ export class UsersService extends TypeOrmCrudService<User> {
       .where(' type.id=' + userTypeId + ' AND ins.id=' + institutionId)
       .orderBy('user.status', 'ASC');
     let SQLString = data.getSql();
-    // console.log('SQLString', SQLString);
+    console.log('SQLString', SQLString);
     let resualt = await paginate(data, options);
 
     if (resualt) {

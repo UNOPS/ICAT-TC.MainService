@@ -22,11 +22,19 @@ import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { Tool } from 'src/data-request/enum/tool.enum';
 
+const schema = {
+  'id': {
+    prop: 'id',
+    type: Number
+  },
+  'value': {
+    prop: 'value',
+    type: Number
+  }
+}
+
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
-  
-  
-
 
   constructor(
     @InjectRepository(InvestorTool) repo,
@@ -45,6 +53,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   ) {
     super(repo)
   }
+
+  readXlsxFile = require('read-excel-file/node');
 
 
   async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto): Promise<any> {
@@ -710,6 +720,33 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         console.log(error)
         return new InternalServerErrorException()
       }
+    }
+
+    async uplaodFileUpload(fileName: string) {
+      this.readXlsxFile('./uploads/' + fileName, { schema }).then(({ rows, errors }) => {
+        rows.forEach(async (key) => {
+          let dataEnterItem = await this.investorAssessRepo.findOne({
+            where: { id: key.id }
+          })
+  
+          let dataStatusItem = await this.dataRequestRepository.find({
+            where: { parameter: key.id }
+          })
+  
+          dataStatusItem.forEach(async (e) => {
+            if (e.dataRequestStatus === 4 || e.dataRequestStatus === 5 || e.dataRequestStatus === -8) {
+              dataEnterItem.parameter_value = key.value
+  
+  
+              let res = await this.investorAssessRepo.save(dataEnterItem);
+              if (res) {
+                e.dataRequestStatus = 5
+                await this.dataRequestRepository.save(e)
+              }
+            }
+          })
+        });
+      });
     }
     
 

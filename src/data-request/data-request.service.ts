@@ -696,8 +696,6 @@ console.log("=========11",result)
       filter, {climateActionId: climateActionId, insId: insId, filterText: filterText, tool: tool}
     )
 
-    console.log(data.getQuery())
-
     return await paginate(data, options)
   }
 
@@ -807,8 +805,6 @@ console.log("=========11",result)
       data.andWhere('p.climateActionName LIKE :filterText OR para.name LIKE :filterText OR u.username LIKE :filterText OR a.assessmentType  LIKE :filterText', {filterText: filterText})
     }
     data.groupBy('dr.id')
-
-    console.log(data.getQuery())
     
     let result = await paginate(data, options);
     if (result) {
@@ -1122,18 +1118,33 @@ console.log("=========11",result)
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
+      let dataRequestItem = await this.repo.findOne({ where: { id: id }, relations: ['cmAssessmentAnswer', 'investmentParameter'] });
       let originalStatus = dataRequestItem.dataRequestStatus;
       dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
       dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
       dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
 
-      let email = dataRequestItem.parameter.institution.email;
+      console.log(dataRequestItem)
+
+      let email
+      let institutionName 
+      if (updateDataRequestDto.tool === Tool.CM_tool){
+        email = dataRequestItem.cmAssessmentAnswer.institution.email;
+        institutionName = dataRequestItem.cmAssessmentAnswer.institution.name
+      } else if (updateDataRequestDto.tool === Tool.Investor_tool || updateDataRequestDto.tool === Tool.Portfolio_tool){
+        email = dataRequestItem.investmentParameter.institution.email;
+        institutionName = dataRequestItem.investmentParameter.institution.name
+      } else {
+        email = dataRequestItem.parameter.institution.email;
+        institutionName = dataRequestItem.parameter.institution.name
+      }
+
+      // let email = dataRequestItem.parameter.institution.email;
       var template: any;
       if (updateDataRequestDto.comment != undefined) {
         template =
           'Dear ' +
-          dataRequestItem.parameter.institution.name +
+          institutionName +
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value' +
@@ -1144,7 +1155,7 @@ console.log("=========11",result)
       } else {
         template =
           'Dear ' +
-          dataRequestItem.parameter.institution.name +
+          institutionName +
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value'
@@ -1157,14 +1168,14 @@ console.log("=========11",result)
 
       this.repo.save(dataRequestItem).then((res) => {
         console.log('res', res);
-        this.parameterHistoryService.SaveParameterHistory(
-          res.id,
-          ParameterHistoryAction.EnterData,
-          'EnterData',
-          res.noteDataRequest,
-          res.dataRequestStatus.toString(),
-          originalStatus.toString(),
-        );
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.EnterData,
+        //   'EnterData',
+        //   res.noteDataRequest,
+        //   res.dataRequestStatus.toString(),
+        //   originalStatus.toString(),
+        // );
       });
       //  dataRequestItemList.push(dataRequestItem);
     }

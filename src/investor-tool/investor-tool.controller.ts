@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -7,6 +7,9 @@ import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -85,6 +88,23 @@ export class InvestorToolController {
   async updateInvestorAssessment(@Body() req: UpdateInvestorToolDto){
     return await this.investorToolService.updateInvestorAssessment(req)
   }
+
+
+  @Post('upload')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            storage: diskStorage({
+                destination: './uploads',
+                filename: editFileName,
+            }),
+            fileFilter: excelFileFilter,
+        }),
+    )
+    async uploadFileExcel(@UploadedFile() file) {
+        console.log("====file++++",file);
+        const newSavedfile = file.filename;
+        await this.investorToolService.uplaodFileUpload(newSavedfile);
+    }
 
 
 }
