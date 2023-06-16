@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Post,
   Put,
   Query,
@@ -20,6 +21,7 @@ import { ApiHeader } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Tool } from './enum/tool.enum';
 
 @Crud({
   model: {
@@ -30,7 +32,16 @@ import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
       parameter: {
         eager: true,
       },
+      cmAssessmentAnswer: {
+        eager: true,
+        exclude: ['id']
+      },
+      investmentParameter: {
+        eager: true,
+        exclude: ['id']
+      },
     },
+    exclude: ['id']
   },
 })
 @Controller('parameter-request')
@@ -57,7 +68,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
   @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get(
-    'getNewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:dataProvider',
+    'getNewDataRequest/:page/:limit/:filterText/:climateActionId/:year/:dataProvider/:tool',
   )
   @ApiHeader({
     name: 'api-key',
@@ -73,6 +84,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     @Query('climateActionId') climateActionId: number,
     @Query('year') year: string,
     @Query('dataProvider') dataProvider: number,
+    @Query('tool') tool: string,
   ): Promise<any> {
 
     let countryIdFromTocken:number;
@@ -91,6 +103,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
       dataProvider,
       countryIdFromTocken,
       sectorIdFromTocken,
+      tool
     );
   }
 
@@ -135,7 +148,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
   @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
   @Get(
-    'getAssignDateRequest/:page/:limit/:filterText/:climateActionId/:userName',
+    'getAssignDateRequest/:page/:limit/:filterText/:climateActionId/:userName/:tool',
   )
   @ApiHeader({
     name: 'api-key',
@@ -149,6 +162,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     @Query('filterText') filterText: string,
     @Query('climateActionId') climateActionId: number,
     @Query('userName') userName: string,
+    @Query('tool') tool: string,
   ): Promise<any> {
     return await this.service.getAssignDataRequest(
       {
@@ -158,6 +172,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
       filterText,
       climateActionId,
       userName,
+      tool
     );
   }
 
@@ -186,6 +201,35 @@ export class ParameterRequestController implements CrudController<ParameterReque
       climateActionId,
       year,
       userName,
+    );
+  }
+  @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_ENTRY_OPERATOR]))
+  @Get('getEnterDataRequests/:page/:limit/:filterText/:climateActionId/:year')
+  @ApiHeader({
+    name: 'api-key',
+    schema: { type: 'string', default: '1234'} 
+   
+  }) 	
+  async getEnterDataParameters(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+    @Query('climateActionId') climateActionId: number,
+    @Query('year') year: string,
+    @Query('userName') userName: string,
+    @Query('tool') tool: Tool,
+  ): Promise<any> {
+    return await this.service.getEnterDataParameters(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      climateActionId,
+      year,
+      userName,
+      tool
     );
   }
 
@@ -219,6 +263,39 @@ export class ParameterRequestController implements CrudController<ParameterReque
       year,
       type,
       userName,
+    );
+  }
+ 
+  @Get(
+    'getReviewDataRequests/:page/:limit/:filterText/:climateActionId/:year/:type',
+  )
+  @ApiHeader({
+    name: 'api-key',
+    schema: { type: 'string', default: '1234'} 
+   
+  }) 	
+  async getReviewDataRequests(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+    @Query('climateActionId') climateActionId: number,
+    @Query('year') year: string,
+    @Query('type') type: string,
+    @Query('userName') userName: string,
+    @Query('tool') tool: Tool
+  ): Promise<any> {
+    return await this.service.getReviewDataRequests(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      climateActionId,
+      year,
+      type,
+      userName,
+      tool
     );
   }
 
@@ -272,7 +349,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
   @Put('reject-review-data')
   rejectReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
-  ): Promise<boolean> {
+  ): Promise<boolean | InternalServerErrorException> {
     let audit: AuditDto=new AuditDto();
     audit.action='Review Data Rejected';
     audit.comment=updateDeadlineDto.comment+' Rejected';
@@ -323,6 +400,18 @@ export class ParameterRequestController implements CrudController<ParameterReque
     return await this.service.getClimateActionByDataRequestStatusSix(
      
     );
+  }
+
+  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
+
+  @Post('update-institution/:id')
+  updateInstitution(
+    @Query('id') id: number,
+    
+    @Body() updateValueDto: ParameterRequest,
+  ): Promise<boolean> {
+    // console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
+    return this.service.updateInstitution(updateValueDto,id);
   }
 
 

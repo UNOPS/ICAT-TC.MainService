@@ -13,6 +13,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DataRequestStatus } from './data-request-status.entity';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { Tool } from '../enum/tool.enum';
+import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
+import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 
 @Entity({ name: 'datarequest' })
 export class ParameterRequest extends BaseTrackingEntity {
@@ -94,4 +98,17 @@ export class ParameterRequest extends BaseTrackingEntity {
 
   @Column({ nullable: true })
   qcUserName: string;
+
+  @ManyToOne((type) => CMAssessmentAnswer, {nullable: true,eager:true})
+  @JoinColumn()
+  cmAssessmentAnswer: CMAssessmentAnswer
+
+  @ManyToOne((type) => InvestorAssessment, {nullable: true, eager:true})
+  @JoinColumn()
+  investmentParameter: InvestorAssessment
+
+
+  @Column()
+  tool: Tool
+
 }

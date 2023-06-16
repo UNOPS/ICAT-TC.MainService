@@ -21,6 +21,9 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @JoinColumn()
   question: CMQuestion
 
+  @Column({ nullable: true })
+  enterDataAssumption: string;
+
 
   
 }
