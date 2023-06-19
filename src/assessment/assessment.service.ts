@@ -141,7 +141,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     let resualt = await paginate(data, options);
     if (resualt) {
-      console.log('results for manage..', resualt);
+      // console.log('results for manage..', resualt);
       return resualt;
     }
   }

@@ -61,24 +61,58 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
   async getDateRequestToManageDataStatus(
     assesmentId: number,
     assessmentYear: number,
+    tool: Tool
   ): Promise<any> {
     let data = this.repo
       .createQueryBuilder('dr')
-      .leftJoinAndMapMany(
-        'dr.parameter',
-        Parameter,
-        'para',
-        'para.id = dr.parameterId',
-      )
-      .select(['dr.dataRequestStatus', 'para.id'])
-      .where(
-        `para.assessment_id = ${assesmentId}`,
-      );
+
+      if (tool === Tool.CM_tool){
+        console.log("cm")
+        data.leftJoinAndMapMany(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'para',
+          'para.id = dr.cmAssessmentAnswerId',
+        ) .leftJoinAndMapOne(
+          'para.assessment_question',
+           CMAssessmentQuestion,
+          'assessment_question',
+          'assessment_question.id = para.assessmentQuestionId',
+        ).leftJoinAndMapMany(
+          'assessment_question.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = assessment_question.assessmentId',
+        ).where(
+          `assessment.id = ${assesmentId}`,
+        )
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        console.log("ip")
+        data.leftJoinAndMapMany(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'para',
+          'para.id = dr.investmentParameterId',
+        ).where(
+          `para.assessment_id = ${assesmentId}`,
+        )
+      } else [
+        data.leftJoinAndMapMany(
+          'dr.parameter',
+          Parameter,
+          'para',
+          'para.id = dr.parameterId',
+        ).where(
+          `para.assessment_id = ${assesmentId}`,
+        )
+      ]
+      // data.select(['dr.dataRequestStatus', 'para.id'])
       // .where(
       //   `para.assessment_id = ${assesmentId} 
       //   AND ((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false ))
       //    AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
       // );
+
 
     return await data.execute();
   }
@@ -511,7 +545,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
 
     let result = await paginate(data, options);
     if (result) {
-      // console.log('ffff',result)
+      console.log('ffff',result)
       return result;
     }
   }
