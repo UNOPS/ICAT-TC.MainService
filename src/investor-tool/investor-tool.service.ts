@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -19,12 +19,22 @@ import { IndicatorDetails } from './entities/indicator-details.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
+import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { Tool } from 'src/data-request/enum/tool.enum';
+
+const schema = {
+  'id': {
+    prop: 'id',
+    type: Number
+  },
+  'value': {
+    prop: 'value',
+    type: Number
+  }
+}
 
 @Injectable()
 export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
-  
-  
-
 
   constructor(
     @InjectRepository(InvestorTool) repo,
@@ -32,17 +42,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(InvestorSector) private readonly investorSectorRepo: Repository<InvestorSector>,
     @InjectRepository(InvestorImpacts) private readonly investorImpactRepo: Repository<InvestorImpacts>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
-    @InjectRepository(InvestorAssessment) private readonly investorAssessmentRepo: Repository<InvestorAssessment>,
+    @InjectRepository(InvestorAssessment) private investorAssessmentRepo: Repository<InvestorAssessment>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
-    @InjectRepository(InvestorQuestions) private readonly investorQuestionRepo: Repository<InvestorQuestions>,
+    @InjectRepository(InvestorQuestions) private  investorQuestionRepo: Repository<InvestorQuestions>,
     @InjectRepository(IndicatorDetails) private readonly indicatorDetailsRepo: Repository<IndicatorDetails>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     @InjectRepository(Category) private readonly categotyRepository: Repository<Category>,
-
+    @InjectRepository(ParameterRequest) private readonly dataRequestRepository: Repository<ParameterRequest>,
 
   ) {
     super(repo)
   }
+
+  readXlsxFile = require('read-excel-file/node');
 
 
   async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto): Promise<any> {
@@ -173,6 +185,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     async createFinalAssessmentIndirect(request: any):Promise<any> {
       console.log("request",request)
+      let tool:any;
+      if(request[0].data[0].assessment.tool === 'Investment & Private Sector Tool'){
+        tool =Tool.Investor_tool
+      }
+      else if(request[0].data[0].assessment.tool === 'Portfolio Tool'){
+        tool=Tool.Portfolio_tool
+      }
     
       for (let req of request) {
         for (let assess of req.data) {
@@ -198,7 +217,17 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj1.justification = assess.justification
               obj1.indicator = assess.indicator
               obj1.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj1)
+              // let saved= new Promise
+              let a = await this.investorAssessmentRepo.save(obj1).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
+              
+              
+
               console.log("saved1")
             }
             if(assess.indicatorStartingVal){
@@ -216,7 +245,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj2.justification = assess.justification
               obj2.indicator = assess.indicator
               obj2.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj2)
+              let a = await this.investorAssessmentRepo.save(obj2).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved2")
             }
             if(assess.likelihood){
@@ -234,7 +269,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj3.justification = assess.justification
               obj3.indicator = assess.indicator
               obj3.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj3)
+              let a = await this.investorAssessmentRepo.save(obj3).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved3")
             }
             if(assess.relavance){
@@ -252,11 +293,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj4.justification = assess.justification
               obj4.indicator = assess.indicator
               obj4.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj4)
+              let a = await this.investorAssessmentRepo.save(obj4).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved4")
             }
             if(assess.indicator_details){
               for (let detail of assess.indicator_details) {
+               
                 let obj4 = new InvestorAssessment()
                 obj4.category = category
                 obj4.type = req.type
@@ -265,13 +313,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                 obj4.description = assess.description
                 obj4.starting_situation = assess.starting_situation
                 obj4.likelihood_weight = assess.likelihood_weight
-                obj4.institution = (detail.value)?detail.value:null
+                
                 obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.institution = detail.value
                 obj4.likelihood_justification = assess.likelihood_justification
                 obj4.justification = assess.justification
                 obj4.indicator = assess.indicator
                 obj4.assessment = request[0].data[0].assessment
-                let a = await this.investorAssessmentRepo.save(obj4)
+                if( detail.value){
+                  obj4.institution = detail.value
+                let a = await this.investorAssessmentRepo.save(obj4).then(
+                  async (asess) => {
+                    let datarequestParameter= new ParameterRequest()
+                    datarequestParameter.investmentParameter =asess;
+                    datarequestParameter.tool =tool;
+                    await this.dataRequestRepository.save(datarequestParameter)
+                  })
+                  console.log("=================",detail.value)
+                }
+                
                 
                }
               }
@@ -291,7 +351,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                 obj4.justification = assess.justification
                 obj4.indicator = assess.indicator
                 obj4.assessment = request[0].data[0].assessment
-                let a = await this.investorAssessmentRepo.save(obj4)
+                let a = await this.investorAssessmentRepo.save(obj4).then(
+                  async (asess) => {
+                    let datarequestParameter= new ParameterRequest()
+                    datarequestParameter.investmentParameter =asess;
+                    datarequestParameter.tool =tool;
+                    await this.dataRequestRepository.save(datarequestParameter)
+                  })
                 console.log("savd mitigation action")
               }
               
@@ -308,7 +374,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj1.justification = assess.justification
               obj1.indicator = assess.indicator
               obj1.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj1)
+              let a = await this.investorAssessmentRepo.save(obj1).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved5")
             }
             if(assess.indicatorStartingVal){
@@ -321,7 +393,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj2.justification = assess.justification
               obj2.indicator = assess.indicator
               obj2.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj2)
+              let a = await this.investorAssessmentRepo.save(obj2).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved6")
             }
 
@@ -335,9 +413,48 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj3.justification = assess.justification
               obj3.indicator = assess.indicator
               obj3.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj3)
+              let a = await this.investorAssessmentRepo.save(obj3).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("saved7")
             }
+            if(assess.indicator_details){
+              for (let detail of assess.indicator_details) {
+               
+                let obj4 = new InvestorAssessment()
+                obj4.category = category
+                obj4.type = req.type
+                obj4.characteristics = assess.characteristics
+                obj4.relevance_weight = assess.relevance_weight
+                obj4.description = assess.description
+                obj4.starting_situation = assess.starting_situation
+                obj4.likelihood_weight = assess.likelihood_weight
+                
+                obj4.institutionDescription = (detail.question)?detail.question.id:''
+                obj4.institution = detail.value
+                obj4.likelihood_justification = assess.likelihood_justification
+                obj4.justification = assess.justification
+                obj4.indicator = assess.indicator
+                obj4.assessment = request[0].data[0].assessment
+                if( detail.value){
+                  obj4.institution = detail.value
+                let a = await this.investorAssessmentRepo.save(obj4).then(
+                  async (asess) => {
+                    let datarequestParameter= new ParameterRequest()
+                    datarequestParameter.investmentParameter =asess;
+                    datarequestParameter.tool =tool;
+                    await this.dataRequestRepository.save(datarequestParameter)
+                  })
+                  console.log("=================",detail.value)
+                }
+                
+                
+               }
+              }
             if(assess.expected_ghg_mitigation){
               let obj4 = new InvestorAssessment()
               obj4.category = category
@@ -347,7 +464,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               obj4.institutionDescription = 'expected_ghg_mitigation'
               obj4.indicator = assess.indicator
               obj4.assessment = request[0].data[0].assessment
-              let a = await this.investorAssessmentRepo.save(obj4)
+              let a = await this.investorAssessmentRepo.save(obj4).then(
+                async (asess) => {
+                  let datarequestParameter= new ParameterRequest()
+                  datarequestParameter.investmentParameter =asess;
+                  datarequestParameter.tool =tool;
+                  await this.dataRequestRepository.save(datarequestParameter)
+                })
               console.log("savd mitigation action")
             }
           }
@@ -578,6 +701,52 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
         return {meth1Process,meth1Outcomes}
       
+    }
+
+    async getInvestorQuestionById(id: number){
+      return await (this.investorQuestionRepo.createQueryBuilder('qu').where('id = :id', {id:id})).getOne()
+    }
+
+    async updateInvestorAssessment(req: UpdateInvestorToolDto){
+      try{
+        let invest_assessment = await this.investorAssessmentRepo.findBy({id: req.id})
+        if (invest_assessment){
+          invest_assessment[0].parameter_value = req.parameter_value
+          invest_assessment[0].enterDataAssumption = req.assumption
+        }
+
+        return await this.investorAssessmentRepo.update(invest_assessment[0].id, invest_assessment[0])
+      } catch(error){
+        console.log(error)
+        return new InternalServerErrorException()
+      }
+    }
+
+    async uplaodFileUpload(fileName: string) {
+      this.readXlsxFile('./uploads/' + fileName, { schema }).then(({ rows, errors }) => {
+        rows.forEach(async (key) => {
+          let dataEnterItem = await this.investorAssessRepo.findOne({
+            where: { id: key.id }
+          })
+  
+          let dataStatusItem = await this.dataRequestRepository.find({
+            where: { parameter: key.id }
+          })
+  
+          dataStatusItem.forEach(async (e) => {
+            if (e.dataRequestStatus === 4 || e.dataRequestStatus === 5 || e.dataRequestStatus === -8) {
+              dataEnterItem.parameter_value = key.value
+  
+  
+              let res = await this.investorAssessRepo.save(dataEnterItem);
+              if (res) {
+                e.dataRequestStatus = 5
+                await this.dataRequestRepository.save(e)
+              }
+            }
+          })
+        });
+      });
     }
     
 

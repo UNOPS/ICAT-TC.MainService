@@ -104,7 +104,7 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ type: 'double', nullable: true })
     expected_ghg_mitigation: number;
 
-    @ManyToOne((type) => Institution, { cascade: false,eager:true })
+    @ManyToOne((type) => Institution, { cascade: false})
     @JoinColumn({ name: 'institution_id' })
     institution?: Institution;
     
@@ -112,6 +112,11 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({  nullable: true })
     institutionDescription: string;
 
+    @Column({  nullable: true })
+    parameter_value: string;
+    
+    @Column({  nullable: true })
+    enterDataAssumption: string;
 
 
 }

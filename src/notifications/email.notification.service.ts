@@ -24,7 +24,7 @@ export class EmailNotificationService {
         html: emailTemplate, // HTML body content
       })
       .then((res) => {
-        console.log('email sent sent ===============', res);
+        // console.log('email sent sent ===============', res);
       })
       .catch((e) => {
         console.log('email error =====================', e);

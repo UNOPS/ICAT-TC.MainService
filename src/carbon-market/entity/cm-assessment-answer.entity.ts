@@ -26,7 +26,7 @@ export class CMAssessmentAnswer extends BaseTrackingEntity {
   @JoinColumn()
   answer: CMAnswer
 
-  @ManyToOne((type) => Institution, {nullable: true})
+  @ManyToOne((type) => Institution, {nullable: true, eager: true})
   @JoinColumn()
   institution: Institution
 }
