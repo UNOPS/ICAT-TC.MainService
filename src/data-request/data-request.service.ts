@@ -627,7 +627,7 @@ console.log("=========11",result)
     let filter = 'request.dataRequestStatus in (4,5,-8) AND  request.tool = :tool '
 
     if (filterText){
-      filter = filter + 'AND project.climateActionName LIKE %:filterText% '
+      filter = filter + 'AND climateAction.policyName LIKE :filterText '
     }
 
     if (climateActionId !== 0) {
@@ -693,7 +693,7 @@ console.log("=========11",result)
       'climateAction',
       'climateAction.id = assessment.climateAction_id'
     ).where(
-      filter, {climateActionId: climateActionId, insId: insId, filterText: filterText, tool: tool}
+      filter, {climateActionId: climateActionId, insId: insId, filterText: `%${filterText}%`, tool: tool}
     )
 
     return await paginate(data, options)
@@ -802,7 +802,7 @@ console.log("=========11",result)
       data.andWhere('assessment.assessmentType = :type', {type: type})
     }
     if (filterText && filterText !== ''){
-      data.andWhere('p.climateActionName LIKE :filterText OR para.name LIKE :filterText OR u.username LIKE :filterText OR a.assessmentType  LIKE :filterText', {filterText: filterText})
+      data.andWhere('climateAction.policyName LIKE :filterText OR assessment.assessmentType  LIKE :filterText', {filterText: `%${filterText}%`})
     }
     data.groupBy('dr.id')
     
