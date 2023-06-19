@@ -61,24 +61,58 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
   async getDateRequestToManageDataStatus(
     assesmentId: number,
     assessmentYear: number,
+    tool: Tool
   ): Promise<any> {
     let data = this.repo
       .createQueryBuilder('dr')
-      .leftJoinAndMapMany(
-        'dr.parameter',
-        Parameter,
-        'para',
-        'para.id = dr.parameterId',
-      )
-      .select(['dr.dataRequestStatus', 'para.id'])
-      .where(
-        `para.assessment_id = ${assesmentId}`,
-      );
+
+      if (tool === Tool.CM_tool){
+        console.log("cm")
+        data.leftJoinAndMapMany(
+          'dr.cmAssessmentAnswer',
+          CMAssessmentAnswer,
+          'para',
+          'para.id = dr.cmAssessmentAnswerId',
+        ) .leftJoinAndMapOne(
+          'para.assessment_question',
+           CMAssessmentQuestion,
+          'assessment_question',
+          'assessment_question.id = para.assessmentQuestionId',
+        ).leftJoinAndMapMany(
+          'assessment_question.assessment',
+          Assessment,
+          'assessment',
+          'assessment.id = assessment_question.assessmentId',
+        ).where(
+          `assessment.id = ${assesmentId}`,
+        )
+      } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
+        console.log("ip")
+        data.leftJoinAndMapMany(
+          'dr.investmentParameter',
+          InvestorAssessment,
+          'para',
+          'para.id = dr.investmentParameterId',
+        ).where(
+          `para.assessment_id = ${assesmentId}`,
+        )
+      } else [
+        data.leftJoinAndMapMany(
+          'dr.parameter',
+          Parameter,
+          'para',
+          'para.id = dr.parameterId',
+        ).where(
+          `para.assessment_id = ${assesmentId}`,
+        )
+      ]
+      // data.select(['dr.dataRequestStatus', 'para.id'])
       // .where(
       //   `para.assessment_id = ${assesmentId} 
       //   AND ((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false ))
       //    AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
       // );
+
 
     return await data.execute();
   }
@@ -511,7 +545,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
 
     let result = await paginate(data, options);
     if (result) {
-      // console.log('ffff',result)
+      console.log('ffff',result)
       return result;
     }
   }
@@ -627,7 +661,7 @@ console.log("=========11",result)
     let filter = 'request.dataRequestStatus in (4,5,-8) AND  request.tool = :tool '
 
     if (filterText){
-      filter = filter + 'AND project.climateActionName LIKE %:filterText% '
+      filter = filter + 'AND climateAction.policyName LIKE :filterText '
     }
 
     if (climateActionId !== 0) {
@@ -693,10 +727,8 @@ console.log("=========11",result)
       'climateAction',
       'climateAction.id = assessment.climateAction_id'
     ).where(
-      filter, {climateActionId: climateActionId, insId: insId, filterText: filterText, tool: tool}
+      filter, {climateActionId: climateActionId, insId: insId, filterText: `%${filterText}%`, tool: tool}
     )
-
-    console.log(data.getQuery())
 
     return await paginate(data, options)
   }
@@ -804,11 +836,9 @@ console.log("=========11",result)
       data.andWhere('assessment.assessmentType = :type', {type: type})
     }
     if (filterText && filterText !== ''){
-      data.andWhere('p.climateActionName LIKE :filterText OR para.name LIKE :filterText OR u.username LIKE :filterText OR a.assessmentType  LIKE :filterText', {filterText: filterText})
+      data.andWhere('climateAction.policyName LIKE :filterText OR assessment.assessmentType  LIKE :filterText', {filterText: `%${filterText}%`})
     }
     data.groupBy('dr.id')
-
-    console.log(data.getQuery())
     
     let result = await paginate(data, options);
     if (result) {
@@ -1122,18 +1152,33 @@ console.log("=========11",result)
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
-      let dataRequestItem = await this.repo.findOne({ where: { id: id } });
+      let dataRequestItem = await this.repo.findOne({ where: { id: id }, relations: ['cmAssessmentAnswer', 'investmentParameter'] });
       let originalStatus = dataRequestItem.dataRequestStatus;
       dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
       dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
       dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
 
-      let email = dataRequestItem.parameter.institution.email;
+      console.log(dataRequestItem)
+
+      let email
+      let institutionName 
+      if (updateDataRequestDto.tool === Tool.CM_tool){
+        email = dataRequestItem.cmAssessmentAnswer.institution.email;
+        institutionName = dataRequestItem.cmAssessmentAnswer.institution.name
+      } else if (updateDataRequestDto.tool === Tool.Investor_tool || updateDataRequestDto.tool === Tool.Portfolio_tool){
+        email = dataRequestItem.investmentParameter.institution.email;
+        institutionName = dataRequestItem.investmentParameter.institution.name
+      } else {
+        email = dataRequestItem.parameter.institution.email;
+        institutionName = dataRequestItem.parameter.institution.name
+      }
+
+      // let email = dataRequestItem.parameter.institution.email;
       var template: any;
       if (updateDataRequestDto.comment != undefined) {
         template =
           'Dear ' +
-          dataRequestItem.parameter.institution.name +
+          institutionName +
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value' +
@@ -1144,7 +1189,7 @@ console.log("=========11",result)
       } else {
         template =
           'Dear ' +
-          dataRequestItem.parameter.institution.name +
+          institutionName +
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value'
@@ -1157,14 +1202,14 @@ console.log("=========11",result)
 
       this.repo.save(dataRequestItem).then((res) => {
         console.log('res', res);
-        this.parameterHistoryService.SaveParameterHistory(
-          res.id,
-          ParameterHistoryAction.EnterData,
-          'EnterData',
-          res.noteDataRequest,
-          res.dataRequestStatus.toString(),
-          originalStatus.toString(),
-        );
+        // this.parameterHistoryService.SaveParameterHistory(
+        //   res.id,
+        //   ParameterHistoryAction.EnterData,
+        //   'EnterData',
+        //   res.noteDataRequest,
+        //   res.dataRequestStatus.toString(),
+        //   originalStatus.toString(),
+        // );
       });
       //  dataRequestItemList.push(dataRequestItem);
     }
