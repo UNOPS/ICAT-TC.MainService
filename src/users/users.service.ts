@@ -115,12 +115,12 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.loginProfile = createUserDto.loginProfile;
     newUser.admin = ''
     let newUUID = uuidv4();
-    let newPassword = createUserDto.password;
+    // let newPassword = createUserDto.password;
     // createUserDto.password = newPassword;
-    newUser.password = await this.hashPassword(
-      newPassword,
-      newUser.salt,
-    );
+    // newUser.password = await this.hashPassword(
+    //   newPassword,
+    //   newUser.salt,
+    // );
     newUser.resetToken = '';
 
     var newUserDb = await this.repo.save(newUser);
