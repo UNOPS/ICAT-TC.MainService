@@ -620,7 +620,17 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       });
     }
 
-    
+   
+    async AssessmentDetailsforTool(tool: string): Promise<any[]> {
+      //  return await this.repo.find();
+        let res =  await this.assessmentRepository.find({
+          relations: [ 'methodology', 'climateAction'],
+        });
+
+        const filteredResults = res.filter(assessment => assessment?.tool === tool);
+
+        return filteredResults
+      } 
 
   async findAllPolicyBarriers(): Promise<any[]> {
     const policyBarriers = await this.policyBarrierRepository.find({

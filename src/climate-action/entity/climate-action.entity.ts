@@ -85,7 +85,7 @@ export class ClimateAction extends BaseTrackingEntity {
 
   
 
-  @ManyToOne((type) => ProjectStatus, { cascade: false })
+  @ManyToOne((type) => ProjectStatus, { cascade: false , eager : true})
   @JoinColumn()
   projectStatus?: ProjectStatus;
 
