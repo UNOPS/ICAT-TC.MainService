@@ -364,6 +364,13 @@ async uploadFile2(
   }
 
 
+  @Get('AssessmentDetailsforTool/:tool')
+  async AssessmentDetailsforTool(@Param('tool') tool: string): Promise<any[]> {
+  let res  = await this.methodologyAssessmentService.AssessmentDetailsforTool(tool);
+    return res;
+   
+  }
+
   @Get('findAllCategories')
   async findAllCategories() {
     return await this.methodologyAssessmentService.findAllCategories();
