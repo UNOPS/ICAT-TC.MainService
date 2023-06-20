@@ -56,6 +56,7 @@ import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity
 import { PolicySector } from './climate-action/entity/policy-sectors.entity';
 import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
 import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
+import { PortfolioSdg } from './investor-tool/entities/portfolio-sdg.entity';
 
 
 export const config: ConnectionOptions = {
@@ -68,15 +69,15 @@ export const config: ConnectionOptions = {
 /*  username: 'root',
  password: 'pradeep123#',
  database: 'tc-main',   */
- username: 'root',
- password: 'pradeep123#',
- database: 'tc-main',  
+//  username: 'root',
+//  password: 'pradeep123#',
+//  database: 'tc-main',  
 /*     username: 'sqluser',
  password: 'password',
   database: 'tc-main-new3', */    
-      // username: 'root',
-      // password: '1997',
-      // database: 'tc_new',
+      username: 'root',
+      password: '1997',
+      database: 'tc_new',
      
   // username: 'root',
   //  database: 'tc-main', 
@@ -89,10 +90,10 @@ export const config: ConnectionOptions = {
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
 ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification,
-PolicySector,InvestorQuestions,IndicatorDetails],
+PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: true,
+  synchronize: false,
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
