@@ -13,7 +13,7 @@ export class Characteristics {
     @Column({ nullable: true })
     name : string;
 
-    @ManyToOne((type) => Category, { cascade: false })
+    @ManyToOne((type) => Category, { cascade: false})
     @JoinColumn({ name: 'category_id' })
     category?: Category;
 
