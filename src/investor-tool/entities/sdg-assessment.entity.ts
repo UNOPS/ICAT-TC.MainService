@@ -11,8 +11,6 @@ export class SdgAssessment  {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
-    number: number;
 
     @ManyToOne((type) => Assessment, { cascade: false ,eager:true})
     assessment: Assessment;

@@ -39,5 +39,8 @@ export class PortfolioController {
   async getLastID() {
     return await this.portfolioService.getLastID();
   }
-
+  @Get('sdgSumCalculate/:portfolioId')
+  async sdgSumCalculate(@Param('portfolioId') portfolioId: number) {
+    return await this.portfolioService.sdgSumCalculate(portfolioId);
+  }
 }
