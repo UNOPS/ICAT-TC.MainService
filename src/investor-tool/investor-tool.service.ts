@@ -669,12 +669,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             });
             // console.log(scaleScoreTotal)
             finalDataArray.push({
-              assesment:obj,
-              likelihood:(finalLikelihood/4),
-              relevance:(finalrelevance/4),
-              scaleScore:(scaleScoreTotal/2),
-              sustainedScore:(sustainedScoreTotal/2)
-            })
+              assesment: obj,
+              likelihood: Math.round(finalLikelihood / 4),
+              relevance: Math.round(finalrelevance / 4),
+              scaleScore: Math.round(scaleScoreTotal / 2),
+              sustainedScore: Math.round(sustainedScoreTotal / 2)
+            });
+            
             
         }
 
