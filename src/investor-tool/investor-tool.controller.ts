@@ -44,7 +44,14 @@ export class InvestorToolController {
 
   @Post('createFinalAssessment')
   async createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
-    return await this.investorToolService.createFinalAssessment(req);
+    let request2 : any = req;
+    let request = request2.finalArray
+    if(request[0].data[0].assessment.tool === 'Portfolio Tool'){
+      return await this.investorToolService.createFinalAssessment2(req);
+    }else{
+      return await this.investorToolService.createFinalAssessment(req);
+    }
+    
   }
 
   @Post('createFinalAssessmentIndirect')
@@ -106,5 +113,10 @@ export class InvestorToolController {
         await this.investorToolService.uplaodFileUpload(newSavedfile);
     }
 
+
+    @Get('findAllSDGs')
+  async findAllSDGs():Promise<any[]> {
+    return await this.investorToolService.findAllSDGs();
+  }
 
 }

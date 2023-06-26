@@ -10,6 +10,7 @@ import { Characteristics } from "src/methodology-assessment/entities/characteris
 import { InvestorQuestions } from "./investor-questions.entity";
 import { IndicatorDetails } from "./indicator-details.entity";
 import { Institution } from "src/institution/entity/institution.entity";
+import { PortfolioSdg } from "./portfolio-sdg.entity";
 
 @Entity()
 export class InvestorAssessment extends BaseTrackingEntity {
@@ -33,6 +34,12 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @JoinColumn({ name: 'characteristic_id' })
     characteristics: Characteristics;
 
+    @ManyToOne((type) => PortfolioSdg, { cascade: false , eager : true, nullable : true})
+    @JoinColumn({ name: 'portfolioSdg_id' })
+    portfolioSdg: PortfolioSdg;
+
+
+
     @Column({ nullable: true })
     description: string;
 
@@ -44,25 +51,6 @@ export class InvestorAssessment extends BaseTrackingEntity {
 
     @Column({ nullable: true })
     justification: string;
-
-    // @Column({ nullable: true })
-    // question01: string; // does the project have a local R&D
-
-    // @Column({ nullable: true })
-    // question02: string; // does the project have a significant training component
-
-    // @Column({ nullable: true })
-    // question03: string; //is the project first of its kind for the local project developer
-
-    // @Column({ nullable: true })
-    // question04: string; //is the project first of its kind for the local project developer
-
-    // @Column({ nullable: true })
-    // question05: string;
-
-    // @Column({ nullable: true })
-    // question06: string; // outcome-scale GHGs- question 1
-   
 
     @Column({ nullable: true })
     likelihood: number;
@@ -80,13 +68,13 @@ export class InvestorAssessment extends BaseTrackingEntity {
     score: number; // outcome- sustained GHGs
 
 
-    @ManyToOne((type) => InvestorTool, { cascade: false })
+     @ManyToOne((type) => InvestorTool, { cascade: false })
     @JoinColumn({ name: 'investortool_id' })
-    investorTool?: InvestorTool;
+    investorTool?: InvestorTool; 
 
-    @OneToMany(() => IndicatorDetails, (indicatorDetails) => indicatorDetails.investorAssessment)
+     @OneToMany(() => IndicatorDetails, (indicatorDetails) => indicatorDetails.investorAssessment)
    
-    indicator_details:IndicatorDetails[]
+    indicator_details:IndicatorDetails[] 
 
     @ManyToOne((type) => Assessment, { cascade: false })
     @JoinColumn({ name: 'assessment_id' })
