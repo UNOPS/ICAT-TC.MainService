@@ -7,7 +7,7 @@ import { Section } from "../entity/section.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Repository } from "typeorm";
 import { categories, characteristic, questions } from "../dto/seed-data";
-import { UniqueCharacteristicDto } from "../dto/unique-characteristic.dto";
+// import { UniqueCharacteristicDto } from "../dto/unique-characteristic.dto";
 
 @Injectable()
 export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
