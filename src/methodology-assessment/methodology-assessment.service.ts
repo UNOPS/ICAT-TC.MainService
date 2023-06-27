@@ -718,7 +718,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         if (res.characteristic[char.category.code]) {
           res.characteristic[char.category.code].push({ name: char.name, code: char.code, id: char.id })
         } else {
-          res.categories.push({ name: char.category.name, code: char.category.code })
+          let obj = { name: char.category.name, code: char.category.code }
+          char.category.code.indexOf('GHG') !== -1 ? obj['type'] = 'GHG' : obj['type'] = 'SD'
+          char.category.code.indexOf('SCALE') !== -1 ? obj['method'] = 'SCALE' : obj['method'] = 'SUSTAINED'
+          res.categories.push(obj)
           res.characteristic[char.category.code] = [{ name: char.name, code: char.code, id: char.id }]
         }
       })
