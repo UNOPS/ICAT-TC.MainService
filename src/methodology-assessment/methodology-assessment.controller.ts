@@ -376,6 +376,11 @@ async uploadFile2(
     return await this.methodologyAssessmentService.findAllCategories();
   }
 
+  @Get('get-all-outcome-characteristics')
+  async getAllOutcomeCharacteristics():Promise<any>{
+    return await this.methodologyAssessmentService.getAllOutcomeCharacteristics()
+  }
+
   @Get('findByAllCategories')
   async findByAllCategories() {
     return await this.methodologyAssessmentService.findByAllCategories();

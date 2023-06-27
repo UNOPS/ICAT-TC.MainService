@@ -704,6 +704,28 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .getMany();
   }
 
+  async getAllOutcomeCharacteristics(){
+    let data = this.characteristicsRepository.createQueryBuilder('characteristic')
+        .leftJoinAndSelect(
+          'characteristic.category',
+          'category',
+          'category.id = characteristic.category_id'
+        ).where('category.type = :type', {type: 'outcome'})
+      
+      let result = await data.getMany()
+      let res = {categories:[], characteristic: {}}
+      result.forEach(char => {
+        if (res.characteristic[char.category.code]) {
+          res.characteristic[char.category.code].push({ name: char.name, code: char.code, id: char.id })
+        } else {
+          res.categories.push({ name: char.category.name, code: char.category.code })
+          res.characteristic[char.category.code] = [{ name: char.name, code: char.code, id: char.id }]
+        }
+      })
+
+      return res
+  }
+
   async findAllCharacteristics(): Promise<Characteristics[]> {
   //  return this.characteristicsRepository.find();
     return this.characteristicsRepository.createQueryBuilder('characteristics')
