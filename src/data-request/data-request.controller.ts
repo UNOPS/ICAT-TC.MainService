@@ -55,6 +55,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
 
 
+  // @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get('getDateRequestToManageDataStatus')
   async getDateRequestToManageDataStatus(
     @Request() request,

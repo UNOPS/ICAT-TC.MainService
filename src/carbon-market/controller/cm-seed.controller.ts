@@ -37,4 +37,19 @@ export class CMSeedController {
     async updateAnswerSeed(){
         return await this.service.updateAnswerSeed()
     }
+
+    @Post('update-characteristics-seed')
+    async updateCharacteristicsSeed(){
+        return await this.service.updateCharacteristicsByName()
+    }
+
+    @Post('update-section-seed')
+    async updateSectionSeed(){
+        return await this.service.updateSectionSeed()
+    }
+
+    @Post('update-category-seed')
+    async updateCategorySeed(){
+        return await this.service.updateCategoryByName()
+    }
 }

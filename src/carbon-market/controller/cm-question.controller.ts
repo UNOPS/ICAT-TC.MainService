@@ -6,6 +6,7 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMQuestionService } from "../service/cm-question.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
+import { UniqueCharacteristicDto } from "../dto/unique-characteristic.dto";
 
 
 @Crud({
@@ -54,5 +55,16 @@ export class CMQuestionController implements CrudController<CMQuestion>
     return await this.service.getAnswersByQuestion(questionId)
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-unique-characteristics')
+  async getUniqueCharacterisctics():Promise<any>{
+    return await this.service.getUniqueCharacterisctics()
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-questions-by-characteristic')
+  async getQuestionsByCharacteristic(@Query('characteristicId') characteristicId: number[]):Promise<any>{
+    return await this.service.getQuestionsByCharacteristicId(characteristicId)
+  }
 
 }
