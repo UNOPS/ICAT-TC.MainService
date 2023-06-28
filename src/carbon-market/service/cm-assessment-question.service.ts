@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
@@ -49,47 +49,54 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.assessment = assessment;
       ass_question.comment = res.comment;
       ass_question.question = res.question;
+      if (res.question?.id === undefined) ass_question.question = undefined
+      ass_question.characteristic = res.characteristic;
+      if (res.characteristic?.id === undefined) ass_question.characteristic = undefined
+      ass_question.sdgIndicator = res.sdgIndicator;
+      ass_question.startingSituation = res.startingSituation;
+      ass_question.expectedImpact = res.expectedImpact;
+      ass_question.selectedSdg = res.selectedSdg;
+      let q_res
+      try{
+        q_res = await this.repo.save(ass_question)
+      }catch(err){
+        console.log(err)
+        return new InternalServerErrorException()
+      }
+      let _answers = []
 
-      let q_res = await this.repo.save(ass_question)
-      let answers = []
-
-      console.log("typeeee", res.type)
-      if (res.answer || res.institution){
-        if (res.type === 'INDIRECT'){
-          let ass_answer = new CMAssessmentAnswer()
-          ass_answer.institution = res.institution
-          ass_answer.assessment_question = q_res
-          ass_answer.approach = Approach.INDIRECT
-          answers.push(ass_answer)
-        } else {
-          if (Array.isArray(res.answer)) {
-            res.answer.forEach(async ans => {
-              let ass_answer = new CMAssessmentAnswer()
-              ass_answer.answer = ans
-              ass_answer.assessment_question = q_res
-              ass_answer.score = score * ans.score_portion/100 * ans.weight/100
-              ass_answer.approach = Approach.DIRECT
-    
-              answers.push(ass_answer)
-            })
-          } else {
-            let ass_answer = new CMAssessmentAnswer()
-            ass_answer.answer = res.answer
-            ass_answer.assessment_question = q_res
-            ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
-            ass_answer.approach = Approach.DIRECT
-    
-            answers.push(ass_answer)
-          }
+      // if (res.answer || res.institution){
+      if (res.type === 'INDIRECT') {
+        let ass_answer = new CMAssessmentAnswer()
+        ass_answer.institution = res.institution
+        ass_answer.institution = undefined
+        ass_answer.assessment_question = q_res
+        ass_answer.approach = Approach.INDIRECT
+        _answers.push(ass_answer)
+      } else {
+        let ass_answer = new CMAssessmentAnswer()
+        if (res.answer) {
+          ass_answer.answer = res.answer
+          ass_answer.score = score * res.answer.score_portion / 100 * res.answer.weight / 100
         }
-        a_ans = await this.assessmentAnswerRepo.save(answers)
+        ass_answer.assessment_question = q_res
+        ass_answer.selectedScore = res.selectedScore
+        ass_answer.approach = Approach.DIRECT
+
+        _answers.push(ass_answer)
+      }
+      console.log(_answers)
+      try{
+        a_ans = await this.assessmentAnswerRepo.save(_answers)
+      }catch(err){
+        console.log(err)
+        return new InternalServerErrorException()
+      }
       /*   let result = new Results()
         result.assessment = assessment;
         await this.resultsRepo.save(result)  */
-        await this.saveDataRequests(answers)
-
-        
-      }
+      // await this.saveDataRequests(_answers)
+      // }
 
     }
 

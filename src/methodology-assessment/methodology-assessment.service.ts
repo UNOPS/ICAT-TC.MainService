@@ -41,6 +41,8 @@ import { ParameterRequestDto } from './dto/parameter-request.dto';
 const MainCalURL = 'http://localhost:7100/indicator_calculation';
 import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
+import { OutcomeCategory } from './dto/outcome-category.dto';
+import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
  
@@ -704,29 +706,37 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .getMany();
   }
 
-  async getAllOutcomeCharacteristics(){
+  async getAllOutcomeCharacteristics() {
     let data = this.characteristicsRepository.createQueryBuilder('characteristic')
-        .leftJoinAndSelect(
-          'characteristic.category',
-          'category',
-          'category.id = characteristic.category_id'
-        ).where('category.type = :type', {type: 'outcome'})
-      
-      let result = await data.getMany()
-      let res = {categories:[], characteristic: {}}
-      result.forEach(char => {
-        if (res.characteristic[char.category.code]) {
-          res.characteristic[char.category.code].push({ name: char.name, code: char.code, id: char.id })
-        } else {
-          let obj = { name: char.category.name, code: char.category.code }
-          char.category.code.indexOf('GHG') !== -1 ? obj['type'] = 'GHG' : obj['type'] = 'SD'
-          char.category.code.indexOf('SCALE') !== -1 ? obj['method'] = 'SCALE' : obj['method'] = 'SUSTAINED'
-          res.categories.push(obj)
-          res.characteristic[char.category.code] = [{ name: char.name, code: char.code, id: char.id }]
-        }
-      })
+      .leftJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id'
+      ).where('category.type = :type', { type: 'outcome' })
 
-      return res
+    let response: OutcomeCategory[] = []
+
+    let result = await data.getMany()
+    for await (let ch of result) {
+      ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
+      ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
+      let cat = response.find(o => o.code === ch.category.code)
+      let cmRes = new CMResultDto()
+      cmRes.characteristic = ch 
+      if (cat) {
+        cat.results.push(cmRes)
+      } else {
+        let obj = new OutcomeCategory()
+        obj.name = ch.category.name
+        obj.code = ch.category.code
+        obj.method = ch.category.code.indexOf('SCALE') !== -1 ? 'SCALE' : 'SUSTAINED'
+        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : 'SD'
+        obj.results = [cmRes]
+        response.push(obj)
+      }
+    }
+
+    return response
   }
 
   async findAllCharacteristics(): Promise<Characteristics[]> {
