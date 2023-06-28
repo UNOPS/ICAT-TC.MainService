@@ -157,6 +157,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         assess.category.id = req.categoryID;
         assess.type = req.type;
         assess.expected_ghg_mitigation=mitigation
+
+        let port = new PortfolioSdg()
+        port.id = 1
+
+        assess.portfolioSdg = port
         // assess.indicator_details=[]
         // if(assess.indicator_details){
         //   for (let detail of assess.indicator_details) {
@@ -952,6 +957,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             }
           })
         });
+      });
+    }
+
+
+    async findSDGs(assessmentId: number): Promise<SdgAssessment[]> {
+      return this.sdgsRepo.find({
+        where: { assessment: { id: assessmentId } },
       });
     }
     
