@@ -11,6 +11,12 @@ import { Approach } from "../enum/answer-type.enum";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 import { request } from "http";
 import { Tool } from "src/data-request/enum/tool.enum";
+import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
+import { Category } from "src/methodology-assessment/entities/category.entity";
+import { CMQuestion } from "../entity/cm-question.entity";
+import { CMAnswer } from "../entity/cm-answer.entity";
+import { Criteria } from "../entity/criteria.entity";
+import { Section } from "../entity/section.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -158,6 +164,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
   async getResults(assessmentId: number){
     let result = []
+    let processData:{technology:any[],incentives:any[], norms:any[],}={ technology: [], incentives: [], norms: [] };
+    let outcomeData:{scale_GHGs:any[],sustained_GHGs:any[], scale_SDs:any[],sustained_SDs:any[]}={ scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [] };
+
+     
+     
+   
+      
+      
+     
+    
+    
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
       .innerJoin(
@@ -178,40 +195,98 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             'question',
             'question.id = ans.assessmentQuestionId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'ans.answer',
+            CMAnswer,
             'answer',
             'answer.id = ans.answerId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'question.question',
+            CMQuestion,
             'cmquestion',
             'cmquestion.id = question.questionId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
+            'question.characteristic',
+            Characteristics,
+            'characteristic',
+            'characteristic.id = question.characteristicId'
+          )
+          .leftJoinAndMapOne(
+            'characteristic.category',
+            Category,
+            'category',
+            'category.id = characteristic.category_id'
+          )
+          .leftJoinAndMapOne(
             'cmquestion.criteria',
+            Criteria,
             'criteria',
             'criteria.id = cmquestion.criteriaId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'criteria.section',
+            Section,
             'section',
             'section.id = criteria.sectionId'
           )
           .where('question.id In (:id)', { id: qIds })
           .getMany()
-
+          // answers.forEach(ans=>{console.log("3333",ans.assessment_question.id)})
           let criteria = []
+          answers.forEach(ans => {
+            let obj = {
+              // data:ans,
+              characteristic:ans.assessment_question?.characteristic?.name,
+              question: ans?.assessment_question?.question?.label,
+              score: ans?.answer?.score_portion,
+              justification: ans?.assessment_question?.comment,
+              document: ans?.assessment_question?.uploadedDocumentPath,
+              category:ans?.assessment_question?.characteristic?.category,
+              starting_situation:ans?.assessment_question?.startingSituation,
+              expected_impacts:ans?.assessment_question?.expectedImpact,
+              SDG:ans?.assessment_question?.selectedSdg?.toLowerCase()
+              
+            }
+            if(obj?.category?.code=='TECHNOLOGY'){
+              processData.technology.push(obj)
+            }
+            else if(obj?.category?.code=='INCENTIVES'){
+              processData.incentives.push(obj)
+            }
+            else if(obj?.category?.code=='NORMS'){
+              processData.norms.push(obj)
+            }
+
+           if(obj?.category?.code=='SCALE_GHG'){
+              outcomeData.scale_GHGs.push(obj)
+            }
+            else if(obj?.category?.code=='SUSTAINED_GHG'){
+              outcomeData.sustained_GHGs.push(obj)
+            }
+            else if(obj?.category?.code=='SCALE_SD'){
+              outcomeData.scale_SDs.push(obj)
+            }
+            else if(obj?.category?.code=='SUSTAINED_SD'){
+              outcomeData.sustained_SDs.push(obj)
+            }
+           
+            
+            
+          })
 
           answers.forEach(ans => {
             let obj = {
-              section: ans.assessment_question.question.criteria.section.name,
-              criteria: ans.assessment_question.question.criteria.name,
-              question: ans.assessment_question.question.label,
-              answer: ans.answer.label,
-              comment: ans.assessment_question.comment
+              section: ans?.assessment_question?.question?.criteria?.section?.name,
+              criteria: ans?.assessment_question?.question?.criteria?.name,
+              question: ans.assessment_question?.question?.label,
+              answer: ans?.answer?.label,
+              comment: ans.assessment_question.comment,
+              document: ans?.assessment_question?.uploadedDocumentPath,
+              
             }
-            criteria.push(ans.assessment_question.question.criteria.name)
+            criteria.push(ans?.assessment_question?.question?.criteria?.name)
             result.push(obj)
           })
 
@@ -220,7 +295,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
           return {
             result: result,
-            criteria: criteria
+            criteria: criteria,
+            processData:processData,
+            outComeData:outcomeData,
           }
       } 
   }
