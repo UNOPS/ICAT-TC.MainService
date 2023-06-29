@@ -15,7 +15,7 @@ export class CMResultDto {
     startingSituation: string
     expectedImpact: string
     selectedSdg: string
-    selectedScore: string
+    selectedScore: scoreDto
     filePath: string
 }
 
@@ -26,4 +26,27 @@ export class SaveCMResultDto {
 
 export class CalculateDto {
     assessmentId: number
+}
+
+export class scoreDto {
+    name: string
+    code: string
+    value: number
+}
+
+export class UniqueCategories{
+    process: UniqueCategory[]
+    outcome: UniqueCategory[]
+}
+
+export class UniqueCategory{
+    name: string
+    code: string
+    characteristics: UniqueCharacteristic[]
+}
+
+export class UniqueCharacteristic{
+    name: string
+    code: string
+    id: number
 }

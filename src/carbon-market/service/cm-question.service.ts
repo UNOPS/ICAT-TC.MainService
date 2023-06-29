@@ -7,6 +7,7 @@ import { Section } from "../entity/section.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Repository } from "typeorm";
 import { categories, characteristic, questions } from "../dto/seed-data";
+import { UniqueCategories, UniqueCategory, UniqueCharacteristic } from "../dto/cm-result.dto";
 
 @Injectable()
 export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
@@ -71,7 +72,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
     return await data.getMany()
   }
 
-  async getUniqueCharacterisctics() {
+  async getUniqueCharacterisctics(): Promise<UniqueCategories> {
     let data = this.repo.createQueryBuilder('question')
       // .distinct(true)
       .innerJoinAndSelect(
@@ -85,32 +86,63 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'category.id = characteristic.category_id'
       )
       .where('characteristic.id is not null')
-      .groupBy('characteristic.code')
+      // .groupBy('characteristic.code')
 
     let characteristics = await data.getMany()
-    let res = { process: { categories: [], characteristic: {} }, outcome: { categories: [], characteristic: {} } }
-    res.process.categories = []
-    res.outcome.categories = []
 
-    characteristics.map(char => {
-      if (char.characteristic.category.type === 'process') {
-        if (res.process.characteristic[char.characteristic.category.code]) {
-          res.process.characteristic[char.characteristic.category.code].push({ name: char.characteristic.name, code: char.characteristic.code, id: char.characteristic.id })
+    let categories = new UniqueCategories()
+    categories.process = []
+    categories.outcome = []
+
+    characteristics.map(ch => {
+      if (ch.characteristic.category.type === 'process') {
+        let cat = categories.process?.find(o => o.code === ch.characteristic.category.code)
+        if (cat){
+          let char = cat.characteristics.find(o => o.code === ch.characteristic.code)
+          if (char === undefined){
+            char = new UniqueCharacteristic()
+            char.name = ch.characteristic.name
+            char.code = ch.characteristic.code
+            char.id = ch.characteristic.id
+            cat.characteristics.push(char)
+          }
         } else {
-          res.process.categories.push({ name: char.characteristic.category.name, code: char.characteristic.category.code })
-          res.process.characteristic[char.characteristic.category.code] = [{ name: char.characteristic.name, code: char.characteristic.code, id: char.characteristic.id }]
+          let _char = new UniqueCharacteristic()
+          _char.name = ch.characteristic.name
+          _char.code = ch.characteristic.code
+          _char.id = ch.characteristic.id
+          cat = new UniqueCategory()
+          cat.name = ch.characteristic.category.name
+          cat.code = ch.characteristic.category.code
+          cat.characteristics = [_char]
+          categories.process.push(cat)
         }
-      } else if (char.characteristic.category.type === 'outcome') {
-        if (res.outcome.characteristic[char.characteristic.category.code]) {
-          res.outcome.characteristic[char.characteristic.category.code].push({ name: char.characteristic.name, code: char.characteristic.code, id: char.characteristic.id })
+      } else if (ch.characteristic.category.type === 'outcome') {
+        let cat = categories.outcome.find(o => o.code === ch.characteristic.category.code)
+        if (cat){
+          let char = cat.characteristics.find(o => o.code === ch.characteristic.code)
+          if (char === undefined){
+            char = new UniqueCharacteristic()
+            char.name = ch.characteristic.name
+            char.code = ch.characteristic.code
+            char.id = ch.characteristic.id
+            cat.characteristics.push(char)
+          }
         } else {
-          res.outcome.categories.push({ name: char.characteristic.category.name, code: char.characteristic.category.code })
-          res.outcome.characteristic[char.characteristic.category.code] = [{ name: char.characteristic.name, code: char.characteristic.code, id: char.characteristic.id }]
+          let _char = new UniqueCharacteristic()
+          _char.name = ch.characteristic.name
+          _char.code = ch.characteristic.code
+          _char.id = ch.characteristic.id
+          cat = new UniqueCategory()
+          cat.name = ch.characteristic.category.name
+          cat.code = ch.characteristic.category.code
+          cat.characteristics = [_char]
+          categories.outcome.push(cat)
         }
       }
     })
 
-    return res
+    return categories
   }
 
   async getQuestionsByCharacteristicId(ids: number[]) {
