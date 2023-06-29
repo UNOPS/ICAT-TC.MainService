@@ -15,6 +15,7 @@ import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -31,7 +32,8 @@ import { SdgAssessment } from './entities/sdg-assessment.entity';
     ParameterRequest,
     InvestorAssessment,
     SdgAssessment,
-    PortfolioSdg
+    PortfolioSdg,
+    PolicySector
   ])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService]

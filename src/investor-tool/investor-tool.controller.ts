@@ -77,6 +77,12 @@ export class InvestorToolController {
     return await this.investorToolService.getTCValueByAssessment(tool);
   }
 
+  @Get('getSectorCountByTool/:tool')
+  async getSectorCountByTool(@Param('tool') tool:string):Promise<any[]> {
+    return await this.investorToolService.getSectorCountByTool(tool);
+  }
+
+
   @Get('calculateAssessmentResults/:tool')
   async calculateAssessmentResults(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.investorToolService.calculateAssessmentResults(tool);
