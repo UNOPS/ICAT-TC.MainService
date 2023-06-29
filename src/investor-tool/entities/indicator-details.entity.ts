@@ -29,9 +29,9 @@ export class IndicatorDetails extends BaseTrackingEntity {
     value: string;
     
 
-    @ManyToOne(() => InvestorAssessment, (investorAssessment) => investorAssessment.indicator_details)
+     @ManyToOne(() => InvestorAssessment, (investorAssessment) => investorAssessment.indicator_details)
     @JoinColumn({ name: 'investorAssessment_id' })
-    investorAssessment?: InvestorAssessment;
+    investorAssessment?: InvestorAssessment; 
 
     // @ManyToOne((type) => InvestorTool, { cascade: false })
     // @JoinColumn({ name: 'investorTool_id' })

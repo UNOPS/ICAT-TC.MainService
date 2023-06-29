@@ -29,8 +29,9 @@ import { SdgAssessment } from './entities/sdg-assessment.entity';
     IndicatorDetails,
     Category,
     ParameterRequest,
-    PortfolioSdg,
-    SdgAssessment
+    InvestorAssessment,
+    SdgAssessment,
+    PortfolioSdg
   ])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService]
