@@ -56,6 +56,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.startingSituation = res.startingSituation;
       ass_question.expectedImpact = res.expectedImpact;
       ass_question.selectedSdg = res.selectedSdg;
+      ass_question.uploadedDocumentPath = res.filePath
       let q_res
       try{
         q_res = await this.repo.save(ass_question)

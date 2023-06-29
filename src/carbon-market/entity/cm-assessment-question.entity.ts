@@ -33,6 +33,9 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @Column({nullable: true})
   selectedSdg: string
 
+  @Column({nullable: true})
+  uploadedDocumentPath: string
+
   @ManyToOne((type) => Characteristics, {nullable: true})
   @JoinColumn()
   characteristic: Characteristics

@@ -16,6 +16,7 @@ export class CMResultDto {
     expectedImpact: string
     selectedSdg: string
     selectedScore: string
+    filePath: string
 }
 
 export class SaveCMResultDto {
