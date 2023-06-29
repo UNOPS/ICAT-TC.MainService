@@ -28,6 +28,7 @@ const auditlogURL = 'http://localhost:7000/audit';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
+import { OutcomeCategory } from './dto/outcome-category.dto';
 
 
 @ApiTags('methodology-assessment')
@@ -377,7 +378,7 @@ async uploadFile2(
   }
 
   @Get('get-all-outcome-characteristics')
-  async getAllOutcomeCharacteristics():Promise<any>{
+  async getAllOutcomeCharacteristics():Promise<OutcomeCategory[]>{
     return await this.methodologyAssessmentService.getAllOutcomeCharacteristics()
   }
 

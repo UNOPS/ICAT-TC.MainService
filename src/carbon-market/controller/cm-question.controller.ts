@@ -6,7 +6,6 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMQuestionService } from "../service/cm-question.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
-// import { UniqueCharacteristicDto } from "../dto/unique-characteristic.dto";
 
 
 @Crud({
