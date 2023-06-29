@@ -6,6 +6,7 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMQuestionService } from "../service/cm-question.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
+import { UniqueCategories } from "../dto/cm-result.dto";
 
 
 @Crud({
@@ -56,7 +57,7 @@ export class CMQuestionController implements CrudController<CMQuestion>
 
   // @UseGuards(JwtAuthGuard)
   @Get('get-unique-characteristics')
-  async getUniqueCharacterisctics():Promise<any>{
+  async getUniqueCharacterisctics():Promise<UniqueCategories>{
     return await this.service.getUniqueCharacterisctics()
   }
 

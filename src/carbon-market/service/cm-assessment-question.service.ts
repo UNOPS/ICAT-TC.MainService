@@ -76,12 +76,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _answers.push(ass_answer)
       } else {
         let ass_answer = new CMAssessmentAnswer()
-        if (res.answer) {
+        if (res.answer && res.answer.id !== undefined) {
           ass_answer.answer = res.answer
-          ass_answer.score = score * res.answer.score_portion / 100 * res.answer.weight / 100
+          let _score = score * res.answer.score_portion / 100 * res.answer.weight / 100
+          ass_answer.score = isNaN(_score) ? 0 : score
         }
         ass_answer.assessment_question = q_res
-        ass_answer.selectedScore = res.selectedScore
+        ass_answer.selectedScore = res.selectedScore.code
         ass_answer.approach = Approach.DIRECT
 
         _answers.push(ass_answer)
