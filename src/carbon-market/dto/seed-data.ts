@@ -4,12 +4,14 @@ export const sections = [
     {
         name: 'Section 2: Environmental integrity preconditions',
         code: 'SECTION_2',
-        order: 1
+        order: 1,
+        description: 'The next set of questions will be related to basic tenets of environmental integrity which are preconditions for delivering transformational change and should be applied in all activities. These criteria can be considered preconditions to enable transformational impacts and should be fulfilled before assessing transformational change criteria.'
     },
     {
         name: 'Section 3: Transformational change criteria',
         code: 'SECTION_3',
-        order: 2
+        order: 2,
+        description: 'This section will examine the potential of the project to contribute to fundamental, sustained change. Questions in this section will be weighted and form the overall transformational change score'
     }
 ]
 
@@ -723,5 +725,139 @@ export const answers = [
         score_portion: 100,
         isPassing: true,
         question: 'S-3-C-6-Q-1'
+    },
+]
+
+export const characteristic = [
+    {
+        name: 'Research and Development',
+        code: 'R_&_D'
+    },
+    {
+        name: 'Adoption',
+        code: 'ADOPTION'
+    },
+    {
+        name: 'Scale up',
+        code: 'SCALE_UP'
+    },
+    {
+        name: 'Entrepreneurs',
+        code: 'ENTREPRENEURS'
+    },
+    {
+        name: 'Coalition of advocates',
+        code: 'COALITION_OF_ADVOCATES'
+    },
+    {
+        name: 'Beneficiaries',
+        code: 'BENIFICIARIES'
+    },
+    {
+        name: 'Economic and non-economic',
+        code: 'ECONOMIC_NON_ECONOMIC'
+    },
+    {
+        name: 'Disincentives',
+        code: 'DISINCENTIVES'
+    },
+    {
+        name: 'Institutional and regulatory',
+        code: 'INSTITUTIONAL_AND_REGULATORY'
+    },
+    {
+        name: 'Awareness',
+        code: 'AWARENESS'
+    },
+    {
+        name: 'Behaviour',
+        code: 'BEHAVIOUR'
+    },
+    {
+        name: 'Social Norms',
+        code: 'SOCIAL_NORMS'
+    },
+    {
+        name: 'Macro Level',
+        code: 'MACRO_LEVEL'
+    },
+    {
+        name: 'Medium Level',
+        code: 'MEDIUM_LEVEL'
+    },
+    {
+        name: 'Micro Level',
+        code: 'MICRO_LEVEL'
+    },
+    {
+        name: 'Macro Level',
+        code: 'MACRO_LEVEL'
+    },
+    {
+        name: 'Medium Level',
+        code: 'MEDIUM_LEVEL'
+    },
+    {
+        name: 'Micro Level',
+        code: 'MICRO_LEVEL'
+    },
+    {
+        name: 'Long term (>15 years)',
+        code: 'LONG_TERM'
+    },
+    {
+        name: 'Medium term (5-15 years)',
+        code: 'MEDIUM_TERM'
+    },
+    {
+        name: 'Short Term (<5 years)',
+        code: 'SHORT_TERM'
+    },
+    {
+        name: 'Long term (>15 years)',
+        code: 'LONG_TERM'
+    },
+    {
+        name: 'Medium term (5-15 years)',
+        code: 'MEDIUM_TERM'
+    },
+    {
+        name: 'Short Term (<5 years)',
+        code: 'SHORT_TERM'
+    }
+]
+
+export const categories = [
+    {
+        name: 'Technology',
+        code: 'TECHNOLOGY'
+    },
+    {
+        name: 'Agents',
+        code: 'AGENTS'
+    },
+    {
+        name: 'Incentives',
+        code: 'INCENTIVES'
+    },
+    {
+        name: 'Norms',
+        code: 'NORMS'
+    },
+    {
+        name: 'Scale GHGs',
+        code: 'SCALE_GHG'
+    },
+    {
+        name: 'Scale SD',
+        code: 'SCALE_SD'
+    },
+    {
+        name: 'Sustained nature-GHGs',
+        code: 'SUSTAINED_GHG'
+    },
+    {
+        name: 'Sustained nature-SD',
+        code: 'SUSTAINED_SD'
     },
 ]

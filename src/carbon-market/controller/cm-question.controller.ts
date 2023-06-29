@@ -54,5 +54,16 @@ export class CMQuestionController implements CrudController<CMQuestion>
     return await this.service.getAnswersByQuestion(questionId)
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-unique-characteristics')
+  async getUniqueCharacterisctics():Promise<any>{
+    return await this.service.getUniqueCharacterisctics()
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-questions-by-characteristic')
+  async getQuestionsByCharacteristic(@Query('characteristicId') characteristicId: number[]):Promise<any>{
+    return await this.service.getQuestionsByCharacteristicId(characteristicId)
+  }
 
 }
