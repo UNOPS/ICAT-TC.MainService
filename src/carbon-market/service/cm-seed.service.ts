@@ -87,8 +87,9 @@ export class CMSeedService {
                 q.code = question.code
                 q.order = question.order
                 q.answer_type = question.answer_type
-                q.criteria = criteria
-
+                if (criteria !== undefined) q.criteria = criteria
+                let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
+                if (ch !== undefined) q.characteristic = ch
                 _questions.push(q)
             }
         }
@@ -142,6 +143,8 @@ export class CMSeedService {
             if (q){
                 q.message = question.message
                 q.label = question.label
+                let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
+                if (ch) q.characteristic = ch
                 _questions.push(q)
             } else {
                 response[question.code] = 'Not found'

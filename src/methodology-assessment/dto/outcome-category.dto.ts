@@ -6,5 +6,6 @@ export class OutcomeCategory{
     code: string
     type: string
     method: string
+    order: number
     results: CMResultDto[]
 }
