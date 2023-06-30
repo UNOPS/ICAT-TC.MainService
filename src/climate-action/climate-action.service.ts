@@ -164,6 +164,7 @@ async allProject(
 
 
   async getAllCAList(
+    
     options: IPaginationOptions,
     filterText: string,
     projectStatusId: number,
@@ -172,11 +173,11 @@ async allProject(
     countryId: number,
     sectorId: number,
   ): Promise<Pagination<ClimateAction>> {
-
+    console.log("filterText",filterText)
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(dr.policyName LIKE :filterText OR pas.description LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText OR dr.projectStatus LIKE :filterText  OR dr.contactPersonDesignation LIKE :filterText OR dr.email LIKE :filterText )';
+        '(dr.policyName LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText  OR pas.description LIKE :filterText )';
     }
    // console.log("hello");
     if (projectStatusId != 0) {
@@ -271,7 +272,7 @@ async allProject(
     //console.log(data.getQuery());
 
     let result = await paginate(data, options);
-    console.log(result);
+    // console.log(result);
     if (result) {
       return result;
     }

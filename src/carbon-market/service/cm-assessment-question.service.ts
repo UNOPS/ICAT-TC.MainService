@@ -239,6 +239,35 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           .where('question.id In (:id)', { id: qIds })
           .getMany()
           // answers.forEach(ans=>{console.log("3333",ans.assessment_question.id)})
+            let answers2 = await this.assessmentAnswerRepo
+              .createQueryBuilder('ans')
+              .innerJoinAndSelect(
+                'ans.assessment_question',
+                'question',
+                'question.id = ans.assessmentQuestionId'
+              )
+              .innerJoinAndSelect(
+                'ans.answer',
+                'answer',
+                'answer.id = ans.answerId'
+              )
+              .innerJoinAndSelect(
+                'question.question',
+                'cmquestion',
+                'cmquestion.id = question.questionId'
+              )
+              .innerJoinAndSelect(
+                'cmquestion.criteria',
+                'criteria',
+                'criteria.id = cmquestion.criteriaId'
+              )
+              .innerJoinAndSelect(
+                'criteria.section',
+                'section',
+                'section.id = criteria.sectionId'
+              )
+              .where('question.id In (:id)', { id: qIds })
+              .getMany()
           let criteria = []
           answers.forEach(ans => {
             let obj = {
@@ -282,7 +311,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             
           })
 
-          answers.forEach(ans => {
+          answers2.forEach(ans => {
             let obj = {
               section: ans?.assessment_question?.question?.criteria?.section?.name,
               criteria: ans?.assessment_question?.question?.criteria?.name,

@@ -282,7 +282,9 @@ export class ClimateAction extends BaseTrackingEntity {
   
   @Column({type: 'int', nullable: true,})
   availabilityOfTechnology: number;
-  
+
+  @Column({type: 'int', nullable: true,})
+  isCity: number;
 
 
 
