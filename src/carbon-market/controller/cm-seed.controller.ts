@@ -48,6 +48,11 @@ export class CMSeedController {
         return await this.service.updateSectionSeed()
     }
 
+    @Post('update-criteria-seed')
+    async updateCriteiraSeed(){
+        return await this.service.updateCriteriaSeed()
+    }
+
     @Post('update-category-seed')
     async updateCategorySeed(){
         return await this.service.updateCategoryByName()

@@ -143,6 +143,8 @@ export class CMSeedService {
             if (q){
                 q.message = question.message
                 q.label = question.label
+                q.answer_type = question.answer_type
+                q.order = question.order
                 let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
                 if (ch) q.characteristic = ch
                 _questions.push(q)
@@ -173,6 +175,7 @@ export class CMSeedService {
                 a.label = ans.label
                 a.score_portion = ans.score_portion
                 a.weight = ans.weight
+                a.isPassing = ans.isPassing
                 _answers.push(a)
             } else {
                 response[ans.code] = 'Not found'
@@ -237,6 +240,33 @@ export class CMSeedService {
 
         if (_sections.length > 0){
             let res = this.sectionRepo.save(_sections)
+            if (res) {
+                return {res: response, status: "saved"}
+            } else { 
+                return {res: response, status: "failed to save"}
+            }
+        }  else {
+            return {res: response, status: "Nothing to save"}
+        }
+        
+    }
+
+    async updateCriteriaSeed() {
+        let response = {}
+        let _criterias: Criteria[] = []
+        for await (let criteria of criterias){
+            let s = await this.criteriaRepo.createQueryBuilder('cr').where('cr.code = :code', {code: criteria.code}).getOne()
+            if (s){
+                s.name = criteria.name
+                s.order = criteria.order
+                _criterias.push(s)
+            } else {
+                response[criteria.code] = 'Not found'
+            }
+        }
+
+        if (_criterias.length > 0){
+            let res = this.criteriaRepo.save(_criterias)
             if (res) {
                 return {res: response, status: "saved"}
             } else { 

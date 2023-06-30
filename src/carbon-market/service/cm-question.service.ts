@@ -7,7 +7,7 @@ import { Section } from "../entity/section.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Repository } from "typeorm";
 import { categories, characteristic, questions } from "../dto/seed-data";
-import { UniqueCategories, UniqueCategory, UniqueCharacteristic } from "../dto/cm-result.dto";
+import { CMResultDto, UniqueCategories, UniqueCategory, UniqueCharacteristic } from "../dto/cm-result.dto";
 
 @Injectable()
 export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
@@ -88,13 +88,16 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       .where('characteristic.id is not null')
       // .groupBy('characteristic.code')
 
-    let characteristics = await data.getMany()
+    let questions = await data.getMany()
 
     let categories = new UniqueCategories()
     categories.process = []
     categories.outcome = []
 
-    characteristics.map(ch => {
+    questions.map(ch => {
+      ch['result'] = new CMResultDto()
+      ch['result'].characteristic = ch.characteristic
+
       if (ch.characteristic.category.type === 'process') {
         let cat = categories.process?.find(o => o.code === ch.characteristic.category.code)
         if (cat){
@@ -104,13 +107,17 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
             char.name = ch.characteristic.name
             char.code = ch.characteristic.code
             char.id = ch.characteristic.id
+            char.questions.push(ch)
             cat.characteristics.push(char)
+          } else {
+            char.questions.push(ch)
           }
         } else {
           let _char = new UniqueCharacteristic()
           _char.name = ch.characteristic.name
           _char.code = ch.characteristic.code
           _char.id = ch.characteristic.id
+          _char.questions.push(ch)
           cat = new UniqueCategory()
           cat.name = ch.characteristic.category.name
           cat.code = ch.characteristic.category.code

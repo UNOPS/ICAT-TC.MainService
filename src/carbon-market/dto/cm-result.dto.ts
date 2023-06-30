@@ -51,4 +51,5 @@ export class UniqueCharacteristic{
     name: string
     code: string
     id: number
+    questions: CMQuestion[] = []
 }

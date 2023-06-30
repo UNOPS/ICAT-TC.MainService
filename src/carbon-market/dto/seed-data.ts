@@ -18,7 +18,7 @@ export const sections = [
 export const criterias = [
     //section 2
     {
-        name: 'Criterion 1: Prevention/avoidance of overselling and undermining host country’s NDC',
+        name: 'Criterion 1: Safeguards on overselling of mitigation outcomes',
         code: 'S-2-CRITERIA-1',
         order: 1,
         section: 'SECTION_2'
@@ -75,94 +75,94 @@ export const criterias = [
 
 export const questions = [
     {
-        label: 'Q1: Is the Article 6 activity directly mandated by law or otherwise triggered by legal requirements (e.g., legally binding agreements, covenants, consent decrees, contracts with government agencies and private parties)? ',
-        code: 'S-2-C-1-Q-1',
+        label: "Q1: Is the Article 6 activity directly mandated by law or otherwise triggered by legal requirements (e.g., legally binding agreements, covenants, consent decrees, contracts with government agencies and private parties)? ",
+        code: "S-2-C-1-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'The activity is not additional, will result in “hot air” and undermine the country’s NDC, clearly not enabling transformational change'
+        criteria: "S-2-CRITERIA-1",
+        characteristic: "",
+        message: "The activity is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: 'Q2: Is the Article 6 activity financially additional?',
-        code: 'S-2-C-1-Q-2',
+        label: "Q2: Is the Article 6 activity financially additional, i.e. the revenue from the sale of ITMOs enables the activity??",
+        code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'The activity cannot be considered additional, clearly not enabling transformational change.'
+        criteria: "S-2-CRITERIA-1",
+        characteristic: "",
+        message: "The activity cannot be considered additional, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: 'Q3: Does the envisaged Article 6 activity occur entirely outside the scope of the country’s NDC, meaning both its conditional and unconditional NDC targets? ',
-        code: 'S-2-C-1-Q-3',
+        label: "Q3: Does the envisaged Article 6 activity involve emission reductions or removals that are not included in the GHG inventory used to assess NDC progress?",
+        code: "S-2-C-1-Q-3",
         answer_type: AnswerType.SINGLE,
         order: 3,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
+        criteria: "S-2-CRITERIA-1",
+        characteristic: "",
+        message: "Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: 'Q4: Does the envisaged Article 6 activity involve emission reductions or removals that are not included in the GHG inventory used to assess unconditional NDC progress?',
-        code: 'S-2-C-1-Q-4',
+        label: "Q4: If the country clearly differentiates between unconditional and conditional NDC targets: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target?",
+        code: "S-2-C-1-Q-4",
         answer_type: AnswerType.SINGLE,
         order: 4,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
+        criteria: "S-2-CRITERIA-1",
+        characteristic: "",
+        message: "The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
+    // {
+    //     label: 'Q5: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target? ',
+    //     code: 'S-2-C-1-Q-5',
+    //     answer_type: AnswerType.SINGLE,
+    //     order: 5,
+    //     criteria: 'S-2-CRITERIA-1',
+    //     characteristic: '',
+    //     message: 'The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition.'
+    // },
+    // {
+    //     label: 'Q6: Does the Article 6 activity feature on the host country’s positive list or has the host country stated its intention to promote the envisaged activity type?',
+    //     code: 'S-2-C-1-Q-6',
+    //     answer_type: AnswerType.SINGLE,
+    //     order: 6,
+    //     criteria: 'S-2-CRITERIA-1',
+    //     characteristic: '',
+    //     message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
+    // },
     {
-        label: 'Q5: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target? ',
-        code: 'S-2-C-1-Q-5',
-        answer_type: AnswerType.SINGLE,
-        order: 5,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition.'
-    },
-    {
-        label: 'Q6: Does the Article 6 activity feature on the host country’s positive list or has the host country stated its intention to promote the envisaged activity type?',
-        code: 'S-2-C-1-Q-6',
-        answer_type: AnswerType.SINGLE,
-        order: 6,
-        criteria: 'S-2-CRITERIA-1',
-        characteristic: '',
-        message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
-    },
-    {
-        label: 'Q1: Is the activity listed on any negative list adopted by the host country? ',
-        code: 'S-2-C-2-Q-1',
-        answer_type: AnswerType.SINGLE,
-        order: 1,
-        criteria: 'S-2-CRITERIA-2',
-        characteristic: '',
-        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
-    },
-    {
-        label: 'Q2: Is the activity in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ',
-        code: 'S-2-C-2-Q-2',
-        answer_type: AnswerType.SINGLE,
-        order: 2,
-        criteria: 'S-2-CRITERIA-2',
-        characteristic: '',
-        message: 'The Article 6 activity should not be implemented, as it cannot be ensured that emissions lock-in is avoided.'
-    },
-    {
-        label: 'Q1: Does the implementation of the Article 6 activity result in any negative environmental impacts (i.e., release of pollutants or unmanaged waste, increased GHG emissions, introduction of genetically modified organisms, etc.)?  ',
-        code: 'S-2-C-3-Q-1',
+        label: "Q1: Is the activity type listed on any negative list adopted by the host country arguing that the activity type would lead to lock-in? ",
+        code: "S-2-C-2-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
-        criteria: 'S-2-CRITERIA-3',
-        characteristic: '',
-        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
+        criteria: "S-2-CRITERIA-2",
+        characteristic: "",
+        message: "The Article 6 activity should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: 'Q2: Does the implementation of the Article 6 activity result in any negative social impacts (i.e. displacement, forced evictions, violation of rights of indigenous people and local communities, damage or alteration of cultural heritage sites, etc.)? ',
-        code: 'S-2-C-3-Q-2',
+        label: "Q2: Is the activity in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ",
+        code: "S-2-C-2-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
-        criteria: 'S-2-CRITERIA-3',
-        characteristic: '',
-        message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
+        criteria: "S-2-CRITERIA-2",
+        characteristic: "",
+        message: "The Article 6 activity should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+    },
+    {
+        label: "Q1: Does the implementation of the Article 6 activity result in significant negative environmental impacts (i.e., air, water and soil pollution, destruction of biodiversity, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the activity area.)",
+        code: "S-2-C-3-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: "S-2-CRITERIA-3",
+        characteristic: "",
+        message: "If the activity entails significant negative impacts, it does not enable transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+    },
+    {
+        label: "Q2: Does the implementation of the Article 6 activity result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)?",
+        code: "S-2-C-3-Q-2",
+        answer_type: AnswerType.SINGLE,
+        order: 2,
+        criteria: "S-2-CRITERIA-3",
+        characteristic: "",
+        message: "If the activity entails significant negative impacts, it does not enable transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies? ',
@@ -385,244 +385,220 @@ export const questions = [
 
 export const answers = [
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-1-A-1',
+        label: "Yes",
+        code: "S-2-C-1-Q-1-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-1'
+        question: "S-2-C-1-Q-1"
     },
     {
-        label: 'No',
-        code: 'S-2-C-1-Q-1-A-2',
+        label: "No",
+        code: "S-2-C-1-Q-1-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-1'
+        question: "S-2-C-1-Q-1"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-1-A-3',
+        label: "Unsure",
+        code: "S-2-C-1-Q-1-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-1'
+        question: "S-2-C-1-Q-1"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-2-A-1',
+        label: "Yes",
+        code: "S-2-C-1-Q-2-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-2'
+        question: "S-2-C-1-Q-2"
     },
     {
-        label: 'No',
-        code: 'S-2-C-1-Q-2-A-2',
+        label: "No",
+        code: "S-2-C-1-Q-2-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-2'
+        question: "S-2-C-1-Q-2"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-2-A-3',
+        label: "Unsure",
+        code: "S-2-C-1-Q-2-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-2'
+        question: "S-2-C-1-Q-2"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-3-A-1',
+        label: "Yes",
+        code: "S-2-C-1-Q-3-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-3'
+        question: "S-2-C-1-Q-3"
     },
     {
-        label: 'No',
-        code: 'S-2-C-1-Q-3-A-2',
+        label: "No",
+        code: "S-2-C-1-Q-3-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-3'
+        question: "S-2-C-1-Q-3"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-3-A-3',
+        label: "Unsure",
+        code: "S-2-C-1-Q-3-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-3'
+        question: "S-2-C-1-Q-3"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-4-A-1',
+        label: "Yes",
+        code: "S-2-C-1-Q-4-A-1",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-4"
+    },
+    {
+        label: "No",
+        code: "S-2-C-1-Q-4-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-4'
+        question: "S-2-C-1-Q-4"
     },
     {
-        label: 'No',
-        code: 'S-2-C-1-Q-4-A-2',
+        label: "Unsure",
+        code: "S-2-C-1-Q-4-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-4'
+        question: "S-2-C-1-Q-4"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-4-A-3',
+        label: "The country does not differentiate between conditional and unconditional targets",
+        code: "S-2-C-1-Q-4-A-4",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-4'
+        question: "S-2-C-1-Q-4"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-5-A-1',
-        weight: 0,
-        score_portion: 1,
-        isPassing: true,
-        question: 'S-2-C-1-Q-5'
-    },
-    {
-        label: 'No',
-        code: 'S-2-C-1-Q-5-A-2',
+        label: "Yes",
+        code: "S-2-C-2-Q-1-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-5'
+        question: "S-2-C-2-Q-1"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-5-A-3',
+        label: "No",
+        code: "S-2-C-2-Q-1-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-5'
+        question: "S-2-C-2-Q-1"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-1-Q-6-A-1',
+        label: "Unsure",
+        code: "S-2-C-2-Q-1-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-6'
+        question: "S-2-C-2-Q-1"
     },
     {
-        label: 'No',
-        code: 'S-2-C-1-Q-6-A-2',
+        label: "No negative list available",
+        code: "S-2-C-2-Q-1-A-4",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-2-Q-1"
+    },
+    {
+        label: "Yes",
+        code: "S-2-C-2-Q-2-A-1",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-2-Q-2"
+    },
+    {
+        label: "No",
+        code: "S-2-C-2-Q-2-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-1-Q-6'
+        question: "S-2-C-2-Q-2"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-1-Q-6-A-3',
+        label: "No LT-LEDS available",
+        code: "S-2-C-2-Q-2-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-1-Q-6'
+        question: "S-2-C-2-Q-2"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-2-Q-1-A-1',
+        label: "Unsure",
+        code: "S-2-C-2-Q-2-A-3",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-2-Q-2"
+    },
+    {
+        label: "Yes",
+        code: "S-2-C-3-Q-1-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-2-Q-1'
+        question: "S-2-C-3-Q-1"
     },
     {
-        label: 'No',
-        code: 'S-2-C-2-Q-1-A-2',
+        label: "No",
+        code: "S-2-C-3-Q-1-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-2-Q-1'
+        question: "S-2-C-3-Q-1"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-2-Q-1-A-3',
+        label: "Unsure",
+        code: "S-2-C-3-Q-1-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-2-Q-1'
+        question: "S-2-C-3-Q-1"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-2-Q-2-A-1',
-        weight: 0,
-        score_portion: 1,
-        isPassing: true,
-        question: 'S-2-C-2-Q-2'
-    },
-    {
-        label: 'No',
-        code: 'S-2-C-2-Q-2-A-2',
+        label: "Yes",
+        code: "S-2-C-3-Q-2-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: false,
-        question: 'S-2-C-2-Q-2'
+        question: "S-2-C-3-Q-2"
     },
     {
-        label: 'Not sure',
-        code: 'S-2-C-2-Q-2-A-3',
+        label: "No",
+        code: "S-2-C-3-Q-2-A-2",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-2-Q-2'
+        question: "S-2-C-3-Q-2"
     },
     {
-        label: 'Yes',
-        code: 'S-2-C-3-Q-1-A-1',
-        weight: 0,
-        score_portion: 1,
-        isPassing: false,
-        question: 'S-2-C-3-Q-1'
-    },
-    {
-        label: 'No',
-        code: 'S-2-C-3-Q-1-A-2',
+        label: "Unsure",
+        code: "S-2-C-3-Q-2-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: 'S-2-C-3-Q-1'
-    },
-    {
-        label: 'Not sure',
-        code: 'S-2-C-3-Q-1-A-3',
-        weight: 0,
-        score_portion: 1,
-        isPassing: true,
-        question: 'S-2-C-3-Q-1'
-    },
-    {
-        label: 'Yes',
-        code: 'S-2-C-3-Q-2-A-1',
-        weight: 0,
-        score_portion: 1,
-        isPassing: false,
-        question: 'S-2-C-3-Q-2'
-    },
-    {
-        label: 'No',
-        code: 'S-2-C-3-Q-2-A-2',
-        weight: 0,
-        score_portion: 1,
-        isPassing: true,
-        question: 'S-2-C-3-Q-2'
-    },
-    {
-        label: 'Not sure',
-        code: 'S-2-C-3-Q-2-A-3',
-        weight: 0,
-        score_portion: 1,
-        isPassing: true,
-        question: 'S-2-C-3-Q-2'
+        question: "S-2-C-3-Q-2"
     },
     {
         label: 'Yes',
