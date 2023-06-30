@@ -718,11 +718,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let result = await data.getMany()
     for await (let ch of result) {
+      let isGHG: boolean = false
+      let isSDG: boolean = false
       ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
       ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
       let cat = response.find(o => o.code === ch.category.code)
       let cmRes = new CMResultDto()
       cmRes.characteristic = ch 
+      ch.category.code.indexOf('GHG') !== -1 ? isGHG = true : isSDG = true
+      cmRes.isGHG = isGHG
+      cmRes.isSDG = isSDG
       if (cat) {
         cat.results.push(cmRes)
       } else {
@@ -735,6 +740,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         response.push(obj)
       }
     }
+
+    response = response.map(res => {
+      if (res.method === 'SCALE' && res.type === 'GHG') res.order = 1
+      else if (res.method === 'SUSTAINED' && res.type === 'GHG') res.order = 2
+      else if(res.method === 'SCALE' && res.type === 'SD') res.order = 3
+      else res.order = 4
+      return res
+     })
+
+     response.sort((a,b) => a.order - b.order)
 
     return response
   }
