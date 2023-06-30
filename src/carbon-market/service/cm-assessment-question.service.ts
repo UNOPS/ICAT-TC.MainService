@@ -93,7 +93,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100) 
         }
         ass_answer.assessment_question = q_res
-        ass_answer.selectedScore = res.selectedScore.code
+        ass_answer.selectedScore = res.selectedScore?.code
         ass_answer.approach = Approach.DIRECT
 
         _answers.push(ass_answer)
