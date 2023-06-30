@@ -251,8 +251,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
               category:ans?.assessment_question?.characteristic?.category,
               starting_situation:ans?.assessment_question?.startingSituation,
               expected_impacts:ans?.assessment_question?.expectedImpact,
-              SDG:ans?.assessment_question?.selectedSdg?.toLowerCase(),
-              outcome_score:ans?.selectedScore
+              SDG:ans?.assessment_question?.selectedSdg
               
             }
             if(obj?.category?.code=='TECHNOLOGY'){
