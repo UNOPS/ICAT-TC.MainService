@@ -44,7 +44,7 @@ export class Institution extends BaseTrackingEntity {
   @JoinColumn()
   category: InstitutionCategory;
 
-  @ManyToOne((type) => InstitutionType, { cascade: false, nullable: true })
+  @ManyToOne((type) => InstitutionType, { cascade: false, nullable: true,eager:true })
   @JoinColumn()
   type: InstitutionType;
 
