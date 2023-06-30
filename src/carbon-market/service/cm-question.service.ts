@@ -151,18 +151,20 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'question.characteristic',
         'characteristic',
         'characteristic.id = question.characteristicId'
-      ).innerJoinAndMapOne(
-        'question.criteria',
-        Criteria,
-        'criteria',
-        'criteria.id = question.criteriaId'
       )
-      .innerJoinAndMapOne(
-        'criteria.section',
-        Section,
-        'section',
-        'section.id = criteria.sectionId'
-      ).where('characteristic.id In (:id)', {id: ids})
+      // .innerJoinAndMapOne(
+      //   'question.criteria',
+      //   Criteria,
+      //   'criteria',
+      //   'criteria.id = question.criteriaId'
+      // )
+      // .innerJoinAndMapOne(
+      //   'criteria.section',
+      //   Section,
+      //   'section',
+      //   'section.id = criteria.sectionId'
+      // )
+      .where('characteristic.id In (:id)', {id: ids})
 
       let questions = await data.getMany()
       let res = {}

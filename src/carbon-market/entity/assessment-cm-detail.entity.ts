@@ -27,8 +27,8 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @JoinColumn()
   cmassessment: Assessment
 
-  // @Column()
-  // sectoral_boundary: string;
+  @Column()
+  sectoral_boundary: string;
 
   // @Column()
   // temporal_boundary: string;

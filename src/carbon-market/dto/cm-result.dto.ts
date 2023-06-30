@@ -17,6 +17,8 @@ export class CMResultDto {
     selectedSdg: string
     selectedScore: scoreDto
     filePath: string
+    isGHG: boolean
+    isSDG: boolean
 }
 
 export class SaveCMResultDto {

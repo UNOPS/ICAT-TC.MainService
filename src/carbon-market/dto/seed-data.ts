@@ -80,6 +80,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'The activity is not additional, will result in “hot air” and undermine the country’s NDC, clearly not enabling transformational change'
     },
     {
@@ -88,6 +89,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'The activity cannot be considered additional, clearly not enabling transformational change.'
     },
     {
@@ -96,6 +98,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 3,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
     },
     {
@@ -104,6 +107,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 4,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. Therefore, such an activity does not enable transformational change.'
     },
     {
@@ -112,6 +116,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 5,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition.'
     },
     {
@@ -120,6 +125,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 6,
         criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
         message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
     },
     {
@@ -128,6 +134,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-2',
+        characteristic: '',
         message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
@@ -136,6 +143,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-2',
+        characteristic: '',
         message: 'The Article 6 activity should not be implemented, as it cannot be ensured that emissions lock-in is avoided.'
     },
     {
@@ -144,6 +152,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-2-CRITERIA-3',
+        characteristic: '',
         message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
@@ -152,6 +161,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-2-CRITERIA-3',
+        characteristic: '',
         message: 'Article 6 activity should not be implemented, as it undermines transformational change.'
     },
     {
@@ -160,6 +170,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-1',
+        characteristic: '',
         message: ''
     },
     {
@@ -168,6 +179,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-3-CRITERIA-1',
+        characteristic: '',
         message: ''
     },
     {
@@ -176,6 +188,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 3,
         criteria: 'S-3-CRITERIA-1',
+        characteristic: '',
         message: ''
     },
     {
@@ -184,6 +197,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-2',
+        characteristic: '',
         message: ''
     },
     {
@@ -192,6 +206,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-3',
+        characteristic: '',
         message: ''
     },
     {
@@ -200,6 +215,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-3-CRITERIA-3',
+        characteristic: '',
         message: ''
     },
     {
@@ -208,6 +224,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 3,
         criteria: 'S-3-CRITERIA-3',
+        characteristic: '',
         message: ''
     },
     {
@@ -216,6 +233,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 4,
         criteria: 'S-3-CRITERIA-3',
+        characteristic: '',
         message: ''
     },
     {
@@ -224,6 +242,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-4',
+        characteristic: '',
         message: ''
     },
     {
@@ -232,6 +251,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-3-CRITERIA-4',
+        characteristic: '',
         message: ''
     },
     {
@@ -240,6 +260,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-5',
+        characteristic: '',
         message: ''
     },
     {
@@ -248,6 +269,7 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: 'S-3-CRITERIA-5',
+        characteristic: '',
         message: ''
     },
     {
@@ -256,9 +278,109 @@ export const questions = [
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: 'S-3-CRITERIA-6',
+        characteristic: '',
         message: ''
     },
-    
+    {
+        label: "Is the activity innovative, i.e., supports the adoption of newly emerging technologies, i.e. technologies that have so far not commercially been applied in the country?",
+        code: "S-3-R_&_D-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: '',
+        message: '',
+        characteristic: "R_&_D"
+    },
+    {
+        label: "Does the activity support mitigation options with high abatement costs (high-hanging fruits)? ",
+        code: "S-3-ADOPTION-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: '',
+        message: '',
+        characteristic: "ADOPTION"
+    },
+    {
+        label: "Does the activity make use of low-cost yet robust MRV solutions, e.g. through digitalisation, with the purpose of fostering a more rapid adoption of the mitigation practice\/technology?",
+        code: "S-3-ADOPTION-Q-2",
+        answer_type: AnswerType.SINGLE,
+        order: 2,
+        criteria: '',
+        message: '',
+        characteristic: "ADOPTION"
+    },
+    {
+        label: "Does the activity design encourage upscaling\/ increased market penetration \/ replication of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies, introducing a policy or applying a sectoral approach?",
+        code: "S-3-SCALE_UP-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: '',
+        message: '',
+        characteristic: "SCALE_UP"
+    },
+    {
+        label: "Does the activity result in inclusion of activities of this type that are subject to similar conditions (resource availability, etc.) in the unconditional NDC during the next NDC revision?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Does the activity allocate a share of mitigation outcomes generated by the activity to the host country?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2",
+        answer_type: AnswerType.SINGLE,
+        order: 2,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Does the activity contribute to increased ambition by limiting the crediting period to less than the technical lifetime of a project and counting any mitigation that occurs after the crediting period towards national targets?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3",
+        answer_type: AnswerType.SINGLE,
+        order: 3,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Does the activity contribute to increased ambition by charging a carbon credit issuance fee and using it to fund national mitigation action that contributes to national targets?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4",
+        answer_type: AnswerType.SINGLE,
+        order: 4,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Is the activity’s crediting baseline set in an ambitious manner, i.e., below business-as-usual (BAU)?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5",
+        answer_type: AnswerType.SINGLE,
+        order: 5,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Is the activity’s baseline emission factor reduced over time to align with the long-term temperature goal of the Paris Agreement? If the baseline does not use an emission factor, are baseline emissions declining over time?",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-6",
+        answer_type: AnswerType.SINGLE,
+        order: 6,
+        criteria: '',
+        message: '',
+        characteristic: "ECONOMIC_NON_ECONOMIC"
+    },
+    {
+        label: "Does the activity contribute to the dissemination of knowledge (i.e. regarding climate change impacts and policies, new technologies, etc.)?",
+        code: "S-3-AWARENESS-Q-1",
+        answer_type: AnswerType.SINGLE,
+        order: 1,
+        criteria: '',
+        message: '',
+        characteristic: "AWARENESS"
+    },
+
 ]
 
 export const answers = [
@@ -266,7 +388,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-1-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-1'
     },
@@ -274,7 +396,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-1'
     },
@@ -282,7 +404,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-1-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-1'
     },
@@ -290,7 +412,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-2-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-2'
     },
@@ -298,7 +420,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-2'
     },
@@ -306,7 +428,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-2-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-2'
     },
@@ -314,7 +436,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-3-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-3'
     },
@@ -322,7 +444,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-3-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-3'
     },
@@ -330,7 +452,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-3-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-3'
     },
@@ -338,7 +460,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-4-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-4'
     },
@@ -346,7 +468,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-4-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-4'
     },
@@ -354,7 +476,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-4-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-4'
     },
@@ -362,7 +484,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-5-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-5'
     },
@@ -370,7 +492,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-5-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-5'
     },
@@ -378,7 +500,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-5-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-5'
     },
@@ -386,7 +508,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-1-Q-6-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-6'
     },
@@ -394,7 +516,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-1-Q-6-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-1-Q-6'
     },
@@ -402,7 +524,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-1-Q-6-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-1-Q-6'
     },
@@ -410,7 +532,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-2-Q-1-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-2-Q-1'
     },
@@ -418,7 +540,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-2-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-2-Q-1'
     },
@@ -426,7 +548,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-2-Q-1-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-2-Q-1'
     },
@@ -434,7 +556,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-2-Q-2-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-2-Q-2'
     },
@@ -442,7 +564,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-2-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-2-Q-2'
     },
@@ -450,7 +572,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-2-Q-2-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-2-Q-2'
     },
@@ -458,7 +580,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-3-Q-1-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-3-Q-1'
     },
@@ -466,7 +588,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-3-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-3-Q-1'
     },
@@ -474,7 +596,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-3-Q-1-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-3-Q-1'
     },
@@ -482,7 +604,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-2-C-3-Q-2-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: false,
         question: 'S-2-C-3-Q-2'
     },
@@ -490,7 +612,7 @@ export const answers = [
         label: 'No',
         code: 'S-2-C-3-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-3-Q-2'
     },
@@ -498,7 +620,7 @@ export const answers = [
         label: 'Not sure',
         code: 'S-2-C-3-Q-2-A-3',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-2-C-3-Q-2'
     },
@@ -506,7 +628,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-1-Q-1-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-1'
     },
@@ -514,7 +636,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-1-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-1'
     },
@@ -522,7 +644,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-1-Q-2-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-2'
     },
@@ -530,7 +652,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-1-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-2'
     },
@@ -538,7 +660,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-1-Q-3-A-1',
         weight: 5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-3'
     },
@@ -546,7 +668,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-1-Q-3-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-1-Q-3'
     },
@@ -554,7 +676,7 @@ export const answers = [
         label: 'No, the project does not contribute to any SDGs ',
         code: 'S-3-C-2-Q-1-A-1',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-2-Q-1'
     },
@@ -578,7 +700,7 @@ export const answers = [
         label: 'Yes, the project makes significant contributions to multiple SDGs ',
         code: 'S-3-C-2-Q-1-A-4',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-2-Q-1'
     },
@@ -586,7 +708,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-3-Q-1-A-1',
         weight: 7.5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-1'
     },
@@ -594,7 +716,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-3-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-1'
     },
@@ -602,7 +724,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-3-Q-2-A-1',
         weight: 7.5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-2'
     },
@@ -610,7 +732,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-3-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-2'
     },
@@ -618,7 +740,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-3-Q-3-A-1',
         weight: 2.5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-3'
     },
@@ -626,7 +748,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-3-Q-3-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-3'
     },
@@ -634,7 +756,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-3-Q-4-A-1',
         weight: 2.5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-4'
     },
@@ -642,7 +764,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-3-Q-4-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-3-Q-4'
     },
@@ -650,7 +772,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-4-Q-1-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-4-Q-1'
     },
@@ -658,7 +780,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-4-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-4-Q-1'
     },
@@ -666,7 +788,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-4-Q-2-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-4-Q-2'
     },
@@ -674,7 +796,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-4-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-4-Q-2'
     },
@@ -682,7 +804,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-5-Q-1-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-5-Q-1'
     },
@@ -690,7 +812,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-5-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-5-Q-1'
     },
@@ -698,7 +820,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-5-Q-2-A-1',
         weight: 10,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-5-Q-2'
     },
@@ -706,7 +828,7 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-5-Q-2-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-5-Q-2'
     },
@@ -714,7 +836,7 @@ export const answers = [
         label: 'Yes',
         code: 'S-3-C-6-Q-1-A-1',
         weight: 5,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-6-Q-1'
     },
@@ -722,10 +844,290 @@ export const answers = [
         label: 'No',
         code: 'S-3-C-6-Q-1-A-2',
         weight: 0,
-        score_portion: 100,
+        score_portion: 1,
         isPassing: true,
         question: 'S-3-C-6-Q-1'
     },
+    {
+        label: "Yes",
+        code: "S-3-R_&_D-Q-1-A-1",
+        weight: 10,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-R_&_D-Q-1"
+    },
+    {
+        label: "No",
+        code: "S-3-R_&_D-Q-1-A-2",
+        weight: 10,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-R_&_D-Q-1"
+    },
+    {
+        label: "Technology has very high abatement costs (> $100\/ton)",
+        code: "S-3-ADOPTION-Q-1-A-1",
+        weight: 10,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-1"
+    },
+    {
+        label: "Technology has high abatement costs (> $50\/ton)",
+        code: "S-3-ADOPTION-Q-1-A-2",
+        weight: 10,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-1"
+    },
+    {
+        label: "Technology has medium abatement costs (> $25\/ton)",
+        code: "S-3-ADOPTION-Q-1-A-3",
+        weight: 10,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-1"
+    },
+    {
+        label: "No",
+        code: "S-3-ADOPTION-Q-1-A-4",
+        weight: 10,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-1"
+    },
+    {
+        label: "Yes",
+        code: "S-3-ADOPTION-Q-2-A-1",
+        weight: 5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-2"
+    },
+    {
+        label: "No",
+        code: "S-3-ADOPTION-Q-2-A-2",
+        weight: 5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ADOPTION-Q-2"
+    },
+    {
+        label: "Very strongly",
+        code: "S-3-SCALE_UP-Q-1-A-1",
+        weight: 10,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-SCALE_UP-Q-1"
+    },
+    {
+        label: "Strongly",
+        code: "S-3-SCALE_UP-Q-1-A-2",
+        weight: 10,
+        score_portion: 3,
+        isPassing: true,
+        question: "S-3-SCALE_UP-Q-1"
+    },
+    {
+        label: "Somewhat",
+        code: "S-3-SCALE_UP-Q-1-A-3",
+        weight: 10,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-SCALE_UP-Q-1"
+    },
+    {
+        label: "Weakly",
+        code: "S-3-SCALE_UP-Q-1-A-4",
+        weight: 10,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-3-SCALE_UP-Q-1"
+    },
+    {
+        label: "No",
+        code: "S-3-SCALE_UP-Q-1-A-5",
+        weight: 10,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-SCALE_UP-Q-1"
+    },
+    {
+        label: "Fully",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-1",
+        weight: 7.5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
+    },
+    {
+        label: "Partially",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-2",
+        weight: 7.5,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-3",
+        weight: 7.5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
+    },
+    {
+        label: "High (over 50% of the mitigation volume)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-1",
+        weight: 7.5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
+    },
+    {
+        label: " Medium (25-50% of the mitigation volume)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-2",
+        weight: 7.5,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
+    },
+    {
+        label: "Low (below 25% of the mitigation volume)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-3",
+        weight: 7.5,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-4",
+        weight: 7.5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
+    },
+    {
+        label: "Less than a fourth of the technical lifetime",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-1",
+        weight: 2.5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
+    },
+    {
+        label: "Less than half of the technical lifetime",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-2",
+        weight: 2.5,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
+    },
+    {
+        label: "More than half of the technical lifetime",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-3",
+        weight: 2.5,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-4",
+        weight: 2.5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
+    },
+    {
+        label: "High fee (> $5\/credit)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-1",
+        weight: 2.5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
+    },
+    {
+        label: "Low fee (below $5\/credit)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-2",
+        weight: 2.5,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-3",
+        weight: 2.5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
+    },
+    {
+        label: "Strongly",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-1",
+        weight: 10,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
+    },
+    {
+        label: "Somewhat (more than 5% below BAU)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-2",
+        weight: 10,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-3",
+        weight: 10,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
+    },
+    {
+        label: "Fully aligned (baseline reaches zero in year of net zero target of host country)",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-6-A-1",
+        weight: 10,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-6"
+    },
+    {
+        label: "Partially aligned",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-6-A-2",
+        weight: 10,
+        score_portion: 2,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-6"
+    },
+    {
+        label: "No",
+        code: "S-3-ECONOMIC_NON_ECONOMIC-Q-6-A-3",
+        weight: 10,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-ECONOMIC_NON_ECONOMIC-Q-6"
+    },
+    {
+        label: "Yes",
+        code: "S-3-AWARENESS-Q-1-A-1",
+        weight: 5,
+        score_portion: 4,
+        isPassing: true,
+        question: "S-3-AWARENESS-Q-1"
+    },
+    {
+        label: "No",
+        code: "S-3-AWARENESS-Q-1-A-2",
+        weight: 5,
+        score_portion: 0,
+        isPassing: true,
+        question: "S-3-AWARENESS-Q-1"
+    }
 ]
 
 export const characteristic = [
