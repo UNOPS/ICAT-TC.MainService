@@ -631,6 +631,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
         const filteredResults = res.filter(assessment => assessment?.tool === tool);
 
+        filteredResults.sort((a, b) => b.id - a.id);
         return filteredResults
       } 
 
