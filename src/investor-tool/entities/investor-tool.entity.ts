@@ -22,6 +22,9 @@ export class InvestorTool extends BaseTrackingEntity {
     national_country: string;
 
     @Column({ nullable: true })
+    investment_type: string;
+
+    @Column({ nullable: true })
     subnational_region: string;
     
     @ManyToOne((type) => Assessment, { cascade: false ,eager:true})

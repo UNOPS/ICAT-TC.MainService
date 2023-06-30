@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
+import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -16,6 +17,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(Portfolio) repo,
     @InjectRepository(PortfolioAssessment) private readonly portfolioAssessRepo: Repository<PortfolioAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
+    @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
 
   ) {
     super(repo)
@@ -83,10 +85,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     });
 
     let result  = new Array();
-
+    let assessementIdArray :number[]=[];
     for(let data of await response){
       let assessmentId = data.assessment.id
-
+      assessementIdArray.push(assessmentId)
       let res = await this.investorAssessRepo.find({
         relations: ['assessment', 'category', 'characteristics'],
         where: { assessment: { id: assessmentId } },
@@ -152,6 +154,32 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     
   
     return result;
+  }
+  async sdgSumCalculate(portfolioId: number):Promise<any[]>{
+    let response =  this.portfolioAssessRepo.find({
+      relations: ['assessment'],
+      where: { portfolio: { id: portfolioId } },
+    });
+    let assessementIdArray :number[]=[];
+    for(let data of await response){
+      let assessmentId = data.assessment.id
+      assessementIdArray.push(assessmentId)
+    }
+    console.log("knownIds",assessementIdArray)
+
+    const sectorSum = await this.sdgAssessRepo
+        .createQueryBuilder('sdgasess')
+        .leftJoinAndSelect('sdgasess.assessment', 'assessment')
+        .where('assessment.id IN (:...ids)', { ids: assessementIdArray })
+        .leftJoinAndSelect('sdgasess.sdg', 'sdg')
+        // .where('sector.name IS NOT NULL')
+        .select('sdg.name', 'sdg')
+        .addSelect('COUNT(sdgasess.id)', 'count')
+        .groupBy('sdg.name')
+        .having('sdg IS NOT NULL')
+        .getRawMany();
+        console.log("sectorSum",sectorSum)
+        return sectorSum;
   }
   
   
