@@ -25,6 +25,7 @@ import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 
 const schema = {
   'id': {
@@ -55,6 +56,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(ParameterRequest) private readonly dataRequestRepository: Repository<ParameterRequest>,
     @InjectRepository(PortfolioSdg) private readonly portfolioSDgsRepo: Repository<PortfolioSdg>,
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
+    @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
 
 
   ) {
@@ -730,6 +732,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
         return sectorSum;
     }
+    
+    async getSectorCountByTool(tool: string): Promise<any[]> {
+      const sectorCounts = await this.PolicySectorsRepo
+        .createQueryBuilder('policySector')
+        .leftJoin('policySector.intervention', 'climateAction')
+        .leftJoin('policySector.sector', 'sector')
+        .leftJoin('assessment', 'assessment', 'assessment.climateAction_id = climateAction.id')
+        .where('assessment.tool = :tool', { tool })
+        .select(['sector.name AS sector', 'COUNT(policySector.id) AS count'])
+        .groupBy('sector.name')
+        .getRawMany();
+    
+      return sectorCounts;
+    }
+      
 
     async calculateAssessmentResults(tool: string): Promise<any> {
       let results = await this.assessmentRepo

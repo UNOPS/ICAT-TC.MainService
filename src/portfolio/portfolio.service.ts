@@ -140,9 +140,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     
       // Calculate the averages for each category
       categoriesMap.forEach((category) => {
-        category.likelihoodAverage = (category.totalLikelihood / category.totalCharacteristics).toFixed(3);
-        category.relevanceAverage = (category.totalRelevance / category.totalCharacteristics).toFixed(3);
-        category.scoreAverage = (category.totalScore / category.totalCharacteristics).toFixed(3);
+        category.likelihoodAverage = (category.totalLikelihood / category.totalCharacteristics)?.toFixed(0);
+        category.relevanceAverage = (category.totalRelevance / category.totalCharacteristics)?.toFixed(0);
+        category.scoreAverage = (category.totalScore / category.totalCharacteristics)?.toFixed(0);
       });
     
       // Convert the map values back to an array
