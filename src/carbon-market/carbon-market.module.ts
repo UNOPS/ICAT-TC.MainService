@@ -20,6 +20,8 @@ import { CMSeedService } from "./service/cm-seed.service";
 import { Results } from "src/methodology-assessment/entities/results.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
+import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
+import { Category } from "src/methodology-assessment/entities/category.entity";
 
 
 @Module({
@@ -34,7 +36,9 @@ import { ParameterRequest } from "src/data-request/entity/data-request.entity";
       CMAssessmentAnswer,
       Results,
       Assessment,
-      ParameterRequest
+      ParameterRequest,
+      Characteristics,
+      Category
     ]),
   ],
   controllers: [

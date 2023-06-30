@@ -12,28 +12,42 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   id: number;
 
   @Column()
-  sectoral_boundary: string;
+  boundraries: string
 
   @Column()
-  temporal_boundary: string;
+  intCMApproach: string
 
   @Column()
-  geographical_boundary: string;
+  otherIntCMApproach: string
 
   @Column()
-  impact_types: string
-
-  @Column( { type: "varchar",length: 2000 })
-  impact_categories: string
-
-  @Column( { type: "varchar",length: 2000 })
-  impact_characteristics: string
-
-  @Column()
-  impact_indicators:string
+  appliedMethodology: string
 
   @ManyToOne((type) => Assessment)
   @JoinColumn()
   cmassessment: Assessment
+
+  @Column()
+  sectoral_boundary: string;
+
+  // @Column()
+  // temporal_boundary: string;
+
+  // @Column()
+  // geographical_boundary: string;
+
+
+  // @Column()
+  // impact_types: string
+
+  // @Column( { type: "varchar",length: 2000 })
+  // impact_categories: string
+
+  // @Column( { type: "varchar",length: 2000 })
+  // impact_characteristics: string
+
+  // @Column()
+  // impact_indicators:string
+
 
 }

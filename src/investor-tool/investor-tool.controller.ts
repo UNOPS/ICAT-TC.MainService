@@ -44,7 +44,12 @@ export class InvestorToolController {
 
   @Post('createFinalAssessment')
   async createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
-    return await this.investorToolService.createFinalAssessment(req);
+      return await this.investorToolService.createFinalAssessment(req);    
+  }
+
+  @Post('createFinalAssessment2')
+  async createFinalAssessment2(@Body() req: FinalInvestorAssessmentDto[]) {
+      return await this.investorToolService.createFinalAssessment2(req);
   }
 
   @Post('createFinalAssessmentIndirect')
@@ -71,6 +76,12 @@ export class InvestorToolController {
   async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.getTCValueByAssessment(tool);
   }
+
+  @Get('getSectorCountByTool/:tool')
+  async getSectorCountByTool(@Param('tool') tool:string):Promise<any[]> {
+    return await this.investorToolService.getSectorCountByTool(tool);
+  }
+
 
   @Get('calculateAssessmentResults/:tool')
   async calculateAssessmentResults(@Param('tool') tool: string): Promise<any[]> {
@@ -106,5 +117,15 @@ export class InvestorToolController {
         await this.investorToolService.uplaodFileUpload(newSavedfile);
     }
 
+
+    @Get('findAllSDGs')
+  async findAllSDGs():Promise<any[]> {
+    return await this.investorToolService.findAllSDGs();
+  }
+
+  @Get('findSDGs/:assessId')
+  async findSDGs(@Param('assessId') assessId: number) {
+    return await this.investorToolService.findSDGs(assessId);
+  }
 
 }

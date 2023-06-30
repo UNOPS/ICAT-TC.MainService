@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
@@ -11,6 +11,12 @@ import { Approach } from "../enum/answer-type.enum";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 import { request } from "http";
 import { Tool } from "src/data-request/enum/tool.enum";
+import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
+import { Category } from "src/methodology-assessment/entities/category.entity";
+import { CMQuestion } from "../entity/cm-question.entity";
+import { CMAnswer } from "../entity/cm-answer.entity";
+import { Criteria } from "../entity/criteria.entity";
+import { Section } from "../entity/section.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -49,47 +55,61 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.assessment = assessment;
       ass_question.comment = res.comment;
       ass_question.question = res.question;
+      if (res.question?.id === undefined) ass_question.question = undefined
+      ass_question.characteristic = res.characteristic;
+      if (res.characteristic?.id === undefined) ass_question.characteristic = undefined
+      ass_question.sdgIndicator = res.sdgIndicator;
+      ass_question.startingSituation = res.startingSituation;
+      ass_question.expectedImpact = res.expectedImpact;
+      ass_question.selectedSdg = res.selectedSdg;
+      ass_question.uploadedDocumentPath = res.filePath
+      let q_res
+      try{
+        q_res = await this.repo.save(ass_question)
+      }catch(err){
+        console.log(err)
+        return new InternalServerErrorException()
+      }
+      let _answers = []
 
-      let q_res = await this.repo.save(ass_question)
-      let answers = []
-
-      console.log("typeeee", res.type)
-      if (res.answer || res.institution){
-        if (res.type === 'INDIRECT'){
-          let ass_answer = new CMAssessmentAnswer()
-          ass_answer.institution = res.institution
-          ass_answer.assessment_question = q_res
-          ass_answer.approach = Approach.INDIRECT
-          answers.push(ass_answer)
-        } else {
-          if (Array.isArray(res.answer)) {
-            res.answer.forEach(async ans => {
-              let ass_answer = new CMAssessmentAnswer()
-              ass_answer.answer = ans
-              ass_answer.assessment_question = q_res
-              ass_answer.score = score * ans.score_portion/100 * ans.weight/100
-              ass_answer.approach = Approach.DIRECT
-    
-              answers.push(ass_answer)
-            })
-          } else {
-            let ass_answer = new CMAssessmentAnswer()
-            ass_answer.answer = res.answer
-            ass_answer.assessment_question = q_res
-            ass_answer.score = score * res.answer.score_portion/100 * res.answer.weight/100
-            ass_answer.approach = Approach.DIRECT
-    
-            answers.push(ass_answer)
-          }
+      // if (res.answer || res.institution){
+      if (res.type === 'INDIRECT') {
+        let ass_answer = new CMAssessmentAnswer()
+        ass_answer.institution = res.institution
+        ass_answer.institution = undefined
+        ass_answer.assessment_question = q_res
+        ass_answer.approach = Approach.INDIRECT
+        _answers.push(ass_answer)
+      } else {
+        let ass_answer = new CMAssessmentAnswer()
+        if (res.answer && res.answer.id !== undefined) {
+          ass_answer.answer = res.answer
+          ass_answer.score = (score * res.answer.score_portion * res.answer.weight / 100 ) / 4
         }
-        a_ans = await this.assessmentAnswerRepo.save(answers)
+        if (res.isGHG){
+          ass_answer.score = (res.selectedScore.value / 6) * (10 / 100) 
+        }
+        if (res.isSDG){
+          ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100) 
+        }
+        ass_answer.assessment_question = q_res
+        ass_answer.selectedScore = res.selectedScore?.code
+        ass_answer.approach = Approach.DIRECT
+
+        _answers.push(ass_answer)
+      }
+      console.log(_answers)
+      try{
+        a_ans = await this.assessmentAnswerRepo.save(_answers)
+      }catch(err){
+        console.log(err)
+        return new InternalServerErrorException()
+      }
       /*   let result = new Results()
         result.assessment = assessment;
         await this.resultsRepo.save(result)  */
-        await this.saveDataRequests(answers)
-
-        
-      }
+      // await this.saveDataRequests(_answers)
+      // }
 
     }
 
@@ -149,6 +169,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
   async getResults(assessmentId: number){
     let result = []
+    let processData:{technology:any[],incentives:any[], norms:any[],}={ technology: [], incentives: [], norms: [] };
+    let outcomeData:{scale_GHGs:any[],sustained_GHGs:any[], scale_SDs:any[],sustained_SDs:any[]}={ scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [] };
+
+     
+     
+   
+      
+      
+     
+    
+    
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
       .innerJoin(
@@ -169,40 +200,128 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             'question',
             'question.id = ans.assessmentQuestionId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'ans.answer',
+            CMAnswer,
             'answer',
             'answer.id = ans.answerId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'question.question',
+            CMQuestion,
             'cmquestion',
             'cmquestion.id = question.questionId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
+            'question.characteristic',
+            Characteristics,
+            'characteristic',
+            'characteristic.id = question.characteristicId'
+          )
+          .leftJoinAndMapOne(
+            'characteristic.category',
+            Category,
+            'category',
+            'category.id = characteristic.category_id'
+          )
+          .leftJoinAndMapOne(
             'cmquestion.criteria',
+            Criteria,
             'criteria',
             'criteria.id = cmquestion.criteriaId'
           )
-          .innerJoinAndSelect(
+          .leftJoinAndMapOne(
             'criteria.section',
+            Section,
             'section',
             'section.id = criteria.sectionId'
           )
           .where('question.id In (:id)', { id: qIds })
           .getMany()
-
+          // answers.forEach(ans=>{console.log("3333",ans.assessment_question.id)})
+            let answers2 = await this.assessmentAnswerRepo
+              .createQueryBuilder('ans')
+              .innerJoinAndSelect(
+                'ans.assessment_question',
+                'question',
+                'question.id = ans.assessmentQuestionId'
+              )
+              .innerJoinAndSelect(
+                'ans.answer',
+                'answer',
+                'answer.id = ans.answerId'
+              )
+              .innerJoinAndSelect(
+                'question.question',
+                'cmquestion',
+                'cmquestion.id = question.questionId'
+              )
+              .innerJoinAndSelect(
+                'cmquestion.criteria',
+                'criteria',
+                'criteria.id = cmquestion.criteriaId'
+              )
+              .innerJoinAndSelect(
+                'criteria.section',
+                'section',
+                'section.id = criteria.sectionId'
+              )
+              .where('question.id In (:id)', { id: qIds })
+              .getMany()
           let criteria = []
-
           answers.forEach(ans => {
             let obj = {
-              section: ans.assessment_question.question.criteria.section.name,
-              criteria: ans.assessment_question.question.criteria.name,
-              question: ans.assessment_question.question.label,
-              answer: ans.answer.label,
-              comment: ans.assessment_question.comment
+              // data:ans,
+              characteristic:ans.assessment_question?.characteristic?.name,
+              question: ans?.assessment_question?.question?.label,
+              score: ans?.answer?.score_portion,
+              justification: ans?.assessment_question?.comment,
+              document: ans?.assessment_question?.uploadedDocumentPath,
+              category:ans?.assessment_question?.characteristic?.category,
+              starting_situation:ans?.assessment_question?.startingSituation,
+              expected_impacts:ans?.assessment_question?.expectedImpact,
+              SDG:ans?.assessment_question?.selectedSdg,
+              outcome_score:ans?.selectedScore
+              
             }
-            criteria.push(ans.assessment_question.question.criteria.name)
+            if(obj?.category?.code=='TECHNOLOGY'){
+              processData.technology.push(obj)
+            }
+            else if(obj?.category?.code=='INCENTIVES'){
+              processData.incentives.push(obj)
+            }
+            else if(obj?.category?.code=='NORMS'){
+              processData.norms.push(obj)
+            }
+
+           if(obj?.category?.code=='SCALE_GHG'){
+              outcomeData.scale_GHGs.push(obj)
+            }
+            else if(obj?.category?.code=='SUSTAINED_GHG'){
+              outcomeData.sustained_GHGs.push(obj)
+            }
+            else if(obj?.category?.code=='SCALE_SD'){
+              outcomeData.scale_SDs.push(obj)
+            }
+            else if(obj?.category?.code=='SUSTAINED_SD'){
+              outcomeData.sustained_SDs.push(obj)
+            }
+           
+            
+            
+          })
+
+          answers2.forEach(ans => {
+            let obj = {
+              section: ans?.assessment_question?.question?.criteria?.section?.name,
+              criteria: ans?.assessment_question?.question?.criteria?.name,
+              question: ans.assessment_question?.question?.label,
+              answer: ans?.answer?.label,
+              comment: ans.assessment_question.comment,
+              document: ans?.assessment_question?.uploadedDocumentPath,
+              
+            }
+            criteria.push(ans?.assessment_question?.question?.criteria?.name)
             result.push(obj)
           })
 
@@ -211,7 +330,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
           return {
             result: result,
-            criteria: criteria
+            criteria: criteria,
+            processData:processData,
+            outComeData:outcomeData,
           }
       } 
   }

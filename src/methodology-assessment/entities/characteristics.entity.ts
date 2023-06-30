@@ -13,6 +13,9 @@ export class Characteristics {
     @Column({ nullable: true })
     name : string;
 
+    @Column()
+    code: string;
+
     @ManyToOne((type) => Category, { cascade: false})
     @JoinColumn({ name: 'category_id' })
     category?: Category;

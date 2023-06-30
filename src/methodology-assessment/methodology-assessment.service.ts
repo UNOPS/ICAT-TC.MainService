@@ -41,6 +41,8 @@ import { ParameterRequestDto } from './dto/parameter-request.dto';
 const MainCalURL = 'http://localhost:7100/indicator_calculation';
 import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
+import { OutcomeCategory } from './dto/outcome-category.dto';
+import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
  
@@ -629,6 +631,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
         const filteredResults = res.filter(assessment => assessment?.tool === tool);
 
+        filteredResults.sort((a, b) => b.id - a.id);
         return filteredResults
       } 
 
@@ -702,6 +705,54 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .leftJoinAndSelect('category.methodology', 'methodology')
       .where('category.methodology_id = methodology.id')
       .getMany();
+  }
+
+  async getAllOutcomeCharacteristics() {
+    let data = this.characteristicsRepository.createQueryBuilder('characteristic')
+      .leftJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id'
+      ).where('category.type = :type', { type: 'outcome' })
+
+    let response: OutcomeCategory[] = []
+
+    let result = await data.getMany()
+    for await (let ch of result) {
+      let isGHG: boolean = false
+      let isSDG: boolean = false
+      ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
+      ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
+      let cat = response.find(o => o.code === ch.category.code)
+      let cmRes = new CMResultDto()
+      cmRes.characteristic = ch 
+      ch.category.code.indexOf('GHG') !== -1 ? isGHG = true : isSDG = true
+      cmRes.isGHG = isGHG
+      cmRes.isSDG = isSDG
+      if (cat) {
+        cat.results.push(cmRes)
+      } else {
+        let obj = new OutcomeCategory()
+        obj.name = ch.category.name
+        obj.code = ch.category.code
+        obj.method = ch.category.code.indexOf('SCALE') !== -1 ? 'SCALE' : 'SUSTAINED'
+        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : 'SD'
+        obj.results = [cmRes]
+        response.push(obj)
+      }
+    }
+
+    response = response.map(res => {
+      if (res.method === 'SCALE' && res.type === 'GHG') res.order = 1
+      else if (res.method === 'SUSTAINED' && res.type === 'GHG') res.order = 2
+      else if(res.method === 'SCALE' && res.type === 'SD') res.order = 3
+      else res.order = 4
+      return res
+     })
+
+     response.sort((a,b) => a.order - b.order)
+
+    return response
   }
 
   async findAllCharacteristics(): Promise<Characteristics[]> {
