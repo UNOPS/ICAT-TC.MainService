@@ -55,19 +55,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
       // OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText
     }
-    // console.log('userId', userId);
-    // console.log('institutionTypeId', institutionTypeId);
-    // console.log('userTypeFromTocken', userTypeFromTocken);
-
-
-
-    // if (userId != 1 && userId !=0) {
-    //   if (filter) {
-    //     filter = `${filter}  and user.userType = :userId`;
-    //   } else {
-    //     filter = `user.userType = :userId`;
-    //   }
-    // }
 
 
 
@@ -113,14 +100,13 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    if (sectorIdFromTocken) {
+    if (userTypeFromTocken != "MASTER_ADMIN" && sectorIdFromTocken) {
       console.log('sectorIdFromTocken')
       if (filter) {
         filter = `${filter}  and ins.sectorId = :sectorIdFromTocken`;
       } else {
         filter = `ins.sectorId = :sectorIdFromTocken`;
       }
-
     }
 
     if (userTypeFromTocken == "Technical Team") {
@@ -133,7 +119,15 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    if (userTypeFromTocken === "Data Collection Team"){
+    if (userTypeFromTocken == "MASTER_ADMIN") {
+      if (filter) {
+        filter = `${filter}  and ins.typeId in (1,2,3,4,5,6)`;
+      } else {
+        filter = `ins.typeId in (1,2,3,4,5,6)`;
+      }
+    }
+
+    else if (userTypeFromTocken === "Data Collection Team"){
       console.log("Data Collection Team")
       if (filter) {
         filter = `${filter} and user.userTypeId = 9 or user.userTypeId = 8`
@@ -142,49 +136,11 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    // if(filter){
-    //   filter = `${filter}  and  (user.institutionId is null OR ins.typeId in (1,2,3)
-    //   and case ins.typeId WHEN 1 THEN user.userTypeId = 1
-    //             WHEN 2 THEN user.userTypeId = 3
-    //                   WHEN 3 THEN user.userTypeId = 8
-    //        END)`;
-
-    // }else{
-    //   filter = ` (user.institutionId is null OR   ins.typeId in (1,2,3)
-    //   and case ins.typeId WHEN 1 THEN user.userTypeId = 1
-    //             WHEN 2 THEN user.userTypeId = 3
-    //                   WHEN 3 THEN user.userTypeId = 8
-    //        END)`; 
-
-    // }
-
-    let data = this.repo
-      .createQueryBuilder('ins')
-      .leftJoinAndMapOne(
-        'ins.category',
-        InstitutionCategory,
-        'cate',
-        'cate.id = ins.categoryId',
-      )
-      .leftJoinAndMapOne(
-        'ins.type',
-        InstitutionType,
-        'type',
-        'type.id = ins.typeId',
-      )
-      .leftJoinAndMapMany(
-        'ins.user',
-        User,
-        'user',
-        'ins.id = user.institutionId',
-      )
-      .leftJoinAndMapOne(
-        'user.userType',
-        UserType,
-        'userType',
-        'userType.id = user.userTypeId',
-      )
-
+    console.log("filter",filter)
+    let data = this.repo.createQueryBuilder('ins')
+      .innerJoinAndMapOne('ins.category',InstitutionCategory,'cate','cate.id = ins.categoryId',)
+      .innerJoinAndMapOne('ins.type',InstitutionType,'type','type.id = ins.typeId',)
+      .leftJoinAndMapMany('ins.user',User,'user','ins.id=user.institutionId',)
       .where(filter, {
         filterText: `%${filterText}%`,
 
@@ -192,19 +148,19 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         countryIdFromTocken,
         sectorIdFromTocken,
         //status
-      })
-      .orderBy('ins.status', 'ASC')
-      // .groupBy('ins.id');
+      },)      
+      // .orderBy('ins.status', 'ASC')
+      .groupBy('ins.id');
     // .addOrderBy('ins.createdOn','DESC')
     // console.log('data........',data)
     // console.log('data////////',data)
     //     let user: User = new User();
 
-    // console.log('query',data.getQuery());
+    console.log('query',data.getQuery());
 
     let resualt = await paginate(data, options);
     if (resualt) {
-      // console.log('resula',resualt)
+      console.log('resula',resualt)
       return resualt;
     }
   }

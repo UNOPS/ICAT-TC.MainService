@@ -85,7 +85,7 @@ export const config: ConnectionOptions = {
   //  database: 'tc-main', 
   //  password: '7860150',  // database: 'tc-main-new3',
 
-  autoLoadEntities: false,
+  autoLoadEntities: true,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
     Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
