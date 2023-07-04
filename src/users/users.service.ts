@@ -44,11 +44,11 @@ export class UsersService extends TypeOrmCrudService<User> {
   async create(createUserDto: User): Promise<User> {
     //console.log("CreateUser=====",createUserDto.institution['id'])
     //console.log("CreateUserwwwwww=====",createUserDto.userType['id'])
-    console.log("CreateUserYYY=====", createUserDto.userType)
+    console.log("CreateUserYYY=====", createUserDto)
     let userTypeId = createUserDto.userType.id
-    let userType = await this.usersTypeRepository.findOne(
-      { where: { id: userTypeId } }
-    );
+    // let userType = await this.usersTypeRepository.findOne(
+    //   { where: { id: userTypeId } }
+    // );
     // console.log("createUserDto.userType", userType.description)
 
     // let institution;
@@ -108,7 +108,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
-    newUser.userType = userType;
+    newUser.userType = createUserDto.userType;
     newUser.country = createUserDto.country;
     newUser.institution = createUserDto.institution;
     newUser.loginProfile = createUserDto.loginProfile;
