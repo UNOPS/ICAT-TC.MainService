@@ -546,7 +546,7 @@ export const answers = [
     },
     {
         label: "Unsure",
-        code: "S-2-C-2-Q-2-A-3",
+        code: "S-2-C-2-Q-2-A-4",
         weight: 0,
         score_portion: 1,
         isPassing: true,
