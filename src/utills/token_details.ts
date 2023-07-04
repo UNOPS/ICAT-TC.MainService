@@ -27,7 +27,7 @@ constructor(
             console.log("3")
              break;
          case 4:
-             details.push(user.role[0])
+             details.push(user.role.name)
              console.log("4")
              break;  
          case 5:
