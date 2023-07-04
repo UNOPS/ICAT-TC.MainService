@@ -82,8 +82,6 @@ export class UsersController implements CrudController<User> {
     audit.userName = 'created'
     //this.auditService.create(audit);
     console.log("audit.......",audit);
-    createUserDto.userType = new UserType()
-    createUserDto.userType.id = 1
 
     return this.service.create(createUserDto);
 
