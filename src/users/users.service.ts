@@ -115,7 +115,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.admin = ''
     let newUUID = uuidv4();
     newUser.resetToken = '';
-
+// console.log("33333",newUser)
     var newUserDb = await this.repo.save(newUser);
     // get an environment variable
     let systemLoginUrl = '';
