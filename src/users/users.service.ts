@@ -49,7 +49,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     let userType = await this.usersTypeRepository.findOne(
       { where: { id: userTypeId } }
     );
-    console.log("createUserDto.userType", userType.description)
+    // console.log("createUserDto.userType", userType.description)
 
     // let institution;
     // if(createUserDto.userType['id'] == 3)
@@ -115,7 +115,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.admin = ''
     let newUUID = uuidv4();
     newUser.resetToken = '';
-
+// console.log("33333",newUser)
     var newUserDb = await this.repo.save(newUser);
     // get an environment variable
     let systemLoginUrl = '';
