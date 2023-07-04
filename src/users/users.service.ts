@@ -65,7 +65,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     let insId = null;
     if (createUserDto.userType['id'] == 3) {
       console.log("okkkkkkkk")
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
       console.log("Hi==", countryId)
     }
@@ -78,12 +78,12 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
 
     else if (createUserDto.userType['id'] == 1) {
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
     }
 
     else if (createUserDto.userType['id'] == 5) {
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
     }
 
@@ -109,18 +109,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
     newUser.userType = userType;
-    // newUser.password = createUserDto.password;
+    newUser.country = createUserDto.country;
     newUser.institution = createUserDto.institution;
-    // newUser.salt = createUserDto.salt;
     newUser.loginProfile = createUserDto.loginProfile;
     newUser.admin = ''
     let newUUID = uuidv4();
-    // let newPassword = createUserDto.password;
-    // createUserDto.password = newPassword;
-    // newUser.password = await this.hashPassword(
-    //   newPassword,
-    //   newUser.salt,
-    // );
     newUser.resetToken = '';
 
     var newUserDb = await this.repo.save(newUser);
