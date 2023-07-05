@@ -50,6 +50,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   
   async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
     let a_ans: any[]
+    let _answers = []
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -70,27 +71,29 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         console.log(err)
         return new InternalServerErrorException()
       }
-      let _answers = []
 
       // if (res.answer || res.institution){
       if (res.type === 'INDIRECT') {
         let ass_answer = new CMAssessmentAnswer()
         ass_answer.institution = res.institution
-        ass_answer.institution = undefined
+        // ass_answer.institution = undefined
         ass_answer.assessment_question = q_res
         ass_answer.approach = Approach.INDIRECT
         _answers.push(ass_answer)
       } else {
         let ass_answer = new CMAssessmentAnswer()
+        ass_answer.institution = undefined
         if (res.answer && res.answer.id !== undefined) {
           ass_answer.answer = res.answer
           ass_answer.score = (score * res.answer.score_portion * res.answer.weight / 100 ) / 4
         }
-        if (res.isGHG){
-          ass_answer.score = (res.selectedScore.value / 6) * (10 / 100) 
-        }
-        if (res.isSDG){
-          ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100) 
+        if (res.selectedScore && res.selectedScore.value){
+          if (res.isGHG){
+            ass_answer.score = (res.selectedScore.value / 6) * (10 / 100) 
+          }
+          if (res.isSDG){
+            ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100) 
+          }
         }
         ass_answer.assessment_question = q_res
         ass_answer.selectedScore = res.selectedScore?.code
@@ -98,20 +101,19 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
         _answers.push(ass_answer)
       }
-      console.log(_answers)
-      try{
-        a_ans = await this.assessmentAnswerRepo.save(_answers)
-      }catch(err){
-        console.log(err)
-        return new InternalServerErrorException()
-      }
-      /*   let result = new Results()
-        result.assessment = assessment;
-        await this.resultsRepo.save(result)  */
-      // await this.saveDataRequests(_answers)
-      // }
-
     }
+    console.log(_answers)
+    try{
+      a_ans = await this.assessmentAnswerRepo.save(_answers)
+    }catch(err){
+      console.log(err)
+      return new InternalServerErrorException()
+    }
+    /*   let result = new Results()
+      result.assessment = assessment;
+      await this.resultsRepo.save(result)  */
+    await this.saveDataRequests(_answers)
+    // }
 
     if(assessment.assessment_approach=== 'DIRECT'){
       let resultObj = new Results()

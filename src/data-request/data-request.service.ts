@@ -234,6 +234,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
         )
         .leftJoinAndMapOne(
+          'assessment_question.characteristic',
+           Characteristics,
+          'characteristic',
+          'characteristic.id = assessment_question.characteristicId',
+        )
+        .leftJoinAndMapOne(
+          'characteristic.category',
+           Category,
+          'category',
+          'category.id = characteristic.category_id',
+        )
+        .leftJoinAndMapOne(
           'assessment_question.question',
            CMQuestion,
           'cmQuestion',
@@ -500,6 +512,18 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment_question.id = cmAssessmentAnswer.assessmentQuestionId',
         )
         .leftJoinAndMapOne(
+          'assessment_question.characteristic',
+           Characteristics,
+          'characteristic',
+          'characteristic.id = assessment_question.characteristicId',
+        )
+        .leftJoinAndMapOne(
+          'characteristic.category',
+           Category,
+          'category',
+          'category.id = characteristic.category_id',
+        )
+        .leftJoinAndMapOne(
           'assessment_question.question',
            CMQuestion,
           'cmQuestion',
@@ -541,6 +565,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .orderBy('dr.id', 'DESC')
       .groupBy('dr.id')
      
+      console.log(data.getQuery())
      
 
     let result = await paginate(data, options);
@@ -686,6 +711,15 @@ console.log("=========11",result)
         'assessmentQuestion',
         'assessmentAnswer.assessmentQuestionId = assessmentQuestion.id'
       ).leftJoinAndSelect(
+        'assessmentQuestion.characteristic',
+        'characteristic',
+        'characteristic.id = assessmentQuestion.characteristicId',
+      )
+      .leftJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id',
+      ).leftJoinAndSelect(
         'assessmentAnswer.answer',
         'answer',
         'assessmentAnswer.answerId = answer.id'
@@ -812,6 +846,8 @@ console.log("=========11",result)
         .leftJoinAndSelect('para.answer', 'answer', 'para.answerId = answer.id')
         .leftJoinAndSelect('assessmentQuestion.question', 'question', 'question.id = assessmentQuestion.questionId')
         .leftJoinAndSelect('assessmentQuestion.assessment', 'assessment', 'assessment.id = assessmentQuestion.assessmentId')
+        .leftJoinAndSelect('assessmentQuestion.characteristic', 'characteristic', 'characteristic.id = assessmentQuestion.characteristicId')
+        .leftJoinAndSelect('characteristic.category', 'category', 'category.id = characteristic.category_id')
         .leftJoinAndSelect('para.institution', 'institution', 'institution.id = para.institutionId')
     } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) {
       data.leftJoinAndSelect('dr.investmentParameter', 'para', 'para.id = dr.investmentParameterId')
