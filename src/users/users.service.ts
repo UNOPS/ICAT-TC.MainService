@@ -44,12 +44,12 @@ export class UsersService extends TypeOrmCrudService<User> {
   async create(createUserDto: User): Promise<User> {
     //console.log("CreateUser=====",createUserDto.institution['id'])
     //console.log("CreateUserwwwwww=====",createUserDto.userType['id'])
-    console.log("CreateUserYYY=====", createUserDto.userType)
+    console.log("CreateUserYYY=====", createUserDto)
     let userTypeId = createUserDto.userType.id
-    let userType = await this.usersTypeRepository.findOne(
-      { where: { id: userTypeId } }
-    );
-    console.log("createUserDto.userType", userType.description)
+    // let userType = await this.usersTypeRepository.findOne(
+    //   { where: { id: userTypeId } }
+    // );
+    // console.log("createUserDto.userType", userType.description)
 
     // let institution;
     // if(createUserDto.userType['id'] == 3)
@@ -65,7 +65,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     let insId = null;
     if (createUserDto.userType['id'] == 3) {
       console.log("okkkkkkkk")
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
       console.log("Hi==", countryId)
     }
@@ -78,12 +78,12 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
 
     else if (createUserDto.userType['id'] == 1) {
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
     }
 
     else if (createUserDto.userType['id'] == 5) {
-      countryId = null;
+      // countryId = null;
       insId = createUserDto.institution['id'];
     }
 
@@ -108,21 +108,14 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
-    newUser.userType = userType;
-    // newUser.password = createUserDto.password;
+    newUser.userType = createUserDto.userType;
+    newUser.country = createUserDto.country;
     newUser.institution = createUserDto.institution;
-    // newUser.salt = createUserDto.salt;
     newUser.loginProfile = createUserDto.loginProfile;
     newUser.admin = ''
     let newUUID = uuidv4();
-    // let newPassword = createUserDto.password;
-    // createUserDto.password = newPassword;
-    // newUser.password = await this.hashPassword(
-    //   newPassword,
-    //   newUser.salt,
-    // );
     newUser.resetToken = '';
-
+// console.log("33333",newUser)
     var newUserDb = await this.repo.save(newUser);
     // get an environment variable
     let systemLoginUrl = '';

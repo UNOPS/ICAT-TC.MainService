@@ -34,6 +34,7 @@ import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
 import { UsersService } from './users.service';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { Country } from 'src/country/entity/country.entity';
 
 @Crud({
   model: {
@@ -82,8 +83,6 @@ export class UsersController implements CrudController<User> {
     audit.userName = 'created'
     //this.auditService.create(audit);
     console.log("audit.......",audit);
-    createUserDto.userType = new UserType()
-    createUserDto.userType.id = 1
 
     return this.service.create(createUserDto);
 
@@ -99,13 +98,15 @@ export class UsersController implements CrudController<User> {
     //this.auditService.create(audit);
     console.log("audit.......",audit);
     createUserDto.userType = new UserType()
-    createUserDto.userType.id = 10 // external user
+    createUserDto.userType.id = 12 // external user
     console.log("external user",createUserDto);
-
+    let userCountry =new Country();
+    userCountry.id=0
+    let userIns =new Institution();
+    userIns.id=0
+    createUserDto.country=userCountry;
+    createUserDto.institution=userIns;
     return this.service.create(createUserDto);
-
- 
-
   }
   
 
