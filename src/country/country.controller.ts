@@ -132,7 +132,7 @@ export class CountryController implements CrudController<Country>{
   }
 
   @Get('find-All')
-  async findall():Promise<any>{
+  async findall():Promise<Country[]>{
     return await this.CountryRepo.find();
   }
 

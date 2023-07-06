@@ -287,7 +287,9 @@ export class ClimateAction extends BaseTrackingEntity {
   isCity: number;
 
 
-
+  //institute addded 2023/07/06(TC-441)
+  @Column({ length: 500, default: null, nullable: true })
+  institute: string;
 
 
 
