@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -7,7 +7,7 @@ import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 
@@ -126,6 +126,15 @@ export class InvestorToolController {
   @Get('findSDGs/:assessId')
   async findSDGs(@Param('assessId') assessId: number) {
     return await this.investorToolService.findSDGs(assessId);
+  }
+
+
+  @Post('upload-file')
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: './public/portfolio',filename: editFileName})}),)
+  async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
+  ) {
+    return {fileName: files[0].filename}
+    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
 
 }

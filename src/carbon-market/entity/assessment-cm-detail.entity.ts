@@ -18,7 +18,7 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   intCMApproach: string
 
   @Column()
-  otherIntCMApproach: string
+  otherIntCMApproach: string 
 
   @Column()
   appliedMethodology: string
@@ -27,8 +27,8 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @JoinColumn()
   cmassessment: Assessment
 
-  @Column()
-  sectoral_boundary: string;
+   @Column()
+  sectoral_boundary: string; 
 
   // @Column()
   // temporal_boundary: string;
