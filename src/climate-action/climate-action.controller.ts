@@ -108,7 +108,7 @@ export class ProjectController implements CrudController<ClimateAction> {
       dto.createdBy = '-';
       dto.editedBy = '-';
 
-      console.log(dto);
+      // console.log(dto);
 
       let newplData = await this.service.create(dto);
 
