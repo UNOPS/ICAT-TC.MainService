@@ -983,7 +983,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       'assessment.climateAction',
       'climateAction',
       'climateAction.id = assessment.climateAction_id'
-    ).where("climateAction.id = :id and assessment.assessment_method ='Track 3'", {id: climateActionId})
+    ).where("climateAction.id = :id", {id: climateActionId})
     .getMany()
   }
 
