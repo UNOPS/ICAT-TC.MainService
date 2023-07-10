@@ -15,11 +15,13 @@ import {
 import { Documents } from './entity/document.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
+import { DocOwnerUpdateDto } from './entity/doc-owner-update.dto';
 var fs = require('fs');
 var path = require('path');
 
 @Injectable()
 export class DocumentService extends TypeOrmCrudService<Documents> {
+  
   constructor(
     @InjectRepository(Documents) repo,
     private configService: ConfigService,
@@ -72,5 +74,20 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     });
 
     return documenst;
+
+  }
+
+ async  updateDocOwner(req: DocOwnerUpdateDto):Promise<any> {
+  console.log("document ids:",req)
+  let projectid=req.projectID
+    for (let num of req.ids) {
+      console.log("num",num)
+      let update = await this.repo.createQueryBuilder()
+      .update(Documents)
+      .set({documentOwnerId:projectid})
+      .where("id = :id", { id: num })
+      .execute()
+      console.log("updated",num)
+    }
   }
 }
