@@ -34,7 +34,7 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @JoinColumn({ name: 'characteristic_id' })
     characteristics: Characteristics;
 
-    @ManyToOne((type) => PortfolioSdg, { cascade: false , eager : true, nullable : true})
+    @ManyToOne((type) => PortfolioSdg, { cascade: false , eager : false, nullable : true})
     @JoinColumn({ name: 'portfolioSdg_id' })
     portfolioSdg: PortfolioSdg;
 

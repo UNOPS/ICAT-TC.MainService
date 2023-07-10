@@ -51,9 +51,19 @@ export class CMAssessmentAnswerService extends TypeOrmCrudService<CMAssessmentAn
 
         dataStatusItem.forEach(async (e) => {
           if (e.dataRequestStatus === 4 || e.dataRequestStatus === 5 || e.dataRequestStatus === -8) {
-            let answers = await this.cMQuestionService.getAnswersByQuestion(key.questionId)
-            let answer = answers.find(o => o.label === key.answer)
-            dataEnterItem.answer = answer;
+            if (key.questionId){
+              let answers = await this.cMQuestionService.getAnswersByQuestion(key.questionId)
+              let answer = answers.find(o => o.label === key.answer)
+              dataEnterItem.answer = answer;
+              dataEnterItem.score = (answer.score_portion * answer.weight / 100 ) / 4
+            } else {
+              dataEnterItem.selectedScore = key.answer
+              if (['SUSTAINED_GHG', 'SCALE_GHG'].includes(key.category_code)){
+                dataEnterItem.score = (parseInt(key.answer) / 6) * (10 / 100) 
+              } else {
+                dataEnterItem.score = (parseInt(key.answer) / 6) * (2.5 / 100) * (10 / 100) 
+              }
+            }
 
 
             let res = await this.repo.save(dataEnterItem);
