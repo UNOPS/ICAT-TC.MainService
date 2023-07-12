@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -43,6 +43,7 @@ import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { OutcomeCategory } from './dto/outcome-category.dto';
 import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
  
@@ -615,8 +616,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     });
   }
 
-  AssessmentDetails(): Promise<Assessment[]> {
-    //  return await this.repo.find();
+  //@UseGuards(JwtAuthGuard)
+  async AssessmentDetails(): Promise<Assessment[]> {
+   // let user = this.userService.currentUser();
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
       return this.assessmentRepository.find({
         relations: [ 'methodology', 'climateAction'],
       });
