@@ -276,7 +276,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
               // data:ans,
               characteristic:ans.assessment_question?.characteristic?.name,
               question: ans?.assessment_question?.question?.label,
-              score: ans?.answer?.score_portion,
+              score: ans?.answer?.label,
               justification: ans?.assessment_question?.comment,
               document: ans?.assessment_question?.uploadedDocumentPath,
               category:ans?.assessment_question?.characteristic?.category,
