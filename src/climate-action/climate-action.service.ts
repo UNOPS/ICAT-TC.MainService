@@ -25,7 +25,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     super(repo);
   }
   async create(req:ClimateAction):Promise<ClimateAction>{
-    console.log( "req",req)
+    // console.log( "req",req)
     return await this.repo.save(req)
      
   }

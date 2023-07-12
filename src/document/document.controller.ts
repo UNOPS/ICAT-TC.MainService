@@ -8,6 +8,7 @@ import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get,
 import { assert, log } from 'console';
 import { join } from 'path';
 import { createReadStream } from 'fs';
+import { DocOwnerUpdateDto } from './entity/doc-owner-update.dto';
 var multer = require('multer')
 //var upload = multer({ dest: './public/data/uploads/' })
 const restrictedFileExtentions = ["exe", "dll", "com", "bat", "sql","php","js.","ts"];
@@ -110,6 +111,13 @@ export class DocumentController implements CrudController<Documents> {
         
           return new StreamableFile(file);
     }
+   
+    @Post('updateDocOwner')
+    async updateDocOwner(@Body() req: DocOwnerUpdateDto) {
+    console.log("called updateDocOwner", req)
+    return await this.service.updateDocOwner(req);
+  }
+  
 
 
 

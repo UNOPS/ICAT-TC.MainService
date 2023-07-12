@@ -132,9 +132,22 @@ export class CountryController implements CrudController<Country>{
   }
 
   @Get('find-All')
-  async findall():Promise<any>{
-    return await this.CountryRepo.find();
+  async findall():Promise<Country[]>{
+    let allCountries= await this.CountryRepo.find();
+    let countriesWithoutzero=allCountries.filter(object => {
+      return object.id !== 0;})
+    // console.log("countriesWithoutzero",countriesWithoutzero)
+    return countriesWithoutzero;
   }
+
+  // @Get('findWithoutZeroCountry')
+  // async findWithoutZeroCountry():Promise<Country[]>{
+  //   let allCountries= await this.CountryRepo.find();
+  //   let countriesWithoutzero=allCountries.filter(object => {console.log(object.id)
+  //     return object.id !== 0;})
+  //   console.log("countriesWithoutzero",countriesWithoutzero)
+  //   return countriesWithoutzero;
+  // }
 
   
 
