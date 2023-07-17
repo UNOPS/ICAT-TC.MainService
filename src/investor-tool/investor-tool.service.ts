@@ -239,6 +239,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           iassess.relevance_weight = assess.relevance_weight;
           iassess.likelihood_weight = assess.likelihood_weight;
           iassess.score = assess.score;
+          iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
 
 
           iassess.indicator = assess.indicator;
@@ -300,7 +301,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           iassess.relevance_weight = assess.relevance_weight;
           iassess.likelihood_weight = assess.likelihood_weight;
           iassess.score = assess.score;
-
+          iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
 
           iassess.indicator = assess.indicator;
           iassess.indicatorStartingVal = assess.indicatorStartingVal;
@@ -355,7 +356,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           iassess.relevance_weight = assess.relevance_weight;
           iassess.likelihood_weight = assess.likelihood_weight;
           iassess.score = assess.score;
-
+          iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
 
           iassess.indicator = assess.indicator;
           iassess.indicatorStartingVal = assess.indicatorStartingVal;

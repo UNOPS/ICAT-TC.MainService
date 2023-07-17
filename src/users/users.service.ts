@@ -248,6 +248,14 @@ export class UsersService extends TypeOrmCrudService<User> {
     return userDetails
   }
 
+  @UseGuards(JwtAuthGuard)
+  async currentUser(): Promise<User> {
+    let userNameFromTocken: string;
+    [ userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username])
+    let user = this.findByUserName(userNameFromTocken)
+    return user
+  }
+
   async validateUser(userName: string, password: string): Promise<boolean> {
     const user = await this.repo.findOne({ where: { username: userName } });
 
