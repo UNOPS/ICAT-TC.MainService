@@ -13,6 +13,7 @@ import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { PolicySector } from './entity/policy-sectors.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -21,6 +22,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(ClimateAction) repo,
     @InjectRepository(PolicyBarriers) public PolicyBarriersRepo: Repository<PolicyBarriers>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
+    private userService: UsersService,
 ) {
     super(repo);
   }
@@ -137,9 +139,47 @@ async allProject(
 
 
   async findAllPolicies(): Promise<ClimateAction[]> {
-      return this.repo.find({
+
+    let user = this.userService.currentUser();
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+     let res =  this.repo.find({
         relations: [],
       });
+
+      let policyList: ClimateAction[] = [];
+
+   /*    if((await user)?.userType?.name === 'External')
+      {
+        for(let x of await res){
+          if(x.user?.id == (await user)?.id ){
+            policyList.push(x)
+          }
+        }
+      }
+      else{
+        for(let x of await res){
+          if(x.user?.country?.id == (await user)?.country?.id && (x.user?.userType?.name !==  "External") ){
+            policyList.push(x)
+          }
+        }
+      } */
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    for (const x of await res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x);
+      }
+    }
+
+
+      return policyList
   }
 
   async getIntervention(id:number):Promise<ClimateAction> {
