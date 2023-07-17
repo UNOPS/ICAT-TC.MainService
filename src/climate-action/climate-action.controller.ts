@@ -151,7 +151,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
    
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get(
     'AllClimateAction/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:countryId/:sectorId',
   )
