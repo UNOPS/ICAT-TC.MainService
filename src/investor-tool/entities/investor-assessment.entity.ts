@@ -106,5 +106,8 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({  nullable: true })
     enterDataAssumption: string;
 
+    @Column({nullable: true})
+    uploadedDocumentPath: string
+
 
 }

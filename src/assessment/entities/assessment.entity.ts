@@ -87,6 +87,10 @@ export class Assessment extends BaseTrackingEntity{
       @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
       tc_value?: number;
 
+   /*  @ManyToOne((type) => User, { cascade: false, eager: true, })
+    @JoinColumn({ name: 'user_id' })
+    user?: User; */
+
 }
 
 
