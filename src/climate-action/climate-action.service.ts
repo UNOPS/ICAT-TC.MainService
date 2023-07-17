@@ -141,7 +141,7 @@ async allProject(
   async findAllPolicies(): Promise<ClimateAction[]> {
 
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).email, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
 
      let res =  this.repo.find({
         relations: [],
