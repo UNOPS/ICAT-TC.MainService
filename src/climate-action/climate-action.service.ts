@@ -14,6 +14,7 @@ import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { PolicySector } from './entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -26,6 +27,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
 ) {
     super(repo);
   }
+ 
   async create(req:ClimateAction):Promise<ClimateAction>{
     // console.log( "req",req)
     return await this.repo.save(req)
@@ -141,7 +143,7 @@ async allProject(
   async findAllPolicies(): Promise<ClimateAction[]> {
 
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).email, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
 
      let res =  this.repo.find({
         relations: [],
@@ -215,6 +217,9 @@ async allProject(
   ): Promise<Pagination<ClimateAction>> {
     console.log("filterText",filterText)
     let filter: string = '';
+    let user = this.userService.currentUser();
+    
+    const currentUser = await user;
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(dr.policyName LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText  OR pas.description LIKE :filterText )';
@@ -284,6 +289,14 @@ async allProject(
         
 
       )
+      .leftJoinAndMapOne(
+        'dr.user',
+         User,
+        'user',
+        'user.id = dr.user_id',
+        
+
+      )
       
       
     /* 
@@ -305,15 +318,43 @@ async allProject(
         sectorId,
         isDelete: true,
       })
-      .orderBy('dr.createdOn', 'ASC');
+      .andWhere('user.id = :userId', { userId: currentUser.id })
+      .orderBy('dr.id', 'DESC');
     console.log(
       '=====================================================================',
     );
     //console.log(data.getQuery());
 
     let result = await paginate(data, options);
+    console.group("............",result.meta)
     // console.log(result);
     if (result) {
+    
+      // const isUserExternal = currentUser?.userType?.name === 'External';
+
+      //   const modifiedItems = result.items.map((item) => {
+          
+      //     const isSameUser = item.user?.id === currentUser?.id;
+      //     console.log("modifiedItems",item.id,item?.user?.id,currentUser?.id)
+      //     const isMatchingCountry = item.user?.country?.id === currentUser?.country?.id;
+      //     const isUserInternal = item.user?.userType?.name !== 'External';
+
+      //     // if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+      //     if ((isSameUser ) ) {
+      //       return item;
+      //     }
+         
+      //   });
+       
+      //   result.meta.totalItems=modifiedItems.length;
+      //   // Create a new object with the modified items
+      //   const updatedResult = { ...result, items: modifiedItems, };
+      
+      //   // Return the updated result
+      //   return updatedResult;
+        
+      
+    
       return result;
     }
   }
