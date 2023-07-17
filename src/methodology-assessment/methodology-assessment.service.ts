@@ -238,7 +238,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   async saveAssessment(assessment: Assessment){
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
+    console.log(" : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
 
     let currentUser = new User();
     currentUser.id = (await user).id
