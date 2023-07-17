@@ -237,6 +237,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async saveAssessment(assessment: Assessment){
+    let user = this.userService.currentUser();
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
+
+    let currentUser = new User();
+    currentUser.id = (await user).id
+
+    assessment.user = currentUser;
     return await this.assessmentRepository.save(assessment)
   }
 
@@ -618,11 +625,29 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   //@UseGuards(JwtAuthGuard)
   async AssessmentDetails(): Promise<Assessment[]> {
-   // let user = this.userService.currentUser();
-   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
-      return this.assessmentRepository.find({
-        relations: [ 'methodology', 'climateAction'],
+    let user = this.userService.currentUser();
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+      let res = this.assessmentRepository.find({
+        relations: [ 'methodology', 'climateAction','user'],
       });
+
+      let assessList: Assessment[] = [];
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    for (const x of await res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        assessList.push(x);
+      }
+    }
+
+      return assessList
     }
 
    

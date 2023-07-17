@@ -17,8 +17,8 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @Column()
   intCMApproach: string
 
-  @Column()
-  otherIntCMApproach: string 
+/*   @Column()
+  otherIntCMApproach: string  */
 
   @Column()
   appliedMethodology: string
