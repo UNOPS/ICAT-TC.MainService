@@ -15,6 +15,8 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { PolicySector } from './entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
+import { Country } from 'src/country/entity/country.entity';
+import { Institution } from 'src/institution/entity/institution.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -241,22 +243,6 @@ async allProject(
       }
     }
 
-   
-
-    // if isactive = 0 ---> all climate actions
-    // if isactive = 1 ---> active climate actions
-    // if active = 2 ---> 
-
-   
-       
-      // if (filter) {
-      //   filter = `${filter}  and pas.id !=4 `; // no proposed CA s all climate
-      // } else {
-      //   filter = `pas.id !=4`;
-      // }
-    
-    
-
     if (countryId != 0) {
       if (filter) {
         filter = `${filter}  and dr.countryId = :countryId`;
@@ -286,30 +272,26 @@ async allProject(
         ProjectApprovalStatus,
         'pas',
         'pas.id = dr.projectApprovalStatusId',
-        
-
       )
       .leftJoinAndMapOne(
         'dr.user',
          User,
         'user',
         'user.id = dr.user_id',
-        
-
       )
-      
-      
-    /* 
-      .leftJoinAndMapMany(
-        'asse.parameter',
-        Parameter,
-        'para',
-        'para.assessmentId = asse.id',
+      .leftJoinAndMapOne(
+        'dr.country',
+         Country,
+        'cntry',
+        'cntry.id = dr.countryId',
       )
-     */
-
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
-
+      .leftJoinAndMapOne(
+        'user.institution',
+         Institution,
+        'ins',
+        'ins.id = user.institutionId',
+      )
+   
       .where(filter, {
         filterText: `%${filterText}%`,
         projectStatusId,
@@ -318,42 +300,48 @@ async allProject(
         sectorId,
         isDelete: true,
       })
-      .andWhere('user.id = :userId', { userId: currentUser.id })
       .orderBy('dr.id', 'DESC');
-    console.log(
-      '=====================================================================',
-    );
-    //console.log(data.getQuery());
+
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      const isUserVerifier = currentUser?.userType?.name === 'Verifier';
+      //users filter by country id
+      const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+      console.log("user type", currentUser?.userType?.name)
+      const allowedUserTypes = [
+        'Country Admin',
+        'Sector Admin',
+        'Technical Team',
+        'MRV Admin',
+        'Data Collection Team',
+        'QC Team',
+        'MASTER_ADMIN'
+      ];
+      const allowedUserTypesForAcceptedInterverntions = [
+        'Sector Admin',
+        'Technical Team',
+        'MRV Admin',
+      ];
+      if (isUserExternal || isUserVerifier){
+        data.andWhere('user.id = :userId', { userId: currentUser.id })
+      }
+      else if  (allowedUserTypes.includes(currentUser?.userType?.name)){
+        console.log("............")
+        data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+      }
+      else if (isUsersFilterByInstitute){
+        console.log("+++++++++++",isUsersFilterByInstitute)
+        data.andWhere('ins.id = :insId', { insId: currentUser?.institution?.id  })
+      }
+      // accpeted policies showing
+      if  (!allowedUserTypesForAcceptedInterverntions.includes(currentUser?.userType?.name)){
+        console.log("*********")
+        data.andWhere('pas.id != :projectApprovalStatusId', { projectApprovalStatusId: 1 })
+      }
+
 
     let result = await paginate(data, options);
-    console.group("............",result.meta)
-    // console.log(result);
+  
     if (result) {
-    
-      // const isUserExternal = currentUser?.userType?.name === 'External';
-
-      //   const modifiedItems = result.items.map((item) => {
-          
-      //     const isSameUser = item.user?.id === currentUser?.id;
-      //     console.log("modifiedItems",item.id,item?.user?.id,currentUser?.id)
-      //     const isMatchingCountry = item.user?.country?.id === currentUser?.country?.id;
-      //     const isUserInternal = item.user?.userType?.name !== 'External';
-
-      //     // if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
-      //     if ((isSameUser ) ) {
-      //       return item;
-      //     }
-         
-      //   });
-       
-      //   result.meta.totalItems=modifiedItems.length;
-      //   // Create a new object with the modified items
-      //   const updatedResult = { ...result, items: modifiedItems, };
-      
-      //   // Return the updated result
-      //   return updatedResult;
-        
-      
     
       return result;
     }
