@@ -70,20 +70,21 @@ export const config: ConnectionOptions = {
 /*  username: 'root',
  password: 'pradeep123#',
  database: 'tc-main',   */
-//  username: 'root',
-//  password: 'pradeep123#',
-//  database: 'tc-main',  
+ username: 'root',
+ password: 'pradeep123#',
+ database: 'tc-main',  
 //     username: 'sqluser',
 //  password: 'password',
 //   database: 'tc-main-new3',  
-      username: 'root',
-      password: '1997',
-      database: 'tc_new',
+      // username: 'root',
+      // password: '1997',
+      // database: 'tc_new',
      
   // username: 'root',
   //  database: 'tc-main', 
   //  password: '7860150',  // database: 'tc-main-new3',
 
+  
   autoLoadEntities: true,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
