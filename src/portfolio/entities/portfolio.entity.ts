@@ -2,6 +2,7 @@
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { User } from "src/users/entity/user.entity";
 
 @Entity()
 export class Portfolio {
@@ -35,5 +36,8 @@ export class Portfolio {
 
     @Column({ nullable: true })
     principles : string; 
-  
+
+    @ManyToOne((type) => User, { cascade: false, eager: true, })
+    user?: User;  
+
 }

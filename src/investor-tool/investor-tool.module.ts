@@ -16,6 +16,14 @@ import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { User } from 'src/users/entity/user.entity';
+import { Institution } from 'src/institution/entity/institution.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
+import { Country } from 'src/country/entity/country.entity';
+import { Audit } from 'src/audit/entity/audit.entity';
+import { TokenDetails } from 'src/utills/token_details';
+import { UsersService } from 'src/users/users.service';
+import { EmailNotificationService } from 'src/notifications/email.notification.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -33,9 +41,11 @@ import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
     InvestorAssessment,
     SdgAssessment,
     PortfolioSdg,
-    PolicySector
+    PolicySector,
+    User, UserType, Institution, Country,Audit,
   ])],
   controllers: [InvestorToolController],
-  providers: [InvestorToolService]
+  providers: [InvestorToolService, TokenDetails, EmailNotificationService,
+    UsersService,]
 })
 export class InvestorToolModule {}
