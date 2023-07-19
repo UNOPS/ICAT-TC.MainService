@@ -26,6 +26,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { UsersService } from 'src/users/users.service';
 
 const schema = {
   'id': {
@@ -58,6 +59,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
 
+    private userService: UsersService,
 
   ) {
     super(repo)
@@ -748,11 +750,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       return sectorCounts;
     }
       
+    
 
     async calculateAssessmentResults(tool: string): Promise<any> {
       let results = await this.assessmentRepo
         .createQueryBuilder('assessment')
         .leftJoinAndSelect('assessment.climateAction', 'intervention')
+        .leftJoinAndSelect('assessment.user', 'user')
+        .leftJoinAndSelect('user.userType', 'userType')
+        .leftJoinAndSelect('user.country', 'country')
+        .leftJoinAndSelect('user.institution', 'institution')
         .where('assessment.tool = :value', { value: tool })
         .orderBy('assessment.id', 'DESC')
         .getMany();
@@ -907,8 +914,27 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             
         }
 
-        
-        return[ finalDataArray];
+        /* //////////////////////////////////////// */
+        let user = this.userService.currentUser();
+    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    let finalDataArray2 = []
+
+    for (const x of await finalDataArray) {
+      const isSameUser = x.assesment?.user?.id === currentUser?.id;
+      const isMatchingCountry = x.assesment?.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.assesment?.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        finalDataArray2.push(x);
+      }
+    }
+
+        /* //////////////////////////////////////// */
+        return[ finalDataArray2];
   
     }
     async findAllCategories(): Promise<any> {

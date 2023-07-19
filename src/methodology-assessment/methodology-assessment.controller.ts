@@ -365,7 +365,7 @@ async uploadFile2(
     return await this.methodologyAssessmentService.AssessmentDetails();
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get('AssessmentDetailsforTool/:tool')
   async AssessmentDetailsforTool(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.methodologyAssessmentService.AssessmentDetailsforTool(tool);
