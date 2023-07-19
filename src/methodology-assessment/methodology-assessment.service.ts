@@ -651,39 +651,17 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     }
 
    
-  async AssessmentDetailsforTool(tool: string): Promise<any[]> {
-    //  return await this.repo.find();
-    /*  let res =  await this.assessmentRepository.find({
-       relations: [ 'methodology', 'climateAction','user'],
-     }); */
+    async AssessmentDetailsforTool(tool: string): Promise<any[]> {
+      //  return await this.repo.find();
+        let res =  await this.assessmentRepository.find({
+          relations: [ 'methodology', 'climateAction'],
+        });
 
-    let user = this.userService.currentUser();
-    console.log("ussssser : ", (await user).fullname, "and ", (await user).username, "Id :", (await user).id, "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+        const filteredResults = res.filter(assessment => assessment?.tool === tool);
 
-    let res = this.assessmentRepository.find({
-      relations: ['methodology', 'climateAction', 'user'],
-    });
-
-    let assessList: Assessment[] = [];
-
-    const currentUser = await user;
-    const isUserExternal = currentUser?.userType?.name === 'External';
-
-    for (const x of await res) {
-      const isSameUser = x.user?.id === currentUser?.id;
-      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.user?.userType?.name !== 'External';
-
-      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
-        assessList.push(x);
-      }
-    }
-
-    const filteredResults = assessList.filter(assessment => assessment?.tool === tool);
-
-    filteredResults.sort((a, b) => b.id - a.id);
-    return filteredResults
-  } 
+        filteredResults.sort((a, b) => b.id - a.id);
+        return filteredResults
+      } 
 
   async findAllPolicyBarriers(): Promise<any[]> {
     const policyBarriers = await this.policyBarrierRepository.find({
@@ -1132,13 +1110,29 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-    const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepository.find({
       relations: ['climateAction'],
     });
   
-     const filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+     let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+     console.log("current user:",currentUser?.userType?.name)
+     if(isUserExternal){
+      filteredResults= filteredResults.filter(result => 
+        {if (result?.user?.id===currentUser?.id){
+          return result
+        }})
+        
+     }
+     else {
+      filteredResults= filteredResults.filter(result => {
+        // console.log(result?.climateAction?.country,currentUser?.country?.id)
+        if(result?.climateAction?.country?.id===currentUser?.country?.id){
+          // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
+          return result;
+        }})
+     }
   
     const formattedResults = filteredResults.map(result => {
       return {
