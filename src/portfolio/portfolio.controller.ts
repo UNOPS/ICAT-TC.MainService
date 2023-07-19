@@ -1,17 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from './entities/portfolio.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 @Controller('portfolio')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(@Body() createPortfolioDto: Portfolio): Promise<any> {
     return await this.portfolioService.create(createPortfolioDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('getAllPortfolios')
   async getAll() {
     return await this.portfolioService.getAll();

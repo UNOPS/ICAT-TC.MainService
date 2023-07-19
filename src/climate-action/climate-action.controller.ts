@@ -144,6 +144,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('typeofAction')
   async findTypeofAction(): Promise<any[]> {
   let res  = await this.service.findTypeofAction();

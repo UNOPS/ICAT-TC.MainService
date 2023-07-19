@@ -195,7 +195,7 @@ async allProject(
     return policy;
   }
   
-  async findTypeofAction(): Promise<any[]> {
+ /*  async findTypeofAction(): Promise<any[]> {
     const actions = await this.repo
       .createQueryBuilder('entity')
       .select('entity.typeofAction', 'name')
@@ -204,8 +204,55 @@ async allProject(
       .getRawMany();
 
     return actions.map(({ name, count }) => ({ name, count }));
-  }
+  } */
 
+  async findTypeofAction(): Promise<any[]> {
+    const currentUser = await this.userService.currentUser();
+    console.log(
+      "ussssser : ",
+      currentUser.fullname,
+      "and ",
+      currentUser.username,
+      "Id :",
+      currentUser.id,
+      "user Type",
+      currentUser?.userType?.name,
+      "country ID :",
+      currentUser?.country?.id
+    );
+  
+    const res = await this.repo.find({
+      relations: [],
+    });
+  
+    const policyList: ClimateAction[] = [];
+    const isUserExternal = currentUser?.userType?.name === 'External';
+  
+    for (const x of res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+  
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x);
+      }
+    }
+  
+    const actions = policyList.reduce((acc: any[], entity: ClimateAction) => {
+      const existingAction = acc.find((item) => item.name === entity.typeofAction);
+  
+      if (existingAction) {
+        existingAction.count++;
+      } else {
+        acc.push({ name: entity.typeofAction, count: 1 });
+      }
+  
+      return acc;
+    }, []);
+  
+    return actions;
+  }
+  
 
   async getAllCAList(
     
