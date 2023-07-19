@@ -1107,6 +1107,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async getTCForTool(tool: string): Promise<any[]> {
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    
     const results = await this.assessmentRepository.find({
       relations: ['climateAction'],
     });
