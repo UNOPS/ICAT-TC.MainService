@@ -604,7 +604,7 @@ async uploadFile2(
     return res;
    
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('getTCForTool/:tool')
   async getTCForTool(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.methodologyAssessmentService.getTCForTool(tool);

@@ -69,7 +69,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn()
   mappedInstitution?: Institution;//
 
-  @ManyToOne((type) => Country, { cascade: false })
+  @ManyToOne((type) => Country, { cascade: false ,eager:true})
   @JoinColumn({ name: 'countryId' })
   country?: Country; // country of the policy
   
