@@ -24,6 +24,25 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { TokenDetails } from 'src/utills/token_details';
 import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
+import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
+import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { AssessmentCategory } from 'src/methodology-assessment/entities/assessmentCategory.entity';
+import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
+import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
+import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
+import { BarriersCharacteristics } from 'src/methodology-assessment/entities/barriercharacteristics.entity';
+import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
+import { BarriersCategory } from 'src/methodology-assessment/entities/barrierscategory.entity';
+import { CalculationResults } from 'src/methodology-assessment/entities/calculationResults.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
+import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
+import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
+import { MethodologyParameters } from 'src/methodology-assessment/entities/methodologyParameters.entity';
+import { MethodologyIndicators } from 'src/methodology-assessment/entities/methodologyindicators.entity';
+import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
+import { ParameterStatus } from 'src/methodology-assessment/entities/parameterStatus.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -43,9 +62,29 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
     PortfolioSdg,
     PolicySector,
     User, UserType, Institution, Country,Audit,
+    Methodology,
+    Characteristics,
+    MethodologyAssessmentParameters,
+    AssessmentBarriers,
+    ClimateAction,
+    Barriers,
+    BarriersCategory,
+    ParameterStatus,
+    PolicyBarriers,
+    Indicators,
+    AssessmentCharacteristics,
+    MethodologyIndicators,
+    BarriersCharacteristics,
+    AssessmentCategory,
+    Objectives,
+    AssessmentObjectives,
+    MethodologyParameters,
+    CalculationResults,
+    
+    
   ])],
   controllers: [InvestorToolController],
   providers: [InvestorToolService, TokenDetails, EmailNotificationService,
-    UsersService,]
+    UsersService,MethodologyAssessmentService]
 })
 export class InvestorToolModule {}

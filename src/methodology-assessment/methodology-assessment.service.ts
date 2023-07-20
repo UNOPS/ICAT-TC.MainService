@@ -1139,7 +1139,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         id : result.id,
         data: result.climateAction.policyName,
         y: result.tc_value,
-        x: result.climateAction.intervention_id
+        x: result.climateAction.intervention_id,
+        intervention: result.climateAction.id
       };
     }); 
   
