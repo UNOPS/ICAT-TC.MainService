@@ -27,6 +27,7 @@ import { Characteristics } from 'src/methodology-assessment/entities/characteris
 import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
+import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
 
 const schema = {
   'id': {
@@ -60,6 +61,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
 
     private userService: UsersService,
+    private methAssessService:MethodologyAssessmentService
 
   ) {
     super(repo)
@@ -736,20 +738,50 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return sectorSum;
     }
     
-    async getSectorCountByTool(tool: string): Promise<any[]> {
-      const sectorCounts = await this.PolicySectorsRepo
-        .createQueryBuilder('policySector')
-        .leftJoin('policySector.intervention', 'climateAction')
-        .leftJoin('policySector.sector', 'sector')
-        .leftJoin('assessment', 'assessment', 'assessment.climateAction_id = climateAction.id')
-        .where('assessment.tool = :tool', { tool })
-        .select(['sector.name AS sector', 'COUNT(policySector.id) AS count'])
-        .groupBy('sector.name')
-        .getRawMany();
-    
-      return sectorCounts;
+    async getSectorCountByTool(tool: string): Promise<any> {
+
+      const data= await this.methAssessService.getTCForTool(tool)
+      const promises = data.map(async (item) => {
+        const policySectors = await this.PolicySectorsRepo.find({
+          where: { intervention: { id: item.interventionid } },
+          relations: ['sector'],
+        });
+  
+        return policySectors.map((policySector) => ({ sector: policySector.sector.name }));
+      });
+  
+      const sectorsArrays = await Promise.all(promises);
+      const sectors = sectorsArrays.flat();
+
+      return this.countSectors(sectors)
+  
+     
     }
       
+     countSectors(array: any[]): { sector: string; count: number }[] {
+      const sectorCounts: { [sector: string]: number } = {};
+      array.reduce((accumulator, currentValue) => {
+        const sectorName = currentValue.sector;
+        if (!sectorCounts[sectorName]) {
+          sectorCounts[sectorName] = 1;
+        } else {
+          sectorCounts[sectorName]++;
+        }
+        return accumulator;
+      }, {});
+    
+      const result: { sector: string; count: number }[] = Object.keys(sectorCounts).map((sector) => {
+        return { sector, count: sectorCounts[sector] };
+      });
+    
+      return result;
+    }
+    
+    // Call the function with the data array
+    // const sectorCounts = countSectors(data);
+    
+    // // Output the results
+    // console.log(sectorCounts);
     
 
     async calculateAssessmentResults(tool: string): Promise<any> {

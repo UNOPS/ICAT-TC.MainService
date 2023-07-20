@@ -77,9 +77,9 @@ export class InvestorToolController {
   async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.getTCValueByAssessment(tool);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('getSectorCountByTool/:tool')
-  async getSectorCountByTool(@Param('tool') tool:string):Promise<any[]> {
+  async getSectorCountByTool(@Param('tool') tool:string){
     return await this.investorToolService.getSectorCountByTool(tool);
   }
 
