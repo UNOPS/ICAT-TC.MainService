@@ -69,6 +69,7 @@ var multer = require('multer');
       },
       
     },
+    exclude: ['id']
   },
 })
 @Controller('climateAction')
