@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -739,23 +739,20 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     
     async getSectorCountByTool(tool: string): Promise<any> {
-
       const data= await this.methAssessService.getTCForTool(tool)
       const promises = data.map(async (item) => {
         const policySectors = await this.PolicySectorsRepo.find({
-          where: { intervention: { id: item.interventionid } },
+          where: { intervention: { id: item.intervention } },
           relations: ['sector'],
         });
-  
+        // console.log(item.intervention)
         return policySectors.map((policySector) => ({ sector: policySector.sector.name }));
       });
-  
       const sectorsArrays = await Promise.all(promises);
+      // console.log(sectorsArrays)
       const sectors = sectorsArrays.flat();
-
+      
       return this.countSectors(sectors)
-  
-     
     }
       
      countSectors(array: any[]): { sector: string; count: number }[] {
@@ -776,13 +773,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     
       return result;
     }
-    
-    // Call the function with the data array
-    // const sectorCounts = countSectors(data);
-    
-    // // Output the results
-    // console.log(sectorCounts);
-    
 
     async calculateAssessmentResults(tool: string): Promise<any> {
       let results = await this.assessmentRepo
