@@ -88,7 +88,7 @@ export class InvestorToolController {
   async calculateAssessmentResults(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.investorToolService.calculateAssessmentResults(tool);
     return res;
-   
+
   }
 
   @Get('get-investor-question-by-id')
