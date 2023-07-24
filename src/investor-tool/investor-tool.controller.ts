@@ -68,11 +68,12 @@ export class InvestorToolController {
   async findAllIndicatorquestions():Promise<InvestorQuestions[]> {
     return await this.investorToolService.findAllIndicatorquestions();
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.findSectorCount(tool);
   }
+  @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
   async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.getTCValueByAssessment(tool);
