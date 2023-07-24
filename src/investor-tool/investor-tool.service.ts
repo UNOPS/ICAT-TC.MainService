@@ -28,6 +28,8 @@ import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
 import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
+import { User } from 'src/users/entity/user.entity';
+import { Country } from 'src/country/entity/country.entity';
 
 const schema = {
   'id': {
@@ -707,27 +709,79 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     async  findSectorCount(tool:string): Promise<any[]> {
       console.log(tool)
-      const sectorSum = await this.investorSectorRepo
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      let data = await this.investorSectorRepo
         .createQueryBuilder('investorSector')
         .leftJoinAndSelect('investorSector.assessment', 'assessment')
+        .leftJoinAndSelect('assessment.climateAction', 'intervention')
+        .leftJoinAndMapOne(
+          'assessment.user',
+           User,
+          'user',
+          'user.id = assessment.user_id',
+        )
+        .leftJoinAndMapOne(
+          'user.country',
+           Country,
+          'cntry',
+          'cntry.id = user.countryId',
+        )
         .where('assessment.tool = :value', { value: tool })
+
+        if(isUserExternal){
+          data.andWhere('user.id = :userId', { userId: currentUser.id })
+          
+        }
+        else {
+          data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+        
+        }
+
+      let result =data
         .leftJoinAndSelect('investorSector.sector', 'sector')
-        // .where('sector.name IS NOT NULL')
         .select('sector.name', 'sector')
         .addSelect('COUNT(investorSector.id)', 'count')
         .groupBy('sector.name')
         .having('sector IS NOT NULL')
         .getRawMany();
     
-    return sectorSum;
+    return result;
     }
 
    async  getTCValueByAssessment(tool: string): Promise<any> {
-        const sectorSum = await this.assessmentRepo
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+        let data = await this.assessmentRepo
           .createQueryBuilder('assessment')
           .leftJoinAndSelect('assessment.climateAction', 'intervention')
+          .leftJoinAndMapOne(
+            'assessment.user',
+             User,
+            'user',
+            'user.id = assessment.user_id',
+          )
+          .leftJoinAndMapOne(
+            'user.country',
+             Country,
+            'cntry',
+            'cntry.id = user.countryId',
+          )
           .where('assessment.tool = :value', { value: tool })
-          .select(['assessment.id', 'intervention.id', 'intervention.initialInvestment','intervention.policyName','assessment.tc_value'])
+
+          if(isUserExternal){
+            data.andWhere('user.id = :userId', { userId: currentUser.id })
+            
+          }
+          else {
+            data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+          
+          }
+
+      let  result= data.
+        select(['assessment.id', 'intervention.id', 'intervention.initialInvestment','intervention.policyName','assessment.tc_value'])
           // // .where('sector.name IS NOT NULL')
           // .select('sector.name', 'sector')
           // .addSelect('COUNT(investorSector.id)', 'count')
@@ -735,7 +789,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // .having('sector IS NOT NULL')
           .getMany();
 
-        return sectorSum;
+        return result;
     }
     
     async getSectorCountByTool(tool: string): Promise<any> {
@@ -775,6 +829,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     async calculateAssessmentResults(tool: string): Promise<any> {
+
+      
+      
       let results = await this.assessmentRepo
         .createQueryBuilder('assessment')
         .leftJoinAndSelect('assessment.climateAction', 'intervention')
