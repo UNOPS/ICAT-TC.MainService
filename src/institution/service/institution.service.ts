@@ -48,51 +48,23 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     userTypeFromTocken: string
     // status: number,
   ): Promise<Pagination<Institution>> {
+    let arr =  sectorIdFromTocken.toString() ;
+    arr = '(' + arr+ ")";
     let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
-      // OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText
-    }
-
-
-
-    if (filterText == 'Activate') {
-      console.log('Activate');
-      console.log('status....', 0);
+     }
+    if (filterText == 'Activate' || filterText == 'activate') {
       filter = `ins.status = 0`;
-      // console.log('filterrrr',filter)
     }
-
-    if (filterText == 'activate') {
-      console.log('Activate');
-
-      console.log('status....', 0);
-      filter = `ins.status = 0`;
-      // console.log('filterrrr',filter)
-    }
-
-    if (filterText == 'Deactivate') {
-      console.log('Activate');
-
-      console.log('status....', -10);
+    if (filterText == 'Deactivate' || filterText == 'deactivate') {
       filter = `ins.status = -10`;
-      // console.log('filterrrr',filter)
-    }
-
-    if (filterText == 'deactivate') {
-      console.log('Activate');
-
-      console.log('status....', -10);
-      filter = `ins.status = -10`;
-      // console.log('filterrrr',filter)
     }
 
 
     if (countryIdFromTocken != 0) {
-      console.log('countryIdFromTocken')
-
       if (filter) {
         filter = `${filter}  and ins.countryId = :countryIdFromTocken`;
       } else {
@@ -100,12 +72,13 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    if (userTypeFromTocken != "MASTER_ADMIN" && sectorIdFromTocken) {
-      console.log('sectorIdFromTocken')
+
+    if (userTypeFromTocken != "Master_Admin" && userTypeFromTocken != "Country Admin" && sectorIdFromTocken) {
+      let ins= await this.repo.findOne({where:{id:institutionTypeId}})
       if (filter) {
-        filter = `${filter}  and ins.sectorId = :sectorIdFromTocken`;
+        filter = `${filter}  and ins.sectorId =` + ins.sectorId;
       } else {
-        filter = `ins.sectorId = :sectorIdFromTocken`;
+        filter = `ins.sectorId = ` + ins.sectorId;
       }
     }
 
@@ -143,18 +116,11 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .leftJoinAndMapMany('ins.user',User,'user','ins.id=user.institutionId',)
       .where(filter, {
         filterText: `%${filterText}%`,
-
-        // userId,
         countryIdFromTocken,
         sectorIdFromTocken,
-        //status
       },)      
-      // .orderBy('ins.status', 'ASC')
+      .orderBy('ins.createdOn', 'DESC')
       .groupBy('ins.id');
-    // .addOrderBy('ins.createdOn','DESC')
-    // console.log('data........',data)
-    // console.log('data////////',data)
-    //     let user: User = new User();
 
     console.log('query',data.getQuery());
 
@@ -168,9 +134,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
   async getInsDetails(
     filterText: string,
     countryIdFromTocken: number,
-    sectorIdFromTocken: number,
-    userTypeFromTocken: string
-    // status: number,
   ) {
     let filter: string = '';
 
@@ -269,6 +232,8 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     sectorIdFromTocken: number
   ): Promise<Institution[]> {
 
+    let arr =  sectorIdFromTocken.toString() ;
+    arr = '(' + arr+ ")";
 
     let data = this.repo
       .createQueryBuilder('ins')
@@ -284,19 +249,12 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         'cou',
         `ins.countryId = cou.id and cou.id = ${countryIdFromTocken}`,
       )
-      .where('type.id = 3' + (sectorIdFromTocken != 0 ? ` and ins.sectorId = ${sectorIdFromTocken}` : ''))
+      .where('type.id = 3' + (sectorIdFromTocken != 0 ? ` and ins.sectorId in ${arr}` : ''))
       .orderBy('ins.name', 'ASC');
-    // .addOrderBy('ins.createdOn','DESC')
-    // console.log('data........',data)
-    // console.log('data////////',data)
-    //     let user: User = new User();
-
-    // console.log('query',data.getQuery());
 
     let resualt = await data.getMany();
 
     if (resualt) {
-      // console.log('resula',resualt)
       return resualt;
     }
   }
@@ -307,83 +265,42 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
     options: IPaginationOptions,
     countryIdFromTocken: number,
-    sectorIdFromTocken: number,
+    sectorIdFromTocken: any,
     institutionIdFromTocken: number,
-    role: string
+    role: string,
+    secId:number
   ) {
-
-
     let filter: string = '';
-
-
-
-
     if (countryIdFromTocken != 0) {
-      console.log('countryIdFromTocken', countryIdFromTocken)
-
       if (filter) {
-        console.log('kkkkkkkkkkkkkkkkkk')
-
         filter = `${filter}  and ins.countryId = :countryIdFromTocken`;
       } else {
-        console.log('yyyyyyyyyyyyyyyyyuuuyy')
-
         filter = `ins.countryId = :countryIdFromTocken`;
       }
     }
-
-    if (sectorIdFromTocken) {
-      console.log('sectorIdFromTocken')
-      if (filter) {
-        filter = `${filter}  and ins.sectorId = :sectorIdFromTocken`;
-      } else {
-        filter = `ins.sectorId = :sectorIdFromTocken`;
-      }
-
-    }
-
-    if (institutionIdFromTocken) {
-      console.log('institutionIdFromTocken')
-      if (filter) {
-        filter = `${filter}  and ins.id = :institutionIdFromTocken`;
-      } else {
-        filter = `ins.id = :institutionIdFromTocken`;
-      }
-
-    }
-
-
-    if (role == "Country Admin") {
-
-    }
     else if (role == "Sector Admin") {
-      console.log("Sector Admin")
       if (filter) {
-        filter = `${filter}  and ins.typeId not in (1)`;
+        filter = `${filter}  and ins.typeId not in (1) and ins.sectorId=`+secId;
       } else {
-        filter = `ins.typeId not in (1) `;
+        filter = `ins.typeId not in (1) and ins.sectorId=`+secId;
       }
     }
     else if (role == "MRV Admin") {
-      console.log("MRV Admin")
       if (filter) {
-        filter = `${filter}  and ins.typeId not in (1,2)`;
+        filter = `${filter}  and ins.typeId not in (1,2) and ins.sectorId=`+secId;
       } else {
-        filter = `ins.typeId not in (1,2) `;
+        filter = `ins.typeId not in (1,2) and ins.sectorId=`+secId;
       }
     }
     else if (role == "Technical Team" || role == "Data Collection Team" || role == "QC Team") {
-      console.log("Technical Team")
       if (filter) {
-        filter = `${filter}  and ins.typeId = 3 `;
+        filter = `${filter}  and ins.typeId = 3 and ins.sectorId=`+secId;
       } else {
-        filter = `ins.typeId = 3 `;
+        filter = `ins.typeId = 3 and ins.sectorId=`+secId;
       }
     }
 
     else {
-
-
     }
 
     let data = this.repo
@@ -413,10 +330,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
     let resualt = await paginate(data, options);
-    // console.log("data====",data.execute())
-    // console.log('resula======', resualt);
     if (resualt) {
-      // console.log('resula',resualt)
       return resualt;
     }
 

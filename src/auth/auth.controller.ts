@@ -28,41 +28,19 @@ export class AuthController {
 
   ) {}
 
-  // @Post('auth/login')
-  // async login(@Body() authCredentialDto: AuthCredentialDto): Promise<any> {
-  //   //return req.user;
-  //   console.log('AppController.login');
-  //    this.username = authCredentialDto.username;
 
-  //  console.log("authcred---",authCredentialDto.username)
-
-  //    let audit: AuditDto = new AuditDto();
-  //   audit.action =  authCredentialDto.username +" Is Logged";
-  //   audit.comment = "User Logged";
-  //   audit.actionStatus = 'Logged';
-  //   audit.userName = authCredentialDto.username;
-  
-  //   this.auditService.create(audit);
-  //   console.log("audit.......",audit);
-
-  //   return await this.authService.login(authCredentialDto);
-  
-
-  // }
 
   @Get('auth/validate-reset-password/:email/:token')
   async validateResetPassword(
     @Param('email') email: string,
     @Param('token') token: string,
   ): Promise<boolean> {
-    console.log('inside');
 
     return await this.usersService.validateResetPasswordRequest(email, token);
   }
 
   @Put('auth/reset-password')
   async resetPassword(@Body() resetPwd: ResetPassword): Promise<boolean> {
-    console.log('resetPwd', resetPwd);
 
     if (
       await this.usersService.validateResetPasswordRequest(
@@ -70,7 +48,6 @@ export class AuthController {
         resetPwd.token,
       )
     ) {
-      console.log('is valid');
 
       let res = await this.usersService.resetPassword(
         resetPwd.email,
@@ -87,10 +64,7 @@ export class AuthController {
     @Body() forgotparam: ForgotPasswordDto,
     @Res() response: any,
   ): Promise<any> {
-    //return req.user;
-    console.log('forgotPassword=========', forgotparam);
     let user = await this.usersService.findUserByEmail(forgotparam.email);
-    console.log('resultData=========', user);
 
     if (!user) {
       const errorResponse: any = {
@@ -107,32 +81,10 @@ export class AuthController {
       pwdRestToken,
     );
 
-    console.log('updateChnagePasswordToken user=========', user);
-
-    // let emailTemplate = '';
-
-    // emailTemplate = fs.readFileSync(
-    //   './src/template/email/reset-password.html',
-    //   'utf8',
-    // );
 
     // get an environment variable
     const resetPwdUrl = this.configService.get<string>('PWD_RESET_URL');
 
-    console.log('PWD_RESET_URL', resetPwdUrl);
-
-    // emailTemplate = emailTemplate.replace(
-    //   '[RESER_PWD_URL]',
-    //   resetPwdUrl + '?token=' + pwdRestToken + '&email=' + forgotparam.email,
-    // );
-
-    // sned email with new password
-    // this.emailService.sendMail(
-    //   user.email,
-    //   'Reset your ncc-dsn login password',
-    //   '',
-    //   emailTemplate,
-    // );
 
     return response.status(200).send(true);
   }
