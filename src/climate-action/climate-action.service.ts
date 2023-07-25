@@ -145,7 +145,7 @@ async allProject(
   async findAllPolicies(): Promise<ClimateAction[]> {
 
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+  //  console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
 
      let res =  this.repo.find({
         relations: [],
@@ -208,7 +208,7 @@ async allProject(
 
   async findTypeofAction(): Promise<any[]> {
     const currentUser = await this.userService.currentUser();
-    console.log(
+   /*  console.log(
       "ussssser : ",
       currentUser.fullname,
       "and ",
@@ -219,7 +219,7 @@ async allProject(
       currentUser?.userType?.name,
       "country ID :",
       currentUser?.country?.id
-    );
+    ); */
   
     const res = await this.repo.find({
       relations: [],
