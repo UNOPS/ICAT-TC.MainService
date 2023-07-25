@@ -30,7 +30,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   async create(createPortfolioDto: any) {
 
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
 
     let currentUser = new User();
     currentUser.id = (await user).id
@@ -65,7 +65,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
      let res = await this.repo.find();
 
     let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+   // console.log("ussssser : ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
 
       let portfolios: Portfolio[] = [];
 

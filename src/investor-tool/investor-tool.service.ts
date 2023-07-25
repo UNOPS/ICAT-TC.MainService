@@ -995,7 +995,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
         /* //////////////////////////////////////// */
         let user = this.userService.currentUser();
-    console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
 
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
