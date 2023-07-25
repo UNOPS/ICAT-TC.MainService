@@ -125,7 +125,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     year: string,
     dataProvider: number,
     countryIdFromTocken: number,
-    sectorIdFromTocken: number,
     tool:string,
   ): Promise<Pagination<any>> {
     console.log("tool :",tool)
@@ -306,7 +305,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     year: string,
     dataProvider: number,
     countryIdFromTocken: number,
-    sectorIdFromTocken: number,
   ): Promise<Pagination<any>> {
     let whereCond = (
       (climateActionId != 0

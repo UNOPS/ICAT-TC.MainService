@@ -58,22 +58,11 @@ export class CountryService extends TypeOrmCrudService<Country>{
             'cou.countrysector',
             CountrySector,
             'cs',
-            // `cs.countryId = cou.id `,
             `cou.id = cs.countryId `,
-
           )
-            // `meth.id = asse.methodologyId and asse.methodolgyId IS NOT NULL  and meth.countryId = ${country} `
-          // ).innerJoinAndMapOne(
-
-          // 'cs.sector',
-          // Sector,
-          // 'sec',
-          // 'sec.id = cs.sectorId'
-          // )
           .where(
             `cou.id = ${countryId}`
           )
-        // .select(['COUNT(parm.name) as data', 'parm.name as name']).groupBy("parm.name");
         
       }else{}
       return data.getOne();

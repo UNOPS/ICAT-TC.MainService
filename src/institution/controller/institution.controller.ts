@@ -105,7 +105,7 @@ export class InstitutionController implements CrudController<Institution> {
       countryIdFromTocken,
       sectorIdFromTocken,
       institutionTypeId,
-      'Technical Team',
+      userTypeFromTocken,
     );
   }
 
@@ -118,24 +118,18 @@ export class InstitutionController implements CrudController<Institution> {
     @Query('filterText') filterText: string,
     @Query('userId') userId: number,
   ): Promise<any> {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     let userTypeFromTocken: string;
-    let institutionTypeId: number; //instypeId
-    console.log('userTypeFromTocken==',  this.tokenDetails.getDetails([ 
-      TokenReqestType.countryId,
-      TokenReqestType.sectorId,
-      TokenReqestType.role,
-    ]));
-    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
+    let institutionTypeId: number; 
+    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken,institutionTypeId] =
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
         TokenReqestType.sectorId,
         TokenReqestType.role,
+        TokenReqestType.InstitutionId,
       ]);
 
-    console.log('userTypeFromTocken==', userTypeFromTocken);
 
     return await this.service.getInstitutionDetails(
       {
@@ -161,24 +155,14 @@ export class InstitutionController implements CrudController<Institution> {
     @Query('userId') userId: number,
   ): Promise<any> {
     let countryIdFromTocken: number;
-    let sectorIdFromTocken: number;
-    let userTypeFromTocken: string;
-    let institutionTypeId: number; //instypeId
 
-    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
-      this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
-        TokenReqestType.sectorId,
-        TokenReqestType.role,
-      ]);
+    [countryIdFromTocken] =
+      this.tokenDetails.getDetails([TokenReqestType.countryId ]);
 
-    console.log('userTypeFromTocken==', userTypeFromTocken);
 
     return await this.service.getInsDetails(
       filterText,
       countryIdFromTocken,
-      sectorIdFromTocken,
-      userTypeFromTocken,
     );
   }
 
@@ -202,9 +186,8 @@ export class InstitutionController implements CrudController<Institution> {
   async getInstitutionforAssesment(): Promise<any> {
     console.log('wwwwwwwwwwwwwwwwwwww');
     let countryIdFromTocken:number ;
-    let sectorIdFromTocken:number;
   
-    [countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
+    [countryIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId])
 
 
 
@@ -338,10 +321,7 @@ export class InstitutionController implements CrudController<Institution> {
         TokenReqestType.role,
       ]);
 
-    console.log('countryIdFromTocken====', countryIdFromTocken);
-    console.log('sectorIdFromTocken====', sectorIdFromTocken);
-
-    console.log('InstitutionIdFromTocken====', InstitutionIdFromTocken);
+      let ins=  await this.service.findOne({where:{id:InstitutionIdFromTocken}});
 
     let resault = await this.service.getInstitutionForManageUsers(
       {
@@ -351,7 +331,7 @@ export class InstitutionController implements CrudController<Institution> {
       countryIdFromTocken,
       sectorIdFromTocken,
       InstitutionIdFromTocken,
-      role
+      role, ins.sectorId
     );
 
     return resault;
