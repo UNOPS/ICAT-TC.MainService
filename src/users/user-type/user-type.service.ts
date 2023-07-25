@@ -11,7 +11,6 @@ export class UserTypeService extends TypeOrmCrudService<UserType> {
 
   async GetUserTypes(): Promise<UserType[]> {
     let data = await this.repo.find()
-    console.log("data in usertypes",data)
     if (data) {
       return data;
     }

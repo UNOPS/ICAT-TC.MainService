@@ -522,9 +522,8 @@ async uploadFile2(
     console.log("getAssessmentForAssignVerifier")
 
     let countryIdFromTocken: number;
-    let sectorIdFromTocken: number;
-    [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId, TokenReqestType.InstitutionId])
-    console.log(countryIdFromTocken, sectorIdFromTocken)
+    [countryIdFromTocken, ] = this.tokenDetails.getDetails([TokenReqestType.countryId])
+    
 
     return await this.methodologyAssessmentService.getAssessmentForAssignVerifier(
       {

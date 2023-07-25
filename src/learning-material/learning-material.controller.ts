@@ -106,27 +106,15 @@ export class LearningMaterialController implements CrudController<LearningMateri
   ): Promise<LearningMaterial> {
 
 
-    //console.log("came to inside...",dto);
-
     let lm = await this.base.createOneBase(req, dto);
 
-    // dto.learningMaterialsector.map((a) => {
-    //   // let lmtemp = new LearningMaterial();
-    //   //lmtemp.id = lm.id;
-    //   a.learningMaterial2.id = lm.id;
-    // });
     try {
-      // dto.learningMaterialsector.map(async (a) => {
-      //   // let lms = await this.LearningMaterialSectorRepo.save(await a);
-      // });
     } catch (error) {
       console.log(error);
     }
 
 
     dto.learningMaterialusertype.map((b) => {
-      // let lmtemp = new LearningMaterial();
-      //lmtemp.id = lm.id;
       b.learningMaterial.id = lm.id;
       b.userType.id = dto.learningMaterialusertype[0].userType.id;
     });

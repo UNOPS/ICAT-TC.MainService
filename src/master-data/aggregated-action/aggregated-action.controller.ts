@@ -156,12 +156,6 @@ export class NdcController implements CrudController<AggregatedAction> {
 
   
 
-  //  [countryIdFromTocken,sectorIdFromTocken,moduleLevelsFromTocken]=    this.tokenDetails
-  //     .getDetails([
-  //       TokenReqestType.countryId,
-  //       TokenReqestType.sectorId,
-  //       TokenReqestType.moduleLevels]);
-    
 
      return await this.service.getNdcForDashboard(
        {

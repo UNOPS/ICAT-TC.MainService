@@ -115,7 +115,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.admin = ''
     let newUUID = uuidv4();
     newUser.resetToken = '';
-// console.log("33333",newUser)
+    // console.log("33333",newUser)
     var newUserDb = await this.repo.save(newUser);
     // get an environment variable
     let systemLoginUrl = '';
@@ -248,6 +248,14 @@ export class UsersService extends TypeOrmCrudService<User> {
     return userDetails
   }
 
+  @UseGuards(JwtAuthGuard)
+  async currentUser(): Promise<User> {
+    let userNameFromTocken: string;
+    [userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username])
+    let user = this.findByUserName(userNameFromTocken)
+    return user
+  }
+
   async validateUser(userName: string, password: string): Promise<boolean> {
     const user = await this.repo.findOne({ where: { username: userName } });
 
@@ -289,7 +297,6 @@ export class UsersService extends TypeOrmCrudService<User> {
       .then((value) => {
         console.log(value);
         if (!!value) {
-          console.log('inside', value.id);
 
           return value.id;
         } else {
@@ -305,9 +312,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.repo
       .findOne({ where: { email: email } })
       .then((value) => {
-        console.log(value);
         if (!!value) {
-          console.log('inside', value.id);
 
           return value;
         } else {
@@ -315,7 +320,6 @@ export class UsersService extends TypeOrmCrudService<User> {
         }
       })
       .catch((e) => {
-        console.log('findUserByEmail error', e);
         return false;
       });
   }
@@ -344,25 +348,16 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async resetPassword(email: string, password: string): Promise<boolean> {
     let user = await this.repo.findOne({ where: { email: email } })
-    console.log(user);
     if (user) {
       let salt = await bcript.genSalt();
-      console.log('password', password, 'salt', salt);
       user.salt = salt;
       user.password = await this.hashPassword(password, salt);
-      console.log('inside success');
-
       await this.repo.save(user);
-
-      console.log('inside success2');
-
       await this.updateChnagePasswordToken(user.id, ''); // clean the tocken
 
-      console.log('inside success3');
 
       return true;
     }
-    console.log('inside fail');
 
     return false;
   }
@@ -380,9 +375,14 @@ export class UsersService extends TypeOrmCrudService<User> {
   ): Promise<Pagination<User>> {
     let filter: string = '';
 
+    let countryIDFromTocken: number;
+    let roleFromTocken: string;
+    let institutionIDFromTocken: number;
+    [countryIDFromTocken, roleFromTocken, institutionIDFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.role, TokenReqestType.InstitutionId]);
+
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText  OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
+        '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText  OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)';
     }
 
     if (userTypeId != 0) {
@@ -392,24 +392,90 @@ export class UsersService extends TypeOrmCrudService<User> {
         filter = `user.userTypeId = :userTypeId`;
       }
     }
-
-    let data = this.repo
-      .createQueryBuilder('user')
-      .leftJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId',)
-      .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
-      // .leftJoinAndMapOne('user.country',Country, 'con',)
-
-      .where(filter, {
-        filterText: `%${filterText}%`,
-        userTypeId,
-      }).orderBy('user.status', 'ASC');
-
-    let resualt = await paginate(data, options);
-
-    if (resualt) {
-      //  console.log('reaslt...',resualt)
-      return resualt;
+    if (userTypeId == null || userTypeId || undefined || roleFromTocken != "Master Admin") {
+      if (roleFromTocken == "Country Admin") {
+        if (filter) {
+          filter = `${filter} and user.countryId =` + countryIDFromTocken + ` and user.userTypeId in (1,2,3, 5, 6,7,8,9,10,11)`;
+        } else {
+          filter = `user.countryId =` + countryIDFromTocken + ` and user.userTypeId in (1,2,3,5,6,7,8,9,10,11)`;
+        }
+      }
+      else if (roleFromTocken == "Sector Admin") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (8,2,3, 5, 6,7,9,11)`;
+        } else {
+          filter = `user.userTypeId in (8,2,3,5,6,7,9,11)`;
+        }
+      }
+      else if (roleFromTocken == "Technical Team") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (5,6,7,9,11)`;
+        } else {
+          filter = `user.userTypeId in (5,6,7,9,11)`;
+        }
+      }
+      else if (roleFromTocken == "Data Collection Team") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (6,9,8)`;
+        } else {
+          filter = `user.userTypeId in (6,8,9)`;
+        }
+      }
+      else if (roleFromTocken == "QC Team") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (7)`;
+        } else {
+          filter = `user.userTypeId in (7)`;
+        }
+      }
+      else if (roleFromTocken == "Institution Admin") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (9,8)`;
+        } else {
+          filter = `user.userTypeId in (9,8)`;
+        }
+      }
+      else if (roleFromTocken == "MRV Admin") {
+        if (filter) {
+          filter = `${filter}  and user.userTypeId in (11)`;
+        } else {
+          filter = `user.userTypeId in (11)`;
+        }
+      }
     }
+
+
+    if (roleFromTocken == "Master Admin" || roleFromTocken == "Country Admin") {
+      let data = this.repo
+        .createQueryBuilder('user')
+        .innerJoinAndMapOne('user.country', Country, 'con', 'con.id = user.countryId')
+        .leftJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId')
+        .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId')
+
+        .where(filter, {
+          filterText: `%${filterText}%`,
+          userTypeId,
+        }).orderBy('user.firstName', 'ASC');
+
+      return await paginate(data, options);
+    }
+    else if (roleFromTocken != "Master Admin" && roleFromTocken != "Country Admin") {
+      let data = this.repo
+        .createQueryBuilder('user')
+        .innerJoinAndMapOne('user.country', Country, 'con', 'con.id = user.countryId and user.countryId =' + countryIDFromTocken)
+        .innerJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId and user.institutionId =' + institutionIDFromTocken)
+        .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
+
+        .where(filter, {
+          filterText: `%${filterText}%`,
+          userTypeId,
+          countryIDFromTocken,
+          institutionIDFromTocken,
+        }).orderBy('user.firstName', 'ASC');
+
+      return await paginate(data, options);
+    }
+
   }
 
   async findUserByUserType() {
