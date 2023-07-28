@@ -30,7 +30,7 @@ export class AppController {
   @Get('deloyweb')
   deloyweb(){
     console.log("deloying the FE ---------------------------------")
-    exec('sh /home/ubuntu/web-deploy.sh',
+    exec('sh /home/ubuntu/code/web-deploy.sh',
         (error, stdout, stderr) => {
             console.log(stdout);
             console.log(stderr);
