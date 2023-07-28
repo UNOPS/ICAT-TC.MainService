@@ -26,4 +26,20 @@ export class AppController {
     return true;
 
   }
+
+  @Get('deloyweb')
+  deloyweb(){
+    console.log("deloying the FE ---------------------------------")
+    exec('sh /home/ubuntu/.sh',
+        (error, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            if (error !== null) {
+                console.log(`exec error: ${error}`);
+            }
+        });       
+
+    return true;
+
+  }
 }
