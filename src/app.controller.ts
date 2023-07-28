@@ -13,7 +13,7 @@ export class AppController {
 
   @Get('deploy')
   deploy(){
-    console.log("deloying the main service ---------------------------------")
+    console.log("deloying the main main service ---------------------------------")
     exec('sh /home/ubuntu/code/main-deploy.sh',
         (error, stdout, stderr) => {
             console.log(stdout);
