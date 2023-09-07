@@ -114,10 +114,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       }
     }
     if (sectorIdFromTocken != 0) {
+      let arr =  sectorIdFromTocken.toString() ;
+         arr = '(' + arr+ ")";
       if (filter) {
-        filter = `${filter}  and proj.sectorId = :sectorIdFromTocken`;
+        filter = `${filter}  and proj.sectorId in arr`;
       } else {
-        filter = `proj.sectorId = :sectorIdFromTocken`;
+        filter = `proj.sectorId in arr`;
       }
     }
 

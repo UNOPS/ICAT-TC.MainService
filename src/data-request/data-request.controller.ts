@@ -89,9 +89,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
   ): Promise<any> {
 
     let countryIdFromTocken:number;
-    let sectorIdFromTocken:number;
 
-    [countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
+    [countryIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId])
 
     return await this.service.getNewDataRequest(
       {
@@ -103,7 +102,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
       year,
       dataProvider,
       countryIdFromTocken,
-      sectorIdFromTocken,
       tool
     );
   }
@@ -129,9 +127,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
   ): Promise<any> {
 
     let countryIdFromTocken:number;
-    let sectorIdFromTocken:number;
 
-    [countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
+    [countryIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId])
     console.log("*******************************")
     return await this.service.getNewDataRequestForClimateList(
       {
@@ -143,7 +140,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
       year,
       dataProvider,
       countryIdFromTocken,
-      sectorIdFromTocken,
     );
   }
 
