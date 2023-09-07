@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -26,6 +26,10 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { UsersService } from 'src/users/users.service';
+import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
+import { User } from 'src/users/entity/user.entity';
+import { Country } from 'src/country/entity/country.entity';
 
 const schema = {
   'id': {
@@ -58,6 +62,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
 
+    private userService: UsersService,
+    private methAssessService:MethodologyAssessmentService
 
   ) {
     super(repo)
@@ -703,27 +709,79 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     async  findSectorCount(tool:string): Promise<any[]> {
       console.log(tool)
-      const sectorSum = await this.investorSectorRepo
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      let data = await this.investorSectorRepo
         .createQueryBuilder('investorSector')
         .leftJoinAndSelect('investorSector.assessment', 'assessment')
+        .leftJoinAndSelect('assessment.climateAction', 'intervention')
+        .leftJoinAndMapOne(
+          'assessment.user',
+           User,
+          'user',
+          'user.id = assessment.user_id',
+        )
+        .leftJoinAndMapOne(
+          'user.country',
+           Country,
+          'cntry',
+          'cntry.id = user.countryId',
+        )
         .where('assessment.tool = :value', { value: tool })
+
+        if(isUserExternal){
+          data.andWhere('user.id = :userId', { userId: currentUser.id })
+          
+        }
+        else {
+          data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+        
+        }
+
+      let result =data
         .leftJoinAndSelect('investorSector.sector', 'sector')
-        // .where('sector.name IS NOT NULL')
         .select('sector.name', 'sector')
         .addSelect('COUNT(investorSector.id)', 'count')
         .groupBy('sector.name')
         .having('sector IS NOT NULL')
         .getRawMany();
     
-    return sectorSum;
+    return result;
     }
 
    async  getTCValueByAssessment(tool: string): Promise<any> {
-        const sectorSum = await this.assessmentRepo
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+        let data = await this.assessmentRepo
           .createQueryBuilder('assessment')
           .leftJoinAndSelect('assessment.climateAction', 'intervention')
+          .leftJoinAndMapOne(
+            'assessment.user',
+             User,
+            'user',
+            'user.id = assessment.user_id',
+          )
+          .leftJoinAndMapOne(
+            'user.country',
+             Country,
+            'cntry',
+            'cntry.id = user.countryId',
+          )
           .where('assessment.tool = :value', { value: tool })
-          .select(['assessment.id', 'intervention.id', 'intervention.initialInvestment','intervention.policyName','assessment.tc_value'])
+
+          if(isUserExternal){
+            data.andWhere('user.id = :userId', { userId: currentUser.id })
+            
+          }
+          else {
+            data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+          
+          }
+
+      let  result= data.
+        select(['assessment.id', 'intervention.id', 'intervention.initialInvestment','intervention.policyName','assessment.tc_value'])
           // // .where('sector.name IS NOT NULL')
           // .select('sector.name', 'sector')
           // .addSelect('COUNT(investorSector.id)', 'count')
@@ -731,28 +789,56 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // .having('sector IS NOT NULL')
           .getMany();
 
-        return sectorSum;
+        return result;
     }
     
-    async getSectorCountByTool(tool: string): Promise<any[]> {
-      const sectorCounts = await this.PolicySectorsRepo
-        .createQueryBuilder('policySector')
-        .leftJoin('policySector.intervention', 'climateAction')
-        .leftJoin('policySector.sector', 'sector')
-        .leftJoin('assessment', 'assessment', 'assessment.climateAction_id = climateAction.id')
-        .where('assessment.tool = :tool', { tool })
-        .select(['sector.name AS sector', 'COUNT(policySector.id) AS count'])
-        .groupBy('sector.name')
-        .getRawMany();
-    
-      return sectorCounts;
+    async getSectorCountByTool(tool: string): Promise<any> {
+      const data= await this.methAssessService.getTCForTool(tool)
+      const promises = data.map(async (item) => {
+        const policySectors = await this.PolicySectorsRepo.find({
+          where: { intervention: { id: item.intervention } },
+          relations: ['sector'],
+        });
+        // console.log(item.intervention)
+        return policySectors.map((policySector) => ({ sector: policySector.sector.name }));
+      });
+      const sectorsArrays = await Promise.all(promises);
+      // console.log(sectorsArrays)
+      const sectors = sectorsArrays.flat();
+      
+      return this.countSectors(sectors)
     }
       
+     countSectors(array: any[]): { sector: string; count: number }[] {
+      const sectorCounts: { [sector: string]: number } = {};
+      array.reduce((accumulator, currentValue) => {
+        const sectorName = currentValue.sector;
+        if (!sectorCounts[sectorName]) {
+          sectorCounts[sectorName] = 1;
+        } else {
+          sectorCounts[sectorName]++;
+        }
+        return accumulator;
+      }, {});
+    
+      const result: { sector: string; count: number }[] = Object.keys(sectorCounts).map((sector) => {
+        return { sector, count: sectorCounts[sector] };
+      });
+    
+      return result;
+    }
 
     async calculateAssessmentResults(tool: string): Promise<any> {
+
+      
+      
       let results = await this.assessmentRepo
         .createQueryBuilder('assessment')
         .leftJoinAndSelect('assessment.climateAction', 'intervention')
+        .leftJoinAndSelect('assessment.user', 'user')
+        .leftJoinAndSelect('user.userType', 'userType')
+        .leftJoinAndSelect('user.country', 'country')
+        .leftJoinAndSelect('user.institution', 'institution')
         .where('assessment.tool = :value', { value: tool })
         .orderBy('assessment.id', 'DESC')
         .getMany();
@@ -907,8 +993,27 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             
         }
 
-        
-        return[ finalDataArray];
+        /* //////////////////////////////////////// */
+        let user = this.userService.currentUser();
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    let finalDataArray2 = []
+
+    for (const x of await finalDataArray) {
+      const isSameUser = x.assesment?.user?.id === currentUser?.id;
+      const isMatchingCountry = x.assesment?.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.assesment?.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        finalDataArray2.push(x);
+      }
+    }
+
+        /* //////////////////////////////////////// */
+        return[ finalDataArray2];
   
     }
     async findAllCategories(): Promise<any> {
