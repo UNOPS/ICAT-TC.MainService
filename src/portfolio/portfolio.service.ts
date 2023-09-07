@@ -9,6 +9,8 @@ import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -19,11 +21,21 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
 
+    private userService: UsersService,
+
   ) {
     super(repo)
   }
 
   async create(createPortfolioDto: any) {
+
+    let user = this.userService.currentUser();
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
+
+    let currentUser = new User();
+    currentUser.id = (await user).id
+
+    createPortfolioDto.formData.user = currentUser
     let res = this.repo.save(createPortfolioDto.formData);
     const portfolioId = (await res).id;
 
@@ -50,7 +62,27 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   
 
   async getAll(): Promise<Portfolio[]> {
-    return await this.repo.find();
+     let res = await this.repo.find();
+
+    let user = this.userService.currentUser();
+   // console.log("ussssser : ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+      let portfolios: Portfolio[] = [];
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    for (const x of await res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        portfolios.push(x);
+      }
+    }
+
+    return portfolios
   }
 
  /*  async assessmentsByPortfolioId(portfolioId: number): Promise<any[]> {
