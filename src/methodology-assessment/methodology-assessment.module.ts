@@ -36,6 +36,7 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 
 
 @Module({
@@ -47,7 +48,6 @@ import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
     TokenDetails,
     UsersService,
     EmailNotificationService,
-
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,

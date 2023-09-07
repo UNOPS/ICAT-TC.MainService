@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -10,6 +10,7 @@ import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -67,27 +68,28 @@ export class InvestorToolController {
   async findAllIndicatorquestions():Promise<InvestorQuestions[]> {
     return await this.investorToolService.findAllIndicatorquestions();
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.findSectorCount(tool);
   }
+  @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
   async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.getTCValueByAssessment(tool);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('getSectorCountByTool/:tool')
-  async getSectorCountByTool(@Param('tool') tool:string):Promise<any[]> {
+  async getSectorCountByTool(@Param('tool') tool:string){
     return await this.investorToolService.getSectorCountByTool(tool);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get('calculateAssessmentResults/:tool')
   async calculateAssessmentResults(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.investorToolService.calculateAssessmentResults(tool);
     return res;
-   
+
   }
 
   @Get('get-investor-question-by-id')
