@@ -359,12 +359,13 @@ async uploadFile2(
     return await this.methodologyAssessmentService.findByAllAssessmentBarriers();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('AssessmentDetails')
   async AssessmentDetails() {
     return await this.methodologyAssessmentService.AssessmentDetails();
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get('AssessmentDetailsforTool/:tool')
   async AssessmentDetailsforTool(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.methodologyAssessmentService.AssessmentDetailsforTool(tool);
@@ -542,10 +543,12 @@ async uploadFile2(
     return this.methodologyAssessmentService.updateResult(+id, result);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('save-assessment')
   async saveAssessment(@Body() assessment: Assessment){
     return await this.methodologyAssessmentService.saveAssessment(assessment)
   }
+
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.COUNTRY_ADMIN]))
   @Put('update-assign-verifiers')
   async updateAssignVerifiers(
@@ -600,7 +603,7 @@ async uploadFile2(
     return res;
    
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('getTCForTool/:tool')
   async getTCForTool(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.methodologyAssessmentService.getTCForTool(tool);

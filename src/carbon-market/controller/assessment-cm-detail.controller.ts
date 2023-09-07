@@ -36,7 +36,7 @@ export class AssessmentCMDetailController
     return await this.service.getAssessmentCMDetailByAssessmentId(assessmnetId)
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('getPrerequisite')
   async getPrerequisite(): Promise<any>{
     return await this.service.getPrerequisite()
