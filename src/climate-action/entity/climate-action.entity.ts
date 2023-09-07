@@ -22,6 +22,7 @@ import {
 } from 'typeorm';
 import { ActionArea } from 'src/master-data/action-area/entity/action-area.entity';
 import { PolicyBarriers } from './policy-barriers.entity';
+import { User } from 'src/users/entity/user.entity';
 
 @Entity({ name: 'climateaction'})
 export class ClimateAction extends BaseTrackingEntity {
@@ -68,7 +69,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn()
   mappedInstitution?: Institution;//
 
-  @ManyToOne((type) => Country, { cascade: false })
+  @ManyToOne((type) => Country, { cascade: false ,eager:true})
   @JoinColumn({ name: 'countryId' })
   country?: Country; // country of the policy
   
@@ -292,6 +293,9 @@ export class ClimateAction extends BaseTrackingEntity {
   institute: string;
 
 
+  @ManyToOne((type) => User, { cascade: false, eager: true, })
+  @JoinColumn({ name: 'user_id' })
+  user?: User; 
 
   
   
