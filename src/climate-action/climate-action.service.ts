@@ -172,6 +172,7 @@ async allProject(
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
 
+    console.log("currreenntt", currentUser)
     for (const x of await res) {
       const isSameUser = x.user?.id === currentUser?.id;
       const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
