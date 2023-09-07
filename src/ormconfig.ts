@@ -84,6 +84,7 @@ export const config: ConnectionOptions = {
   //  database: 'tc-main', 
   //  password: '7860150',  // database: 'tc-main-new3',
 
+  
   autoLoadEntities: true,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
@@ -94,7 +95,7 @@ ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters
 PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: true,
+  synchronize: false,
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.

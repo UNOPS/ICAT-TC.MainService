@@ -270,12 +270,10 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
     let countryIdFromTocken: number;
-    let sectorIdFromTocken: number;
   
 
-    [countryIdFromTocken, sectorIdFromTocken] =this.tokenDetails.getDetails([
+    [countryIdFromTocken] =this.tokenDetails.getDetails([
         TokenReqestType.countryId,
-        TokenReqestType.sectorId,
     
       ]);
     return await this.service.getAllProjectDetails(
