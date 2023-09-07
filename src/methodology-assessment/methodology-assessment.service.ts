@@ -237,6 +237,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async saveAssessment(assessment: Assessment){
+    let user = this.userService.currentUser();
+    console.log(" : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
+
+    let currentUser = new User();
+    currentUser.id = (await user).id
+
+    assessment.user = currentUser;
     return await this.assessmentRepository.save(assessment)
   }
 
@@ -618,24 +625,59 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   //@UseGuards(JwtAuthGuard)
   async AssessmentDetails(): Promise<Assessment[]> {
-   // let user = this.userService.currentUser();
-   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
-      return this.assessmentRepository.find({
-        relations: [ 'methodology', 'climateAction'],
+    let user = this.userService.currentUser();
+   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+      let res = this.assessmentRepository.find({
+        relations: [ 'methodology', 'climateAction','user'],
       });
+
+      let assessList: Assessment[] = [];
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    for (const x of await res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        assessList.push(x);
+      }
+    }
+
+      return assessList
     }
 
    
     async AssessmentDetailsforTool(tool: string): Promise<any[]> {
-      //  return await this.repo.find();
-        let res =  await this.assessmentRepository.find({
-          relations: [ 'methodology', 'climateAction'],
-        });
-
-        const filteredResults = res.filter(assessment => assessment?.tool === tool);
-
-        filteredResults.sort((a, b) => b.id - a.id);
-        return filteredResults
+      let user = this.userService.currentUser();
+      console.log("ussssser : ", (await user).fullname, "and ", (await user).username, "Id :", (await user).id, "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+  
+      let res = this.assessmentRepository.find({
+        relations: ['methodology', 'climateAction', 'user'],
+      });
+  
+      let assessList: Assessment[] = [];
+  
+      const currentUser = await user;
+      const isUserExternal = currentUser?.userType?.name === 'External';
+  
+      for (const x of await res) {
+        const isSameUser = x.user?.id === currentUser?.id;
+        const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+        const isUserInternal = x.user?.userType?.name !== 'External';
+  
+        if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+          assessList.push(x);
+        }
+      }
+  
+      const filteredResults = assessList.filter(assessment => assessment?.tool === tool);
+  
+      filteredResults.sort((a, b) => b.id - a.id);
+      return filteredResults
       } 
 
   async findAllPolicyBarriers(): Promise<any[]> {
@@ -1082,18 +1124,40 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async getTCForTool(tool: string): Promise<any[]> {
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    
     const results = await this.assessmentRepository.find({
       relations: ['climateAction'],
     });
   
-     const filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+     let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+     console.log("current user:",currentUser?.userType?.name)
+     if(isUserExternal){
+      filteredResults= filteredResults.filter(result => 
+        {if (result?.user?.id===currentUser?.id){
+          return result
+        }})
+        
+     }
+     else {
+      filteredResults= filteredResults.filter(result => {
+        // console.log(result?.climateAction?.country,currentUser?.country?.id)
+        if(result?.climateAction?.country?.id===currentUser?.country?.id){
+          // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
+          return result;
+        }})
+     }
   
     const formattedResults = filteredResults.map(result => {
       return {
         id : result.id,
         data: result.climateAction.policyName,
         y: result.tc_value,
-        x: result.climateAction.intervention_id
+        x: result.climateAction.intervention_id,
+        intervention: result.climateAction.id
       };
     }); 
   

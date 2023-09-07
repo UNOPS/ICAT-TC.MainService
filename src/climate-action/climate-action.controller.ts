@@ -129,6 +129,7 @@ export class ProjectController implements CrudController<ClimateAction> {
   }
  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
+ @UseGuards(JwtAuthGuard)
   @Get('findAllPolicies')
 async findAllPolicies() {
   const policies = await this.service.findAllPolicies();
@@ -143,6 +144,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('typeofAction')
   async findTypeofAction(): Promise<any[]> {
   let res  = await this.service.findTypeofAction();
@@ -150,7 +152,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
    
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get(
     'AllClimateAction/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:countryId/:sectorId',
   )
