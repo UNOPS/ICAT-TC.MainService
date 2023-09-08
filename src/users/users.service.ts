@@ -255,7 +255,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   async currentUser(): Promise<User> {
     let userNameFromTocken: string;
     [userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username])
-    let user = this.findByUserName(userNameFromTocken)
+    let user = this.findByUseremail(userNameFromTocken)
     return user
   }
 
