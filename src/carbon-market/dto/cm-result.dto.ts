@@ -44,12 +44,15 @@ export class UniqueCategories{
 export class UniqueCategory{
     name: string
     code: string
+    description: string
     characteristics: UniqueCharacteristic[]
 }
 
 export class UniqueCharacteristic{
     name: string
     code: string
+    description: string
+    main_question: string
     id: number
     questions: CMQuestion[] = []
 }

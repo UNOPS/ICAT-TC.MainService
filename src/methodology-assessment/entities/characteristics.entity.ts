@@ -16,6 +16,12 @@ export class Characteristics {
     @Column()
     code: string;
 
+    @Column({nullable: true, length: 3000})
+    description: string
+
+    @Column({nullable: true, length: 3000})
+    main_question: string
+
     @ManyToOne((type) => Category, { cascade: false})
     @JoinColumn({ name: 'category_id' })
     category?: Category;
