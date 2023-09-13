@@ -16,6 +16,9 @@ export class Category {
 
     @Column({ nullable: true })
     type : string;
+
+    @Column({ nullable: true, length: 3000})
+    description: string;
     
 
 /*     @ManyToOne(type => Methodology, methodology => methodology.categories)

@@ -2,23 +2,23 @@ import { AnswerType } from "../enum/answer-type.enum"
 
 export const sections = [
     {
-        name: 'Section 2: Environmental integrity preconditions',
+        name: 'Section 2: Environmental and social integrity preconditions',
         code: 'SECTION_2',
         order: 1,
-        description: 'The next set of questions will be related to basic tenets of environmental integrity which are preconditions for delivering transformational change and should be applied in all activities. These criteria can be considered preconditions to enable transformational impacts and should be fulfilled before assessing transformational change criteria.'
+        description: 'These questions check basic aspects of environmental integrity which are preconditions for delivering transformational change, and should be present in all interventions. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed.'
     },
     {
-        name: 'Section 3: Transformational change criteria',
+        name: 'Section 3: Tranformational Change Indicators',
         code: 'SECTION_3',
         order: 2,
-        description: 'This section will examine the potential of the project to contribute to fundamental, sustained change. Questions in this section will be weighted and form the overall transformational change score'
+        description: 'This section of the carbon markets tool will examine the potential of the intervention to contribute to fundamental, sustained change. The 2021 ‘Promoting transformational change through carbon markets’ report builds on the original ICAT Transformational Change Assessment Methodology  and defines four main drivers of change: 1) technology change, 2) agents of change, 3) incentives for change, and 4) norms and behavioural change, which are operationalized in form of indicators from the responses to the following questions. Indicators from responses to questions in this section will be weighted and form the overall transformational change score.'
     }
 ]
 
 export const criterias = [
     //section 2
     {
-        name: 'Criterion 1: Safeguards on overselling of mitigation outcomes',
+        name: 'Criterion 1: Safeguards on environmental integrity',
         code: 'S-2-CRITERIA-1',
         order: 1,
         section: 'SECTION_2'
@@ -75,50 +75,50 @@ export const criterias = [
 
 export const questions = [
     {
-        label: "Q1: Is the Article 6 activity directly mandated by law or otherwise triggered by legal requirements (e.g., legally binding agreements, covenants, consent decrees, contracts with government agencies and private parties)? ",
+        label: "Q1: Is the carbon market intervention directly mandated by law or otherwise triggered by legal requirements (e.g., legally binding agreements, covenants, consent decrees, contracts with government agencies and private parties)? ",
         code: "S-2-C-1-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
-        message: "The activity is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q2: Is the Article 6 activity financially additional, i.e. the revenue from the sale of ITMOs enables the activity??",
+        label: "Q2: Is the carbon market intervention financially additional, i.e. the revenue from the sale of ITMOs enables the activity??",
         code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
-        message: "The activity cannot be considered additional, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The intervention cannot be considered additional, clearly not enabling transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q3: Does the envisaged Article 6 activity involve emission reductions or removals that are not included in the GHG inventory used to assess NDC progress?",
+        label: "Q3: Is the envisaged carbon market intervention consistent with the host country's NDC targets and goes beyond the host country's (unconditional) NDC targets? ",
         code: "S-2-C-1-Q-3",
         answer_type: AnswerType.SINGLE,
         order: 3,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
-        message: "Authorising mitigation outcomes of such an Article 6 activity would move a host country further from achieving its NDC targets, thus creating a high risk of compromising its goal. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The envisaged Article 6 intervention might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q4: If the country clearly differentiates between unconditional and conditional NDC targets: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target?",
+        label: "Q4: Does the carbon market intervention robustly quantify and verify mitigation outcomes using below business-as-usual baselines and fully addressing leakage?",
         code: "S-2-C-1-Q-4",
         answer_type: AnswerType.SINGLE,
         order: 4,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
-        message: "The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
-    // {
-    //     label: 'Q5: Does the envisaged Article 6 activity contribute to increased ambition by going beyond the host country’s unconditional NDC target(s), contributing to the conditional NDC target? ',
-    //     code: 'S-2-C-1-Q-5',
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 5,
-    //     criteria: 'S-2-CRITERIA-1',
-    //     characteristic: '',
-    //     message: 'The envisaged Article 6 activity might not go beyond reasonably anticipated measures and thus not contribute to increased ambition.'
-    // },
+    {
+        label: 'Q5: Does the carbon market intervention design aim to minimise the risk of non-permanence and does the intervention foresee the full addressing of reversals of emission reductions and removals if these occur? ',
+        code: 'S-2-C-1-Q-5',
+        answer_type: AnswerType.SINGLE,
+        order: 5,
+        criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
+        message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.'
+    },
     // {
     //     label: 'Q6: Does the Article 6 activity feature on the host country’s positive list or has the host country stated its intention to promote the envisaged activity type?',
     //     code: 'S-2-C-1-Q-6',
@@ -129,40 +129,40 @@ export const questions = [
     //     message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
     // },
     {
-        label: "Q1: Is the activity type listed on any negative list adopted by the host country arguing that the activity type would lead to lock-in? ",
+        label: "Q1: Is the intervention type listed on any negative list of activities that could lead to lock in (e.g., developed by the host country, the Article 6.4 Supervisory Body, the Integrity Council for Voluntary Carbon Markets, the International Energy Agency etc.)? ",
         code: "S-2-C-2-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: "S-2-CRITERIA-2",
         characteristic: "",
-        message: "The Article 6 activity should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q2: Is the activity in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ",
+        label: "Q2: Is the carbon market intervention in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ",
         code: "S-2-C-2-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: "S-2-CRITERIA-2",
         characteristic: "",
-        message: "The Article 6 activity should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q1: Does the implementation of the Article 6 activity result in significant negative environmental impacts (i.e., air, water and soil pollution, destruction of biodiversity, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the activity area.)",
+        label: "Q1: Does the implementation of the carbon market intervention result in significant negative environmental impacts (i.e., air, water and soil pollution, destruction of biodiversity, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
         code: "S-2-C-3-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: "S-2-CRITERIA-3",
         characteristic: "",
-        message: "If the activity entails significant negative impacts, it does not enable transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q2: Does the implementation of the Article 6 activity result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)?",
+        label: "Q2: Does the implementation of the carbon market intervention result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
         code: "S-2-C-3-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: "S-2-CRITERIA-3",
         characteristic: "",
-        message: "If the activity entails significant negative impacts, it does not enable transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
+        message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies? ',
@@ -437,7 +437,7 @@ export const answers = [
         code: "S-2-C-1-Q-3-A-1",
         weight: 0,
         score_portion: 1,
-        isPassing: false,
+        isPassing: true,
         question: "S-2-C-1-Q-3"
     },
     {
@@ -445,12 +445,20 @@ export const answers = [
         code: "S-2-C-1-Q-3-A-2",
         weight: 0,
         score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-3"
+    },
+    {
+        label: "This does not apply",
+        code: "S-2-C-1-Q-3-A-3",
+        weight: 0,
+        score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-3"
     },
     {
         label: "Unsure",
-        code: "S-2-C-1-Q-3-A-3",
+        code: "S-2-C-1-Q-3-A-4",
         weight: 0,
         score_portion: 1,
         isPassing: true,
@@ -480,13 +488,37 @@ export const answers = [
         isPassing: true,
         question: "S-2-C-1-Q-4"
     },
+    // {
+    //     label: "The country does not differentiate between conditional and unconditional targets",
+    //     code: "S-2-C-1-Q-4-A-4",
+    //     weight: 0,
+    //     score_portion: 1,
+    //     isPassing: true,
+    //     question: "S-2-C-1-Q-4"
+    // },
     {
-        label: "The country does not differentiate between conditional and unconditional targets",
-        code: "S-2-C-1-Q-4-A-4",
+        label: "Yes",
+        code: "S-2-C-1-Q-5-A-1",
         weight: 0,
         score_portion: 1,
         isPassing: true,
-        question: "S-2-C-1-Q-4"
+        question: "S-2-C-1-Q-5"
+    },
+    {
+        label: "No",
+        code: "S-2-C-1-Q-5-A-2",
+        weight: 0,
+        score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-5"
+    },
+    {
+        label: "Unsure",
+        code: "S-2-C-1-Q-5-A-3",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-5"
     },
     {
         label: "Yes",
@@ -1106,136 +1138,195 @@ export const answers = [
     }
 ]
 
-export const characteristic = [
+/**
+ * Don't update name and codes for specific tool
+ */
+export const characteristic = [ 
     {
         name: 'Research and Development',
-        code: 'R_&_D'
+        code: 'R_&_D',
+        description: 'Technological research and development happens through support of science, specialization and learning. This includes actions such as direct investment in R&D, development of the knowledge/skill base, research networks and consortiums, capacity-building efforts, and experimentation.',
+        main_question: 'Does the intervention support R&D for building technological capabilities favouring a low-carbon economy?'
     },
     {
         name: 'Adoption',
-        code: 'ADOPTION'
+        code: 'ADOPTION',
+        description: 'Adoption of new technologies can be facilitated by pilot projects, demonstrations, experimentation and publicly or privately funded trials. Through these actions, the required skills and capacities to handle new technologies can be developed, new networks of users can be built, and the potential market for a new technology can be assessed.',
+        main_question: 'Does the intervention lead to early adoption of promising low-carbon technologies?'
     },
     {
         name: 'Scale up',
-        code: 'SCALE_UP'
+        code: 'SCALE_UP',
+        description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectorial public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
+        main_question: 'Does the intervention support the scale-up and diffusion of low-carbon innovations?'
     },
     {
         name: 'Entrepreneurs',
-        code: 'ENTREPRENEURS'
+        code: 'ENTREPRENEURS',
+        description: 'Enterpreneurs are key agents of change that can invest, innovate and experiment with new technologies, applications or business models to drive change. They can be supported by creating an enabling environment and facilitating the exchange of information and ideas.',
+        main_question: 'Does the intervention promote enterpreneurs, businesses and investors to catalyse transformational change?'
     },
     {
         name: 'Coalition of advocates',
-        code: 'COALITION_OF_ADVOCATES'
+        code: 'COALITION_OF_ADVOCATES',
+        description: 'The process of transformational change can benefit from the participation of a wide range of stakeholders organized in different forms (e.g., coalitions, lobbys, social movements etc) representing diverse interests and which could defend the intervention and provide counterbalance those actors opposing it. The way the intervention is planned may determined the networks that may arise around it.',
+        main_question: 'Does the intervention support coalitions and networks that seek to broaden and deepen support for low-carbon development?'
     },
     {
         name: 'Beneficiaries',
-        code: 'BENIFICIARIES'
+        code: 'BENIFICIARIES',
+        description: 'Those stakeholders who would benefit from the intervention or who would be compensated if it has adverse effects can serve as agents of change and play a role in ensuring that the intervention is durable and gets strengthened over time.',
+        main_question: 'Does the intervention support diverse groups of society affected by the transformational change?'
     },
     {
         name: 'Economic and non-economic',
-        code: 'ECONOMIC_NON_ECONOMIC'
+        code: 'ECONOMIC_NON_ECONOMIC',
+        description: 'Economic incentives may include tariff structures, access to low-cost finance, feed-in tariff policies for renewable energy, value-added and/or import duty exemptions on new technology, lowered land rates etc. Non-economic incentives may include partnerships, transitional support to communities affected by phase-out of emissions-intensive activities, giving ownership to local initiatives and communities, long-term institutional and governance support, political power and support for transition, signing memoranda of understanding, removing bureaucratic procedures.',
+        main_question: 'Does the intervention use economic and/or non-economic incentives to shift technology and increase market penetration?'
     },
     {
         name: 'Disincentives',
-        code: 'DISINCENTIVES'
+        code: 'DISINCENTIVES',
+        description: 'Disincentives may include taxes on carbon-intensive produces, use of market-based instruments ausch as import duties, tariff structures that discourage investments in business-as-usual technologies, reduction or phase-out of fossil fuels subsidies, increased or new fossil fuel taxes, etc.',
+        main_question: 'Does the intervention disincentivize technologies and business contributing to a high carbon economy?'
     },
     {
         name: 'Institutional and regulatory',
-        code: 'INSTITUTIONAL_AND_REGULATORY'
+        code: 'INSTITUTIONAL_AND_REGULATORY',
+        description: 'An intervention may contribute to changes in the institutional and regulatory setting that facilitate/enable/promote transformational change. For instance, an intervention may lead to the creation of formal and informal institutions, new regulations or permanent budget allocation. It may also contribute to the development of intragovernmental processes for horizontal integration or multi-scale governmental processes.',
+        main_question: 'Does the intervention create or reconfigure existing conditions, including availability of finance for implementation, and puts in place regulation and institutions favouring low-carbon development?'
     },
     {
         name: 'Awareness',
-        code: 'AWARENESS'
+        code: 'AWARENESS',
+        description: 'An intervention may include components oriented to raise awareness and increase support for low-carbon solutions that may contribute to change norms and behaviours among diverse groups of stakeholders. Such a component can take the shape of campaigns and sensitization of policymakers and consumers, information dissemination within the institutions using various means etc',
+        main_question: 'Does the intervention support awareness raising and education for sustainability transition?'
     },
     {
         name: 'Behaviour',
-        code: 'BEHAVIOUR'
+        code: 'BEHAVIOUR',
+        description: 'In order for transformational change to happen, a shift in the lifestyle and common practices of a large majority of the population has to take place. An intervention may influence consumers\' behaviour with actions such as peak energy savings, cash incentives for using alternative transport models, rewards for recycling, etc.',
+        main_question: 'Does the policy support measures that discourage high-carbon lifestyle and practices and promote low-carbon solutions?'
     },
     {
         name: 'Social Norms',
-        code: 'SOCIAL_NORMS'
+        code: 'SOCIAL_NORMS',
+        description: 'Social norms refers to those behaviours and practices that have become widely accepted and enjoy broad and deeply entrenched support within the society. An intervention can contribute to low-carbon lifestyle and practices becoming the prevalent societal norm. Some examples of this are the willingness to pay for pollution, the valorization of natural resources, the widespread adoption of energy efficiency measures within the households, etc.',
+        main_question: 'Does the intervention affect norms within society that align with and further promote low-carbon and sustainable development?'
     },
     {
         name: 'Macro Level',
-        code: 'MACRO_LEVEL'
+        code: 'MACRO_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Medium Level',
-        code: 'MEDIUM_LEVEL'
+        code: 'MEDIUM_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Micro Level',
-        code: 'MICRO_LEVEL'
+        code: 'MICRO_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Macro Level',
-        code: 'MACRO_LEVEL'
+        code: 'MACRO_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Medium Level',
-        code: 'MEDIUM_LEVEL'
+        code: 'MEDIUM_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Micro Level',
-        code: 'MICRO_LEVEL'
+        code: 'MICRO_LEVEL',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Long term (>15 years)',
-        code: 'LONG_TERM'
+        code: 'LONG_TERM',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Medium term (5-15 years)',
-        code: 'MEDIUM_TERM'
+        code: 'MEDIUM_TERM',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Short Term (<5 years)',
-        code: 'SHORT_TERM'
+        code: 'SHORT_TERM',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Long term (>15 years)',
-        code: 'LONG_TERM'
+        code: 'LONG_TERM',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Medium term (5-15 years)',
-        code: 'MEDIUM_TERM'
+        code: 'MEDIUM_TERM',
+        description: '',
+        main_question: ''
     },
     {
         name: 'Short Term (<5 years)',
-        code: 'SHORT_TERM'
+        code: 'SHORT_TERM',
+        description: '',
+        main_question: ''
     }
 ]
 
 export const categories = [
     {
-        name: 'Technology',
-        code: 'TECHNOLOGY'
+        name: 'Technology Change',
+        code: 'TECHNOLOGY',
+        description: 'Process, skills and practices that drive research and development, early adoption and widespread scale-up of clean technologies.'
     },
     {
-        name: 'Agents',
-        code: 'AGENTS'
+        name: 'Agents of Change',
+        code: 'AGENTS',
+        description: 'Governments, enterpreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.'
     },
     {
-        name: 'Incentives',
-        code: 'INCENTIVES'
+        name: 'Incentives for change',
+        code: 'INCENTIVES',
+        description: 'Economic and non-economic incentives, along with disincentives, which play a critical role in shifting technology and societal change.'
     },
     {
-        name: 'Norms',
-        code: 'NORMS'
+        name: 'Norms and behavioural change',
+        code: 'NORMS',
+        description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.'
     },
     {
         name: 'Scale GHGs',
-        code: 'SCALE_GHG'
+        code: 'SCALE_GHG',
+        description: ''
     },
     {
         name: 'Scale SD',
-        code: 'SCALE_SD'
+        code: 'SCALE_SD',
+        description: ''
     },
     {
         name: 'Sustained nature-GHGs',
-        code: 'SUSTAINED_GHG'
+        code: 'SUSTAINED_GHG',
+        description: ''
     },
     {
         name: 'Sustained nature-SD',
-        code: 'SUSTAINED_SD'
+        code: 'SUSTAINED_SD',
+        description: ''
     },
 ]
