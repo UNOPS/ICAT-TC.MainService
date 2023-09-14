@@ -43,6 +43,8 @@ import { MethodologyParameters } from 'src/methodology-assessment/entities/metho
 import { MethodologyIndicators } from 'src/methodology-assessment/entities/methodologyindicators.entity';
 import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
 import { ParameterStatus } from 'src/methodology-assessment/entities/parameterStatus.entity';
+import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { PortfolioQuestionDetails } from './entities/portfolio_question-details.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -80,6 +82,8 @@ import { ParameterStatus } from 'src/methodology-assessment/entities/parameterSt
     AssessmentObjectives,
     MethodologyParameters,
     CalculationResults,
+    PortfolioQuestions,
+    PortfolioQuestionDetails
     
     
   ])],

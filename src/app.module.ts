@@ -91,6 +91,8 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { CMAssessmentAnswer } from './carbon-market/entity/cm-assessment-answer.entity';
 import { PortfolioSdg } from './investor-tool/entities/portfolio-sdg.entity';
 import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
+import { PortfolioQuestions } from './investor-tool/entities/portfolio-questions.entity';
+import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_question-details.entity';
 
 @Module({
   imports: [
@@ -137,6 +139,8 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
       CMAssessmentAnswer,
       PortfolioSdg,
       SdgAssessment,
+      PortfolioQuestions,
+      PortfolioQuestionDetails
     ]),
     UsersModule,
     UserTypeModule,
