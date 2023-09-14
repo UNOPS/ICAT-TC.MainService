@@ -11,6 +11,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -68,6 +69,12 @@ export class InvestorToolController {
   async findAllIndicatorquestions():Promise<InvestorQuestions[]> {
     return await this.investorToolService.findAllIndicatorquestions();
   }
+
+  @Get('findAllPortfolioquestions')
+  async findAllPortfolioquestions():Promise<PortfolioQuestions[]> {
+    return await this.investorToolService.findAllPortfolioquestions();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
