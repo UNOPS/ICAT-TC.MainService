@@ -695,7 +695,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return policyBarriers.map((pb) => ({
       id: pb.id,
       policyName: pb.climateAction?.policyName,
-      barriers: pb.barriers,
+      // barriers: pb.barriers,
       editedBy: pb.editedBy,
     }));
   }
