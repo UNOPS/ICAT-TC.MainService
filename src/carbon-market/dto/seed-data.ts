@@ -1459,41 +1459,49 @@ export const categories = [
     {
         name: 'Technology',
         code: 'TECHNOLOGY',
-        description: 'Process, skills and practices that drive research and development, early adoption and widespread scale-up of clean technologies.'
+        description: 'Process, skills and practices that drive research and development, early adoption and widespread scale-up of clean technologies.',
+        weight: 10
     },
     {
         name: 'Agents',
         code: 'AGENTS',
-        description: 'Governments, enterpreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.'
+        description: 'Governments, enterpreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.',
+        weight: 20
     },
     {
         name: 'Incentives',
         code: 'INCENTIVES',
-        description: 'Economic and non-economic incentives, along with disincentives, which play a critical role in shifting technology and societal change.'
+        description: 'Economic and non-economic incentives, along with disincentives, which play a critical role in shifting technology and societal change.',
+        weight: 4
     },
     {
         name: 'Norms',
         code: 'NORMS',
-        description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.'
+        description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.',
+        weight: 12
     },
     {
         name: 'Scale GHGs',
         code: 'SCALE_GHG',
-        description: ''
+        description: '',
+        weight: 0
     },
     {
         name: 'Scale SD',
         code: 'SCALE_SD',
-        description: ''
+        description: '',
+        weight: 0
     },
     {
         name: 'Sustained nature-GHGs',
         code: 'SUSTAINED_GHG',
-        description: ''
+        description: '',
+        weight: 0
     },
     {
         name: 'Sustained nature-SD',
         code: 'SUSTAINED_SD',
-        description: ''
+        description: '',
+        weight: 0
     },
 ]
