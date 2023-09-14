@@ -67,7 +67,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       'question',
       'question.id = answer.questionId'
     )
-    .where('question.id = :questionId', {questionId: questionId})
+    .where('question.id = :questionId and answer.status = 0', {questionId: questionId})
 
     return await data.getMany()
   }
@@ -85,7 +85,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'category',
         'category.id = characteristic.category_id'
       )
-      .where('characteristic.id is not null')
+      .where('characteristic.id is not null and status = 0')
       // .groupBy('characteristic.code')
 
     let questions = await data.getMany()
@@ -106,6 +106,8 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
             char = new UniqueCharacteristic()
             char.name = ch.characteristic.name
             char.code = ch.characteristic.code
+            char.description = ch.characteristic.description
+            char.main_question = ch.characteristic.main_question
             char.id = ch.characteristic.id
             char.questions.push(ch)
             cat.characteristics.push(char)
@@ -116,11 +118,14 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
           let _char = new UniqueCharacteristic()
           _char.name = ch.characteristic.name
           _char.code = ch.characteristic.code
+          _char.description = ch.characteristic.description
+          _char.main_question = ch.characteristic.main_question
           _char.id = ch.characteristic.id
           _char.questions.push(ch)
           cat = new UniqueCategory()
           cat.name = ch.characteristic.category.name
           cat.code = ch.characteristic.category.code
+          cat.description = ch.characteristic.category.description
           cat.characteristics = [_char]
           categories.process.push(cat)
         }
