@@ -19,6 +19,7 @@ export class CMResultDto {
     filePath: string
     isGHG: boolean
     isSDG: boolean
+    relevance: string
 }
 
 export class SaveCMResultDto {

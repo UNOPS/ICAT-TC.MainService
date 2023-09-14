@@ -67,7 +67,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
       'question',
       'question.id = answer.questionId'
     )
-    .where('question.id = :questionId', {questionId: questionId})
+    .where('question.id = :questionId and answer.status = 0', {questionId: questionId})
 
     return await data.getMany()
   }
@@ -85,7 +85,7 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'category',
         'category.id = characteristic.category_id'
       )
-      .where('characteristic.id is not null')
+      .where('characteristic.id is not null and status = 0')
       // .groupBy('characteristic.code')
 
     let questions = await data.getMany()

@@ -57,4 +57,14 @@ export class CMSeedController {
     async updateCategorySeed(){
         return await this.service.updateCategoryByName()
     }
+
+    @Post('delete-not-using-questions')
+    async deleteNotUsingQuestions(){
+        return await this.service.deleteNotUsingQuestions()
+    }
+
+    @Post('delete-not-using-answers')
+    async deletNotUsingAnswers(){
+        return await this.service.deleteNotUsingAnswers()
+    }
 }
