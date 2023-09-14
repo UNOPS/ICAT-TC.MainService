@@ -43,7 +43,7 @@ import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
   controllers: [MethodologyAssessmentController],
   providers: [
     MethodologyAssessmentService,
-    ProjectService,
+    // ProjectService,
     PolicyBarriers,
     TokenDetails,
     UsersService,
@@ -79,7 +79,7 @@ import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
   ])],
   exports: [
     MethodologyAssessmentService,
-    ProjectService ,
+    // ProjectService ,
   ]
 })
 export class MethodologyAssessmentModule { }

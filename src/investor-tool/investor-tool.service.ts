@@ -30,6 +30,7 @@ import { UsersService } from 'src/users/users.service';
 import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
+import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 
 const schema = {
   'id': {
@@ -61,6 +62,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioSdg) private readonly portfolioSDgsRepo: Repository<PortfolioSdg>,
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
+    @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
 
     private userService: UsersService,
     private methAssessService:MethodologyAssessmentService
@@ -400,6 +402,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     async findAllIndicatorquestions(): Promise<InvestorQuestions[]> {
       return this.investorQuestionRepo.find()
+    }
+
+    async findAllPortfolioquestions(): Promise<PortfolioQuestions[]> {
+      return this.portfolioQuestionRepo.find()
     }
 
     async createFinalAssessmentIndirect(request: any):Promise<any> {

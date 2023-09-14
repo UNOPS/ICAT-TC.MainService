@@ -63,7 +63,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.startingSituation = res.startingSituation;
       ass_question.expectedImpact = res.expectedImpact;
       ass_question.selectedSdg = res.selectedSdg;
-      ass_question.uploadedDocumentPath = res.filePath
+      ass_question.uploadedDocumentPath = res.filePath;
+      ass_question.relevance = res.relevance;
       let q_res
       try{
         q_res = await this.repo.save(ass_question)
@@ -102,7 +103,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _answers.push(ass_answer)
       }
     }
-    console.log(_answers)
     try{
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     }catch(err){
@@ -141,7 +141,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       .getMany()
     if (questions.length > 0) {
       let qIds: number[] = questions.map((q) => q.id)
-      console.log(qIds)
       let answers = await this.assessmentAnswerRepo
         .createQueryBuilder('ans')
         .innerJoin(
@@ -194,7 +193,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
       if (questions.length > 0) {
         let qIds: number[] = questions.map((q) => q.id)
-        console.log(qIds)
         let answers = await this.assessmentAnswerRepo
           .createQueryBuilder('ans')
           .innerJoinAndSelect(
@@ -348,7 +346,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
 
   async saveTcValue(assessmentId: number) {
-    console.log("called saveTcValue",assessmentId)
     let tc_score = 0
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -362,7 +359,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     if (questions.length > 0) {
       
       let qIds: number[] = questions.map((q) => q.id)
-      console.log(qIds)
       let answers = await this.assessmentAnswerRepo
         .createQueryBuilder('ans')
         .innerJoin(
@@ -383,8 +379,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .set({ tc_value: score})
         .where("id = :id", { id: assessmentId })
         .execute()
-
-        console.log("updated tc value ",score, "for id",assessmentId)
       
     }
 
