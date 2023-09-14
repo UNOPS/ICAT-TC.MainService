@@ -308,4 +308,52 @@ export class CMSeedService {
             return {res: response, status: "Nothing to save"}
         }
     }
+
+    async deleteNotUsingQuestions(){
+        let _questions = await this.questionRepo.createQueryBuilder('q').getMany()
+        let q_codes = questions.map(o => o.code)
+
+        let qs: CMQuestion[] = []
+        for await(let question of _questions){
+            if (!q_codes.includes(question.code)){
+                question.status = -20
+                qs.push(question)
+            }
+        }
+
+        if (qs.length > 0){
+            let res = this.questionRepo.save(qs)
+            if (res) {
+                return { status: "saved"}
+            } else { 
+                return { status: "failed to save"}
+            }
+        }  else {
+            return { status: "Nothing to save"}
+        }
+    }
+
+    async deleteNotUsingAnswers(){
+        let _answers = await this.answerRepo.createQueryBuilder('a').getMany()
+        let a_codes = answers.map(o => o.code)
+
+        let ans: CMAnswer[] = []
+        for await(let answer of _answers){
+            if (!a_codes.includes(answer.code)){
+                answer.status = -20
+                ans.push(answer)
+            }
+        }
+
+        if (ans.length > 0){
+            let res = this.answerRepo.save(ans)
+            if (res) {
+                return { status: "saved"}
+            } else { 
+                return { status: "failed to save"}
+            }
+        }  else {
+            return { status: "Nothing to save"}
+        }
+    }
 }
