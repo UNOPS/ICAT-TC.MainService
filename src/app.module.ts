@@ -91,6 +91,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { CMAssessmentAnswer } from './carbon-market/entity/cm-assessment-answer.entity';
 import { PortfolioSdg } from './investor-tool/entities/portfolio-sdg.entity';
 import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
+import { BarrierCategory } from './climate-action/entity/barrier-category.entity';
 
 @Module({
   imports: [
@@ -137,6 +138,7 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
       CMAssessmentAnswer,
       PortfolioSdg,
       SdgAssessment,
+      BarrierCategory,
     ]),
     UsersModule,
     UserTypeModule,
@@ -155,7 +157,6 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
     ReportModule,
     MethodologyAssessmentModule,
     AssessmentModule,
-    
     InstitutionModule,
     // ServeStaticModule.forRoot({
     //   rootPath: join(__dirname, '..', '../static-files'),
@@ -197,7 +198,7 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
     CarbonMarketModule,
     CarbonMarketModule,
     InvestorToolModule,
-    PortfolioModule
+    PortfolioModule,
 
   ],
   controllers: [

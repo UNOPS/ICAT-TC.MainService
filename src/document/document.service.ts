@@ -78,7 +78,7 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
   }
 
  async  updateDocOwner(req: DocOwnerUpdateDto):Promise<any> {
-  console.log("document ids:",req)
+  // console.log("document ids:",req)
   let projectid=req.projectID
     for (let num of req.ids) {
       console.log("num",num)
