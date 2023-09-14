@@ -1043,7 +1043,7 @@ export const answers = [
         label: "Yes",
         code: "S-3-ENTREPRENEURS-Q-1-A-1",
         weight: 10,
-        score_portion: 0,
+        score_portion: 4,
         isPassing: true,
         question: "S-3-ENTREPRENEURS-Q-1"
     },
@@ -1059,7 +1059,7 @@ export const answers = [
         label: "Yes",
         code: "S-3-COALITION_OF_ADVOCATES-Q-1-A-1",
         weight: 10,
-        score_portion: 0,
+        score_portion: 4,
         isPassing: true,
         question: "S-3-COALITION_OF_ADVOCATES-Q-1"
     },
@@ -1075,7 +1075,7 @@ export const answers = [
         label: "Yes",
         code: "S-3-BENIFICIARIES-Q-1-A-1",
         weight: 10,
-        score_portion: 0,
+        score_portion: 4,
         isPassing: true,
         question: "S-3-BENIFICIARIES-Q-1"
     },
