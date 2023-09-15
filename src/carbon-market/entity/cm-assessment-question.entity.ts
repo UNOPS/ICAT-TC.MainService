@@ -39,6 +39,9 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @Column({nullable: true})
   relevance: string
 
+  @Column({nullable: true})
+  adaptationCoBenifit: string
+
   @ManyToOne((type) => Characteristics, {nullable: true})
   @JoinColumn()
   characteristic: Characteristics
