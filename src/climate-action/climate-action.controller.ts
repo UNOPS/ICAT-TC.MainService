@@ -422,6 +422,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
 
   @Get('findPolicyBarrierData/:policyID')
   async findPolicyBarrierData(@Param('policyID') policyID: number) {
+    console.log("policyID",policyID)
     return await this.service.findPolicyBarrierData(policyID);
   }
   
