@@ -564,11 +564,21 @@ async allProject(
     });
   }
   
-  async findPolicyBarrierData(policyID: number){
-    return this.PolicyBarriersRepo.find({
-      relations: ['barriers','characteristics'],
-      where: { climateAction: { id: policyID } },
-    });
+  async findPolicyBarrierData(policyID: number):Promise<PolicyBarriers[]>{
+    let barriers= await this.PolicyBarriersRepo.createQueryBuilder('policyBarriers')
+      .leftJoinAndSelect('policyBarriers.barrierCategory', 'barrierCategory')
+      .leftJoinAndSelect('barrierCategory.characteristics', 'characteristics')
+      .where('policyBarriers.climateAction.id = :policyID', { policyID })
+      .getMany();
+
+      console.log("barriers",barriers)
+      const modifiedArray = barriers.map(item => {
+        return {
+          ...item,
+          characteristics: item.barrierCategory.map(category => category.characteristics),
+        };
+      });
+      return modifiedArray
   }
   
 
