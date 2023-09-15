@@ -65,6 +65,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.selectedSdg = res.selectedSdg;
       ass_question.uploadedDocumentPath = res.filePath;
       ass_question.relevance = res.relevance;
+      ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
       let q_res
       try{
         q_res = await this.repo.save(ass_question)
@@ -281,7 +282,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
               starting_situation:ans?.assessment_question?.startingSituation,
               expected_impacts:ans?.assessment_question?.expectedImpact,
               SDG:ans?.assessment_question?.selectedSdg,
-              outcome_score:ans?.selectedScore
+              outcome_score:ans?.selectedScore,
+              adaptation_co_benifit: ans?.assessment_question?.adaptationCoBenifit
               
             }
             if(obj?.category?.code=='TECHNOLOGY'){

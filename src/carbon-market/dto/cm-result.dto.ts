@@ -19,7 +19,9 @@ export class CMResultDto {
     filePath: string
     isGHG: boolean
     isSDG: boolean
+    isAdaptation: boolean
     relevance: string
+    adaptationCoBenifit: string
 }
 
 export class SaveCMResultDto {
