@@ -199,7 +199,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           async (x) => {
             for(let item of x.indicator_details){
               if(item.value || item.justification){
-                console.log("44444")
+                // console.log("44444")
                 // item.institution =new Institution()
                 item.investorAssessment =x
                 await this.indicatorDetailsRepo.save(item)
