@@ -922,7 +922,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-R_&_D-Q-1-A-1",
-        weight: 10,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-R_&_D-Q-1"
@@ -930,7 +930,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-R_&_D-Q-1-A-2",
-        weight: 10,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-R_&_D-Q-1"
@@ -938,7 +938,7 @@ export const answers = [
     {
         label: "Technology has very high abatement costs (> $100\/ton)",
         code: "S-3-ADOPTION-Q-1-A-1",
-        weight: 10,
+        weight: 45,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ADOPTION-Q-1"
@@ -946,7 +946,7 @@ export const answers = [
     {
         label: "Technology has high abatement costs (> $50\/ton)",
         code: "S-3-ADOPTION-Q-1-A-2",
-        weight: 10,
+        weight: 45,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ADOPTION-Q-1"
@@ -954,7 +954,7 @@ export const answers = [
     {
         label: "Technology has medium abatement costs (> $25\/ton)",
         code: "S-3-ADOPTION-Q-1-A-3",
-        weight: 10,
+        weight: 45,
         score_portion: 1,
         isPassing: true,
         question: "S-3-ADOPTION-Q-1"
@@ -962,7 +962,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ADOPTION-Q-1-A-4",
-        weight: 10,
+        weight: 45,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ADOPTION-Q-1"
@@ -970,7 +970,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-ADOPTION-Q-2-A-1",
-        weight: 5,
+        weight: 45,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ADOPTION-Q-2"
@@ -978,7 +978,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ADOPTION-Q-2-A-2",
-        weight: 5,
+        weight: 45,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ADOPTION-Q-2"
@@ -986,7 +986,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-ADOPTION-Q-3-A-1",
-        weight: 5,
+        weight: 10,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ADOPTION-Q-3"
@@ -994,7 +994,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ADOPTION-Q-3-A-2",
-        weight: 5,
+        weight: 10,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ADOPTION-Q-3"
@@ -1002,7 +1002,7 @@ export const answers = [
     {
         label: "Very strongly (upscaling is encouraged through a clearly replicable approach targeting more than five localities, introduction of a nationwide policy, or application of an approach covering a large sector)",
         code: "S-3-SCALE_UP-Q-1-A-1",
-        weight: 10,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-1"
@@ -1010,7 +1010,7 @@ export const answers = [
     {
         label: "Strongly (upscaling is encouraged through a clearly replicable approach targeting more than three localities, introduction of a regional policy, or application of an approach covering a medium-sized sector)",
         code: "S-3-SCALE_UP-Q-1-A-2",
-        weight: 10,
+        weight: 100,
         score_portion: 3,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-1"
@@ -1018,7 +1018,7 @@ export const answers = [
     {
         label: "Somewhat (upscaling is encouraged through a replicable approach only implemented in one locality (with the intention to expand), introduction of a local policy, or application of an approach covering a small sector)",
         code: "S-3-SCALE_UP-Q-1-A-3",
-        weight: 10,
+        weight: 100,
         score_portion: 2,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-1"
@@ -1026,7 +1026,7 @@ export const answers = [
     {
         label: "Weakly (some upscaling potential of the intervention can be seen, but no concrete plans to expand within the lifespan of the intervention)",
         code: "S-3-SCALE_UP-Q-1-A-4",
-        weight: 10,
+        weight: 100,
         score_portion: 1,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-1"
@@ -1034,7 +1034,7 @@ export const answers = [
     {
         label: "No (the intervention does not have the potential for upscaling or replication)",
         code: "S-3-SCALE_UP-Q-1-A-5",
-        weight: 10,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-1"
@@ -1042,7 +1042,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-ENTREPRENEURS-Q-1-A-1",
-        weight: 10,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ENTREPRENEURS-Q-1"
@@ -1050,7 +1050,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ENTREPRENEURS-Q-1-A-2",
-        weight: 10,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ENTREPRENEURS-Q-1"
@@ -1058,7 +1058,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-COALITION_OF_ADVOCATES-Q-1-A-1",
-        weight: 10,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-COALITION_OF_ADVOCATES-Q-1"
@@ -1066,7 +1066,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-COALITION_OF_ADVOCATES-Q-1-A-2",
-        weight: 10,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-COALITION_OF_ADVOCATES-Q-1"
@@ -1074,7 +1074,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-BENIFICIARIES-Q-1-A-1",
-        weight: 10,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-BENIFICIARIES-Q-1"
@@ -1082,7 +1082,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-BENIFICIARIES-Q-1-A-2",
-        weight: 10,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-BENIFICIARIES-Q-1"
@@ -1098,7 +1098,7 @@ export const answers = [
     {
         label: " Medium (25-50% of the mitigation volume)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-2",
-        weight: 7.5,
+        weight: 24,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
@@ -1106,7 +1106,7 @@ export const answers = [
     {
         label: "Low (below 25% of the mitigation volume)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-3",
-        weight: 7.5,
+        weight: 24,
         score_portion: 1,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
@@ -1114,7 +1114,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-1-A-4",
-        weight: 7.5,
+        weight: 24,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-1"
@@ -1122,7 +1122,7 @@ export const answers = [
     {
         label: "Less than a fourth of the technical lifetime",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-1",
-        weight: 2.5,
+        weight: 8,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
@@ -1130,7 +1130,7 @@ export const answers = [
     {
         label: "Less than half of the technical lifetime",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-2",
-        weight: 2.5,
+        weight: 8,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
@@ -1138,7 +1138,7 @@ export const answers = [
     {
         label: "More than half of the technical lifetime",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-3",
-        weight: 2.5,
+        weight: 8,
         score_portion: 1,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
@@ -1146,7 +1146,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2-A-4",
-        weight: 2.5,
+        weight: 8,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2"
@@ -1154,7 +1154,7 @@ export const answers = [
     {
         label: "High fee (> $5\/credit)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-1",
-        weight: 2.5,
+        weight: 8,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
@@ -1162,7 +1162,7 @@ export const answers = [
     {
         label: "Low fee (below $5\/credit)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-2",
-        weight: 2.5,
+        weight: 8,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
@@ -1170,7 +1170,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3-A-3",
-        weight: 2.5,
+        weight: 8,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-3"
@@ -1178,7 +1178,7 @@ export const answers = [
     {
         label: "Strongly",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-1",
-        weight: 10,
+        weight: 30,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
@@ -1186,7 +1186,7 @@ export const answers = [
     {
         label: "Somewhat (more than 5% below BAU)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-2",
-        weight: 10,
+        weight: 30,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
@@ -1194,7 +1194,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4-A-3",
-        weight: 10,
+        weight: 30,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-4"
@@ -1202,7 +1202,7 @@ export const answers = [
     {
         label: "Fully aligned (baseline reaches zero in year of net zero target of host country)",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-1",
-        weight: 10,
+        weight: 30,
         score_portion: 4,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
@@ -1210,7 +1210,7 @@ export const answers = [
     {
         label: "Partially aligned",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-2",
-        weight: 10,
+        weight: 30,
         score_portion: 2,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
@@ -1218,7 +1218,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5-A-3",
-        weight: 10,
+        weight: 30,
         score_portion: 0,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-5"
@@ -1226,7 +1226,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-DISINCENTIVES-Q-1-A-1",
-        weight: 5,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-DISINCENTIVES-Q-1"
@@ -1234,7 +1234,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-DISINCENTIVES-Q-1-A-2",
-        weight: 5,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-DISINCENTIVES-Q-1"
@@ -1242,7 +1242,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-INSTITUTIONAL_AND_REGULATORY-Q-1-A-1",
-        weight: 5,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-INSTITUTIONAL_AND_REGULATORY-Q-1"
@@ -1250,7 +1250,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-INSTITUTIONAL_AND_REGULATORY-Q-1-A-2",
-        weight: 5,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-INSTITUTIONAL_AND_REGULATORY-Q-1"
@@ -1258,7 +1258,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-AWARENESS-Q-1-A-1",
-        weight: 5,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-AWARENESS-Q-1"
@@ -1266,7 +1266,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-AWARENESS-Q-1-A-2",
-        weight: 5,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-AWARENESS-Q-1"
@@ -1274,7 +1274,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-BEHAVIOUR-Q-1-A-1",
-        weight: 5,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-BEHAVIOUR-Q-1"
@@ -1282,7 +1282,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-BEHAVIOUR-Q-1-A-2",
-        weight: 5,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-BEHAVIOUR-Q-1"
@@ -1290,7 +1290,7 @@ export const answers = [
     {
         label: "Yes",
         code: "S-3-SOCIAL_NORMS-Q-1-A-1",
-        weight: 5,
+        weight: 100,
         score_portion: 4,
         isPassing: true,
         question: "S-3-SOCIAL_NORMS-Q-1"
@@ -1298,7 +1298,7 @@ export const answers = [
     {
         label: "No",
         code: "S-3-SOCIAL_NORMS-Q-1-A-2",
-        weight: 5,
+        weight: 100,
         score_portion: 0,
         isPassing: true,
         question: "S-3-SOCIAL_NORMS-Q-1"
@@ -1312,147 +1312,243 @@ export const characteristic = [
     {
         name: 'Research and Development',
         code: 'R_&_D',
+        category_id: 1,
         description: 'Technological research and development happens through support of science, specialization and learning. This includes actions such as direct investment in R&D, development of the knowledge/skill base, research networks and consortiums, capacity-building efforts, and experimentation.',
-        main_question: 'Does the intervention support R&D for building technological capabilities favouring a low-carbon economy?'
+        main_question: 'Does the intervention support R&D for building technological capabilities favouring a low-carbon economy?',
+        weight: 20
     },
     {
         name: 'Adoption',
         code: 'ADOPTION',
+        category_id: 1,
         description: 'Adoption of new technologies can be facilitated by pilot projects, demonstrations, experimentation and publicly or privately funded trials. Through these actions, the required skills and capacities to handle new technologies can be developed, new networks of users can be built, and the potential market for a new technology can be assessed.',
-        main_question: 'Does the intervention lead to early adoption of promising low-carbon technologies?'
+        main_question: 'Does the intervention lead to early adoption of promising low-carbon technologies?',
+        weight: 60
     },
     {
         name: 'Scale up',
         code: 'SCALE_UP',
+        category_id: 1,
         description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectorial public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
-        main_question: 'Does the intervention support the scale-up and diffusion of low-carbon innovations?'
+        main_question: 'Does the intervention support the scale-up and diffusion of low-carbon innovations?',
+        weight: 20
     },
     {
         name: 'Entrepreneurs',
         code: 'ENTREPRENEURS',
+        category_id: 2,
         description: 'Enterpreneurs are key agents of change that can invest, innovate and experiment with new technologies, applications or business models to drive change. They can be supported by creating an enabling environment and facilitating the exchange of information and ideas.',
-        main_question: 'Does the intervention promote enterpreneurs, businesses and investors to catalyse transformational change?'
+        main_question: 'Does the intervention promote enterpreneurs, businesses and investors to catalyse transformational change?',
+        weight: 33
     },
     {
         name: 'Coalition of advocates',
         code: 'COALITION_OF_ADVOCATES',
+        category_id: 2,
         description: 'The process of transformational change can benefit from the participation of a wide range of stakeholders organized in different forms (e.g., coalitions, lobbys, social movements etc) representing diverse interests and which could defend the intervention and provide counterbalance those actors opposing it. The way the intervention is planned may determined the networks that may arise around it.',
-        main_question: 'Does the intervention support coalitions and networks that seek to broaden and deepen support for low-carbon development?'
+        main_question: 'Does the intervention support coalitions and networks that seek to broaden and deepen support for low-carbon development?',
+        weight: 33
     },
     {
         name: 'Beneficiaries',
         code: 'BENIFICIARIES',
+        category_id: 2,
         description: 'Those stakeholders who would benefit from the intervention or who would be compensated if it has adverse effects can serve as agents of change and play a role in ensuring that the intervention is durable and gets strengthened over time.',
-        main_question: 'Does the intervention support diverse groups of society affected by the transformational change?'
+        main_question: 'Does the intervention support diverse groups of society affected by the transformational change?',
+        weight: 33
     },
     {
         name: 'Economic and non-economic',
         code: 'ECONOMIC_NON_ECONOMIC',
+        category_id: 3,
         description: 'Economic incentives may include tariff structures, access to low-cost finance, feed-in tariff policies for renewable energy, value-added and/or import duty exemptions on new technology, lowered land rates etc. Non-economic incentives may include partnerships, transitional support to communities affected by phase-out of emissions-intensive activities, giving ownership to local initiatives and communities, long-term institutional and governance support, political power and support for transition, signing memoranda of understanding, removing bureaucratic procedures.',
-        main_question: 'Does the intervention use economic and/or non-economic incentives to shift technology and increase market penetration?'
+        main_question: 'Does the intervention use economic and/or non-economic incentives to shift technology and increase market penetration?',
+        weight: 80
     },
     {
         name: 'Disincentives',
         code: 'DISINCENTIVES',
+        category_id: 3,
         description: 'Disincentives may include taxes on carbon-intensive produces, use of market-based instruments ausch as import duties, tariff structures that discourage investments in business-as-usual technologies, reduction or phase-out of fossil fuels subsidies, increased or new fossil fuel taxes, etc.',
-        main_question: 'Does the intervention disincentivize technologies and business contributing to a high carbon economy?'
+        main_question: 'Does the intervention disincentivize technologies and business contributing to a high carbon economy?',
+        weight: 10
     },
     {
         name: 'Institutional and regulatory',
         code: 'INSTITUTIONAL_AND_REGULATORY',
+        category_id: 3,
         description: 'An intervention may contribute to changes in the institutional and regulatory setting that facilitate/enable/promote transformational change. For instance, an intervention may lead to the creation of formal and informal institutions, new regulations or permanent budget allocation. It may also contribute to the development of intragovernmental processes for horizontal integration or multi-scale governmental processes.',
-        main_question: 'Does the intervention create or reconfigure existing conditions, including availability of finance for implementation, and puts in place regulation and institutions favouring low-carbon development?'
+        main_question: 'Does the intervention create or reconfigure existing conditions, including availability of finance for implementation, and puts in place regulation and institutions favouring low-carbon development?',
+        weight: 10
     },
     {
         name: 'Awareness',
         code: 'AWARENESS',
+        category_id: 4,
         description: 'An intervention may include components oriented to raise awareness and increase support for low-carbon solutions that may contribute to change norms and behaviours among diverse groups of stakeholders. Such a component can take the shape of campaigns and sensitization of policymakers and consumers, information dissemination within the institutions using various means etc',
-        main_question: 'Does the intervention support awareness raising and education for sustainability transition?'
+        main_question: 'Does the intervention support awareness raising and education for sustainability transition?',
+        weight: 46
     },
     {
         name: 'Behaviour',
         code: 'BEHAVIOUR',
+        category_id: 4,
         description: 'In order for transformational change to happen, a shift in the lifestyle and common practices of a large majority of the population has to take place. An intervention may influence consumers\' behaviour with actions such as peak energy savings, cash incentives for using alternative transport models, rewards for recycling, etc.',
-        main_question: 'Does the policy support measures that discourage high-carbon lifestyle and practices and promote low-carbon solutions?'
+        main_question: 'Does the policy support measures that discourage high-carbon lifestyle and practices and promote low-carbon solutions?',
+        weight: 27
     },
     {
         name: 'Social Norms',
         code: 'SOCIAL_NORMS',
+        category_id: 4,
         description: 'Social norms refers to those behaviours and practices that have become widely accepted and enjoy broad and deeply entrenched support within the society. An intervention can contribute to low-carbon lifestyle and practices becoming the prevalent societal norm. Some examples of this are the willingness to pay for pollution, the valorization of natural resources, the widespread adoption of energy efficiency measures within the households, etc.',
-        main_question: 'Does the intervention affect norms within society that align with and further promote low-carbon and sustainable development?'
+        main_question: 'Does the intervention affect norms within society that align with and further promote low-carbon and sustainable development?',
+        weight: 27
     },
     {
         name: 'Macro Level',
         code: 'MACRO_LEVEL',
+        category_id: 5,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Medium Level',
         code: 'MEDIUM_LEVEL',
+        category_id: 5,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Micro Level',
         code: 'MICRO_LEVEL',
+        category_id: 5,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Macro Level',
         code: 'MACRO_LEVEL',
+        category_id: 6,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Medium Level',
         code: 'MEDIUM_LEVEL',
+        category_id: 6,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Micro Level',
         code: 'MICRO_LEVEL',
+        category_id: 6,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Long term (>15 years)',
         code: 'LONG_TERM',
+        category_id: 7,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Medium term (5-15 years)',
         code: 'MEDIUM_TERM',
+        category_id: 7,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Short Term (<5 years)',
         code: 'SHORT_TERM',
+        category_id: 7,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Long term (>15 years)',
         code: 'LONG_TERM',
+        category_id: 8,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Medium term (5-15 years)',
         code: 'MEDIUM_TERM',
+        category_id: 8,
         description: '',
-        main_question: ''
+        main_question: '',
+        weight: 0
     },
     {
         name: 'Short Term (<5 years)',
         code: 'SHORT_TERM',
+        category_id: 8,
         description: '',
-        main_question: ''
-    }
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'International',
+        code: 'INTERNATIONAL',
+        category_id: 9,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'National',
+        code: 'NATIONAL',
+        category_id: 9,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'Subnational',
+        code: 'SUBNATIONAL',
+        category_id: 9,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'International',
+        code: 'INTERNATIONAL',
+        category_id: 10,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'National',
+        code: 'NATIONAL',
+        category_id: 10,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
+    {
+        name: 'Subnational',
+        code: 'SUBNATIONAL',
+        category_id: 10,
+        description: '',
+        main_question: '',
+        weight: 0
+    },
 ]
 
 export const categories = [
@@ -1460,48 +1556,60 @@ export const categories = [
         name: 'Technology',
         code: 'TECHNOLOGY',
         description: 'Process, skills and practices that drive research and development, early adoption and widespread scale-up of clean technologies.',
-        weight: 10
+        weight: 30
     },
     {
         name: 'Agents',
         code: 'AGENTS',
         description: 'Governments, enterpreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.',
-        weight: 20
+        weight: 10
     },
     {
         name: 'Incentives',
         code: 'INCENTIVES',
         description: 'Economic and non-economic incentives, along with disincentives, which play a critical role in shifting technology and societal change.',
-        weight: 4
+        weight: 50
     },
     {
         name: 'Norms',
         code: 'NORMS',
         description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.',
-        weight: 12
+        weight: 10
     },
     {
         name: 'Scale GHGs',
         code: 'SCALE_GHG',
         description: '',
-        weight: 0
+        weight: 35
     },
     {
         name: 'Scale SD',
         code: 'SCALE_SD',
         description: '',
-        weight: 0
+        weight: 35
     },
     {
         name: 'Sustained nature-GHGs',
         code: 'SUSTAINED_GHG',
         description: '',
-        weight: 0
+        weight: 35
     },
     {
         name: 'Sustained nature-SD',
         code: 'SUSTAINED_SD',
         description: '',
-        weight: 0
+        weight: 35
+    },
+    {
+        name: 'Scale Adaptation',
+        code: 'SCALE_ADAPTATION',
+        description: '',
+        weight: 30
+    },
+    {
+        name: 'Sustained Adaptation',
+        code: 'SUSTAINED_ADAPTATION',
+        description: '',
+        weight: 30
     },
 ]
