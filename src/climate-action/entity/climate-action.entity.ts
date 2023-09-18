@@ -260,6 +260,12 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ length: 500, default: null, nullable: true })
   vision_short: string;
 
+  @Column({ length: 500, default: null, nullable: true })
+  envisioned_change: string;
+
+  @Column({ length: 500, default: null, nullable: true })
+  phase_of_transformation: string;
+
   //location
 
   @Column({ length: 100, default: null, nullable: true })
