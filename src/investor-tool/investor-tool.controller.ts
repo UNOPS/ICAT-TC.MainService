@@ -146,4 +146,12 @@ export class InvestorToolController {
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
 
+  @Post('upload-file-investment')
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: './public/investment',filename: editFileName})}),)
+  async uploadJustificationInvestment(@UploadedFiles() files: Array<Express.Multer.File>
+  ) {
+    return {fileName: files[0].filename}
+    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
+  }
+
 }

@@ -20,6 +20,9 @@ export class InvestorQuestions extends BaseTrackingEntity {
     @JoinColumn({ name: 'characteristics_id' })
     characteristics?: Characteristics;
 
+    @Column({ nullable: true})
+    isMain : boolean;
+
     
 
 
