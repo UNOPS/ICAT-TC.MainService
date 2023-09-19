@@ -8,17 +8,29 @@ import { Methodology } from "./methodology.entity";
 export class Characteristics {
 
     @PrimaryGeneratedColumn()
-    id : number;
+    id: number;
 
     @Column({ nullable: true })
-    name : string;
+    name: string;
 
     @Column()
     code: string;
 
-    @ManyToOne((type) => Category, { cascade: false})
+    @Column({ nullable: true, length: 3000 })
+    description: string
+
+    @Column({ nullable: true, length: 3000 })
+    main_question: string
+
+    @Column({default: 0})
+    cm_weight: number
+
+    @ManyToOne((type) => Category, { cascade: false })
     @JoinColumn({ name: 'category_id' })
     category?: Category;
 
-  
+    @Column({type: 'longtext', nullable: true })
+    investmentDescription: string;
+
+
 }

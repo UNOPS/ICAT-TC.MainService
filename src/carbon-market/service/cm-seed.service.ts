@@ -200,10 +200,13 @@ export class CMSeedService {
         let _characterisctics: Characteristics[] = []
 
         for await(let char of characteristic){
-            let c = await this.characRepo.createQueryBuilder('ch').where('ch.name = :name', {name: char.name}).getMany()
+            let c = await this.characRepo.createQueryBuilder('ch').where('ch.code = :name', {name: char.code}).getMany()
             if (c){
                 for await (let _c of c){
-                    _c.code = char.code
+                    _c.name = char.name
+                    _c.description = char.description
+                    _c.main_question = char.main_question
+                    _c.cm_weight = char.weight
                     _characterisctics.push(_c)
                 }
             } else {
@@ -283,10 +286,12 @@ export class CMSeedService {
         let _categories: Category[] = []
 
         for await(let cat of categories){
-            let c = await this.catRepo.createQueryBuilder('ct').where('ct.name = :name', {name: cat.name}).getMany()
+            let c = await this.catRepo.createQueryBuilder('ct').where('ct.code = :name', {name: cat.code}).getMany()
             if (c){
                 for await (let _c of c){
-                    _c.code = cat.code
+                    _c.name = cat.name
+                    _c.description = cat.description
+                    _c.cm_weight = cat.weight
                     _categories.push(_c)
                 }
             } else {
@@ -303,6 +308,54 @@ export class CMSeedService {
             }
         }  else {
             return {res: response, status: "Nothing to save"}
+        }
+    }
+
+    async deleteNotUsingQuestions(){
+        let _questions = await this.questionRepo.createQueryBuilder('q').getMany()
+        let q_codes = questions.map(o => o.code)
+
+        let qs: CMQuestion[] = []
+        for await(let question of _questions){
+            if (!q_codes.includes(question.code)){
+                question.status = -20
+                qs.push(question)
+            }
+        }
+
+        if (qs.length > 0){
+            let res = this.questionRepo.save(qs)
+            if (res) {
+                return { status: "saved"}
+            } else { 
+                return { status: "failed to save"}
+            }
+        }  else {
+            return { status: "Nothing to save"}
+        }
+    }
+
+    async deleteNotUsingAnswers(){
+        let _answers = await this.answerRepo.createQueryBuilder('a').getMany()
+        let a_codes = answers.map(o => o.code)
+
+        let ans: CMAnswer[] = []
+        for await(let answer of _answers){
+            if (!a_codes.includes(answer.code)){
+                answer.status = -20
+                ans.push(answer)
+            }
+        }
+
+        if (ans.length > 0){
+            let res = this.answerRepo.save(ans)
+            if (res) {
+                return { status: "saved"}
+            } else { 
+                return { status: "failed to save"}
+            }
+        }  else {
+            return { status: "Nothing to save"}
         }
     }
 }
