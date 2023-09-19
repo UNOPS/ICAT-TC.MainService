@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
-import { CMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CMScoreDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
@@ -171,10 +171,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   //   }
   // }
 
-  async calculateResult(assessmentId: number) {
-    let response: {
-      process_score: number, outcome_score: number, message: string
-    } = { process_score: 0, outcome_score: 0, message: '' }
+  async calculateResult(assessmentId: number) :Promise<CMScoreDto>{
+    let response: CMScoreDto = new CMScoreDto()
     let cmAssessmentQuestions_process = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
       .innerJoin(
@@ -308,13 +306,18 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD'].score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
     if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
 
-    return Math.round(outcome_score)
+    return {
+      ghg_score: Math.round(ghg_score),
+      sdg_score: Math.round(sdg_score),
+      adaptation_score: Math.round(adaptation_score),
+      outcome_score: Math.round(outcome_score)
+    }
   }
 
   async getResults(assessmentId: number) {
     let result = []
     let processData: { technology: any[], incentives: any[], norms: any[], } = { technology: [], incentives: [], norms: [] };
-    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [] };
+    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[], scale_adaptation: any[], sustained_adaptation: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [], scale_adaptation:[], sustained_adaptation: [] };
 
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -413,34 +416,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           justification: ans?.assessment_question?.comment,
           document: ans?.assessment_question?.uploadedDocumentPath,
           category: ans?.assessment_question?.characteristic?.category,
-          starting_situation: ans?.assessment_question?.startingSituation,
-          expected_impacts: ans?.assessment_question?.expectedImpact,
           SDG: ans?.assessment_question?.selectedSdg,
           outcome_score: ans?.selectedScore,
-          adaptation_co_benifit: ans?.assessment_question?.adaptationCoBenifit
+          weight:  ans.assessment_question?.characteristic?.category.cm_weight
 
         }
-        if (obj?.category?.code == 'TECHNOLOGY') {
-          processData.technology.push(obj)
-        }
-        else if (obj?.category?.code == 'INCENTIVES') {
-          processData.incentives.push(obj)
-        }
-        else if (obj?.category?.code == 'NORMS') {
-          processData.norms.push(obj)
-        }
+        // if (obj?.category?.code == 'TECHNOLOGY') {
+        //   processData.technology.push(obj)
+        // }
+        // else if (obj?.category?.code == 'INCENTIVES') {
+        //   processData.incentives.push(obj)
+        // }
+        // else if (obj?.category?.code == 'NORMS') {
+        //   processData.norms.push(obj)
+        // }
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_GHG') {
+        } else if (obj?.category?.code == 'SUSTAINED_GHG') {
           outcomeData.sustained_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SCALE_SD') {
+        } else if (obj?.category?.code == 'SCALE_SD') {
           outcomeData.scale_SDs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_SD') {
+        } else if (obj?.category?.code == 'SUSTAINED_SD') {
           outcomeData.sustained_SDs.push(obj)
+        } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
+          outcomeData.sustained_adaptation.push(obj)
+        } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
+          outcomeData.scale_adaptation.push(obj)
         }
 
 

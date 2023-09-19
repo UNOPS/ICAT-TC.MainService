@@ -59,3 +59,16 @@ export class UniqueCharacteristic{
     id: number
     questions: CMQuestion[] = []
 }
+
+export class CMScoreDto {
+    process_score: number
+    outcome_score: OutcomeScoreDto
+    message: string
+}
+
+export class OutcomeScoreDto {
+    ghg_score: number
+    sdg_score: number
+    adaptation_score: number
+    outcome_score: number
+}
