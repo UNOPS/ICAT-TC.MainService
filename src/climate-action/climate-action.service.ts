@@ -17,6 +17,8 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
+import { AllBarriersSelected } from './dto/selected-barriers.dto';
+import { BarrierCategory } from './entity/barrier-category.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -25,15 +27,23 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(ClimateAction) repo,
     @InjectRepository(PolicyBarriers) public PolicyBarriersRepo: Repository<PolicyBarriers>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
+    @InjectRepository(BarrierCategory) private  barrierCategoryRepo: Repository<BarrierCategory>,
     private userService: UsersService,
+    
 ) {
     super(repo);
   }
  
   async create(req:ClimateAction):Promise<ClimateAction>{
     // console.log( "req",req)
-    return await this.repo.save(req)
-     
+    // console.log( "called")
+    // let user =new User()
+    // user.id = 1;
+    // req.user =user;
+    let a =  await this.repo.save(req)
+    console.log( "saved")
+    return a
+      
   }
 
   async getProjectDetails(  
@@ -109,18 +119,36 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       return resualt;
     }
   }
-async save(req:PolicyBarriers[]){
-  for(let re of req){
-    console.log("barrier", re)
-    await this.PolicyBarriersRepo.save(re);
+async save(req:AllBarriersSelected){
+  // console.log("AllBarriersSelected",req)
+  for(let re of req.allBarriers){
+    let policyBarrier = new PolicyBarriers()
+    policyBarrier.barrier = re.barrier;
+    policyBarrier.climateAction = req.climateAction
+    policyBarrier.explanation = re.explanation
+    policyBarrier.is_affected = re.affectedbyIntervention
+    console.log("barrier",policyBarrier)
+    let barrier = await this.PolicyBarriersRepo.save(policyBarrier);
+
+    for (let char of re.characteristics) {
+      let barrierCategory = new BarrierCategory()
+      barrierCategory.barriers = barrier;
+      barrierCategory.characteristics =char;
+      barrierCategory.climateAction = req.climateAction
+      console.log("barrierCategory",barrierCategory)
+      let result = await this.barrierCategoryRepo.save(barrierCategory);
+      console.log("saved")
+
+    }
   }
   return req;
 }
 
 async savepolicySectors(req:PolicySector[]){
   for(let re of req){
-    console.log("sector", re)
+    
     await this.PolicySectorsRepo.save(re);
+    console.log("saved sector")
   }
   return req;
 }
@@ -536,11 +564,21 @@ async allProject(
     });
   }
   
-  async findPolicyBarrierData(policyID: number){
-    return this.PolicyBarriersRepo.find({
-      relations: ['barriers','characteristics'],
-      where: { climateAction: { id: policyID } },
-    });
+  async findPolicyBarrierData(policyID: number):Promise<PolicyBarriers[]>{
+    let barriers= await this.PolicyBarriersRepo.createQueryBuilder('policyBarriers')
+      .leftJoinAndSelect('policyBarriers.barrierCategory', 'barrierCategory')
+      .leftJoinAndSelect('barrierCategory.characteristics', 'characteristics')
+      .where('policyBarriers.climateAction.id = :policyID', { policyID })
+      .getMany();
+
+      console.log("barriers",barriers)
+      const modifiedArray = barriers.map(item => {
+        return {
+          ...item,
+          characteristics: item.barrierCategory.map(category => category.characteristics),
+        };
+      });
+      return modifiedArray
   }
   
 

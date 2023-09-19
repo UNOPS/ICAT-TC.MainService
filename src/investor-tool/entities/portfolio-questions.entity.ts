@@ -8,7 +8,7 @@ import { InvestorAssessment } from "./investor-assessment.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 
 @Entity()
-export class InvestorQuestions extends BaseTrackingEntity {
+export class PortfolioQuestions extends BaseTrackingEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -20,11 +20,10 @@ export class InvestorQuestions extends BaseTrackingEntity {
     @JoinColumn({ name: 'characteristics_id' })
     characteristics?: Characteristics;
 
-    @Column({ nullable: true})
-    isMain : boolean;
+    @Column({type: 'longtext', nullable: true })
+    description: string;
 
-    
-
-
+    @Column({type: 'longtext', nullable: true })
+    hint: string;
 
 }
