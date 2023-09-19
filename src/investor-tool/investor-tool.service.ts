@@ -404,6 +404,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let sdgs = new SdgAssessment()
         sdgs.assessment = request[0].data[0].assessment
         sdgs.sdg = item
+        sdgs.answer = item.answer;
         await this.sdgsRepo.save(sdgs)
       }
       let data = new Results();

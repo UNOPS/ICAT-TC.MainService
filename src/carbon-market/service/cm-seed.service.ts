@@ -206,6 +206,7 @@ export class CMSeedService {
                     _c.name = char.name
                     _c.description = char.description
                     _c.main_question = char.main_question
+                    _c.cm_weight = char.weight
                     _characterisctics.push(_c)
                 }
             } else {
@@ -290,6 +291,7 @@ export class CMSeedService {
                 for await (let _c of c){
                     _c.name = cat.name
                     _c.description = cat.description
+                    _c.cm_weight = cat.weight
                     _categories.push(_c)
                 }
             } else {

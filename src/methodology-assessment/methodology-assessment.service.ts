@@ -766,8 +766,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     for await (let ch of result) {
       let isGHG: boolean = false
       let isSDG: boolean = false
-      ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
-      ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
+      // ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
+      // ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
+      let res = this.mapCharacteristicNames(ch)
+      ch.name = res.name
+      ch.code = res.code
       let cat = response.find(o => o.code === ch.category.code)
       let cmRes = new CMResultDto()
       cmRes.characteristic = ch 
@@ -778,10 +781,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         cat.results.push(cmRes)
       } else {
         let obj = new OutcomeCategory()
-        obj.name = ch.category.name
+        obj.name = this.mapCategoryNames(ch.category)
         obj.code = ch.category.code
         obj.method = ch.category.code.indexOf('SCALE') !== -1 ? 'SCALE' : 'SUSTAINED'
-        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : 'SD'
+        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : (ch.category.code.indexOf('ADAPTATION') !== -1 ? 'ADAPTATION' : 'SD')
         obj.results = [cmRes]
         response.push(obj)
       }
@@ -798,6 +801,137 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      response.sort((a,b) => a.order - b.order)
 
     return response
+  }
+
+  mapCategoryNames(category: Category){
+    switch (category.code) {
+      case 'SCALE_GHG':
+        return 'GHGs <br> Scale of outcomes'
+      case 'SCALE_SD':
+        return 'SDGs <br> Scale of outcomes'
+      case 'SUSTAINED_GHG':
+        return 'Time frame <br> outcome is sustained'
+      case 'SUSTAINED_SD':
+        return 'Time frame <br> outcome is sustained'
+      case 'SCALE_ADAPTATION':
+        return 'Adaptation co-benifits <br> Scale of outcomes'
+      case 'SUSTAINED_ADAPTATION':
+        return 'Time frame <br> outcome is sustained'
+    }
+  }
+
+  mapCharacteristicNames(characteristic: Characteristics){
+    let res = {}
+    switch (characteristic.category.code){
+      case 'SCALE_GHG': 
+        if (characteristic.code === 'MACRO_LEVEL') {
+          return {
+            name: 'What is the scale of the GHG outcome at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'MEDIUM_LEVEL') {
+          return {
+            name: 'What is the scale of the GHG outcome at national or sectoral level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'MICRO_LEVEL') {
+          return {
+            name: 'What is the scale of the GHG outcome at subnational\/regional\/municipal or subsectoral level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+      case 'SCALE_SD':
+        if (characteristic.code === 'MACRO_LEVEL') {
+          return {
+            name: 'What is the scale of the contribution to this SDG at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'MEDIUM_LEVEL') {
+          return {
+            name: 'What is the scale of the contribution to this SDG at national or sectorial level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'MICRO_LEVEL') {
+          return {
+            name: 'What is the scale of the contribution to this SDG at subnational\/regional\/municipal or subsectorial level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+      case 'SUSTAINED_GHG':
+        if (characteristic.code === 'LONG_TERM') {
+          return {
+            name: 'What is the time frame of the GHG outcome at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'MEDIUM_TERM') {
+          return {
+            name: 'What is the time frame of the GHG outcome at national or sectoral level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'SHORT_TERM') {
+          return {
+            name: 'What is the time frame of the GHG outcome at subnational\/regional\/municipal or subsectoral level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+      case 'SUSTAINED_SD':
+        if (characteristic.code === 'LONG_TERM') {
+          return {
+            name: 'What is the time frame of the contribution to this SDG at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'MEDIUM_TERM') {
+          return {
+            name: 'What is the time frame of the contribution to this SDG at national or sectorial level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'SHORT_TERM') {
+          return {
+            name: 'What is the time frame of the contribution to this SDG at subnational\/regional\/municipal or subsectorial level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+      case 'SCALE_ADAPTATION':
+        if (characteristic.code === 'INTERNATIONAL') {
+          return {
+            name: 'What is the scale of the adaptation co-benefits at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'NATIONAL') {
+          return {
+            name: 'What is the scale of the adaptation co-benefits at national or sectoral level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'SUBNATIONAL') {
+          return {
+            name: 'What is the scale of the adaptation co-benefits at subnational\/regional\/municipal or subsectorial level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+      case 'SUSTAINED_ADAPTATION':
+        if (characteristic.code === 'INTERNATIONAL') {
+          return {
+            name: 'What is the time frame of the adaptation co-benefits at international\/global level?',
+            code: 'INTERNATIONAL'
+          }
+        } else if (characteristic.code === 'NATIONAL') {
+          return {
+            name: 'What is the time frame of the adaptation co-benefits at national or sectoral level?',
+            code: 'NATIONAL'
+          }
+        } else if (characteristic.code === 'SUBNATIONAL') {
+          return {
+            name: 'What is the time frame of the adaptation co-benefits at subnational\/regional\/municipal or subsectorial level?',
+            code: 'SUBNATIONAL'
+          }
+        }
+        break;
+    }
   }
 
   async findAllCharacteristics(): Promise<Characteristics[]> {
@@ -1130,7 +1264,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepository.find({
-      relations: ['climateAction'],
+      relations: ['climateAction']
     });
   
      let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);

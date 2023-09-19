@@ -1,8 +1,9 @@
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CMQuestion } from './cm-question.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { CMAssessmentAnswer } from './cm-assessment-answer.entity';
 
 
 @Entity()
@@ -39,6 +40,9 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @Column({nullable: true})
   relevance: string
 
+  @Column({nullable: true})
+  adaptationCoBenifit: string
+
   @ManyToOne((type) => Characteristics, {nullable: true})
   @JoinColumn()
   characteristic: Characteristics
@@ -47,6 +51,7 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @JoinColumn()
   question: CMQuestion
 
-
+  @ManyToMany((type) => CMAssessmentAnswer, (assessmentAnswer)=> assessmentAnswer.assessment_question)
+  assessmentAnswers: CMAssessmentAnswer[]
 
 }
