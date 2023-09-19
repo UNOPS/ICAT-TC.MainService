@@ -51,6 +51,9 @@ export class Assessment extends BaseTrackingEntity{
 
     @Column({type: 'longtext', nullable: true })
     opportunities: string;
+
+    @Column({type: 'longtext', nullable: true })
+    principles: string;
     
     @Column({ type:"mediumtext" ,nullable: true })
     audience?: string;

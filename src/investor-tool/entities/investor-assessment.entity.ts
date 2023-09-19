@@ -11,6 +11,7 @@ import { InvestorQuestions } from "./investor-questions.entity";
 import { IndicatorDetails } from "./indicator-details.entity";
 import { Institution } from "src/institution/entity/institution.entity";
 import { PortfolioSdg } from "./portfolio-sdg.entity";
+import { PortfolioQuestionDetails } from "./portfolio_question-details.entity";
 
 @Entity()
 export class InvestorAssessment extends BaseTrackingEntity {
@@ -75,6 +76,9 @@ export class InvestorAssessment extends BaseTrackingEntity {
      @OneToMany(() => IndicatorDetails, (indicatorDetails) => indicatorDetails.investorAssessment)
    
     indicator_details:IndicatorDetails[] 
+
+    @OneToMany(() => PortfolioQuestionDetails, (portfolioQuestionDetails) => portfolioQuestionDetails.investorAssessment)
+    portfolioQuestion_details:PortfolioQuestionDetails[] 
 
     @ManyToOne((type) => Assessment, { cascade: false })
     @JoinColumn({ name: 'assessment_id' })

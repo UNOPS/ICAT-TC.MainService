@@ -41,7 +41,7 @@ export class MethodologyAssessmentController {
 
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
-    private readonly climateService: ProjectService,
+    // private readonly climateService: ProjectService,
     private readonly tokenDetails: TokenDetails,
     private readonly userService : UsersService
 
