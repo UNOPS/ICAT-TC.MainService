@@ -251,19 +251,19 @@ export class ClimateAction extends BaseTrackingEntity {
   dateOfCompletion: Date;
 
   //vision for design
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ type: 'longtext', default: null, nullable: true })
   vision_long: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ type: 'longtext', default: null, nullable: true })
   vision_medium: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ type: 'longtext', default: null, nullable: true })
   vision_short: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ type: 'longtext', default: null, nullable: true })
   envisioned_change: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ type: 'longtext', default: null, nullable: true })
   phase_of_transformation: string;
 
   //location
