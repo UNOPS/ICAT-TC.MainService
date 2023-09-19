@@ -70,7 +70,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
     // return savedFiles;
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Post('getDashboardData')
+  async getDashboardData(){
+    return await this.service.getDashboardData()
+  }
  
 
 }
