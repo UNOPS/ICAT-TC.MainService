@@ -14,11 +14,12 @@ import { User } from 'src/users/entity/user.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
+import { BarrierCategory } from './entity/barrier-category.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  User, UserType, Institution, Country,Audit,])],
+  imports: [TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  User, UserType, Institution, Country,Audit,BarrierCategory])],
   controllers: [ProjectController],
-  providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService],
+  providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService,BarrierCategory],
   exports: [ProjectService],
 })
 export class ProjectModule {}

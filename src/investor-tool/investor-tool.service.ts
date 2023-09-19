@@ -30,6 +30,7 @@ import { UsersService } from 'src/users/users.service';
 import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
+import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 
 const schema = {
   'id': {
@@ -61,6 +62,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioSdg) private readonly portfolioSDgsRepo: Repository<PortfolioSdg>,
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
+    @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
 
     private userService: UsersService,
     private methAssessService:MethodologyAssessmentService
@@ -148,7 +150,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    
 
    async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
-    console.log("request",request)
+    console.log("....request",request)
     let mitigation:number;
     for (let req of request) {
       for (let assess of req.data) {
@@ -192,7 +194,22 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         //     }
         //   }
 
-        let a = await this.investorAssessmentRepo.save(assess)
+        // let a = await this.investorAssessmentRepo.save(assess)
+        let a = await this.investorAssessmentRepo.save(assess).then(
+          async (x) => {
+            for(let item of x.indicator_details){
+              if(item.value || item.justification){
+                // console.log("44444")
+                // item.institution =new Institution()
+                item.investorAssessment =x
+                await this.indicatorDetailsRepo.save(item)
+                console.log("saved",item.question.id, item.value,item.justification)
+
+              }
+    
+            }
+          })
+        
         console.log("saved")
 
       }
@@ -387,6 +404,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let sdgs = new SdgAssessment()
         sdgs.assessment = request[0].data[0].assessment
         sdgs.sdg = item
+        sdgs.answer = item.answer;
         await this.sdgsRepo.save(sdgs)
       }
       let data = new Results();
@@ -400,6 +418,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     async findAllIndicatorquestions(): Promise<InvestorQuestions[]> {
       return this.investorQuestionRepo.find()
+    }
+
+    async findAllPortfolioquestions(): Promise<PortfolioQuestions[]> {
+      return this.portfolioQuestionRepo.find()
     }
 
     async createFinalAssessmentIndirect(request: any):Promise<any> {
