@@ -71,10 +71,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     // return savedFiles;
   }
   @UseGuards(JwtAuthGuard)
-  @Post('getDashboardData')
-  async getDashboardData(){
-    return await this.service.getDashboardData()
+  @Get('getDashboardData')
+  async getDashboardData(): Promise<any[]>{
+    const data= await this.service.getDashboardData()
+    // console.log(data)
+    return data
   }
- 
 
 }
