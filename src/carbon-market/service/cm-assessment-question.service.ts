@@ -467,11 +467,119 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       return {
         result: result,
         criteria: criteria,
-        processData: processData,
+        processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
       }
     }
   }
+
+  async getProcessData(assessmentId: number) {
+    let cmAssessmentQuestions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .innerJoinAndSelect(
+        'aq.characteristic',
+        'characteristic',
+        'characteristic.id = aq.characteristicId'
+      )
+      .innerJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id'
+      )
+      .leftJoinAndMapMany(
+        'aq.assessmentAnswers',
+        CMAssessmentAnswer,
+        'assessmentAnswers',
+        'assessmentAnswers.assessmentQuestionId = aq.id'
+      )
+      .leftJoinAndMapOne(
+        'assessmentAnswers.answer',
+        CMAnswer,
+        'answer',
+        'answer.id = assessmentAnswers.answerId'
+      ).leftJoinAndMapOne(
+        'answer.question',
+        CMQuestion,
+        'question',
+        'question.id = answer.questionId'
+      )
+      .where('assessment.id = :id and category.type = "process"', { id: assessmentId })
+      .getMany()
+
+    let categories = cmAssessmentQuestions.map(q => q.characteristic.category)
+    let uniqueCats = [
+      ...new Map(categories.map((item) => [item["code"], item])).values(),
+  ];
+    let data = []
+    let maxLength = 0;
+
+    for (let cat of uniqueCats) {
+      let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code)
+      let chs = this.group(qs, 'characteristic', 'code')
+      let ch_data = Object.keys(chs).map(ch => {
+        if (chs[ch].length > maxLength) {
+          maxLength = chs[ch].length;
+        }
+        let _obj = {}
+        _obj['name'] = chs[ch][0].characteristic.name
+        _obj['relevance'] = chs[ch][0].relevance
+        let questions = []
+        for (let q of chs[ch]) {
+          let o = new QuestionData()
+          o.question = q.assessmentAnswers[0].answer.question.label
+          o.weight = q.assessmentAnswers[0].answer.weight
+          o.score = q.assessmentAnswers[0].answer.score_portion
+          questions.push(o)
+        }
+        _obj['questions'] = questions
+        return _obj
+      })
+      data.push({
+        name: cat.name,
+        characteristic: ch_data
+      })
+    }
+
+    data = data.map(_data => {
+      let chs =  _data.characteristic.map(ch => {
+        if (ch.questions.length < maxLength){
+          while (ch.questions.length < maxLength){
+            ch.questions.push(new QuestionData())
+          }
+        }
+        return ch
+      })
+      return {name: _data.name, characteristic: chs}
+    })
+
+    let guiding_questions = []
+
+    for (let i = 0; i < maxLength; i++) {
+      let obj = {}
+      data.map(_data => {
+        _data.characteristic.map(ch => {
+          obj[ch.name + 'question'] = ch.questions[i].question
+          obj[ch.name + 'weight'] = ch.questions[i].weight
+          obj[ch.name + 'score'] = ch.questions[i].score
+        })
+      })
+      guiding_questions.push(obj)
+    }
+
+    let response = {
+      data: data,
+      guidingQuestions: guiding_questions
+    }
+    return response
+
+  }
+
+ 
 
   group(list: any[], prop: string | number, prop2?: string | number) {
     if (prop2) {
@@ -548,6 +656,12 @@ export class CharacteristicData {
   relevance: string
   ch_weight: number
   score: number
+}
+
+export class QuestionData {
+  question: string = '-'
+  weight: string = '-'
+  score: string = '-'
 }
 
 
