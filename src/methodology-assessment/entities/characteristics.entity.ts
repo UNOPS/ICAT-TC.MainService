@@ -29,5 +29,8 @@ export class Characteristics {
     @JoinColumn({ name: 'category_id' })
     category?: Category;
 
+    @Column({type: 'longtext', nullable: true })
+    investmentDescription: string;
+
 
 }
