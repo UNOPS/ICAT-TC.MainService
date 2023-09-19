@@ -18,6 +18,9 @@ export class SdgAssessment  {
     @ManyToOne((type) => PortfolioSdg, { cascade: false ,eager:true})
     sdg: PortfolioSdg;
 
+    @Column({ nullable: true })
+    answer: string;
+
    
 
 }
