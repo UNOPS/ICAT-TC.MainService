@@ -297,7 +297,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let cat of categories) {
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score = qs.reduce((accumulator, object) => {
-        return accumulator + object.assessmentAnswers[0].score;
+        return accumulator + object.assessmentAnswers[0]?.score;
       }, 0);
       obj[cat] = {
         score: Math.round(score),
@@ -307,7 +307,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
     let outcome_score = 0
     if (obj['SCALE_GHG']) { ghg_score += obj['SCALE_GHG'].score + obj['SUSTAINED_GHG'].score; outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) }
-    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD'].score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
+    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD']?.score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
     if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
 
     return {
@@ -656,7 +656,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData(){
+  async getDashboardData():Promise<any[]>{
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
@@ -668,7 +668,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     });
     // let filteredResults =results
      let filteredResults = results.filter(result => result.tool === tool );
-     console.log("current user:",currentUser?.userType?.name,currentUser.id)
+    //  console.log("current user:",currentUser?.userType?.name,currentUser.id)
      if(isUserExternal){
       filteredResults= filteredResults.filter(result => 
         {if (result?.user?.id===currentUser?.id){
@@ -676,16 +676,19 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }})
         
      }
-    
-    const formattedResults = filteredResults.map(result => {
+    const formattedResults = await Promise.all(filteredResults.map(async (result) => {
+      const data = await this.calculateResult(result.id);
       return {
-        assessment : result.id,
-        data: this.calculateResult(result.id),
-        // intervention: result.climateAction?.name
+        assessment: result.id,
+        process_score: data?.process_score,
+        outcome_score: data?.outcome_score?.outcome_score,
+        intervention: result.climateAction?.policyName
       };
-    }); 
-  
-    return formattedResults;
+    }));
+    // return formattedResults
+    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
+    // console.log(filteredData)
+    return  filteredData
   }
 }
 
