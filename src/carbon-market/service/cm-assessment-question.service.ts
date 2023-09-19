@@ -16,6 +16,8 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
+import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -33,7 +35,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(ParameterRequest)
     private parameterRequestRepo: Repository<ParameterRequest>,
     @InjectRepository(Characteristics)
-    private characteristicRepo: Repository<Characteristics>
+    private characteristicRepo: Repository<Characteristics>,
+    
+    private userService:UsersService
   ) {
     super(repo);
   }
@@ -540,6 +544,38 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     })
 
     await this.parameterRequestRepo.save(requests)
+  }
+
+  async getDashboardData(){
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    let tool = 'Carbon Market Tool';
+    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    
+    const results = await this.assessmentRepo.find({
+      relations: ['climateAction']
+    });
+    // let filteredResults =results
+     let filteredResults = results.filter(result => result.tool === tool );
+     console.log("current user:",currentUser?.userType?.name,currentUser.id)
+     if(isUserExternal){
+      filteredResults= filteredResults.filter(result => 
+        {if (result?.user?.id===currentUser?.id){
+          return result
+        }})
+        
+     }
+    
+    const formattedResults = filteredResults.map(result => {
+      return {
+        assessment : result.id,
+        data: this.calculateResult(result.id),
+        // intervention: result.climateAction?.name
+      };
+    }); 
+  
+    return formattedResults;
   }
 }
 
