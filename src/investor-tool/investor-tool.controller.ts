@@ -139,7 +139,7 @@ export class InvestorToolController {
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: './public/portfolio',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
