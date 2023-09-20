@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
-import { CMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CMScoreDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
@@ -171,10 +171,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   //   }
   // }
 
-  async calculateResult(assessmentId: number) {
-    let response: {
-      process_score: number, outcome_score: number, message: string
-    } = { process_score: 0, outcome_score: 0, message: '' }
+  async calculateResult(assessmentId: number) :Promise<CMScoreDto>{
+    let response: CMScoreDto = new CMScoreDto()
     let cmAssessmentQuestions_process = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
       .innerJoin(
@@ -308,13 +306,18 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD'].score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
     if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
 
-    return Math.round(outcome_score)
+    return {
+      ghg_score: Math.round(ghg_score),
+      sdg_score: Math.round(sdg_score),
+      adaptation_score: Math.round(adaptation_score),
+      outcome_score: Math.round(outcome_score)
+    }
   }
 
   async getResults(assessmentId: number) {
     let result = []
     let processData: { technology: any[], incentives: any[], norms: any[], } = { technology: [], incentives: [], norms: [] };
-    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [] };
+    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[], scale_adaptation: any[], sustained_adaptation: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [], scale_adaptation:[], sustained_adaptation: [] };
 
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -413,34 +416,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           justification: ans?.assessment_question?.comment,
           document: ans?.assessment_question?.uploadedDocumentPath,
           category: ans?.assessment_question?.characteristic?.category,
-          starting_situation: ans?.assessment_question?.startingSituation,
-          expected_impacts: ans?.assessment_question?.expectedImpact,
           SDG: ans?.assessment_question?.selectedSdg,
           outcome_score: ans?.selectedScore,
-          adaptation_co_benifit: ans?.assessment_question?.adaptationCoBenifit
+          weight:  ans.assessment_question?.characteristic?.category.cm_weight
 
         }
-        if (obj?.category?.code == 'TECHNOLOGY') {
-          processData.technology.push(obj)
-        }
-        else if (obj?.category?.code == 'INCENTIVES') {
-          processData.incentives.push(obj)
-        }
-        else if (obj?.category?.code == 'NORMS') {
-          processData.norms.push(obj)
-        }
+        // if (obj?.category?.code == 'TECHNOLOGY') {
+        //   processData.technology.push(obj)
+        // }
+        // else if (obj?.category?.code == 'INCENTIVES') {
+        //   processData.incentives.push(obj)
+        // }
+        // else if (obj?.category?.code == 'NORMS') {
+        //   processData.norms.push(obj)
+        // }
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_GHG') {
+        } else if (obj?.category?.code == 'SUSTAINED_GHG') {
           outcomeData.sustained_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SCALE_SD') {
+        } else if (obj?.category?.code == 'SCALE_SD') {
           outcomeData.scale_SDs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_SD') {
+        } else if (obj?.category?.code == 'SUSTAINED_SD') {
           outcomeData.sustained_SDs.push(obj)
+        } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
+          outcomeData.sustained_adaptation.push(obj)
+        } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
+          outcomeData.scale_adaptation.push(obj)
         }
 
 
@@ -467,11 +469,119 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       return {
         result: result,
         criteria: criteria,
-        processData: processData,
+        processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
       }
     }
   }
+
+  async getProcessData(assessmentId: number) {
+    let cmAssessmentQuestions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .innerJoinAndSelect(
+        'aq.characteristic',
+        'characteristic',
+        'characteristic.id = aq.characteristicId'
+      )
+      .innerJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id'
+      )
+      .leftJoinAndMapMany(
+        'aq.assessmentAnswers',
+        CMAssessmentAnswer,
+        'assessmentAnswers',
+        'assessmentAnswers.assessmentQuestionId = aq.id'
+      )
+      .leftJoinAndMapOne(
+        'assessmentAnswers.answer',
+        CMAnswer,
+        'answer',
+        'answer.id = assessmentAnswers.answerId'
+      ).leftJoinAndMapOne(
+        'answer.question',
+        CMQuestion,
+        'question',
+        'question.id = answer.questionId'
+      )
+      .where('assessment.id = :id and category.type = "process"', { id: assessmentId })
+      .getMany()
+
+    let categories = cmAssessmentQuestions.map(q => q.characteristic.category)
+    let uniqueCats = [
+      ...new Map(categories.map((item) => [item["code"], item])).values(),
+  ];
+    let data = []
+    let maxLength = 0;
+
+    for (let cat of uniqueCats) {
+      let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code)
+      let chs = this.group(qs, 'characteristic', 'code')
+      let ch_data = Object.keys(chs).map(ch => {
+        if (chs[ch].length > maxLength) {
+          maxLength = chs[ch].length;
+        }
+        let _obj = {}
+        _obj['name'] = chs[ch][0].characteristic.name
+        _obj['relevance'] = chs[ch][0].relevance
+        let questions = []
+        for (let q of chs[ch]) {
+          let o = new QuestionData()
+          o.question = q.assessmentAnswers[0].answer.question.label
+          o.weight = q.assessmentAnswers[0].answer.weight
+          o.score = q.assessmentAnswers[0].answer.score_portion
+          questions.push(o)
+        }
+        _obj['questions'] = questions
+        return _obj
+      })
+      data.push({
+        name: cat.name,
+        characteristic: ch_data
+      })
+    }
+
+    data = data.map(_data => {
+      let chs =  _data.characteristic.map(ch => {
+        if (ch.questions.length < maxLength){
+          while (ch.questions.length < maxLength){
+            ch.questions.push(new QuestionData())
+          }
+        }
+        return ch
+      })
+      return {name: _data.name, characteristic: chs}
+    })
+
+    let guiding_questions = []
+
+    for (let i = 0; i < maxLength; i++) {
+      let obj = {}
+      data.map(_data => {
+        _data.characteristic.map(ch => {
+          obj[ch.name + 'question'] = ch.questions[i].question
+          obj[ch.name + 'weight'] = ch.questions[i].weight
+          obj[ch.name + 'score'] = ch.questions[i].score
+        })
+      })
+      guiding_questions.push(obj)
+    }
+
+    let response = {
+      data: data,
+      guidingQuestions: guiding_questions
+    }
+    return response
+
+  }
+
+ 
 
   group(list: any[], prop: string | number, prop2?: string | number) {
     if (prop2) {
@@ -548,6 +658,12 @@ export class CharacteristicData {
   relevance: string
   ch_weight: number
   score: number
+}
+
+export class QuestionData {
+  question: string = '-'
+  weight: string = '-'
+  score: string = '-'
 }
 
 
