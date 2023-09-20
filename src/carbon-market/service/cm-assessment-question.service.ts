@@ -18,6 +18,7 @@ import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
 import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
 import { UsersService } from "src/users/users.service";
+import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -656,7 +657,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData():Promise<any[]>{
+  async getDashboardData( options:IPaginationOptions):Promise<Pagination<any>>
+  {
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
@@ -697,7 +699,31 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     // return formattedResults
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
     // console.log(filteredData)
-    return  filteredData
+    return this.paginateArray(filteredData,options)
+  }
+  async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
+    const { page, limit } = options;
+    const startIndex = (Number(page) - 1) * Number(limit);
+    const endIndex = Number(page) * Number(limit);
+
+    const paginatedData = data.slice(startIndex, endIndex);
+    const totalItems = data.length;
+    const itemsPerPage = Number(limit);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const currentPage = Number(page);
+
+    const pagination: Pagination<T> = {
+      items: paginatedData,
+      meta: {
+        totalItems,
+        itemCount: paginatedData.length,
+        itemsPerPage,
+        totalPages,
+        currentPage,
+      },
+    };
+
+    return pagination;
   }
 }
 
