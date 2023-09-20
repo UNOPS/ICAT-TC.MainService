@@ -154,4 +154,9 @@ export class InvestorToolController {
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
 
+  @Get('sdgSumCalculateInvester')
+  async sdgSumCalculate() {
+    return await this.investorToolService.sdgSumCalculate();
+  }
+
 }
