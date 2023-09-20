@@ -16,6 +16,8 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
+import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -33,7 +35,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(ParameterRequest)
     private parameterRequestRepo: Repository<ParameterRequest>,
     @InjectRepository(Characteristics)
-    private characteristicRepo: Repository<Characteristics>
+    private characteristicRepo: Repository<Characteristics>,
+    
+    private userService:UsersService
   ) {
     super(repo);
   }
@@ -293,7 +297,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let cat of categories) {
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score = qs.reduce((accumulator, object) => {
-        return accumulator + object.assessmentAnswers[0].score;
+        return accumulator + object.assessmentAnswers[0]?.score;
       }, 0);
       obj[cat] = {
         score: Math.round(score),
@@ -303,7 +307,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
     let outcome_score = 0
     if (obj['SCALE_GHG']) { ghg_score += obj['SCALE_GHG'].score + obj['SUSTAINED_GHG'].score; outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) }
-    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD'].score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
+    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD']?.score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
     if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
 
     return {
@@ -650,6 +654,41 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     })
 
     await this.parameterRequestRepo.save(requests)
+  }
+
+  async getDashboardData():Promise<any[]>{
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    let tool = 'Carbon Market Tool';
+    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    
+    const results = await this.assessmentRepo.find({
+      relations: ['climateAction']
+    });
+    // let filteredResults =results
+     let filteredResults = results.filter(result => result.tool === tool );
+    //  console.log("current user:",currentUser?.userType?.name,currentUser.id)
+     if(isUserExternal){
+      filteredResults= filteredResults.filter(result => 
+        {if (result?.user?.id===currentUser?.id){
+          return result
+        }})
+        
+     }
+    const formattedResults = await Promise.all(filteredResults.map(async (result) => {
+      const data = await this.calculateResult(result.id);
+      return {
+        assessment: result.id,
+        process_score: data?.process_score,
+        outcome_score: data?.outcome_score?.outcome_score,
+        intervention: result.climateAction?.policyName
+      };
+    }));
+    // return formattedResults
+    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
+    // console.log(filteredData)
+    return  filteredData
   }
 }
 
