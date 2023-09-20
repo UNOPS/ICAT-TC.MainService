@@ -84,7 +84,7 @@ export const questions = [
         message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q2: Is the carbon market intervention financially additional, i.e. the revenue from the sale of ITMOs enables the activity??",
+        label: "Q2: Is the carbon market intervention financially additional, i.e. the revenue from the sale of ITMOs enables the intervention?",
         code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -115,7 +115,7 @@ export const questions = [
         code: 'S-2-C-1-Q-5',
         answer_type: AnswerType.SINGLE,
         order: 5,
-        criteria: 'S-2-CRITERIA-1',
+        criteria: "S-2-CRITERIA-1",
         characteristic: '',
         message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.'
     },
@@ -138,7 +138,7 @@ export const questions = [
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score."
     },
     {
-        label: "Q2: Is the carbon market intervention in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the activity does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions technologies or by constructing new installations using emissions intensive technologies? ",
+        label: "Q2: Is the carbon market intervention in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the intervention does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions-intensive technologies or by constructing new installations using emissions intensive technologies?",
         code: "S-2-C-2-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -282,7 +282,7 @@ export const questions = [
         message: ''
     },
     {
-        label: "Is the activity innovative, i.e., supports the adoption of newly emerging technologies, i.e. technologies that have so far not commercially been applied in the country?",
+        label: "Is the intervention innovative, i.e., supports the adoption of newly emerging technologies, i.e. technologies that have so far not commercially been applied in the country?",
         code: "S-3-R_&_D-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
@@ -309,7 +309,7 @@ export const questions = [
         characteristic: "ADOPTION"
     },
     {
-        label: "Does the activity make use of low-cost yet robust MRV solutions, e.g. through digitalisation, with the purpose of fostering a more rapid adoption of the mitigation practice\/technology?",
+        label: "Does the intervention make use of low-cost yet robust MRV solutions, e.g. through digitalisation, with the purpose of fostering a more rapid adoption of the mitigation practice\/technology?",
         code: "S-3-ADOPTION-Q-3",
         answer_type: AnswerType.SINGLE,
         order: 3,
@@ -363,7 +363,7 @@ export const questions = [
         characteristic: "ECONOMIC_NON_ECONOMIC"
     },
     {
-        label: "Does the activity contribute to increased ambition by limiting the crediting period to less than the technical lifetime of a project and counting any mitigation that occurs after the crediting period towards national targets?",
+        label: "Does the intervention contribute to increased ambition by limiting the crediting period to less than the technical lifetime of a project and counting any mitigation that occurs after the crediting period towards national targets?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -372,7 +372,7 @@ export const questions = [
         characteristic: "ECONOMIC_NON_ECONOMIC"
     },
     {
-        label: "Does the activity contribute to increased ambition by charging a carbon credit issuance fee and using it to fund national mitigation action that contributes to national targets?",
+        label: "Does the intervention contribute to increased ambition by charging a carbon credit issuance fee and using it to fund national mitigation action that contributes to national targets?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3",
         answer_type: AnswerType.SINGLE,
         order: 3,
@@ -381,7 +381,7 @@ export const questions = [
         characteristic: "ECONOMIC_NON_ECONOMIC"
     },
     {
-        label: "Is the activity’s crediting baseline set in an ambitious manner, i.e., below business-as-usual (BAU)?",
+        label: "Is the intervention’s crediting baseline set in an ambitious manner, i.e., below business-as-usual (BAU)?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4",
         answer_type: AnswerType.SINGLE,
         order: 4,
@@ -390,7 +390,7 @@ export const questions = [
         characteristic: "ECONOMIC_NON_ECONOMIC"
     },
     {
-        label: "Is the activity’s baseline emission factor reduced over time to align with the long-term temperature goal of the Paris Agreement? If the baseline does not use an emission factor, are baseline emissions declining over time?",
+        label: "Is the intervention’s baseline emission factor reduced over time to align with the long-term temperature goal of the Paris Agreement? If the baseline does not use an emission factor, are baseline emissions declining over time?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5",
         answer_type: AnswerType.SINGLE,
         order: 5,
@@ -1571,7 +1571,7 @@ export const categories = [
         weight: 50
     },
     {
-        name: 'Norms',
+        name: 'Norms and behavioural change',
         code: 'NORMS',
         description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.',
         weight: 10

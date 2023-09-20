@@ -769,6 +769,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       // ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
       // ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
       let res = this.mapCharacteristicNames(ch)
+      console.log(ch.name)
       ch.name = res.name
       ch.code = res.code
       let cat = response.find(o => o.code === ch.category.code)
@@ -794,7 +795,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       if (res.method === 'SCALE' && res.type === 'GHG') res.order = 1
       else if (res.method === 'SUSTAINED' && res.type === 'GHG') res.order = 2
       else if(res.method === 'SCALE' && res.type === 'SD') res.order = 3
-      else res.order = 4
+      else if (res.method === 'SUSTAINED' && res.type === 'SD') res.order = 4
+      else if (res.method === 'SCALE' && res.type === 'ADAPTATION') res.order = 5
+      else if (res.method === 'SUSTAINED' && res.type === 'ADAPTATION') res.order = 6
+      else res.order = 0
       return res
      })
 
