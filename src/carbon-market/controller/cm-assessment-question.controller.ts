@@ -2,7 +2,7 @@ import { Crud, CrudController } from "@nestjsx/crud";
 import { Body, Controller, Get, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
-import { CMResultDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
@@ -46,7 +46,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
   @UseGuards(JwtAuthGuard)
   @Post('calculate')
-  async calculateResult(@Body() req: CalculateDto){
+  async calculateResult(@Body() req: CalculateDto): Promise<CMScoreDto>{
     return await this.service.calculateResult(req.assessmentId)
   }
 
