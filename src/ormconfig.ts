@@ -78,8 +78,8 @@ export const config: ConnectionOptions = {
 //  database: 'tc-main',  
         username: 'sqluser',
    password: 'password',
-    database: 'tc-main-new3',    
-     /*  username: 'root',
+    database: 'tc-main-new3',   
+    /*   username: 'root',
       password: '1997',
       database: 'tc_new', */
      
