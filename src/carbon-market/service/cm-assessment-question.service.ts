@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
-import { CMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CMScoreDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
@@ -16,6 +16,8 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
+import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -33,7 +35,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(ParameterRequest)
     private parameterRequestRepo: Repository<ParameterRequest>,
     @InjectRepository(Characteristics)
-    private characteristicRepo: Repository<Characteristics>
+    private characteristicRepo: Repository<Characteristics>,
+    
+    private userService:UsersService
   ) {
     super(repo);
   }
@@ -171,10 +175,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   //   }
   // }
 
-  async calculateResult(assessmentId: number) {
-    let response: {
-      process_score: number, outcome_score: number, message: string
-    } = { process_score: 0, outcome_score: 0, message: '' }
+  async calculateResult(assessmentId: number) :Promise<CMScoreDto>{
+    let response: CMScoreDto = new CMScoreDto()
     let cmAssessmentQuestions_process = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
       .innerJoin(
@@ -295,7 +297,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let cat of categories) {
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score = qs.reduce((accumulator, object) => {
-        return accumulator + object.assessmentAnswers[0].score;
+        return accumulator + object.assessmentAnswers[0]?.score;
       }, 0);
       obj[cat] = {
         score: Math.round(score),
@@ -305,16 +307,21 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
     let outcome_score = 0
     if (obj['SCALE_GHG']) { ghg_score += obj['SCALE_GHG'].score + obj['SUSTAINED_GHG'].score; outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) }
-    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD'].score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
+    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD']?.score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
     if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
 
-    return Math.round(outcome_score)
+    return {
+      ghg_score: Math.round(ghg_score),
+      sdg_score: Math.round(sdg_score),
+      adaptation_score: Math.round(adaptation_score),
+      outcome_score: Math.round(outcome_score)
+    }
   }
 
   async getResults(assessmentId: number) {
     let result = []
     let processData: { technology: any[], incentives: any[], norms: any[], } = { technology: [], incentives: [], norms: [] };
-    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [] };
+    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[], scale_adaptation: any[], sustained_adaptation: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [], scale_adaptation:[], sustained_adaptation: [] };
 
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -413,34 +420,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           justification: ans?.assessment_question?.comment,
           document: ans?.assessment_question?.uploadedDocumentPath,
           category: ans?.assessment_question?.characteristic?.category,
-          starting_situation: ans?.assessment_question?.startingSituation,
-          expected_impacts: ans?.assessment_question?.expectedImpact,
           SDG: ans?.assessment_question?.selectedSdg,
           outcome_score: ans?.selectedScore,
-          adaptation_co_benifit: ans?.assessment_question?.adaptationCoBenifit
+          weight:  ans.assessment_question?.characteristic?.category.cm_weight
 
         }
-        if (obj?.category?.code == 'TECHNOLOGY') {
-          processData.technology.push(obj)
-        }
-        else if (obj?.category?.code == 'INCENTIVES') {
-          processData.incentives.push(obj)
-        }
-        else if (obj?.category?.code == 'NORMS') {
-          processData.norms.push(obj)
-        }
+        // if (obj?.category?.code == 'TECHNOLOGY') {
+        //   processData.technology.push(obj)
+        // }
+        // else if (obj?.category?.code == 'INCENTIVES') {
+        //   processData.incentives.push(obj)
+        // }
+        // else if (obj?.category?.code == 'NORMS') {
+        //   processData.norms.push(obj)
+        // }
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_GHG') {
+        } else if (obj?.category?.code == 'SUSTAINED_GHG') {
           outcomeData.sustained_GHGs.push(obj)
-        }
-        else if (obj?.category?.code == 'SCALE_SD') {
+        } else if (obj?.category?.code == 'SCALE_SD') {
           outcomeData.scale_SDs.push(obj)
-        }
-        else if (obj?.category?.code == 'SUSTAINED_SD') {
+        } else if (obj?.category?.code == 'SUSTAINED_SD') {
           outcomeData.sustained_SDs.push(obj)
+        } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
+          outcomeData.sustained_adaptation.push(obj)
+        } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
+          outcomeData.scale_adaptation.push(obj)
         }
 
 
@@ -467,11 +473,119 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       return {
         result: result,
         criteria: criteria,
-        processData: processData,
+        processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
       }
     }
   }
+
+  async getProcessData(assessmentId: number) {
+    let cmAssessmentQuestions = await this.assessmentQuestionRepo
+      .createQueryBuilder('aq')
+      .innerJoin(
+        'aq.assessment',
+        'assessment',
+        'assessment.id = aq.assessmentId'
+      )
+      .innerJoinAndSelect(
+        'aq.characteristic',
+        'characteristic',
+        'characteristic.id = aq.characteristicId'
+      )
+      .innerJoinAndSelect(
+        'characteristic.category',
+        'category',
+        'category.id = characteristic.category_id'
+      )
+      .leftJoinAndMapMany(
+        'aq.assessmentAnswers',
+        CMAssessmentAnswer,
+        'assessmentAnswers',
+        'assessmentAnswers.assessmentQuestionId = aq.id'
+      )
+      .leftJoinAndMapOne(
+        'assessmentAnswers.answer',
+        CMAnswer,
+        'answer',
+        'answer.id = assessmentAnswers.answerId'
+      ).leftJoinAndMapOne(
+        'answer.question',
+        CMQuestion,
+        'question',
+        'question.id = answer.questionId'
+      )
+      .where('assessment.id = :id and category.type = "process"', { id: assessmentId })
+      .getMany()
+
+    let categories = cmAssessmentQuestions.map(q => q.characteristic.category)
+    let uniqueCats = [
+      ...new Map(categories.map((item) => [item["code"], item])).values(),
+  ];
+    let data = []
+    let maxLength = 0;
+
+    for (let cat of uniqueCats) {
+      let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code)
+      let chs = this.group(qs, 'characteristic', 'code')
+      let ch_data = Object.keys(chs).map(ch => {
+        if (chs[ch].length > maxLength) {
+          maxLength = chs[ch].length;
+        }
+        let _obj = {}
+        _obj['name'] = chs[ch][0].characteristic.name
+        _obj['relevance'] = chs[ch][0].relevance
+        let questions = []
+        for (let q of chs[ch]) {
+          let o = new QuestionData()
+          o.question = q.assessmentAnswers[0].answer.question.label
+          o.weight = q.assessmentAnswers[0].answer.weight
+          o.score = q.assessmentAnswers[0].answer.score_portion
+          questions.push(o)
+        }
+        _obj['questions'] = questions
+        return _obj
+      })
+      data.push({
+        name: cat.name,
+        characteristic: ch_data
+      })
+    }
+
+    data = data.map(_data => {
+      let chs =  _data.characteristic.map(ch => {
+        if (ch.questions.length < maxLength){
+          while (ch.questions.length < maxLength){
+            ch.questions.push(new QuestionData())
+          }
+        }
+        return ch
+      })
+      return {name: _data.name, characteristic: chs}
+    })
+
+    let guiding_questions = []
+
+    for (let i = 0; i < maxLength; i++) {
+      let obj = {}
+      data.map(_data => {
+        _data.characteristic.map(ch => {
+          obj[ch.name + 'question'] = ch.questions[i].question
+          obj[ch.name + 'weight'] = ch.questions[i].weight
+          obj[ch.name + 'score'] = ch.questions[i].score
+        })
+      })
+      guiding_questions.push(obj)
+    }
+
+    let response = {
+      data: data,
+      guidingQuestions: guiding_questions
+    }
+    return response
+
+  }
+
+ 
 
   group(list: any[], prop: string | number, prop2?: string | number) {
     if (prop2) {
@@ -541,6 +655,41 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     await this.parameterRequestRepo.save(requests)
   }
+
+  async getDashboardData():Promise<any[]>{
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    let tool = 'Carbon Market Tool';
+    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    
+    const results = await this.assessmentRepo.find({
+      relations: ['climateAction']
+    });
+    // let filteredResults =results
+     let filteredResults = results.filter(result => result.tool === tool );
+    //  console.log("current user:",currentUser?.userType?.name,currentUser.id)
+     if(isUserExternal){
+      filteredResults= filteredResults.filter(result => 
+        {if (result?.user?.id===currentUser?.id){
+          return result
+        }})
+        
+     }
+    const formattedResults = await Promise.all(filteredResults.map(async (result) => {
+      const data = await this.calculateResult(result.id);
+      return {
+        assessment: result.id,
+        process_score: data?.process_score,
+        outcome_score: data?.outcome_score?.outcome_score,
+        intervention: result.climateAction?.policyName
+      };
+    }));
+    // return formattedResults
+    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
+    // console.log(filteredData)
+    return  filteredData
+  }
 }
 
 export class CharacteristicData {
@@ -548,6 +697,12 @@ export class CharacteristicData {
   relevance: string
   ch_weight: number
   score: number
+}
+
+export class QuestionData {
+  question: string = '-'
+  weight: string = '-'
+  score: string = '-'
 }
 
 
