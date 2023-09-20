@@ -1111,6 +1111,34 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         where: { assessment: { id: assessmentId } },
       });
     }
+    async sdgSumCalculate():Promise<any[]>{
     
+     
+      
+   
+  
+      const sectorSum = await this.assessmentRepo
+          .createQueryBuilder('assesment')
+          .leftJoinAndMapMany(
+            'assesment.sdgasses',
+            SdgAssessment,
+            'sdgasses',
+            `assesment.id = sdgasses.assessmentId`,
+          )
+          .leftJoinAndMapOne(
+            'sdgasses.sdg',
+             PortfolioSdg,
+            'sdg',
+            `sdgasses.sdgId = sdg.id`,
+          )
+          .where('assesment.tool="Investment & Private Sector Tool"')
+          .select('sdg.name', 'sdg')
+          .addSelect('COUNT(sdgasses.id)', 'count')
+          .groupBy('sdg.name')
+          .having('sdg IS NOT NULL')
+          .getRawMany();
+          console.log("sectorSum",sectorSum)
+          return sectorSum;
+    } 
 
 }
