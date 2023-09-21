@@ -57,6 +57,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
     let a_ans: any[]
     let _answers = []
+    let selectedSdgs = result.map(res => res.selectedSdg)
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -101,7 +102,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           }
           if (res.isSDG) {
             // ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100)  //previous calculation
-            ass_answer.score = (res.selectedScore.value / 12)
+            ass_answer.score = (res.selectedScore.value / (selectedSdgs.length * 3))
           }
         }
         ass_answer.assessment_question = q_res
@@ -125,11 +126,14 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     if (assessment.assessment_approach === 'DIRECT') {
       let resultObj = new Results()
+      let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
+      resultObj.averageProcess = res.process_score
+      resultObj.averageOutcome = res.outcome_score.outcome_score
       await this.resultsRepo.save(resultObj)
 
+      this.saveTcValue(assessment.id, res)
     }
-    this.saveTcValue(assessment.id)
 
 
 
@@ -296,26 +300,60 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
     let obj = {}
     for (let cat of categories) {
+      let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
-      let score = qs.reduce((accumulator, object) => {
-        return accumulator + object.assessmentAnswers[0]?.score;
-      }, 0);
+      let score: number
+      if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
+        selected_sdg_count = [... new Set(qs.map(q => q.selectedSdg))].length
+        score = qs.reduce((accumulator, object) => {
+          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
+        }, 0);
+        score = score / selected_sdg_count / 3
+      } else {
+        score = qs.reduce((accumulator, object) => {
+          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
+        }, 0);
+        score = score / 3
+      }
       obj[cat] = {
         score: Math.round(score),
         weight: qs[0].characteristic.category.cm_weight
       }
     }
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
+    let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0; 
+    let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
     let outcome_score = 0
-    if (obj['SCALE_GHG']) { ghg_score += obj['SCALE_GHG'].score + obj['SUSTAINED_GHG'].score; outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) }
-    if (obj['SCALE_SD']) { sdg_score = (obj['SCALE_SD'].score + obj['SUSTAINED_SD']?.score) / 2; outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) }
-    if (obj['SCALE_ADAPTATION']) { adaptation_score = obj['SCALE_ADAPTATION'].score + obj['SUSTAINED_ADAPTATION'].score; outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) }
+    if (obj['SCALE_GHG']) { 
+      scale_ghg_score = obj['SCALE_GHG'].score
+      sustained_ghg_score = obj['SUSTAINED_GHG'].score
+      ghg_score += (scale_ghg_score + sustained_ghg_score) / 2; 
+      outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) 
+    }
+    if (obj['SCALE_SD']) { 
+      scale_sdg_score = obj['SCALE_SD'].score
+      sustained_sdg_score = obj['SUSTAINED_SD']?.score
+      sdg_score = (scale_sdg_score + sustained_sdg_score) / 2; 
+      outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) 
+    }
+    if (obj['SCALE_ADAPTATION']) { 
+      scale_adaptation_score = obj['SCALE_ADAPTATION'].score
+      sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score
+      adaptation_score = (scale_adaptation_score + sustained_adaptation_score) / 2; 
+      outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) 
+    }
 
     return {
       ghg_score: Math.round(ghg_score),
       sdg_score: Math.round(sdg_score),
       adaptation_score: Math.round(adaptation_score),
-      outcome_score: Math.round(outcome_score)
+      outcome_score: Math.round(outcome_score),
+      scale_ghg_score: Math.round(scale_ghg_score),
+      sustained_ghg_score: Math.round(sustained_ghg_score),
+      scale_sdg_score: Math.round(scale_sdg_score),
+      sustained_sdg_score: Math.round(sustained_sdg_score),
+      scale_adaptation_score: Math.round(scale_adaptation_score),
+      sustained_adaptation_score: Math.round(sustained_adaptation_score)
     }
   }
 
@@ -532,23 +570,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         if (chs[ch].length > maxLength) {
           maxLength = chs[ch].length;
         }
-        let _obj = {}
-        _obj['name'] = chs[ch][0].characteristic.name
-        _obj['relevance'] = chs[ch][0].relevance
+        let _obj = new CharacteristicProcessData()
+        _obj.name = chs[ch][0].characteristic.name
+        _obj.relevance = chs[ch][0].relevance
+        _obj.weight = chs[ch][0].characteristic.cm_weight
         let questions = []
+        let score = 0
         for (let q of chs[ch]) {
           let o = new QuestionData()
           o.question = q.assessmentAnswers[0].answer.question.label
           o.weight = q.assessmentAnswers[0].answer.weight
           o.score = q.assessmentAnswers[0].answer.score_portion
+          score += (+o.score * +o.weight) / 100
           questions.push(o)
         }
-        _obj['questions'] = questions
+        _obj.questions = questions
+        _obj.ch_score = Math.round(score)
         return _obj
       })
+      let cat_score = ch_data.reduce((accumulator, object) => {
+        return accumulator + (object.ch_score * object.weight / 100)
+      }, 0);
+      cat_score = Math.round(cat_score)
       data.push({
         name: cat.name,
-        characteristic: ch_data
+        characteristic: ch_data,
+        cat_score: cat_score,
+        weight: cat.cm_weight
       })
     }
 
@@ -561,7 +609,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
         return ch
       })
-      return {name: _data.name, characteristic: chs}
+      return {name: _data.name, characteristic: chs, cat_score: _data.cat_score, weight: _data.weight}
     })
 
     let guiding_questions = []
@@ -603,7 +651,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
 
-  async saveTcValue(assessmentId: number) {
+  async saveTcValue(assessmentId: number, result: CMScoreDto) {
     let tc_score = 0
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -626,10 +674,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         )
         .where('question.id In (:id)', { id: qIds })
         .getMany()
-      answers.forEach(ans => {
-        tc_score += ans.score
-      })
-      let score = tc_score * 100
+      // answers.forEach(ans => {
+      //   tc_score += ans.score
+      // })
+      // let score = tc_score * 100
+      let score = (result.process_score + result.outcome_score.outcome_score) / 2
 
       await this.assessmentRepo
         .createQueryBuilder()
@@ -670,7 +719,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     });
     // let filteredResults =results
      let filteredResults = results.filter(result => result.tool === tool );
-    //  console.log("current user:",currentUser?.userType?.name,currentUser.id)
      if(isUserExternal){
       filteredResults= filteredResults.filter(result => 
         {if (result?.user?.id===currentUser?.id){
@@ -738,6 +786,15 @@ export class QuestionData {
   question: string = '-'
   weight: string = '-'
   score: string = '-'
+}
+
+export class CharacteristicProcessData {
+  name: string
+  relevance: number
+  weight: number
+  score: number
+  ch_score: number
+  questions: QuestionData[]
 }
 
 
