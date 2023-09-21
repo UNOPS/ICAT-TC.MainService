@@ -94,6 +94,12 @@ export class Assessment extends BaseTrackingEntity{
   @JoinColumn({ name: 'user_id' })
   user?: User; 
 
+  @Column({ type: 'int', nullable: true })
+  process_score: number;
+
+  @Column({ type: 'int', nullable: true })
+  outcome_score: number;
+
 }
 
 
