@@ -724,6 +724,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }})
         
      }
+     else {
+      filteredResults= filteredResults.filter(result => {
+        // console.log(result?.climateAction?.country,currentUser?.country?.id)
+        if(result?.climateAction?.country?.id===currentUser?.country?.id){
+          // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
+          return result;
+        }})
+     }
+     
     const formattedResults = await Promise.all(filteredResults.map(async (result) => {
       const data = await this.calculateResult(result.id);
       return {
