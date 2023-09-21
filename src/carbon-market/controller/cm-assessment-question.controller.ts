@@ -9,6 +9,7 @@ import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { editFileName } from "src/utills/file-upload.utils";
+import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 
 
 @Crud({
@@ -56,11 +57,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return await this.service.getResults(assessmentId)
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('saveTcValue')
-  async saveTcValue(@Query('assessmentId') assessmentId: number){
-    return await this.service.saveTcValue(assessmentId)
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('saveTcValue')
+  // async saveTcValue(@Query('assessmentId') assessmentId: number){
+  //   return await this.service.saveTcValue(assessmentId)
+  // }
 
   @Post('upload-file')
   @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
@@ -71,11 +72,16 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     // return savedFiles;
   }
   @UseGuards(JwtAuthGuard)
-  @Get('getDashboardData')
-  async getDashboardData(): Promise<any[]>{
-    const data= await this.service.getDashboardData()
-    // console.log(data)
-    return data
+  @Get('dashboard-data')
+  async getDashboardData(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.service.getDashboardData( {
+      limit: limit,
+      page: page,
+    },);
   }
+  
 
 }
