@@ -156,7 +156,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         .select(['institution.id', 'institution.name'])
         .where('typeId=' + filterText+' AND countryId=' + countryId)
         .getMany();
-    console.log("22222222222222222",policies)
+    // console.log("22222222222222222",policies)
      return policies
   }
 
