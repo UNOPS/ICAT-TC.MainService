@@ -142,7 +142,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async findAllAssessData(assessmentId: number){
     return this.investorAssessRepo.find({
-      relations: ['assessment','characteristics','category'],
+      relations: ['assessment','characteristics','category','portfolioSdg'],
       where: { assessment: { id: assessmentId } },
     });
   }
@@ -1266,19 +1266,22 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         characteristic:string,
         score:{name:string,value:number},
         isCalulate:boolean;
+        sdg:string;
       }={
         characteristic: '',
         score: {
           name: '',
           value: 0
         },
-        isCalulate: false
+        isCalulate: false,
+        sdg: ''
       }
       let outcomeCategoryData:{
         category:string,
         category_score:{name:string,value:number},
-        category_weight:number;
-        characteristicData: typeof outcomeCharateristics[]
+        category_weight:number,
+        isSDG:Boolean,
+        characteristicData: any[]
 
       }
       let finalProcessDataArray:{
@@ -1379,106 +1382,116 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             finalProcessDataArray.processScore = Math.floor(process_score/100);
 
             // outcome..............
+            let total_outcome_cat_weight =0
             let  outcomeArray : typeof outcomeCategoryData[] = []
-            for(let category of categories.meth1Process){
-           
-              let categoryData: typeof  processCategoryData = {
+            for(let category of categories.meth1Outcomes){
+              // let sdg
+              let categoryData: typeof  outcomeCategoryData = {
                 category: category.name,
                 category_score: {
                   name: '',
                   value: undefined
                 },
                 category_weight: undefined,
-                recalculated_category_weight: undefined,
                 characteristicData: [],
+                isSDG: false,
               };
               for(let x of assessment ){
                 if(category.name === x.category.name){
                   categoryData.category = category.name;
                   // console.log(category.ip_weight)
-                  categoryData.category_weight = category.ip_weight
+                  categoryData.category_weight = category.ip_weight;
+                  categoryData.isSDG= (category.code=='SCALE_SD'|| category.code=='SUSTAINED_SD')?(true):(false)
+                  let isSutained:boolean = (category.code=='SUSTAINED_GHG'|| category.code=='SUSTAINED_ADAPTATION')?(true):(false)
                   categoryData.characteristicData.push(
-                    {
-                      relevance: { name: this.mapRelevance(x?.relavance), value: x?.relavance },
-                      likelihood: { name: this.mapLikelihood(x?.likelihood), value: x?.likelihood },
-                      characteristic: x.characteristics.name,
-                      char_weight:  x.characteristics.ip_weight,
-                      recalculated_char_weight: x.relavance, // for now
-                      isCalulate:(x.relavance==0||!x.relavance)?false:true,
-                    }
-                  
-                  )
+                      {
+                        score: { name: (isSutained)?(this.mapSustaineScores(x?.score)):(this.mapSustaineScores(x?.score)), value: x?.score },
+                        characteristic: x.characteristics.name,
+                        isCalulate:(x.score==null)?false:true,
+                        sdg:(categoryData.isSDG)?(x?.portfolioSdg?.name):''
+                      }
+                    )
                 }
               }
-            categoryDataArray.push(categoryData)
+              outcomeArray.push(categoryData)
       
             }
+            for(let category of outcomeArray){
+              let total_char = 0 
+              let cat_score = 0 
+              // console.log(category.category,"total_char_weight",total_char_weight)
+              if(category.isSDG){
+                const categorizedData:any = {};
+                category.characteristicData.forEach(item => {
+                  const sdg = item.sdg;
+                  if (!categorizedData[sdg]) {
+                      categorizedData[sdg] = [];
+                  }
+                  categorizedData[sdg].push(item);
+                });
+                const categorizedDataArray = Object.entries(categorizedData).map(([sdg, data]) => ({
+                  name:sdg,
+                  sdg_score :0,
+                  data :data,
+                 
+                }));
+                category.characteristicData=categorizedDataArray;
+              let sdg_count = 0
+              let total_sdg_score = 0
+              for(let char of category.characteristicData){
+                let sdg_total_char = 0 
+                let sdg_cat_score = 0
+                  for(let sdg of char.data){
+                    if(sdg.isCalulate){
+                      sdg_cat_score += sdg.score.value;
+                      sdg_total_char ++;
+                    }
+                    else{
+                      sdg_total_char = sdg_total_char
+                    }
+                  }
+                  if(char.data.every(element => element.isCalulate === false)){
+                    char.sdg_score = {name:"-",value:null}
+                  }
+                  else{
+                    char.sdg_score = Math.floor(sdg_cat_score/sdg_total_char); //round down
+                    sdg_count++
+                    total_sdg_score += char.sdg_score;
+                  }
+                }
+                if(sdg_count!=0){
+                  category.category_score = {name:this.mapSustaineScores(Math.floor(total_sdg_score/sdg_count)),value:Math.floor(total_sdg_score/sdg_count)}; //round down
+                  total_outcome_cat_weight += category.category_weight*category.category_score.value;
+                  console.log(category.category,category.category_weight*category.category_score.value)
+                }
+                
+
+              }
+              else{
+                for(let char of category.characteristicData){
+                  if(char.isCalulate){
+                    cat_score += char.score.value;
+                    total_char ++;
+                  }
+                  else{
+                    total_char = total_char
+                  }
+                  
+                }
+                if(category.characteristicData.every(element => element.isCalulate === false)){
+                  category.category_score = {name:"-",value:null}
+                }
+                else{
+                  category.category_score = {name:this.mapSustaineScores(Math.floor(cat_score/total_char)),value:Math.floor(cat_score/total_char)}; //round down
+                  total_outcome_cat_weight += category.category_weight*category.category_score.value;
+                  console.log(category.category,category.category_weight*category.category_score.value)
+                }
+              }
+            }
+            finalProcessDataArray.outcomeData = outcomeArray;
+            finalProcessDataArray.outcomeScore = Math.floor(total_outcome_cat_weight/100)
            
             return finalProcessDataArray;
-
-           
-            // for(let category of categories.meth1Outcomes){
-            //   let categoryData: any = {
-            //     categoryName: category.name ,
-            //     characteristics: [],
-            //     categotyRelevance : 0,
-            //     categoryLikelihood : 0,
-            //     categoryScaleScore : 0,
-            //     categorySustainedScore : 0
-            //   };
-      
-            //   let totalScale = 0
-            //   let countScale = 0
-            //   let totalSustained = 0
-            //   let countSustained = 0
-            //   for(let x of assessment ){
-            //     if(category.name === x.category.name && (x.category.name === 'Scale GHGs' || x.category.name === 'Scale SD' )){
-            //       categoryData.categoryName = category.name;
-            //       categoryData.characteristics.push(
-            //         {
-                      
-            //           scaleScore : x.score,
-            //           sustainedScore : '-',
-            //           name : x.characteristics.name
-            //         }
-            //       )
-      
-            //       totalScale = totalScale +  x.score
-            //       countScale ++
-      
-            //     }
-            //     if(category.name === x.category.name && (x.category.name === 'Sustained nature-GHGs' || x.category.name === 'Sustained nature-SD' )){
-            //       categoryData.categoryName = category.name;
-            //       categoryData.characteristics.push(
-            //         {
-            //           scaleScore : '-',
-            //           sustainedScore : x.score,
-            //           name : x.characteristics.name
-            //         }
-            //       )
-      
-            //       totalSustained = totalSustained +  x.score
-            //       countSustained ++
-      
-            //     }
-            //   }
-      
-            //   if(category.name === 'Scale GHGs' || category.name === 'Scale SD' ){
-            //     categoryData.categoryScaleScore = (totalScale/countScale).toFixed(3)
-            //     categoryData.categorySustainedScore = '-'
-            //   }
-      
-            //   if(category.name === 'Sustained nature-GHGs' || category.name === 'Sustained nature-SD'  ){
-            //     categoryData.categorySustainedScore = (totalSustained/countSustained).toFixed(3)
-            //     categoryData.categoryScaleScore  = '-'
-            //   }
-      
-            //   outcomeArray.push(categoryData)
-            // }
-           
-
-
-  
     }
     async findAllCategories(): Promise<any> {
       let categories = await this.categotyRepository.createQueryBuilder('category')
@@ -1617,12 +1630,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         case 0:
           return 'None';
         case 1:
-          return 'Major';
+          return 'Minor';
         case 2:
           return 'Moderate';
         case 3:
-          return 'Minor';
-        case 4:
+          return 'Major';
+       
+      }
+    }
+    mapSustainedScores(value:number) {
+      switch (value) {
+        case -1:
+          return 'Unlikely (0-10%)';
+        case 0:
+          return 'Less likely (10-33%)';
+        case 1:
+          return 'Possible (33-66%)';
+        case 2:
+          return 'Likely (60-90%)';
+        case 3:
           return 'Very likely (90-100%)';
       }
     }
