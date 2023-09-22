@@ -761,7 +761,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         
         }
 
-      let result =data
+      let result = await data
         .leftJoinAndSelect('investorSector.sector', 'sector')
         .select('sector.name', 'sector')
         .addSelect('COUNT(investorSector.id)', 'count')

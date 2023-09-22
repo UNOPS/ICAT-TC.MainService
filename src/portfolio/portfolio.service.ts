@@ -132,86 +132,104 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         }
       }
     
-      const categoriesMap = new Map<number, any>();
+      // const categoriesMap = new Map<number, any>();
     
-      res.forEach((item) => {
-        const categoryId = item.category.id;
+      // res.forEach((item) => {
+      //   const categoryId = item.category.id;
     
-        if (!categoriesMap.has(categoryId)) {
-          // Add the item to the categories map
-          categoriesMap.set(categoryId, {
-            ...item.category,
-            characteristics: [
-              {
-                ...item.characteristics,
-                likelihood: item.likelihood,
-                relevance: item.relavance,
-                score : item.score,
-              },
-            ],
-            totalCharacteristics: 1,
-            totalLikelihood: item.likelihood,
-            totalRelevance: item.relavance,
-            totalScore : item.score,
-          });
-        } else {
-          // Push the characteristics to the existing category
-          const existingCategory = categoriesMap.get(categoryId);
-          existingCategory.characteristics.push({
-            ...item.characteristics,
-            likelihood: item.likelihood,
-            relevance: item.relavance,
-            score : item.score,
-          });
-          existingCategory.totalCharacteristics += 1;
-          existingCategory.totalLikelihood += item.likelihood;
-          existingCategory.totalRelevance += item.relavance;
-          existingCategory.totalScore += item.score;
-        }
-      });
+      //   if (!categoriesMap.has(categoryId)) {
+      //     // Add the item to the categories map
+      //     categoriesMap.set(categoryId, {
+      //       ...item.category,
+      //       characteristics: [
+      //         {
+      //           ...item.characteristics,
+      //           likelihood: item.likelihood,
+      //           relevance: item.relavance,
+      //           score : item.score,
+      //         },
+      //       ],
+      //       totalCharacteristics: 1,
+      //       totalLikelihood: item.likelihood,
+      //       totalRelevance: item.relavance,
+      //       totalScore : item.score,
+      //     });
+      //   } else {
+      //     // Push the characteristics to the existing category
+      //     const existingCategory = categoriesMap.get(categoryId);
+      //     existingCategory.characteristics.push({
+      //       ...item.characteristics,
+      //       likelihood: item.likelihood,
+      //       relevance: item.relavance,
+      //       score : item.score,
+      //     });
+      //     existingCategory.totalCharacteristics += 1;
+      //     existingCategory.totalLikelihood += item.likelihood;
+      //     existingCategory.totalRelevance += item.relavance;
+      //     existingCategory.totalScore += item.score;
+      //   }
+      // });
     
-      // Calculate the averages for each category
-      categoriesMap.forEach((category) => {
-        category.likelihoodAverage = (category.totalLikelihood / category.totalCharacteristics)?.toFixed(0);
-        category.relevanceAverage = (category.totalRelevance / category.totalCharacteristics)?.toFixed(0);
-        category.scoreAverage = (category.totalScore / category.totalCharacteristics)?.toFixed(0);
-      });
+      // // Calculate the averages for each category
+      // categoriesMap.forEach((category) => {
+      //   category.likelihoodAverage = (category.totalLikelihood / category.totalCharacteristics)?.toFixed(0);
+      //   category.relevanceAverage = (category.totalRelevance / category.totalCharacteristics)?.toFixed(0);
+      //   category.scoreAverage = (category.totalScore / category.totalCharacteristics)?.toFixed(0);
+      // });
     
-      // Convert the map values back to an array
-      const updatedRes = Array.from(categoriesMap.values());
+      // // Convert the map values back to an array
+      // const updatedRes = Array.from(categoriesMap.values());
 
 
-      result.push({result : updatedRes, assessment : data.assessment , ghgValue : GHGvalue })
+      result.push({ assessment : data.assessment , ghgValue : GHGvalue })
     }
     
   
     return result;
   }
   async sdgSumCalculate(portfolioId: number):Promise<any[]>{
-    let response =  this.portfolioAssessRepo.find({
-      relations: ['assessment'],
-      where: { portfolio: { id: portfolioId } },
-    });
-    let assessementIdArray :number[]=[];
-    for(let data of await response){
-      let assessmentId = data.assessment.id
-      assessementIdArray.push(assessmentId)
-    }
-    console.log("knownIds",assessementIdArray)
 
-    const sectorSum = await this.sdgAssessRepo
-        .createQueryBuilder('sdgasess')
-        .leftJoinAndSelect('sdgasess.assessment', 'assessment')
-        .where('assessment.id IN (:...ids)', { ids: assessementIdArray })
-        .leftJoinAndSelect('sdgasess.sdg', 'sdg')
-        // .where('sector.name IS NOT NULL')
-        .select('sdg.name', 'sdg')
-        .addSelect('COUNT(sdgasess.id)', 'count')
-        .groupBy('sdg.name')
-        .having('sdg IS NOT NULL')
-        .getRawMany();
-        console.log("sectorSum",sectorSum)
-        return sectorSum;
+
+    const data =this.sdgAssessRepo
+    .createQueryBuilder('sdgasess')
+    .leftJoinAndSelect('sdgasess.assessment', 'assessment')
+
+    if(!portfolioId){
+      let response =  this.portfolioAssessRepo.find({
+        relations: ['assessment'],
+        where: { portfolio: { id: portfolioId } },
+      });
+      let assessementIdArray :number[]=[];
+      for(let data of await response){
+        let assessmentId = data.assessment.id
+        assessementIdArray.push(assessmentId)
+      }
+      console.log("knownIds",assessementIdArray)
+      data.where('assessment.id IN (:...ids)', { ids: assessementIdArray })
+
+    }
+  
+     data.leftJoinAndSelect('sdgasess.sdg', 'sdg')
+     .select('sdg.name', 'sdg')
+     .addSelect('COUNT(sdgasess.id)', 'count')
+     .groupBy('sdg.name')
+     .having('sdg IS NOT NULL')
+
+    // const sectorSum = await this.sdgAssessRepo
+    //     .createQueryBuilder('sdgasess')
+    //     .leftJoinAndSelect('sdgasess.assessment', 'assessment')
+    //     .where('assessment.id IN (:...ids)', { ids: assessementIdArray })
+    //     .leftJoinAndSelect('sdgasess.sdg', 'sdg')
+    //     // .where('sector.name IS NOT NULL')
+    //     .select('sdg.name', 'sdg')
+    //     .addSelect('COUNT(sdgasess.id)', 'count')
+    //     .groupBy('sdg.name')
+    //     .having('sdg IS NOT NULL')
+    //     .getRawMany();
+        // console.log("sectorSum",await data.getRawMany())
+
+
+        return await data.getRawMany();
   }
   
   
