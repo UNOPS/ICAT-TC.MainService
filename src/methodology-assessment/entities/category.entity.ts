@@ -24,6 +24,9 @@ export class Category {
   @Column({default: 0})
   cm_weight: number
 
+  @Column({default: 0})
+  ip_weight: number
+
 
   /*     @ManyToOne(type => Methodology, methodology => methodology.categories)
       @JoinColumn({ name: 'methodology_id' })
