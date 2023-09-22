@@ -14,13 +14,14 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { TokenDetails } from 'src/utills/token_details';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UsersService } from 'src/users/users.service';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 
 @Module({
   controllers: [PortfolioController],
   providers: [PortfolioService,  TokenDetails, EmailNotificationService, UsersService,],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
-    User, UserType, Institution, Country,Audit,
+    User, UserType, Institution, Country,Audit, Assessment,
   ])],
   exports: [
     PortfolioService
