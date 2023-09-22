@@ -32,5 +32,8 @@ export class Characteristics {
     @Column({type: 'longtext', nullable: true })
     investmentDescription: string;
 
+    @Column({default: 0})
+    ip_weight: number
+
 
 }

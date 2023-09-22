@@ -1219,6 +1219,267 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return[ finalDataArray2];
   
     }
+
+    async calculateNewAssessmentResults(assesId: number): Promise<any> {
+      
+
+      let characteristicData:{
+        characteristic:string,
+        relevance:{name:string,value:number},
+        likelihood:{name:string,value:number},
+        char_weight:number,
+        recalculated_char_weight:number;
+        isCalulate:boolean;
+      }={
+        characteristic: '',
+        relevance: {
+          name: '',
+          value: 0
+        },
+        likelihood: {
+          name: '',
+          value: 0
+        },
+        char_weight: 0,
+        recalculated_char_weight: 0,
+        isCalulate: false
+      }
+
+      let processCategoryData:{
+        category:string,
+        category_score:{name:string,value:number},
+        category_weight:number;
+        recalculated_category_weight:number;
+        characteristicData: typeof characteristicData[]
+
+      }={
+        category: '',
+        category_score: {
+          name: '',
+          value: 0
+        },
+        category_weight: 0,
+        recalculated_category_weight: 0,
+        characteristicData: []
+      }
+      let outcomeCharateristics:{
+        characteristic:string,
+        score:{name:string,value:number},
+        isCalulate:boolean;
+      }={
+        characteristic: '',
+        score: {
+          name: '',
+          value: 0
+        },
+        isCalulate: false
+      }
+      let outcomeCategoryData:{
+        category:string,
+        category_score:{name:string,value:number},
+        category_weight:number;
+        characteristicData: typeof outcomeCharateristics[]
+
+      }
+      let finalProcessDataArray:{
+        processData:typeof processCategoryData[],
+        outcomeData: typeof outcomeCategoryData[]
+        processScore:number,
+        outcomeScore:number,
+      } ={
+        processData: [],
+        processScore: 0,
+        outcomeScore: 0,
+        outcomeData: []
+      }
+  
+         let assessment= await this.findAllAssessData(assesId);
+         let categories =await this.findAllCategories();
+        //  console.log(categories.meth1Process)
+        let  categoryDataArray : typeof processCategoryData[] = []
+        //Creating objects
+            for(let category of categories.meth1Process){
+           
+              let categoryData: typeof  processCategoryData = {
+                category: category.name,
+                category_score: {
+                  name: '',
+                  value: undefined
+                },
+                category_weight: undefined,
+                recalculated_category_weight: undefined,
+                characteristicData: [],
+              };
+              for(let x of assessment ){
+                if(category.name === x.category.name){
+                  categoryData.category = category.name;
+                  // console.log(category.ip_weight)
+                  categoryData.category_weight = category.ip_weight
+                  categoryData.characteristicData.push(
+                    {
+                      relevance: { name: this.mapRelevance(x?.relavance), value: x?.relavance },
+                      likelihood: { name: this.mapLikelihood(x?.likelihood), value: x?.likelihood },
+                      characteristic: x.characteristics.name,
+                      char_weight:  x.characteristics.ip_weight,
+                      recalculated_char_weight: x.relavance, // for now
+                      isCalulate:(x.relavance==0||!x.relavance)?false:true,
+                    }
+                  
+                  )
+                }
+              }
+            categoryDataArray.push(categoryData)
+      
+            }
+            //Assigning values 
+            let total_cat_weight = 0;
+            let process_score = 0;
+            for(let category of categoryDataArray){
+              let total_char_weight = 0 
+              let cat_score = 0
+              category.characteristicData.map(item =>( item.isCalulate?(total_char_weight+=item.recalculated_char_weight):total_char_weight))
+              // console.log(category.category,"total_char_weight",total_char_weight)
+              for(let char of category.characteristicData){
+                if(char.isCalulate){
+                  // console.log(char.characteristic,char.recalculated_char_weight)
+                  char.recalculated_char_weight = Math.floor(100*(char.recalculated_char_weight/total_char_weight));
+                  if(!isNaN(char.likelihood.value)){
+                    cat_score += Math.floor(char.recalculated_char_weight*char.likelihood.value) //rounddown
+                  }
+                
+                  // console.log(category.category,"---cat_score",cat_score)
+                }
+                else{
+                  char.recalculated_char_weight = 0
+                }
+                
+              }
+              ;
+              if( category.characteristicData.every(element => element.isCalulate === false)){
+                category.category_score = {name:"-",value:null}
+              }
+              else{
+                category.category_score = {name:this.mapLikelihood(Math.floor(cat_score/100)),value:Math.floor(cat_score/100)}; //round down
+                total_cat_weight += category.category_weight;
+              }
+
+            }
+            // console.log("total_cat_weight",total_cat_weight)
+            categoryDataArray.map(item => {
+              if(item.category_score.value==null){
+              item.recalculated_category_weight = 0
+              }
+              else{
+                item.recalculated_category_weight = Math.round(item.category_weight/total_cat_weight*100);
+                // console.log(item.recalculated_category_weight)
+                process_score += item.recalculated_category_weight*item.category_score.value;
+              }
+            })
+            finalProcessDataArray.processData = categoryDataArray;
+            finalProcessDataArray.processScore = Math.floor(process_score/100);
+
+            // outcome..............
+            let  outcomeArray : typeof outcomeCategoryData[] = []
+            for(let category of categories.meth1Process){
+           
+              let categoryData: typeof  processCategoryData = {
+                category: category.name,
+                category_score: {
+                  name: '',
+                  value: undefined
+                },
+                category_weight: undefined,
+                recalculated_category_weight: undefined,
+                characteristicData: [],
+              };
+              for(let x of assessment ){
+                if(category.name === x.category.name){
+                  categoryData.category = category.name;
+                  // console.log(category.ip_weight)
+                  categoryData.category_weight = category.ip_weight
+                  categoryData.characteristicData.push(
+                    {
+                      relevance: { name: this.mapRelevance(x?.relavance), value: x?.relavance },
+                      likelihood: { name: this.mapLikelihood(x?.likelihood), value: x?.likelihood },
+                      characteristic: x.characteristics.name,
+                      char_weight:  x.characteristics.ip_weight,
+                      recalculated_char_weight: x.relavance, // for now
+                      isCalulate:(x.relavance==0||!x.relavance)?false:true,
+                    }
+                  
+                  )
+                }
+              }
+            categoryDataArray.push(categoryData)
+      
+            }
+           
+            return finalProcessDataArray;
+
+           
+            // for(let category of categories.meth1Outcomes){
+            //   let categoryData: any = {
+            //     categoryName: category.name ,
+            //     characteristics: [],
+            //     categotyRelevance : 0,
+            //     categoryLikelihood : 0,
+            //     categoryScaleScore : 0,
+            //     categorySustainedScore : 0
+            //   };
+      
+            //   let totalScale = 0
+            //   let countScale = 0
+            //   let totalSustained = 0
+            //   let countSustained = 0
+            //   for(let x of assessment ){
+            //     if(category.name === x.category.name && (x.category.name === 'Scale GHGs' || x.category.name === 'Scale SD' )){
+            //       categoryData.categoryName = category.name;
+            //       categoryData.characteristics.push(
+            //         {
+                      
+            //           scaleScore : x.score,
+            //           sustainedScore : '-',
+            //           name : x.characteristics.name
+            //         }
+            //       )
+      
+            //       totalScale = totalScale +  x.score
+            //       countScale ++
+      
+            //     }
+            //     if(category.name === x.category.name && (x.category.name === 'Sustained nature-GHGs' || x.category.name === 'Sustained nature-SD' )){
+            //       categoryData.categoryName = category.name;
+            //       categoryData.characteristics.push(
+            //         {
+            //           scaleScore : '-',
+            //           sustainedScore : x.score,
+            //           name : x.characteristics.name
+            //         }
+            //       )
+      
+            //       totalSustained = totalSustained +  x.score
+            //       countSustained ++
+      
+            //     }
+            //   }
+      
+            //   if(category.name === 'Scale GHGs' || category.name === 'Scale SD' ){
+            //     categoryData.categoryScaleScore = (totalScale/countScale).toFixed(3)
+            //     categoryData.categorySustainedScore = '-'
+            //   }
+      
+            //   if(category.name === 'Sustained nature-GHGs' || category.name === 'Sustained nature-SD'  ){
+            //     categoryData.categorySustainedScore = (totalSustained/countSustained).toFixed(3)
+            //     categoryData.categoryScaleScore  = '-'
+            //   }
+      
+            //   outcomeArray.push(categoryData)
+            // }
+           
+
+
+  
+    }
     async findAllCategories(): Promise<any> {
       let categories = await this.categotyRepository.createQueryBuilder('category')
         .leftJoinAndSelect('category.methodology', 'methodology')
@@ -1321,5 +1582,51 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           console.log("sectorSum",sectorSum)
           return sectorSum;
     } 
+    mapRelevance(value:number) {
+      switch (value) {
+        case 0:
+          return 'Not relevant';
+        case 1:
+          return 'Possibly relvant';
+        case 2:
+          return 'Relevant';
+      }
+    }
+    mapLikelihood(value:number) {
+      switch (value) {
+        case 0:
+          return 'Very unlikely (0-10%)';
+        case 1:
+          return 'Unlikely (10-33%)';
+        case 2:
+          return 'Possible (33-66%)';
+        case 3:
+          return 'Likely (60-90%)';
+        case 4:
+          return 'Very likely (90-100%)';
+      }
+    }
+    mapSustaineScores(value:number) {
+      switch (value) {
+        case -1:
+          return 'Minor Negative';
+        case -2:
+          return 'Moderate Negative';
+        case -3:
+          return 'Major Negative';
+        case 0:
+          return 'None';
+        case 1:
+          return 'Major';
+        case 2:
+          return 'Moderate';
+        case 3:
+          return 'Minor';
+        case 4:
+          return 'Very likely (90-100%)';
+      }
+    }
 
 }
+
+

@@ -74,7 +74,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
         'cntry.id = ca.countryId',
       )
       .where('assessment.tool = :value', { value: tool })
-      .andWhere('assessment.tc_value IS NOT NULL')
+      // .andWhere('assessment.tc_value IS NOT NULL')
       
       if(isUserExternal){
         totolAssess.andWhere('user.id = :userId', { userId: currentUser.id })
