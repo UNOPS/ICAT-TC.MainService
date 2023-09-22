@@ -14,13 +14,20 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { TokenDetails } from 'src/utills/token_details';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UsersService } from 'src/users/users.service';
+import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
+import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-question.entity';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 
 @Module({
   controllers: [PortfolioController],
-  providers: [PortfolioService,  TokenDetails, EmailNotificationService, UsersService,],
+  providers: [PortfolioService,  TokenDetails, EmailNotificationService, UsersService, CMAssessmentQuestionService],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
-    User, UserType, Institution, Country,Audit,
+    User, UserType, Institution, Country,Audit, CMAssessmentQuestion, CMAssessmentAnswer, Results, Assessment, ParameterRequest, Characteristics
   ])],
   exports: [
     PortfolioService
