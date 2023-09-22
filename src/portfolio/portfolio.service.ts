@@ -11,9 +11,17 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
 import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
+
+  col_set_2 = [
+    { label: 'ID', code: 'id' },
+    { label: 'Intervention Name', code: 'name' },
+    { label: 'Intervention Type', code: 'type' },
+    { label: 'Status', code: 'status' }
+  ]
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -22,7 +30,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
 
     private userService: UsersService,
-    private cMAssessmentQuestionService: CMAssessmentQuestionService
+    private cMAssessmentQuestionService: CMAssessmentQuestionService,
+    private masterDataService: MasterDataService
 
   ) {
     super(repo)
@@ -181,28 +190,21 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let response = new ComparisonTableDataDto()
 
     let pAssessments = await this.assessmentsByPortfolioId(portfolioId)
-    // console.log(pAssessments)
 
-    let process_data = await this.getProcessData(pAssessments)
-    let outcome_data = await this.getOutcomeData(pAssessments)
-    let aggregation_data = await this.getAggragationData(pAssessments)
-    let alignment_data = await this.getAlignmentData(pAssessments)
-
-   
+    response.process_data = await this.getProcessData(pAssessments)
+    response.outcome_data = await this.getOutcomeData(pAssessments)
+    response.aggregation_data = await this.getAggragationData(pAssessments)
+    response.alignment_data = await this.getAlignmentData(pAssessments)
 
     return response
   }
 
   async getProcessData(pAssessments: PortfolioAssessment[]){
+    let response: ComparisonDto[] = []
     let intervention_data = []
     let int_categories = []
     let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
-    let col_set_2 = [
-      { label: 'ID', code: 'id' },
-      { label: 'Intervention Name', code: 'name' },
-      { label: 'Intervention Type', code: 'type' },
-      { label: 'Status', code: 'status' }
-    ]
+    
     for await (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -228,11 +230,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     int_categories = [... new Set(int_categories)]
 
-    let response: ComparisonDto[] = []
     for (let [idx, cat] of int_categories.entries()){
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
-      comparisonData.col_set_2.push(...col_set_2)
+      comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()){
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
         if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
@@ -250,6 +251,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getOutcomeData(pAssessments: PortfolioAssessment[]){
+    let response: ComparisonDto[] = []
+    let intervention_data = []
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -261,16 +264,23 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let data
       switch(pAssessment.assessment.tool){
         case 'Investment & Private Sector Tool' || 'Portfolio Tool':
-          data = this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
-          data = this.getOutcomeDataCarbonMarket(pAssessment.assessment)
+          data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
           break;
       }
+
+      intervention_data.push({data: data, intervention: _intervention})
     }
+
+    console.log("intervention data", intervention_data)
+
+    return response
   }
 
   async getAggragationData(pAssessments: PortfolioAssessment[]){
+    let response: ComparisonDto 
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -289,9 +299,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           break;
       }
     }
+
+    return response
   }
 
   async getAlignmentData(pAssessments: PortfolioAssessment[]){
+    let response: ComparisonDto
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -310,6 +323,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           break;
       }
     }
+
+    return response
   }
 
   async getProcessDataPortfolioInvestor(assessement: Assessment){
@@ -340,6 +355,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         characteristics.push({label: ch.name, code: ch.code})
         ch_data[ch.code] = ch.ch_score
       }
+      characteristics.push({label: 'Category score', code: 'category_score'})
       ch_data['category_score'] = cat.cat_score
       obj['characteristics'] = characteristics
       obj['ch_data'] = ch_data
@@ -349,7 +365,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       categories.push(obj)
     }
 
-    console.log('&&', categories)
     return {categories: categories, cat_names: cat_names}
 
   }
@@ -357,6 +372,93 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getOutcomeDataCarbonMarket(assessement: Assessment){
     let data = (await this.cMAssessmentQuestionService.getResults(assessement.id))?.outComeData
+    let result = await this.cMAssessmentQuestionService.calculateResult(assessement.id)
+
+    let scale_GHGs = {
+      col_set_1: {label: 'GHG', colspan: 4},
+      data: {
+        international: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
+        national: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
+        subnational: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
+        category_score: result.outcome_score.scale_ghg_score
+      }
+    }
+
+    let sdg = this.cMAssessmentQuestionService.group(data.scale_SDs, 'SDG')
+
+    let scale_SDs = {}
+    let sdg_count = Object.keys(sdg).length
+    for (let sd of Object.keys(sdg)){
+      let international = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
+      let national =  data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
+      let subnational = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
+      scale_SDs[sd] = {
+        col_set_1: { label: this.getSDGName(sd), colspan: 4 },
+        data: {
+          international: international,
+          national: national,
+          subnational: subnational,
+          category_score: (international + national + subnational) / sdg_count / 3 
+        }
+      }
+    }
+
+    let scale_adaptation = {
+      col_set_1: {label: 'ADAPTATION', colspan: 4},
+      data: {
+        international: data.scale_adaptation.find(o => o.ch_code === 'INTERNATIONAL').outcome_score,
+        national: data.scale_adaptation.find(o => o.ch_code === 'NATIONAL').outcome_score,
+        subnational: data.scale_adaptation.find(o => o.ch_code === 'SUBNATIONAL').outcome_score,
+        category_score: result.outcome_score.scale_adaptation_score
+      }
+    }
+
+    let sustained_GHGs = {
+      col_set_1: {label: 'GHG', colspan: 4},
+      data: {
+        international: data.sustained_GHGs.find(o => o.ch_code === 'LONG_TERM').outcome_score,
+        national: data.sustained_GHGs.find(o => o.ch_code === 'MEDIUM_TERM').outcome_score,
+        subnational: data.sustained_GHGs.find(o => o.ch_code === 'SHORT_TERM').outcome_score,
+        category_score: result.outcome_score.sustained_ghg_score
+      }
+    }
+
+    let sustained_SDs = {}
+    for (let sd of Object.keys(sdg)){
+      let international = data.sustained_SDs.find(o => o.ch_code === 'LONG_TERM' && o.SDG === sd).outcome_score
+      let national =  data.sustained_SDs.find(o => o.ch_code === 'MEDIUM_TERM' && o.SDG === sd).outcome_score
+      let subnational = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd).outcome_score
+      sustained_SDs[sd] = {
+        col_set_1: { label: this.getSDGName(sd), colspan: 4 },
+        data: {
+          international: international,
+          national: national,
+          subnational: subnational,
+          category_score: (international + national + subnational) / sdg_count / 3 
+        }
+      }
+    }
+
+    let sustained_adaptation = {
+      col_set_1: {label: 'ADAPTATION', colspan: 4},
+      data: {
+        international: data.sustained_adaptation.find(o => o.ch_code === 'INTERNATIONAL').outcome_score,
+        national: data.sustained_adaptation.find(o => o.ch_code === 'NATIONAL').outcome_score,
+        subnational: data.sustained_adaptation.find(o => o.ch_code === 'SUBNATIONAL').outcome_score,
+        category_score: result.outcome_score.sustained_adaptation_score
+      }
+    }
+
+    return {
+      scale_comparisons: {
+        ghg: scale_GHGs, sdg: scale_SDs, adaptation: scale_adaptation
+      },
+      sustained_comparisons: {
+        ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
+      },
+      sdg: Object.keys(sdg)
+    }
+
   }
 
 
@@ -367,6 +469,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getAlignmentDataCarbonMarket(assessement: Assessment){
     
+  }
+
+  getSDGName(code){
+    let sdg = this.masterDataService.SDGs.find(o => o.code === code)
+    return sdg.name
   }
 
 

@@ -21,10 +21,11 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 @Module({
   controllers: [PortfolioController],
-  providers: [PortfolioService,  TokenDetails, EmailNotificationService, UsersService, CMAssessmentQuestionService],
+  providers: [PortfolioService,  TokenDetails, EmailNotificationService, UsersService, CMAssessmentQuestionService, MasterDataService],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
     User, UserType, Institution, Country,Audit, CMAssessmentQuestion, CMAssessmentAnswer, Results, Assessment, ParameterRequest, Characteristics
