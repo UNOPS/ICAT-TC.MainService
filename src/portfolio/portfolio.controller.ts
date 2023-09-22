@@ -59,4 +59,8 @@ export class PortfolioController {
       page: page,
     },);
   }
+  @Get('get-comparison-data/:portfolioId')
+  async getPortfolioComparisonData(@Param('portfolioId') portfolioId: number){
+    return this.portfolioService.getPortfolioComparisonData(portfolioId)
+  }
 }
