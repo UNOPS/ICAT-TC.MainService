@@ -454,6 +454,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let obj = {
           // data:ans,
           characteristic: ans.assessment_question?.characteristic?.name,
+          ch_code: ans.assessment_question?.characteristic?.code,
           question: ans?.assessment_question?.question?.label,
           score: ans?.answer?.label,
           justification: ans?.assessment_question?.comment,
