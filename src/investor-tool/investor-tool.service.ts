@@ -149,7 +149,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    
    
 
-/*     async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
+     async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
     console.log("....request",request)
     let mitigation:number;
     for (let req of request) {
@@ -197,9 +197,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     await this.resultRepository.save(data);
     return 0
 
-  }  */
+  }  
 
-  async createFinalAssessment(request2: FinalInvestorAssessmentDto[]): Promise<any> {
+ /*  async createFinalAssessment(request2: FinalInvestorAssessmentDto[]): Promise<any> {
     let data2: any = request2;
     let request = data2.finalArray;
     console.log("request", request2);
@@ -400,7 +400,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     data.assessment = request[0].data[0].assessment;
     await this.resultRepository.save(data);
     return 0;
-  }
+  } */
   
  
 
