@@ -46,4 +46,9 @@ export class PortfolioController {
   async sdgSumCalculate(@Param('portfolioId') portfolioId: number) {
     return await this.portfolioService.sdgSumCalculate(portfolioId);
   }
+
+  @Get('get-comparison-data/:portfolioId')
+  async getPortfolioComparisonData(@Param('portfolioId') portfolioId: number){
+    return this.portfolioService.getPortfolioComparisonData(portfolioId)
+  }
 }
