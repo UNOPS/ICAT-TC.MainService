@@ -581,7 +581,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.question = q.assessmentAnswers[0].answer.question.label
           o.weight = q.assessmentAnswers[0].answer.weight
           o.score = q.assessmentAnswers[0].answer.score_portion
-          score += (+o.score * +o.weight) / 100
+          score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
         }
         _obj.questions = questions
