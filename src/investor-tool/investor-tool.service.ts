@@ -31,6 +31,7 @@ import { MethodologyAssessmentService } from 'src/methodology-assessment/methodo
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 
 const schema = {
   'id': {
@@ -942,7 +943,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         
         }
 
-      let result =data
+      let result = await data
         .leftJoinAndSelect('investorSector.sector', 'sector')
         .select('sector.name', 'sector')
         .addSelect('COUNT(investorSector.id)', 'count')
@@ -1321,5 +1322,57 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           console.log("sectorSum",sectorSum)
           return sectorSum;
     } 
+    async getDashboardData( options:IPaginationOptions):Promise<Pagination<any>>
+    {
+      let tool = 'Investment & Private Sector Tool';
+      let filter='asses.tool=:tool '
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      let userId=currentUser.id;
+      let userCountryId=currentUser.country?.id;
+      console.log(userId,userCountryId)
+      if(currentUser?.userType?.name === 'External'){
+        filter=filter+' and asses.user_id=:userId '
+          
+       }
+       else {
+        filter=filter+' and country.id=:userCountryId '
+       } 
 
+    const data =this.assessmentRepo.createQueryBuilder('asses')
+    .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+    .leftJoinAndMapOne(
+      'asses.climateAction',
+      ClimateAction,
+      'climateAction',
+      'asses.climateAction_id = climateAction.id'
+    )
+    
+    // .leftJoinAndMapOne(
+    //   'asses.user',
+    //    User,
+    //   'user',
+    //   'asses.user_id = user.id'
+    // )
+    .leftJoinAndMapOne(
+      'climateAction.country',
+       Country,
+      'country',
+      'climateAction.countryId = country.id'
+    ).where(filter,{tool,userId,userCountryId})
+
+    
+      
+    
+    let result = await paginate(data, options); 
+   console.log("result",result)
+        // return {
+        //   assessment: result.id,
+        //   process_score: data?.process_score,
+        //   outcome_score: data?.outcome_score?.outcome_score,
+        //   intervention: result.climateAction?.policyName
+        // };
+   
+        return result;
+    }
 }

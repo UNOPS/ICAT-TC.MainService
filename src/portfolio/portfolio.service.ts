@@ -9,6 +9,9 @@ import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessme
 import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
+import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { Country } from 'src/country/entity/country.entity';
+import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
@@ -28,7 +31,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(PortfolioAssessment) private readonly portfolioAssessRepo: Repository<PortfolioAssessment>,
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
-
+    @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
     private masterDataService: MasterDataService
@@ -157,30 +160,51 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     return result;
   }
+  async sdgSumCalculate(portfolioId: number):Promise<any[]>{
 
-  async sdgSumCalculate(portfolioId: number): Promise<any[]> {
-    let response = this.portfolioAssessRepo.find({
-      relations: ['assessment'],
-      where: { portfolio: { id: portfolioId } },
-    });
-    let assessementIdArray: number[] = [];
-    for (let data of await response) {
-      let assessmentId = data.assessment.id
-      assessementIdArray.push(assessmentId)
+
+    const data =this.sdgAssessRepo
+    .createQueryBuilder('sdgasess')
+    .leftJoinAndSelect('sdgasess.assessment', 'assessment')
+
+    if(!portfolioId){
+      let response =  this.portfolioAssessRepo.find({
+        relations: ['assessment'],
+        where: { portfolio: { id: portfolioId } },
+      });
+      let assessementIdArray :number[]=[];
+      for(let data of await response){
+        let assessmentId = data.assessment.id
+        assessementIdArray.push(assessmentId)
+      }
+      console.log("knownIds",assessementIdArray)
+      data.where('assessment.id IN (:...ids)', { ids: assessementIdArray })
+
     }
+  
+     data.leftJoinAndSelect('sdgasess.sdg', 'sdg')
+     .select('sdg.name', 'sdg')
+     .addSelect('COUNT(sdgasess.id)', 'count')
+     .groupBy('sdg.name')
+     .having('sdg IS NOT NULL')
 
-    const sectorSum = await this.sdgAssessRepo
-      .createQueryBuilder('sdgasess')
-      .leftJoinAndSelect('sdgasess.assessment', 'assessment')
-      .where('assessment.id IN (:...ids)', { ids: assessementIdArray })
-      .leftJoinAndSelect('sdgasess.sdg', 'sdg')
-      .select('sdg.name', 'sdg')
-      .addSelect('COUNT(sdgasess.id)', 'count')
-      .groupBy('sdg.name')
-      .having('sdg IS NOT NULL')
-      .getRawMany();
-    return sectorSum;
+    // const sectorSum = await this.sdgAssessRepo
+    //     .createQueryBuilder('sdgasess')
+    //     .leftJoinAndSelect('sdgasess.assessment', 'assessment')
+    //     .where('assessment.id IN (:...ids)', { ids: assessementIdArray })
+    //     .leftJoinAndSelect('sdgasess.sdg', 'sdg')
+    //     // .where('sector.name IS NOT NULL')
+    //     .select('sdg.name', 'sdg')
+    //     .addSelect('COUNT(sdgasess.id)', 'count')
+    //     .groupBy('sdg.name')
+    //     .having('sdg IS NOT NULL')
+    //     .getRawMany();
+        // console.log("sectorSum",await data.getRawMany())
+
+
+        return await data.getRawMany();
   }
+ 
 
   async getLastID(): Promise<Portfolio[]> {
     return await this.repo.find({ order: { id: 'DESC' }, take: 1 });
@@ -560,5 +584,67 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return sdg.name
   }
 
+async getDashboardData(portfolioID:number, options:IPaginationOptions):Promise<Pagination<any>>
+{
+  let tool = 'Portfolio Tool';
+  let filter='asses.tool=:tool '
+  let user = this.userService.currentUser();
+  const currentUser = await user;
+  let userId=currentUser.id;
+  let userCountryId=currentUser.country?.id;
+ 
+  if(currentUser?.userType?.name === 'External'){
+    filter=filter+' and asses.user_id=:userId '
+   }
+   else {
+    filter=filter+' and country.id=:userCountryId '
+   } 
 
+let data =this.assessmentRepo.createQueryBuilder('asses')
+
+if(Number(portfolioID)){
+  
+  filter=filter+ 'and portfolio_assesmet.portfolio_id=:portfolioID'
+  data.innerJoinAndMapOne(
+  'asses.portfolio_assesmet',
+   PortfolioAssessment,
+  'portfolio_assesmet',
+  'asses.id = portfolio_assesmet.assessment_id'
+)
+}
+  data.select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+  .leftJoinAndMapOne(
+  'asses.climateAction',
+  ClimateAction,
+  'climateAction',
+  'asses.climateAction_id = climateAction.id'
+)
+
+// .leftJoinAndMapOne(
+//   'asses.user',
+//    User,
+//   'user',
+//   'asses.user_id = user.id'
+// )
+.leftJoinAndMapOne(
+  'climateAction.country',
+   Country,
+  'country',
+  'climateAction.countryId = country.id'
+).where(filter,{tool,userId,userCountryId,portfolioID})
+
+
+  
+
+let result = await paginate(data, options); 
+// console.log("result",result)
+    // return {
+    //   assessment: result.id,
+    //   process_score: data?.process_score,
+    //   outcome_score: data?.outcome_score?.outcome_score,
+    //   intervention: result.climateAction?.policyName
+    // };
+
+    return result;
+}
 }
