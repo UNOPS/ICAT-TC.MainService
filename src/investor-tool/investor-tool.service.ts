@@ -1412,7 +1412,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           let isSutained: boolean = (category.code == 'SUSTAINED_GHG' || category.code == 'SUSTAINED_ADAPTATION') ? (true) : (false)
           categoryData.characteristicData.push(
             {
-              score: { name: (isSutained) ? (this.mapSustaineScores(x?.score)) : (this.mapSustaineScores(x?.score)), value: x?.score },
+              score: { name: (isSutained) ? (this.mapScaleScores(x?.score)) : (this.mapScaleScores(x?.score)), value: x?.score },
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
               isCalulate: (x.score == null) ? false : true,
@@ -1468,7 +1468,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           }
         }
         if (sdg_count != 0) {
-          category.category_score = { name: this.mapSustaineScores(Math.floor(total_sdg_score / sdg_count)), value: Math.floor(total_sdg_score / sdg_count) }; //round down
+          category.category_score = { name: this.mapScaleScores(Math.floor(total_sdg_score / sdg_count)), value: Math.floor(total_sdg_score / sdg_count) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
           console.log(category.category, category.category_weight * category.category_score.value)
         }
@@ -1490,7 +1490,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           category.category_score = { name: "-", value: null }
         }
         else {
-          category.category_score = { name: this.mapSustaineScores(Math.floor(cat_score / total_char)), value: Math.floor(cat_score / total_char) }; //round down
+          category.category_score = { name: this.mapScaleScores(Math.floor(cat_score / total_char)), value: Math.floor(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
           console.log(category.category, category.category_weight * category.category_score.value)
         }
@@ -1663,8 +1663,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
   }
 
-  mapSustaineScores(value: number) {
-    switch (value) {
+  mapScaleScores(value: number) {
+    console.log('mapScaleScores', value)
+    switch (+value) {
       case -1:
         return 'Minor Negative';
       case -2:
@@ -1679,12 +1680,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Moderate';
       case 3:
         return 'Major';
+      default:
+        return value.toString();
 
     }
   }
 
   mapSustainedScores(value: number) {
-    switch (value) {
+    switch (+value) {
       case -1:
         return 'Unlikely (0-10%)';
       case 0:
@@ -1695,6 +1698,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Likely (60-90%)';
       case 3:
         return 'Very likely (90-100%)';
+      default: 
+        return value.toString();
     }
   }
 }
