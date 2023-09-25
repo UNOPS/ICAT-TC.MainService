@@ -31,6 +31,7 @@ import { MethodologyAssessmentService } from 'src/methodology-assessment/methodo
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 
 const schema = {
   'id': {
@@ -942,7 +943,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         
         }
 
-      let result =data
+      let result = await data
         .leftJoinAndSelect('investorSector.sector', 'sector')
         .select('sector.name', 'sector')
         .addSelect('COUNT(investorSector.id)', 'count')

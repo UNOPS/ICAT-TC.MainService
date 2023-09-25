@@ -454,6 +454,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let obj = {
           // data:ans,
           characteristic: ans.assessment_question?.characteristic?.name,
+          ch_code: ans.assessment_question?.characteristic?.code,
           question: ans?.assessment_question?.question?.label,
           score: ans?.answer?.label,
           justification: ans?.assessment_question?.comment,
@@ -572,6 +573,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
         let _obj = new CharacteristicProcessData()
         _obj.name = chs[ch][0].characteristic.name
+        _obj.code = chs[ch][0].characteristic.code
         _obj.relevance = chs[ch][0].relevance
         _obj.weight = chs[ch][0].characteristic.cm_weight
         let questions = []
@@ -581,7 +583,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.question = q.assessmentAnswers[0].answer.question.label
           o.weight = q.assessmentAnswers[0].answer.weight
           o.score = q.assessmentAnswers[0].answer.score_portion
-          score += (+o.score * +o.weight) / 100
+          score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
         }
         _obj.questions = questions
@@ -790,6 +792,7 @@ export class QuestionData {
 
 export class CharacteristicProcessData {
   name: string
+  code: string
   relevance: number
   weight: number
   score: number
