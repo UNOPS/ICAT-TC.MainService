@@ -219,11 +219,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let pAssessments = await this.assessmentsByPortfolioId(portfolioId)
 
     response.process_data = await this.getProcessData(pAssessments)
-    // let outcomeResponse = await this.getOutcomeData(pAssessments)
-    // response.outcome_data = outcomeResponse.outcomeData
-    // response.aggregation_data = await this.getAggragationData(pAssessments)
-    // sdgs = outcomeResponse.sdgs
-    // response.alignment_data = await this.getAlignmentData(pAssessments, sdgs)
+    let outcomeResponse = await this.getOutcomeData(pAssessments)
+    response.outcome_data = outcomeResponse.outcomeData
+    response.aggregation_data = await this.getAggragationData(pAssessments)
+    sdgs = outcomeResponse.sdgs
+    response.alignment_data = await this.getAlignmentData(pAssessments, sdgs)
 
     return response
   }
@@ -246,8 +246,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let res
       switch(pAssessment.assessment.tool){
         case 'Portfolio Tool':
-          res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
-          break;
         case 'Investment & Private Sector Tool':
           res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
           break;
@@ -304,7 +302,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch(pAssessment.assessment.tool){
-        case 'Investment & Private Sector Tool' || 'Portfolio Tool':
+        case 'Portfolio Tool':
+        case 'Investment & Private Sector Tool':
           data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
@@ -400,7 +399,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch(pAssessment.assessment.tool){
-        case 'Investment & Private Sector Tool' || 'Portfolio Tool':
+        case 'Portfolio Tool':
+        case 'Investment & Private Sector Tool':
           data = this.getAggregationDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
@@ -424,7 +424,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch(pAssessment.assessment.tool){
-        case 'Investment & Private Sector Tool' || 'Portfolio Tool':
+        case 'Portfolio Tool':
+        case 'Investment & Private Sector Tool':
           data = this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
@@ -464,7 +465,109 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getOutcomeDataPortfolioInvestor(assessement: Assessment){
+    let data = (await this.investorToolService.calculateNewAssessmentResults(assessement.id)).outcomeData
+    let sdg = []
 
+    let scGHG = data.find(o => o.code === 'SCALE_GHG')
+
+    let scale_GHGs = {
+      col_set_1: {label: 'GHG', colspan: 4},
+      data: {
+        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL').score.name,
+        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL').score.name,
+        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL').score.name,
+        category_score: scGHG.category_score.name
+      }
+    }
+
+    let scSD = data.find(o => o.code === 'SCALE_SD')
+
+    let scale_SDs = {}
+
+    for (let sd of scSD.characteristicData){
+      let sd_code = (sd.name.replace(' ', '_')).toUpperCase()
+      sdg.push(sd_code)
+      let international = sd.data.find(o => o.ch_code === 'MACRO_LEVEL').score.name
+      let national = sd.data.find(o => o.ch_code === 'MEDIUM_LEVEL').score.name
+      let subnational = sd.data.find(o => o.ch_code === 'MICRO_LEVEL').score.name
+
+      scale_SDs[sd_code] = {
+        col_set_1: {label: 'SCALE - ' + sd.name.toUpperCase(), colspan: 4},
+        data: {
+          international: international,
+          national: national,
+          subnational: subnational,
+          category_score: scSD.category_score.name
+        }
+      }
+    }
+
+    let scAD = data.find(o => o.code === 'SCALE_ADAPTATION')
+
+    let scale_adaptation = {
+      col_set_1: {label: 'ADAPTATION', colspan: 4},
+      data: {
+        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score.name,
+        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score.name,
+        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score.name,
+        category_score: scAD.category_score.name
+      }
+    }
+
+    let susGHG = data.find(o => o.code === 'SUSTAINED_GHG')
+
+    let sustained_GHGs = {
+      col_set_1: {label: 'GHG', colspan: 4},
+      data: {
+        international: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM').score.name,
+        national: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM').score.name,
+        subnational: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM').score.name,
+        category_score: susGHG.category_score.name
+      }
+    }
+
+    let susSD = data.find(o => o.code === 'SUSTAINED_SD')
+
+    let sustained_SDs = {}
+
+    for (let sd of susSD.characteristicData){
+      let sd_code = (sd.name.replace(' ', '_')).toUpperCase()
+      let international = sd.data.find(o => o.ch_code === 'LONG_TERM').score.name
+      let national = sd.data.find(o => o.ch_code === 'MEDIUM_TERM').score.name
+      let subnational = sd.data.find(o => o.ch_code === 'SHORT_TERM').score.name
+
+      sustained_SDs[sd_code] = {
+        col_set_1: {label: 'SUSTAINED - ' + sd.name.toUpperCase(), colspan: 4},
+        data: {
+          international: international,
+          national: national,
+          subnational: subnational,
+          category_score: susSD.category_score.name
+        }
+      }
+    }
+
+    let susAD = data.find(o => o.code === 'SUSTAINED_ADAPTATION')
+
+    let sustained_adaptation = {
+      col_set_1: {label: 'ADAPTATION', colspan: 4},
+      data: {
+        international: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score.name,
+        national: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score.name,
+        subnational: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score.name,
+        category_score: susAD.category_score.name
+      }
+    }
+
+    return {
+      scale_comparisons: {
+        ghg: scale_GHGs, sdg: scale_SDs, adaptation: scale_adaptation
+      },
+      sustained_comparisons: {
+        ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
+      },
+      sdg: sdg
+    }
   }
   
   async getAggregationDataPortfolioInvestor(assessement: Assessment){
@@ -501,7 +604,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   }
 
-
   async getOutcomeDataCarbonMarket(assessement: Assessment){
     let data = (await this.cMAssessmentQuestionService.getResults(assessement.id))?.outComeData
     let result = await this.cMAssessmentQuestionService.calculateResult(assessement.id)
@@ -510,8 +612,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       col_set_1: {label: 'GHG', colspan: 4},
       data: {
         international: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
-        national: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
-        subnational: data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score,
+        national: data.scale_GHGs.find(o => o.ch_code === 'MEDIUM_LEVEL').outcome_score,
+        subnational: data.scale_GHGs.find(o => o.ch_code === 'MICRO_LEVEL').outcome_score,
         category_score: result.outcome_score.scale_ghg_score
       }
     }
@@ -522,8 +624,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdg_count = Object.keys(sdg).length
     for (let sd of Object.keys(sdg)){
       let international = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
-      let national =  data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
-      let subnational = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
+      let national =  data.scale_SDs.find(o => o.ch_code === 'MEDIUM_LEVEL' && o.SDG === sd).outcome_score
+      let subnational = data.scale_SDs.find(o => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd).outcome_score
       scale_SDs[sd] = {
         col_set_1: { label: 'SCALE - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
         data: {

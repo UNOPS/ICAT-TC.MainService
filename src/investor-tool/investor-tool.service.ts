@@ -1281,6 +1281,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     let outcomeCategoryData: {
       category: string,
+      code: string,
       category_score: { name: string, value: number },
       category_weight: number,
       isSDG: Boolean,
@@ -1392,6 +1393,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // let sdg
       let categoryData: typeof outcomeCategoryData = {
         category: category.name,
+        code: category.code,
         category_score: {
           name: '',
           value: undefined
@@ -1403,6 +1405,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       for (let x of assessment) {
         if (category.name === x.category.name) {
           categoryData.category = category.name;
+          categoryData.code = category.code;
           // console.log(category.ip_weight)
           categoryData.category_weight = category.ip_weight;
           categoryData.isSDG = (category.code == 'SCALE_SD' || category.code == 'SUSTAINED_SD') ? (true) : (false)
