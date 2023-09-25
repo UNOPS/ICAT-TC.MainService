@@ -188,13 +188,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getPortfolioComparisonData(portfolioId: number) {
     let response = new ComparisonTableDataDto()
+    let sdgs: any[] = []
 
     let pAssessments = await this.assessmentsByPortfolioId(portfolioId)
 
     response.process_data = await this.getProcessData(pAssessments)
-    response.outcome_data = await this.getOutcomeData(pAssessments)
+    let outcomeResponse = await this.getOutcomeData(pAssessments)
+    response.outcome_data = outcomeResponse.outcomeData
     response.aggregation_data = await this.getAggragationData(pAssessments)
-    response.alignment_data = await this.getAlignmentData(pAssessments)
+    sdgs = outcomeResponse.sdgs
+    response.alignment_data = await this.getAlignmentData(pAssessments, sdgs)
 
     return response
   }
@@ -252,7 +255,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getOutcomeData(pAssessments: PortfolioAssessment[]){
     let response: ComparisonDto[] = []
+    let sdgs: any[] = []
     let intervention_data = []
+    let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
+    let col_set_2 = [
+      { label: 'INTERNATIONAL', code: 'international' },
+      { label: 'NATIONAL/SECTORIAL', code: 'national' },
+      { label: 'SUBNATIONAL/SUBSECTORIAL', code: 'subnational' },
+      { label: 'CATEGORY SCORE', code: 'category_score' }
+    ]
+
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -270,13 +282,85 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
           break;
       }
-
       intervention_data.push({data: data, intervention: _intervention})
     }
 
-    console.log("intervention data", intervention_data)
+      console.log(intervention_data[0].data.scale_comparisons.sdg, intervention_data[0].data)
+      
+      let scaleGhgData = new ComparisonDto()
+      let scalAdaptationData = new ComparisonDto()
+      let scaleSdgData = {}
+      let sustainedGhgData = new ComparisonDto()
+      let sustainedSdgData = {}
+      let sustainedAdaptationData = new ComparisonDto()
 
-    return response
+      scaleGhgData.comparison_type = 'SCALE COMPARISON',
+      scalAdaptationData.comparison_type = 'SCALE COMPARISON'
+      sustainedGhgData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
+      sustainedAdaptationData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
+
+      for (let [index, int_data] of intervention_data.entries()){
+        if (index === 0) {
+          sdgs.push(...int_data.data.sdg)
+          scaleGhgData.col_set_1 = [...col_set_1, int_data.data.scale_comparisons.ghg.col_set_1]
+          scaleGhgData.col_set_2 = [...this.col_set_2, ...col_set_2]
+          scalAdaptationData.col_set_1 = [...col_set_1, int_data.data.scale_comparisons.adaptation.col_set_1]
+          scalAdaptationData.col_set_2 = [...this.col_set_2, ...col_set_2]
+          sustainedGhgData.col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.ghg.col_set_1]
+          sustainedGhgData.col_set_2 = [...this.col_set_2, ...col_set_2]
+          sustainedAdaptationData.col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.adaptation.col_set_1]
+          sustainedAdaptationData.col_set_2 = [...this.col_set_2, ...col_set_2]
+          for (let sd of sdgs) {
+            scaleSdgData[sd] = new ComparisonDto()
+            scaleSdgData[sd].comparison_type = 'SCALE COMPARISON'
+            scaleSdgData[sd].col_set_1 = [...col_set_1, int_data.data.scale_comparisons.sdg[sd].col_set_1]
+            scaleSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2]
+            sustainedSdgData[sd] = new ComparisonDto()
+            sustainedSdgData[sd].comparison_type = 'SUSTAINED IN TIME COMPARISON'
+            sustainedSdgData[sd].col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.sdg[sd].col_set_1]
+            sustainedSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2]
+          }
+        }
+
+        scaleGhgData.interventions.push({...int_data.intervention, ...int_data.data.scale_comparisons.ghg.data})
+        scaleGhgData.order = 1
+        let order = 1
+        let sus_order = 2 + sdgs.length
+        for (let sd of sdgs){
+          order += 1
+          sus_order += 1
+          scaleSdgData[sd].interventions.push({...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data})
+          scaleSdgData[sd].order = order
+          sustainedSdgData[sd].interventions.push({...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data})
+          sustainedSdgData[sd].order = sus_order
+        }
+        
+        scalAdaptationData.interventions.push({...int_data.intervention, ...int_data.data.scale_comparisons.adaptation.data})
+        order += 1
+        scalAdaptationData.order = order
+
+        sustainedGhgData.interventions.push({...int_data.intervention, ...int_data.data.sustained_comparisons.ghg.data})
+        sus_order += 1
+        sustainedGhgData.order = order ++
+        sustainedAdaptationData.interventions.push({...int_data.intervention, ...int_data.data.sustained_comparisons.adaptation.data})
+        sustainedAdaptationData.order = sus_order
+      }
+    
+
+    for (let sd of sdgs){
+      response.push(scaleSdgData[sd], sustainedSdgData[sd])
+    }
+
+    response.push(scaleGhgData, scalAdaptationData, sustainedGhgData, sustainedAdaptationData)
+
+    response.sort((a, b) => a.order - b.order)
+
+    console.log(response)
+
+    return {
+      outcomeData: response,
+      sdgs: sdgs
+    }
   }
 
   async getAggragationData(pAssessments: PortfolioAssessment[]){
@@ -303,7 +387,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return response
   }
 
-  async getAlignmentData(pAssessments: PortfolioAssessment[]){
+  async getAlignmentData(pAssessments: PortfolioAssessment[], sdgs: any[]){
     let response: ComparisonDto
     for (let pAssessment of pAssessments) {
       let _intervention = {
@@ -393,12 +477,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let national =  data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
       let subnational = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
       scale_SDs[sd] = {
-        col_set_1: { label: this.getSDGName(sd), colspan: 4 },
+        col_set_1: { label: 'SCALE - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
         data: {
           international: international,
           national: national,
           subnational: subnational,
-          category_score: (international + national + subnational) / sdg_count / 3 
+          category_score: Math.round((international + national + subnational) / sdg_count / 3 )
         }
       }
     }
@@ -429,12 +513,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let national =  data.sustained_SDs.find(o => o.ch_code === 'MEDIUM_TERM' && o.SDG === sd).outcome_score
       let subnational = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd).outcome_score
       sustained_SDs[sd] = {
-        col_set_1: { label: this.getSDGName(sd), colspan: 4 },
+        col_set_1: { label: 'SUSTAINED - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
         data: {
           international: international,
           national: national,
           subnational: subnational,
-          category_score: (international + national + subnational) / sdg_count / 3 
+          category_score: Math.round((international + national + subnational) / sdg_count / 3 )
         }
       }
     }
