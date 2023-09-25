@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from './entities/portfolio.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -45,5 +45,22 @@ export class PortfolioController {
   @Get('sdgSumCalculate/:portfolioId')
   async sdgSumCalculate(@Param('portfolioId') portfolioId: number) {
     return await this.portfolioService.sdgSumCalculate(portfolioId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-data')
+  async getDashboardData(
+    @Query('PortfolioID') PortfolioID: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.portfolioService.getDashboardData( PortfolioID,{
+      limit: limit,
+      page: page,
+    },);
+  }
+  @Get('get-comparison-data/:portfolioId')
+  async getPortfolioComparisonData(@Param('portfolioId') portfolioId: number){
+    return this.portfolioService.getPortfolioComparisonData(portfolioId)
   }
 }
