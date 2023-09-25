@@ -1226,6 +1226,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     let characteristicData: {
       characteristic: string,
+      ch_code: string,
       relevance: { name: string, value: number },
       likelihood: { name: string, value: number },
       char_weight: number,
@@ -1243,7 +1244,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       },
       char_weight: 0,
       recalculated_char_weight: 0,
-      isCalulate: false
+      isCalulate: false,
+      ch_code: ''
     }
 
     let processCategoryData: {
@@ -1324,6 +1326,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               relevance: { name: this.mapRelevance(x?.relavance), value: x?.relavance },
               likelihood: { name: this.mapLikelihood(x?.likelihood), value: x?.likelihood },
               characteristic: x.characteristics.name,
+              ch_code: x.characteristics.code,
               char_weight: x.characteristics.ip_weight,
               recalculated_char_weight: x.relavance, // for now
               isCalulate: (x.relavance == 0 || !x.relavance) ? false : true,
@@ -1408,6 +1411,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             {
               score: { name: (isSutained) ? (this.mapSustaineScores(x?.score)) : (this.mapSustaineScores(x?.score)), value: x?.score },
               characteristic: x.characteristics.name,
+              ch_code: x.characteristics.code,
               isCalulate: (x.score == null) ? false : true,
               sdg: (categoryData.isSDG) ? (x?.portfolioSdg?.name) : ''
             }

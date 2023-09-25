@@ -15,6 +15,7 @@ import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -34,7 +35,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
-    private masterDataService: MasterDataService
+    private masterDataService: MasterDataService,
+    private investorToolService: InvestorToolService
 
   ) {
     super(repo)
@@ -217,11 +219,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let pAssessments = await this.assessmentsByPortfolioId(portfolioId)
 
     response.process_data = await this.getProcessData(pAssessments)
-    let outcomeResponse = await this.getOutcomeData(pAssessments)
-    response.outcome_data = outcomeResponse.outcomeData
-    response.aggregation_data = await this.getAggragationData(pAssessments)
-    sdgs = outcomeResponse.sdgs
-    response.alignment_data = await this.getAlignmentData(pAssessments, sdgs)
+    // let outcomeResponse = await this.getOutcomeData(pAssessments)
+    // response.outcome_data = outcomeResponse.outcomeData
+    // response.aggregation_data = await this.getAggragationData(pAssessments)
+    // sdgs = outcomeResponse.sdgs
+    // response.alignment_data = await this.getAlignmentData(pAssessments, sdgs)
 
     return response
   }
@@ -243,7 +245,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let categories
       let res
       switch(pAssessment.assessment.tool){
-        case 'Investment & Private Sector Tool' || 'Portfolio Tool':
+        case 'Portfolio Tool':
+          res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
+          break;
+        case 'Investment & Private Sector Tool':
           res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
@@ -308,8 +313,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       intervention_data.push({data: data, intervention: _intervention})
     }
-
-      console.log(intervention_data[0].data.scale_comparisons.sdg, intervention_data[0].data)
       
       let scaleGhgData = new ComparisonDto()
       let scalAdaptationData = new ComparisonDto()
@@ -379,8 +382,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     response.sort((a, b) => a.order - b.order)
 
-    console.log(response)
-
     return {
       outcomeData: response,
       sdgs: sdgs
@@ -436,7 +437,30 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getProcessDataPortfolioInvestor(assessement: Assessment){
+    let categories = []
+    let cat_names = []
 
+    let data = (await this.investorToolService.calculateNewAssessmentResults(assessement.id)).processData
+
+    for (let cat of data){
+      let obj = {}
+      let characteristics = []
+      let ch_data = {}
+      for await (let ch of cat.characteristicData) {
+        characteristics.push({label: ch.characteristic, code: ch.ch_code})
+        ch_data[ch.ch_code] = ch.likelihood.name
+      }
+      characteristics.push({label: 'Category score', code: 'category_score'})
+      ch_data['category_score'] = cat.category_score.name
+      obj['characteristics'] = characteristics
+      obj['ch_data'] = ch_data
+      obj['characteristic_count'] = characteristics.length
+      obj['col_set_1'] = {label: cat.category, colspan: characteristics.length + 1}
+      cat_names.push(cat.category)
+      categories.push(obj)
+    }
+
+    return {categories: categories, cat_names: cat_names}
   }
 
   async getOutcomeDataPortfolioInvestor(assessement: Assessment){
