@@ -165,4 +165,18 @@ export class InvestorToolController {
     return await this.investorToolService.sdgSumCalculate();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-data')
+  async getDashboardData(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.investorToolService.getDashboardData( {
+      limit: limit,
+      page: page,
+    },);
+  }
+
+
+
 }
