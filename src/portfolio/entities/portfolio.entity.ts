@@ -38,6 +38,12 @@ export class Portfolio {
     principles : string; 
 
     @ManyToOne((type) => User, { cascade: false, eager: true, })
-    user?: User;  
+    user?: User;
+    
+    @Column({ nullable: true })
+    date: string;
+
+    @Column({ type:"mediumtext" , nullable: true })
+    link: string;
 
 }
