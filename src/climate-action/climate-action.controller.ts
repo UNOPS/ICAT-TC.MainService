@@ -22,6 +22,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { PolicySector } from './entity/policy-sectors.entity';
+import { AllBarriersSelected } from './dto/selected-barriers.dto';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -69,6 +70,7 @@ var multer = require('multer');
       },
       
     },
+    exclude: ['id']
   },
 })
 @Controller('climateAction')
@@ -123,12 +125,13 @@ export class ProjectController implements CrudController<ClimateAction> {
     // await this.service.ceateReverseConvertion(dto);
   }
   @Post('createNewCA')
-  async createNewCA(req:ClimateAction){
-    console.log("req",req)
-    await this.service.create(req)
+  async createNewCA(@Body() req:ClimateAction):Promise<ClimateAction>{
+    // console.log("req",req)
+    return await this.service.create(req)
   }
  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
+ @UseGuards(JwtAuthGuard)
   @Get('findAllPolicies')
 async findAllPolicies() {
   const policies = await this.service.findAllPolicies();
@@ -143,6 +146,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('typeofAction')
   async findTypeofAction(): Promise<any[]> {
   let res  = await this.service.findTypeofAction();
@@ -150,7 +154,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
    
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get(
     'AllClimateAction/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:countryId/:sectorId',
   )
@@ -378,7 +382,8 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Post("policybar")
-  async policyBar(@Body() req:PolicyBarriers[]){
+  async policyBar(@Body() req:AllBarriersSelected){
+    // console.log("policyBar",req)
    return await this.service.save(req);
   }
 
@@ -417,6 +422,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
 
   @Get('findPolicyBarrierData/:policyID')
   async findPolicyBarrierData(@Param('policyID') policyID: number) {
+    console.log("policyID",policyID)
     return await this.service.findPolicyBarrierData(policyID);
   }
   
