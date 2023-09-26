@@ -153,6 +153,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async createFinalAssessment(request: FinalInvestorAssessmentDto[]): Promise<any> {
     console.log("....request", request)
     let mitigation: number;
+ /*     async createFinalAssessment(request: FinalInvestorAssessmentDto[]):Promise<any> {
+    console.log("....request",request)
+    let mitigation:number;
     for (let req of request) {
       for (let assess of req.data) {
         if (assess.expected_ghg_mitigation) {
@@ -404,6 +407,212 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    } */
 
 
+  }  
+ */
+   async createFinalAssessment(request2: FinalInvestorAssessmentDto[]): Promise<any> {
+    let data2: any = request2;
+    let request = data2.finalArray;
+    console.log("request", request2);
+    console.log("abcdee",  request[0].data[0].assessment)
+  
+    for (let req of request) {
+      let vvv : InvestorAssessment[] = req.data
+      for (let assess of vvv) { 
+      //  console.log("assesss", assess);
+  
+        let iassess = new InvestorAssessment();
+  
+        
+        // Set the values for the entity
+
+       // let assess3 = new Assessment();
+       // assess3.id = assess.assessment.id
+       iassess.assessment = request[0].data[0].assessment
+
+        let category = new Category();
+        category.id =  req.categoryID
+        iassess.type = req.type;
+        iassess.category = category;
+
+
+      //  iassess.assessment = assess3
+        iassess.characteristics = assess.characteristics;
+
+        let port = new PortfolioSdg()
+        port.id = assess.portfolioSdg.id
+
+        iassess.description = assess?.description;
+        iassess.starting_situation = assess.starting_situation;
+        iassess.relavance = assess.relavance;
+        iassess.justification = assess.justification;
+        iassess.likelihood = assess.likelihood;
+        iassess.likelihood_justification = assess.likelihood_justification;
+        iassess.relevance_weight = assess.relevance_weight;
+        iassess.likelihood_weight = assess.likelihood_weight;
+        iassess.score = assess.score;
+        iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+
+
+        iassess.indicator = assess.indicator;
+        iassess.indicatorStartingVal = assess.indicatorStartingVal;
+        iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+        iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+
+        let institution = new Institution();
+        institution.id = 1
+        iassess.institution = assess.institution;
+        iassess.institutionDescription = assess.institutionDescription;
+        iassess.parameter_value = assess.parameter_value;
+        iassess.enterDataAssumption = assess.enterDataAssumption;
+        iassess.indicator_details = assess.indicator_details;
+        // Save the entity
+
+        if( category.id != 6 && category.id != 8 ){
+          let a = await this.investorAssessmentRepo.save(iassess).then(
+            async (x) => {            
+                for(let item of x.indicator_details){
+                  if(item.value || item.justification){
+                    item.investorAssessment =x
+                    await this.indicatorDetailsRepo.save(item)
+                    console.log("saved",item.question.id, item.value,item.justification)
+                  }
+                }
+            })
+
+
+          console.log("saved");
+        }
+        
+      }
+    }
+
+    for (let req of data2.scaleSDGs) {
+      for (let assess of req.data) {
+      //  console.log("assesss", assess);
+  
+        let iassess = new InvestorAssessment();
+  
+        // Set the values for the entity
+
+       // let assess3 = new Assessment();
+       // assess3.id = assess.assessment.id
+
+        let category = new Category();
+        category.id =  req.categoryID
+        iassess.type = req.type;
+        iassess.category = category;
+
+        iassess.assessment = request[0].data[0].assessment
+        //iassess.assessment = assess3
+        iassess.characteristics = assess.characteristics;
+
+      //  console.log("xxxx",assess.portfolioSdg)
+        if(assess.portfolioSdg.id){
+          let port = new PortfolioSdg()
+          port.id = assess.portfolioSdg.id
+
+          iassess.portfolioSdg = port
+        }
+       
+        iassess.description = assess?.description;
+        iassess.starting_situation = assess.starting_situation;
+        iassess.relavance = assess.relavance;
+        iassess.justification = assess.justification;
+        iassess.likelihood = assess.likelihood;
+        iassess.likelihood_justification = assess.likelihood_justification;
+        iassess.relevance_weight = assess.relevance_weight;
+        iassess.likelihood_weight = assess.likelihood_weight;
+        iassess.score = assess.score;
+        iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+
+        iassess.indicator = assess.indicator;
+        iassess.indicatorStartingVal = assess.indicatorStartingVal;
+        iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+        iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+
+        let institution = new Institution();
+        institution.id = 1
+        iassess.institution = assess.institution;
+        iassess.institutionDescription = assess.institutionDescription;
+        iassess.parameter_value = assess.parameter_value;
+        iassess.enterDataAssumption = assess.enterDataAssumption;
+  
+        // Save the entity
+        let a = await this.investorAssessmentRepo.save(iassess);
+        console.log("saved");
+      }
+    }
+
+    for (let req of data2.sustainedSDGs) {
+      for (let assess of req.data) {
+      //  console.log("assesss", assess);
+  
+        let iassess = new InvestorAssessment();
+  
+        // Set the values for the entity
+
+        //let assess3 = new Assessment();
+        //assess3.id = assess.assessment.id
+
+        let category = new Category();
+        category.id =  req.categoryID
+        iassess.type = req.type;
+        iassess.category = category;
+
+        iassess.assessment = request[0].data[0].assessment
+       // iassess.assessment = assess3
+        iassess.characteristics = assess.characteristics;
+    //    console.log("xxxx22",assess.portfolioSdg)
+        if(assess.portfolioSdg.id){
+          let port = new PortfolioSdg()
+          port.id = assess.portfolioSdg.id
+
+          iassess.portfolioSdg = port
+        }
+        iassess.description = assess?.description;
+        iassess.starting_situation = assess.starting_situation;
+        iassess.relavance = assess.relavance;
+        iassess.justification = assess.justification;
+        iassess.likelihood = assess.likelihood;
+        iassess.likelihood_justification = assess.likelihood_justification;
+        iassess.relevance_weight = assess.relevance_weight;
+        iassess.likelihood_weight = assess.likelihood_weight;
+        iassess.score = assess.score;
+        iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+
+        iassess.indicator = assess.indicator;
+        iassess.indicatorStartingVal = assess.indicatorStartingVal;
+        iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+        iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+
+        let institution = new Institution();
+        institution.id = 1
+        iassess.institution = assess.institution;
+        iassess.institutionDescription = assess.institutionDescription;
+        iassess.parameter_value = assess.parameter_value;
+        iassess.enterDataAssumption = assess.enterDataAssumption;
+  
+        // Save the entity
+        let a = await this.investorAssessmentRepo.save(iassess);
+        console.log("saved");
+      }
+    }
+  
+  
+    for(let item of data2.sdgs){
+      let sdgs = new SdgAssessment()
+      sdgs.assessment = request[0].data[0].assessment
+      sdgs.sdg = item
+      sdgs.answer = item.answer;
+      await this.sdgsRepo.save(sdgs)
+    }
+    let data = new Results();
+    data.assessment = request[0].data[0].assessment;
+    await this.resultRepository.save(data);
+    return 0;
+  } 
+  
+ 
 
   async createFinalAssessment2(request2: FinalInvestorAssessmentDto[]): Promise<any> {
     let data2: any = request2;
@@ -1502,8 +1711,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     await this.assessmentRepo
     .createQueryBuilder()
     .update(Assessment)
-    .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcomeScore })
-    .where("id = :id", { id: assesId })
+    .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcome_score })
+    .where("id = :id", { id: assessmentId })
     .execute()
     return finalProcessDataArray;
   }
