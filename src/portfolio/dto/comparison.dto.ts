@@ -5,6 +5,7 @@ export class ComparisonDto {
     characteristic_count?: number
     order?: number
     comparison_type?:string
+    comparison_type_2?:string
     total?: number
     sdg_count?: number
 }
