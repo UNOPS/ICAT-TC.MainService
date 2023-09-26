@@ -51,6 +51,9 @@ export class Assessment extends BaseTrackingEntity{
 
     @Column({type: 'longtext', nullable: true })
     opportunities: string;
+
+    @Column({type: 'longtext', nullable: true })
+    principles: string;
     
     @Column({ type:"mediumtext" ,nullable: true })
     audience?: string;
@@ -87,9 +90,15 @@ export class Assessment extends BaseTrackingEntity{
       @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
       tc_value?: number;
 
-   /*  @ManyToOne((type) => User, { cascade: false, eager: true, })
-    @JoinColumn({ name: 'user_id' })
-    user?: User; */
+  @ManyToOne((type) => User, { cascade: false, eager: false, })
+  @JoinColumn({ name: 'user_id' })
+  user?: User; 
+
+  @Column({ type: 'int', nullable: true })
+  process_score: number;
+
+  @Column({ type: 'int', nullable: true })
+  outcome_score: number;
 
 }
 

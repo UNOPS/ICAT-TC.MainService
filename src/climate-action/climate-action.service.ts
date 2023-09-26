@@ -13,6 +13,12 @@ import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { Repository } from 'typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { PolicySector } from './entity/policy-sectors.entity';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entity/user.entity';
+import { Country } from 'src/country/entity/country.entity';
+import { Institution } from 'src/institution/entity/institution.entity';
+import { AllBarriersSelected } from './dto/selected-barriers.dto';
+import { BarrierCategory } from './entity/barrier-category.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -21,13 +27,23 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(ClimateAction) repo,
     @InjectRepository(PolicyBarriers) public PolicyBarriersRepo: Repository<PolicyBarriers>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
+    @InjectRepository(BarrierCategory) private  barrierCategoryRepo: Repository<BarrierCategory>,
+    private userService: UsersService,
+    
 ) {
     super(repo);
   }
+ 
   async create(req:ClimateAction):Promise<ClimateAction>{
     // console.log( "req",req)
-    return await this.repo.save(req)
-     
+    // console.log( "called")
+    // let user =new User()
+    // user.id = 1;
+    // req.user =user;
+    let a =  await this.repo.save(req)
+    console.log( "saved")
+    return a
+      
   }
 
   async getProjectDetails(  
@@ -103,18 +119,36 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       return resualt;
     }
   }
-async save(req:PolicyBarriers[]){
-  for(let re of req){
-    console.log("barrier", re)
-    await this.PolicyBarriersRepo.save(re);
+async save(req:AllBarriersSelected){
+  // console.log("AllBarriersSelected",req)
+  for(let re of req.allBarriers){
+    let policyBarrier = new PolicyBarriers()
+    policyBarrier.barrier = re.barrier;
+    policyBarrier.climateAction = req.climateAction
+    policyBarrier.explanation = re.explanation
+    policyBarrier.is_affected = re.affectedbyIntervention
+    console.log("barrier",policyBarrier)
+    let barrier = await this.PolicyBarriersRepo.save(policyBarrier);
+
+    for (let char of re.characteristics) {
+      let barrierCategory = new BarrierCategory()
+      barrierCategory.barriers = barrier;
+      barrierCategory.characteristics =char;
+      barrierCategory.climateAction = req.climateAction
+      console.log("barrierCategory",barrierCategory)
+      let result = await this.barrierCategoryRepo.save(barrierCategory);
+      console.log("saved")
+
+    }
   }
   return req;
 }
 
 async savepolicySectors(req:PolicySector[]){
   for(let re of req){
-    console.log("sector", re)
+    
     await this.PolicySectorsRepo.save(re);
+    console.log("saved sector")
   }
   return req;
 }
@@ -124,7 +158,7 @@ async savepolicySectors(req:PolicySector[]){
 async allProject(
   options: IPaginationOptions,
   filterText: number){
-    console.log("22222222222222222")
+    // console.log("22222222222222222")
 
     const policies = await this.repo.createQueryBuilder('climateAction')
       .select(['climateAction.id', 'climateAction.policyName'])
@@ -137,9 +171,48 @@ async allProject(
 
 
   async findAllPolicies(): Promise<ClimateAction[]> {
-      return this.repo.find({
+
+    let user = this.userService.currentUser();
+  //  console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
+
+     let res =  this.repo.find({
         relations: [],
       });
+
+      let policyList: ClimateAction[] = [];
+
+   /*    if((await user)?.userType?.name === 'External')
+      {
+        for(let x of await res){
+          if(x.user?.id == (await user)?.id ){
+            policyList.push(x)
+          }
+        }
+      }
+      else{
+        for(let x of await res){
+          if(x.user?.country?.id == (await user)?.country?.id && (x.user?.userType?.name !==  "External") ){
+            policyList.push(x)
+          }
+        }
+      } */
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    // console.log("currreenntt", currentUser)
+    for (const x of await res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x);
+      }
+    }
+
+
+      return policyList
   }
 
   async getIntervention(id:number):Promise<ClimateAction> {
@@ -151,7 +224,7 @@ async allProject(
     return policy;
   }
   
-  async findTypeofAction(): Promise<any[]> {
+ /*  async findTypeofAction(): Promise<any[]> {
     const actions = await this.repo
       .createQueryBuilder('entity')
       .select('entity.typeofAction', 'name')
@@ -160,8 +233,55 @@ async allProject(
       .getRawMany();
 
     return actions.map(({ name, count }) => ({ name, count }));
-  }
+  } */
 
+  async findTypeofAction(): Promise<any[]> {
+    const currentUser = await this.userService.currentUser();
+   /*  console.log(
+      "ussssser : ",
+      currentUser.fullname,
+      "and ",
+      currentUser.username,
+      "Id :",
+      currentUser.id,
+      "user Type",
+      currentUser?.userType?.name,
+      "country ID :",
+      currentUser?.country?.id
+    ); */
+  
+    const res = await this.repo.find({
+      relations: [],
+    });
+  
+    const policyList: ClimateAction[] = [];
+    const isUserExternal = currentUser?.userType?.name === 'External';
+  
+    for (const x of res) {
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.name !== 'External';
+  
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x);
+      }
+    }
+  
+    const actions = policyList.reduce((acc: any[], entity: ClimateAction) => {
+      const existingAction = acc.find((item) => item.name === entity.typeofAction);
+  
+      if (existingAction) {
+        existingAction.count++;
+      } else {
+        acc.push({ name: entity.typeofAction, count: 1 });
+      }
+  
+      return acc;
+    }, []);
+  
+    return actions;
+  }
+  
 
   async getAllCAList(
     
@@ -175,6 +295,9 @@ async allProject(
   ): Promise<Pagination<ClimateAction>> {
     console.log("filterText",filterText)
     let filter: string = '';
+    let user = this.userService.currentUser();
+    
+    const currentUser = await user;
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(dr.policyName LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText  OR pas.description LIKE :filterText )';
@@ -195,22 +318,6 @@ async allProject(
         filter = `dr.projectApprovalStatusId = :projectApprovalStatusId`;
       }
     }
-
-   
-
-    // if isactive = 0 ---> all climate actions
-    // if isactive = 1 ---> active climate actions
-    // if active = 2 ---> 
-
-   
-       
-      // if (filter) {
-      //   filter = `${filter}  and pas.id !=4 `; // no proposed CA s all climate
-      // } else {
-      //   filter = `pas.id !=4`;
-      // }
-    
-    
 
     if (countryId != 0) {
       if (filter) {
@@ -241,22 +348,26 @@ async allProject(
         ProjectApprovalStatus,
         'pas',
         'pas.id = dr.projectApprovalStatusId',
-        
-
       )
-      
-      
-    /* 
-      .leftJoinAndMapMany(
-        'asse.parameter',
-        Parameter,
-        'para',
-        'para.assessmentId = asse.id',
+      .leftJoinAndMapOne(
+        'dr.user',
+         User,
+        'user',
+        'user.id = dr.user_id',
       )
-     */
-
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
-
+      .leftJoinAndMapOne(
+        'dr.country',
+         Country,
+        'cntry',
+        'cntry.id = dr.countryId',
+      )
+      .leftJoinAndMapOne(
+        'user.institution',
+         Institution,
+        'ins',
+        'ins.id = user.institutionId',
+      )
+   
       .where(filter, {
         filterText: `%${filterText}%`,
         projectStatusId,
@@ -265,15 +376,49 @@ async allProject(
         sectorId,
         isDelete: true,
       })
-      .orderBy('dr.createdOn', 'ASC');
-    console.log(
-      '=====================================================================',
-    );
-    //console.log(data.getQuery());
+      .orderBy('dr.id', 'DESC');
+
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      const isUserVerifier = currentUser?.userType?.name === 'Verifier';
+      //users filter by country id
+      const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+      console.log("user type", currentUser?.userType?.name)
+      const allowedUserTypes = [
+        'Country Admin',
+        'Sector Admin',
+        'Technical Team',
+        'MRV Admin',
+        'Data Collection Team',
+        'QC Team',
+        'MASTER_ADMIN'
+      ];
+      const allowedUserTypesForAcceptedInterverntions = [
+        'Sector Admin',
+        'Technical Team',
+        'MRV Admin',
+      ];
+      if (isUserExternal || isUserVerifier){
+        data.andWhere('user.id = :userId', { userId: currentUser.id })
+      }
+      else if  (allowedUserTypes.includes(currentUser?.userType?.name)){
+        console.log("............")
+        data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+      }
+      else if (isUsersFilterByInstitute){
+        console.log("+++++++++++",isUsersFilterByInstitute)
+        data.andWhere('ins.id = :insId', { insId: currentUser?.institution?.id  })
+      }
+      // accpeted policies showing
+      if  (!allowedUserTypesForAcceptedInterverntions.includes(currentUser?.userType?.name)){
+        console.log("*********")
+        data.andWhere('pas.id != :projectApprovalStatusId', { projectApprovalStatusId: 1 })
+      }
+
 
     let result = await paginate(data, options);
-    // console.log(result);
+  
     if (result) {
+    
       return result;
     }
   }
@@ -419,11 +564,21 @@ async allProject(
     });
   }
   
-  async findPolicyBarrierData(policyID: number){
-    return this.PolicyBarriersRepo.find({
-      relations: ['barriers','characteristics'],
-      where: { climateAction: { id: policyID } },
-    });
+  async findPolicyBarrierData(policyID: number):Promise<PolicyBarriers[]>{
+    let barriers= await this.PolicyBarriersRepo.createQueryBuilder('policyBarriers')
+      .leftJoinAndSelect('policyBarriers.barrierCategory', 'barrierCategory')
+      .leftJoinAndSelect('barrierCategory.characteristics', 'characteristics')
+      .where('policyBarriers.climateAction.id = :policyID', { policyID })
+      .getMany();
+
+      console.log("barriers",barriers)
+      const modifiedArray = barriers.map(item => {
+        return {
+          ...item,
+          characteristics: item.barrierCategory.map(category => category.characteristics),
+        };
+      });
+      return modifiedArray
   }
   
 

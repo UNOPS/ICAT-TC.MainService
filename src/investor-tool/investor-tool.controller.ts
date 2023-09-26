@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -10,6 +10,8 @@ import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -68,28 +70,45 @@ export class InvestorToolController {
     return await this.investorToolService.findAllIndicatorquestions();
   }
 
+  @Get('findAllPortfolioquestions')
+  async findAllPortfolioquestions():Promise<PortfolioQuestions[]> {
+    return await this.investorToolService.findAllPortfolioquestions();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.findSectorCount(tool);
   }
+  @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
   async getTCValueByAssessment(@Query('tool') tool:string):Promise<any[]> {
     return await this.investorToolService.getTCValueByAssessment(tool);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('getSectorCountByTool/:tool')
-  async getSectorCountByTool(@Param('tool') tool:string):Promise<any[]> {
+  async getSectorCountByTool(@Param('tool') tool:string){
     return await this.investorToolService.getSectorCountByTool(tool);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get('calculateAssessmentResults/:tool')
   async calculateAssessmentResults(@Param('tool') tool: string): Promise<any[]> {
   let res  = await this.investorToolService.calculateAssessmentResults(tool);
     return res;
-   
-  }
 
+  }
+  
+  @UseGuards(JwtAuthGuard)
+  @Get('calculate-final-result')
+  async calculateFinalResults(@Query('assessID') assessID: number) {
+    console.log("ssss",assessID)
+    let res =  await this.investorToolService.calculateNewAssessmentResults(assessID);
+    // console.log("res",res)
+    return res;
+  //  res;
+
+  }
   @Get('get-investor-question-by-id')
   async getInvestorQuestionById(@Query('id') id: number){
     return await this.investorToolService.getInvestorQuestionById(id)
@@ -130,11 +149,38 @@ export class InvestorToolController {
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: './public/portfolio',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
+
+  @Post('upload-file-investment')
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  async uploadJustificationInvestment(@UploadedFiles() files: Array<Express.Multer.File>
+  ) {
+    return {fileName: files[0].filename}
+    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
+  }
+
+  @Get('sdgSumCalculateInvester')
+  async sdgSumCalculate() {
+    return await this.investorToolService.sdgSumCalculate();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-data')
+  async getDashboardData(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.investorToolService.getDashboardData( {
+      limit: limit,
+      page: page,
+    },);
+  }
+
+
 
 }

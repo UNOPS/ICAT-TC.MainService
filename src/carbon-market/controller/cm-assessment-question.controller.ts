@@ -2,13 +2,14 @@ import { Crud, CrudController } from "@nestjsx/crud";
 import { Body, Controller, Get, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
-import { CMResultDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
+import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { editFileName } from "src/utills/file-upload.utils";
+import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 
 
 @Crud({
@@ -46,7 +47,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
   @UseGuards(JwtAuthGuard)
   @Post('calculate')
-  async calculateResult(@Body() req: CalculateDto){
+  async calculateResult(@Body() req: CalculateDto): Promise<CMScoreDto>{
     return await this.service.calculateResult(req.assessmentId)
   }
 
@@ -56,11 +57,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return await this.service.getResults(assessmentId)
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('saveTcValue')
-  async saveTcValue(@Query('assessmentId') assessmentId: number){
-    return await this.service.saveTcValue(assessmentId)
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('saveTcValue')
+  // async saveTcValue(@Query('assessmentId') assessmentId: number){
+  //   return await this.service.saveTcValue(assessmentId)
+  // }
 
   @Post('upload-file')
   @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
@@ -70,7 +71,17 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
     // return savedFiles;
   }
-
- 
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-data')
+  async getDashboardData(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.service.getDashboardData( {
+      limit: limit,
+      page: page,
+    },);
+  }
+  
 
 }
