@@ -1350,9 +1350,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       for (let char of category.characteristicData) {
         if (char.isCalulate) {
           // console.log(char.characteristic,char.recalculated_char_weight)
-          char.recalculated_char_weight = Math.floor(100 * (char.recalculated_char_weight / total_char_weight));
+          char.recalculated_char_weight = this.roundDown(100 * (char.recalculated_char_weight / total_char_weight));
           if (!isNaN(char.likelihood.value)) {
-            cat_score += Math.floor(char.recalculated_char_weight * char.likelihood.value) //rounddown
+            cat_score += this.roundDown(char.recalculated_char_weight * char.likelihood.value) //rounddown
           }
 
           // console.log(category.category,"---cat_score",cat_score)
@@ -1367,7 +1367,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         category.category_score = { name: "-", value: null }
       }
       else {
-        category.category_score = { name: this.mapLikelihood(Math.floor(cat_score / 100)), value: Math.floor(cat_score / 100) }; //round down
+        category.category_score = { name: this.mapLikelihood(this.roundDown(cat_score / 100)), value: this.roundDown(cat_score / 100) }; //round down
         total_cat_weight += category.category_weight;
       }
 
@@ -1384,7 +1384,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
     })
     finalProcessDataArray.processData = categoryDataArray;
-    finalProcessDataArray.processScore = Math.floor(process_score / 100);
+    finalProcessDataArray.processScore = this.roundDown(process_score / 100);
 
     // outcome..............
     let total_outcome_cat_weight = 0
@@ -1409,10 +1409,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // console.log(category.ip_weight)
           categoryData.category_weight = category.ip_weight;
           categoryData.isSDG = (category.code == 'SCALE_SD' || category.code == 'SUSTAINED_SD') ? (true) : (false)
-          let isSutained: boolean = (category.code == 'SUSTAINED_GHG' || category.code == 'SUSTAINED_ADAPTATION') ? (true) : (false)
+          let isSutained: boolean = (category.code == 'SUSTAINED_GHG' || category.code == 'SUSTAINED_ADAPTATION'||category.code == 'SUSTAINED_SD') ? (true) : (false)
           categoryData.characteristicData.push(
             {
-              score: { name: (isSutained) ? (this.mapScaleScores(x?.score)) : (this.mapScaleScores(x?.score)), value: x?.score },
+              score: { name: (isSutained) ? (this.mapSustainedScores(x?.score)) : (this.mapScaleScores(x?.score)), value: x?.score },
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
               isCalulate: (x.score == null) ? false : true,
@@ -1462,15 +1462,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             char.sdg_score = { name: "-", value: null }
           }
           else {
-            char.sdg_score = Math.floor(sdg_cat_score / sdg_total_char); //round down
+            char.sdg_score = this.roundDown(sdg_cat_score / sdg_total_char); //round down
             sdg_count++
             total_sdg_score += char.sdg_score;
           }
         }
         if (sdg_count != 0) {
-          category.category_score = { name: this.mapScaleScores(Math.floor(total_sdg_score / sdg_count)), value: Math.floor(total_sdg_score / sdg_count) }; //round down
+          // console.log(isSutained,category.code)
+          category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          console.log(category.category, category.category_weight * category.category_score.value)
+          // console.log(category.category, category.category_weight * category.category_score.value)
         }
 
 
@@ -1490,14 +1491,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           category.category_score = { name: "-", value: null }
         }
         else {
-          category.category_score = { name: this.mapScaleScores(Math.floor(cat_score / total_char)), value: Math.floor(cat_score / total_char) }; //round down
+          category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          console.log(category.category, category.category_weight * category.category_score.value)
+          // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
     }
     finalProcessDataArray.outcomeData = outcomeArray;
-    finalProcessDataArray.outcomeScore = Math.floor(total_outcome_cat_weight / 100)
+    finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
 
     return finalProcessDataArray;
   }
@@ -1636,7 +1637,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let result = await paginate(data, options);
     return result;
   }
-
+  roundDown(value: number) {
+    if(value>0){
+      return Math.floor(value)
+    }
+    else{
+      return Math.round(value)
+    }
+  }
   mapRelevance(value: number) {
     switch (value) {
       case 0:
@@ -1664,7 +1672,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   mapScaleScores(value: number) {
-    console.log('mapScaleScores', value)
+    // console.log('mapScaleScores', value)
     switch (+value) {
       case -1:
         return 'Minor Negative';
