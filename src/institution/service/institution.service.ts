@@ -51,7 +51,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     let arr =  sectorIdFromTocken.toString() ;
     arr = '(' + arr+ ")";
     let filter: string = '';
-
+    console.log('userTypeFromTocken',userTypeFromTocken)
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
@@ -73,7 +73,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
 
 
-    if (userTypeFromTocken != "Master_Admin" && userTypeFromTocken != "Country Admin" && sectorIdFromTocken) {
+    if (userTypeFromTocken != "Master Admin" && userTypeFromTocken != "Country Admin" && sectorIdFromTocken) {
       let ins= await this.repo.findOne({where:{id:institutionTypeId}})
       if (filter) {
         filter = `${filter}  and ins.sectorId =` + ins.sectorId;
@@ -92,7 +92,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    if (userTypeFromTocken == "MASTER_ADMIN") {
+    if (userTypeFromTocken == "Master Admin") {
       if (filter) {
         filter = `${filter}  and ins.typeId in (1,2,3,4,5,6)`;
       } else {
