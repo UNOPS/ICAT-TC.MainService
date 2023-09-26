@@ -83,10 +83,10 @@ export const config: ConnectionOptions = {
       password: '1997',
       database: 'tc_new', */
      
- /*  username: 'root',
- /*  username: 'root',
-   database: 'tc-main', 
-   password: '7860150',  */
+
+  //  username: 'root',
+  //  database: 'tc-main', 
+  //  password: '7860150',  
    // database: 'tc-main-new3',
 
   
