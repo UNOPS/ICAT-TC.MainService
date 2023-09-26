@@ -98,7 +98,17 @@ export class InvestorToolController {
     return res;
 
   }
+  
+  @UseGuards(JwtAuthGuard)
+  @Get('calculate-final-result/:assessID')
+  async calculateFinalResults(@Query('assessID') assessID: number) {
+    // console.log("ssss",assessID)
+    let res =  await this.investorToolService.calculateNewAssessmentResults(assessID);
+    // console.log("res",res)
+    return res;
+  //  res;
 
+  }
   @Get('get-investor-question-by-id')
   async getInvestorQuestionById(@Query('id') id: number){
     return await this.investorToolService.getInvestorQuestionById(id)
