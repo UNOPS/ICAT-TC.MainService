@@ -203,7 +203,33 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     return this.repo.save(user);
   }
-  
+
+  async mailcreate(user: User) {
+    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    let newUUID = uuidv4();
+    let newPassword = ('' + newUUID).substr(0, 6);
+    user.password = await this.hashPassword(
+      user.password,
+      user.salt,
+    );
+    user.password = newPassword;
+    var template =
+      'Dear ' + user.firstName + " " + user.lastName +
+      ' <br/>Your username is ' +
+      user.email +
+      '<br/> your login password is : ' +
+      newPassword +
+      ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
+      systemLoginUrl;
+
+    this.emaiService.sendMail(
+      user.email,
+      'Your credentials for ICAT system',
+      '',
+      template,
+    );
+  }
+
 
   async adduser(user: User): Promise<User> {
     console.log(user)
@@ -220,10 +246,17 @@ export class UsersService extends TypeOrmCrudService<User> {
       user.firstName = dto.firstName;
       user.lastName = dto.lastName;
       user.mobile = dto.mobile;
-      user.status =dto.status;
+      user.status = dto.status;
       await this.repo.save(dto);
     }
     else {
+      let newUUID = uuidv4();
+      let newPassword = ('' + newUUID).substr(0, 6);
+      dto.password = await this.hashPassword(
+        user.password,
+        user.salt,
+      );
+      user.password = newPassword;
       await this.repo.save(dto);
     }
   }
