@@ -121,15 +121,9 @@ export class UsersController implements CrudController<User> {
         u.firstName = "Master";
         u.lastName = "Admin";
         u.loginProfile = dto.loginProfile;
-        // u.telephone="";
         u.username =dto.email;
         u.mobile='0114455125'
-        // const mas =await this.unitService.find({name: "ClimateSI Unit"});
-        // if(mas.length > 0){
-          // u.unit = mas[0];
           await this.service.adduser(u);
-        // }
-
         return "Master admin is saved"
       }      
       else{
@@ -201,6 +195,16 @@ export class UsersController implements CrudController<User> {
 
   get base(): CrudController<User> {
     return this;
+  }
+
+  @Post('syncuser')
+  async syncCountry(
+    @Body() dto: any,
+  ): Promise<any> {
+    console.log("++++++++++",dto)
+    this.service.syncUser(dto)
+    
+    // this.CountryRepo.save(dto)
   }
 
   @Override()

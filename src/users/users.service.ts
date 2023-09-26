@@ -203,6 +203,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     return this.repo.save(user);
   }
+  
 
   async adduser(user: User): Promise<User> {
     console.log(user)
@@ -213,8 +214,21 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.repo.update(user.id, user);
   }
 
+  async syncUser(dto: User) {
+    let user = await this.repo.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    if (user) {
+      user.firstName = dto.firstName;
+      user.lastName = dto.lastName;
+      user.mobile = dto.mobile;
+      user.status =dto.status;
+      await this.repo.save(dto);
+    }
+    else {
+      await this.repo.save(dto);
+    }
+  }
+
   async findAll(): Promise<User[]> {
-    console.log("urepo====", this.repo.find())
     return this.repo.find();
   }
 
