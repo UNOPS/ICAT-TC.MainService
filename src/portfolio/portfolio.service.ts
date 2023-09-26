@@ -440,13 +440,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       response.push(scaleSdgData[sd], sustainedSdgData[sd])
     }
 
+    scale_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
+
     scale_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaption_score' },
+      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
 
+    sustained_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
     sustained_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaption_score' },
+      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
 
@@ -686,10 +689,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let ch_data = {}
       for await (let ch of cat.characteristic) {
         characteristics.push({ label: ch.name, code: ch.code })
-        ch_data[ch.code] = ch.ch_score
+        ch_data[ch.code] = this.investorToolService.mapSustainedScores(ch.ch_score)
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
-      ch_data['category_score'] = cat.cat_score
+      ch_data['category_score'] = this.investorToolService.mapSustainedScores(cat.cat_score)
       obj['characteristics'] = characteristics
       obj['ch_data'] = ch_data
       obj['characteristic_count'] = characteristics.length
