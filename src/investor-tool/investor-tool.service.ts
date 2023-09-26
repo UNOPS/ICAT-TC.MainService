@@ -143,7 +143,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async findAllAssessData(assessmentId: number){
     return this.investorAssessRepo.find({
-      relations: ['assessment','characteristics','category'],
+      relations: ['assessment','characteristics','category','portfolioSdg'],
       where: { assessment: { id: assessmentId } },
     });
   }
@@ -1220,6 +1220,280 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return[ finalDataArray2];
   
     }
+
+    async calculateNewAssessmentResults(assesId: number): Promise<any> {
+      
+
+      let characteristicData:{
+        characteristic:string,
+        relevance:{name:string,value:number},
+        likelihood:{name:string,value:number},
+        char_weight:number,
+        recalculated_char_weight:number;
+        isCalulate:boolean;
+      }={
+        characteristic: '',
+        relevance: {
+          name: '',
+          value: 0
+        },
+        likelihood: {
+          name: '',
+          value: 0
+        },
+        char_weight: 0,
+        recalculated_char_weight: 0,
+        isCalulate: false
+      }
+
+      let processCategoryData:{
+        category:string,
+        category_score:{name:string,value:number},
+        category_weight:number;
+        recalculated_category_weight:number;
+        characteristicData: typeof characteristicData[]
+
+      }={
+        category: '',
+        category_score: {
+          name: '',
+          value: 0
+        },
+        category_weight: 0,
+        recalculated_category_weight: 0,
+        characteristicData: []
+      }
+      let outcomeCharateristics:{
+        characteristic:string,
+        score:{name:string,value:number},
+        isCalulate:boolean;
+        sdg:string;
+      }={
+        characteristic: '',
+        score: {
+          name: '',
+          value: 0
+        },
+        isCalulate: false,
+        sdg: ''
+      }
+      let outcomeCategoryData:{
+        category:string,
+        category_score:{name:string,value:number},
+        category_weight:number,
+        isSDG:Boolean,
+        characteristicData: any[]
+
+      }
+      let finalProcessDataArray:{
+        processData:typeof processCategoryData[],
+        outcomeData: typeof outcomeCategoryData[]
+        processScore:number,
+        outcomeScore:number,
+      } ={
+        processData: [],
+        processScore: 0,
+        outcomeScore: 0,
+        outcomeData: []
+      }
+  
+         let assessment= await this.findAllAssessData(assesId);
+         let categories =await this.findAllCategories();
+        //  console.log(categories.meth1Process)
+        let  categoryDataArray : typeof processCategoryData[] = []
+        //Creating objects
+            for(let category of categories.meth1Process){
+           
+              let categoryData: typeof  processCategoryData = {
+                category: category.name,
+                category_score: {
+                  name: '',
+                  value: undefined
+                },
+                category_weight: undefined,
+                recalculated_category_weight: undefined,
+                characteristicData: [],
+              };
+              for(let x of assessment ){
+                if(category.name === x.category.name){
+                  categoryData.category = category.name;
+                  // console.log(category.ip_weight)
+                  categoryData.category_weight = category.ip_weight
+                  categoryData.characteristicData.push(
+                    {
+                      relevance: { name: this.mapRelevance(x?.relavance), value: x?.relavance },
+                      likelihood: { name: this.mapLikelihood(x?.likelihood), value: x?.likelihood },
+                      characteristic: x.characteristics.name,
+                      char_weight:  x.characteristics.ip_weight,
+                      recalculated_char_weight: x.relavance, // for now
+                      isCalulate:(x.relavance==0||!x.relavance)?false:true,
+                    }
+                  
+                  )
+                }
+              }
+            categoryDataArray.push(categoryData)
+      
+            }
+            //Assigning values 
+            let total_cat_weight = 0;
+            let process_score = 0;
+            for(let category of categoryDataArray){
+              let total_char_weight = 0 
+              let cat_score = 0
+              category.characteristicData.map(item =>( item.isCalulate?(total_char_weight+=item.recalculated_char_weight):total_char_weight))
+              // console.log(category.category,"total_char_weight",total_char_weight)
+              for(let char of category.characteristicData){
+                if(char.isCalulate){
+                  // console.log(char.characteristic,char.recalculated_char_weight)
+                  char.recalculated_char_weight = Math.floor(100*(char.recalculated_char_weight/total_char_weight));
+                  if(!isNaN(char.likelihood.value)){
+                    cat_score += Math.floor(char.recalculated_char_weight*char.likelihood.value) //rounddown
+                  }
+                
+                  // console.log(category.category,"---cat_score",cat_score)
+                }
+                else{
+                  char.recalculated_char_weight = 0
+                }
+                
+              }
+              ;
+              if( category.characteristicData.every(element => element.isCalulate === false)){
+                category.category_score = {name:"-",value:null}
+              }
+              else{
+                category.category_score = {name:this.mapLikelihood(Math.floor(cat_score/100)),value:Math.floor(cat_score/100)}; //round down
+                total_cat_weight += category.category_weight;
+              }
+
+            }
+            // console.log("total_cat_weight",total_cat_weight)
+            categoryDataArray.map(item => {
+              if(item.category_score.value==null){
+              item.recalculated_category_weight = 0
+              }
+              else{
+                item.recalculated_category_weight = Math.round(item.category_weight/total_cat_weight*100);
+                // console.log(item.recalculated_category_weight)
+                process_score += item.recalculated_category_weight*item.category_score.value;
+              }
+            })
+            finalProcessDataArray.processData = categoryDataArray;
+            finalProcessDataArray.processScore = Math.floor(process_score/100);
+
+            // outcome..............
+            let total_outcome_cat_weight =0
+            let  outcomeArray : typeof outcomeCategoryData[] = []
+            for(let category of categories.meth1Outcomes){
+              // let sdg
+              let categoryData: typeof  outcomeCategoryData = {
+                category: category.name,
+                category_score: {
+                  name: '',
+                  value: undefined
+                },
+                category_weight: undefined,
+                characteristicData: [],
+                isSDG: false,
+              };
+              for(let x of assessment ){
+                if(category.name === x.category.name){
+                  categoryData.category = category.name;
+                  // console.log(category.ip_weight)
+                  categoryData.category_weight = category.ip_weight;
+                  categoryData.isSDG= (category.code=='SCALE_SD'|| category.code=='SUSTAINED_SD')?(true):(false)
+                  let isSutained:boolean = (category.code=='SUSTAINED_GHG'|| category.code=='SUSTAINED_ADAPTATION')?(true):(false)
+                  categoryData.characteristicData.push(
+                      {
+                        score: { name: (isSutained)?(this.mapSustaineScores(x?.score)):(this.mapSustaineScores(x?.score)), value: x?.score },
+                        characteristic: x.characteristics.name,
+                        isCalulate:(x.score==null)?false:true,
+                        sdg:(categoryData.isSDG)?(x?.portfolioSdg?.name):''
+                      }
+                    )
+                }
+              }
+              outcomeArray.push(categoryData)
+      
+            }
+            for(let category of outcomeArray){
+              let total_char = 0 
+              let cat_score = 0 
+              // console.log(category.category,"total_char_weight",total_char_weight)
+              if(category.isSDG){
+                const categorizedData:any = {};
+                category.characteristicData.forEach(item => {
+                  const sdg = item.sdg;
+                  if (!categorizedData[sdg]) {
+                      categorizedData[sdg] = [];
+                  }
+                  categorizedData[sdg].push(item);
+                });
+                const categorizedDataArray = Object.entries(categorizedData).map(([sdg, data]) => ({
+                  name:sdg,
+                  sdg_score :0,
+                  data :data,
+                 
+                }));
+                category.characteristicData=categorizedDataArray;
+              let sdg_count = 0
+              let total_sdg_score = 0
+              for(let char of category.characteristicData){
+                let sdg_total_char = 0 
+                let sdg_cat_score = 0
+                  for(let sdg of char.data){
+                    if(sdg.isCalulate){
+                      sdg_cat_score += sdg.score.value;
+                      sdg_total_char ++;
+                    }
+                    else{
+                      sdg_total_char = sdg_total_char
+                    }
+                  }
+                  if(char.data.every(element => element.isCalulate === false)){
+                    char.sdg_score = {name:"-",value:null}
+                  }
+                  else{
+                    char.sdg_score = Math.floor(sdg_cat_score/sdg_total_char); //round down
+                    sdg_count++
+                    total_sdg_score += char.sdg_score;
+                  }
+                }
+                if(sdg_count!=0){
+                  category.category_score = {name:this.mapSustaineScores(Math.floor(total_sdg_score/sdg_count)),value:Math.floor(total_sdg_score/sdg_count)}; //round down
+                  total_outcome_cat_weight += category.category_weight*category.category_score.value;
+                  console.log(category.category,category.category_weight*category.category_score.value)
+                }
+                
+
+              }
+              else{
+                for(let char of category.characteristicData){
+                  if(char.isCalulate){
+                    cat_score += char.score.value;
+                    total_char ++;
+                  }
+                  else{
+                    total_char = total_char
+                  }
+                  
+                }
+                if(category.characteristicData.every(element => element.isCalulate === false)){
+                  category.category_score = {name:"-",value:null}
+                }
+                else{
+                  category.category_score = {name:this.mapSustaineScores(Math.floor(cat_score/total_char)),value:Math.floor(cat_score/total_char)}; //round down
+                  total_outcome_cat_weight += category.category_weight*category.category_score.value;
+                  console.log(category.category,category.category_weight*category.category_score.value)
+                }
+              }
+            }
+            finalProcessDataArray.outcomeData = outcomeArray;
+            finalProcessDataArray.outcomeScore = Math.floor(total_outcome_cat_weight/100)
+           
+            return finalProcessDataArray;
+    }
     async findAllCategories(): Promise<any> {
       let categories = await this.categotyRepository.createQueryBuilder('category')
         .leftJoinAndSelect('category.methodology', 'methodology')
@@ -1322,6 +1596,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           console.log("sectorSum",sectorSum)
           return sectorSum;
     } 
+
+
     async getDashboardData( options:IPaginationOptions):Promise<Pagination<any>>
     {
       let tool = 'Investment & Private Sector Tool';
@@ -1338,7 +1614,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
        else {
         filter=filter+' and country.id=:userCountryId '
        } 
-
     const data =this.assessmentRepo.createQueryBuilder('asses')
     .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
     .leftJoinAndMapOne(
@@ -1360,7 +1635,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       'country',
       'climateAction.countryId = country.id'
     ).where(filter,{tool,userId,userCountryId})
-
     
       
     
@@ -1375,4 +1649,64 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
    
         return result;
     }
+    mapRelevance(value:number) {
+      switch (value) {
+        case 0:
+          return 'Not relevant';
+        case 1:
+          return 'Possibly relvant';
+        case 2:
+          return 'Relevant';
+      }
+    }
+    mapLikelihood(value:number) {
+      switch (value) {
+        case 0:
+          return 'Very unlikely (0-10%)';
+        case 1:
+          return 'Unlikely (10-33%)';
+        case 2:
+          return 'Possible (33-66%)';
+        case 3:
+          return 'Likely (60-90%)';
+        case 4:
+          return 'Very likely (90-100%)';
+      }
+    }
+    mapSustaineScores(value:number) {
+      switch (value) {
+        case -1:
+          return 'Minor Negative';
+        case -2:
+          return 'Moderate Negative';
+        case -3:
+          return 'Major Negative';
+        case 0:
+          return 'None';
+        case 1:
+          return 'Minor';
+        case 2:
+          return 'Moderate';
+        case 3:
+          return 'Major';
+       
+      }
+    }
+    mapSustainedScores(value:number) {
+      switch (value) {
+        case -1:
+          return 'Unlikely (0-10%)';
+        case 0:
+          return 'Less likely (10-33%)';
+        case 1:
+          return 'Possible (33-66%)';
+        case 2:
+          return 'Likely (60-90%)';
+        case 3:
+          return 'Very likely (90-100%)';
+      }
+    }
+
 }
+
+
