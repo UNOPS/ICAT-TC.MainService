@@ -1499,12 +1499,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     finalProcessDataArray.outcomeData = outcomeArray;
     finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
-    // await this.assessmentRepo
-    // .createQueryBuilder()
-    // .update(Assessment)
-    // .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcome_score })
-    // .where("id = :id", { id: assesId })
-    // .execute()
+    await this.assessmentRepo
+    .createQueryBuilder()
+    .update(Assessment)
+    .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcomeScore })
+    .where("id = :id", { id: assesId })
+    .execute()
     return finalProcessDataArray;
   }
   async findAllCategories(): Promise<any> {
