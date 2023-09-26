@@ -66,6 +66,6 @@ import { TokenDetails } from "src/utills/token_details";
     TokenDetails, EmailNotificationService,
     UsersService
   ],
-  exports: [],
+  exports: [CMAssessmentQuestionService],
 })
 export class CarbonMarketModule {}
