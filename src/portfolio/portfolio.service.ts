@@ -22,9 +22,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   col_set_2 = [
     { label: 'ID', code: 'id' },
-    { label: 'Intervention Name', code: 'name' },
-    { label: 'Intervention Type', code: 'type' },
-    { label: 'Status', code: 'status' }
+    { label: 'INTERVENTION NAME', code: 'name' },
+    { label: 'INTERVENTION TYPE', code: 'type' },
+    { label: 'STATUS', code: 'status' }
   ]
 
   constructor(
@@ -399,6 +399,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let sc_cat_total = {}
     let sc_sus_total = {}
+    let scale_cat_total = {}
+    let scale_cat_count = {}
+    let sustain_cat_total = {}
+    let sustain_cat_count = {}
+    let comparison_type_2 = 'GHG, '
 
     let sc_sus_col_2 = [
       { label: 'SCALE CATEGORY SCORE', code: 'scale_score' },
@@ -422,6 +427,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_ghg_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
       })
+
+      scale_cat_total[int.id] = int.category_score.value
+      scale_cat_count[int.id] = 1
       sc_cat_total[int.id] = int.category_score.value
       sc_sus_total[int.id] = int.category_score.value
     })
@@ -446,6 +454,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       })
       let res = sc_sus_ghg_comparison.interventions.find(o => o.id === int.id)
       res['sustained_score'] = int.category_score
+      sustain_cat_total[int.id] = int.category_score.value
+      sustain_cat_count[int.id] = 1
       ss_cat_total[int.id] = int.category_score.value
       sc_sus_total[int.id] += int.category_score.value
     })
@@ -467,6 +477,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         { label: '', colspan: 3 }
       ]
       sc_sus_sdgs[sd].col_set_2 = [...this.col_set_2, ...sc_sus_col_2]
+      comparison_type_2 += 'SDG - ' + (scaleSdgData[sd].col_set_1[1].label).split('-')[1] + ' ,'
 
       let sc_sus_sd_total = {}
 
@@ -476,6 +487,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         sc_sus_sdgs[sd].interventions.push({
           id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
         })
+        scale_cat_total[int.id] += int.category_score.value
+        scale_cat_count[int.id] ++
         sc_sus_sd_total[int.id] = int.category_score.value
         sc_cat_total[int.id] += int.category_score.value
       })
@@ -484,6 +497,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         res[sd + '_score'] = int.category_score
         let res2 = sc_sus_sdgs[sd].interventions.find(o => o.id === int.id)
         res2['sustained_score'] = int.category_score
+        sustain_cat_total[int.id] += int.category_score.value
+        sustain_cat_count[int.id] ++
         sc_sus_sd_total[int.id] += int.category_score.value
         ss_cat_total[int.id] += int.category_score.value
       })
@@ -511,6 +526,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
 
+    comparison_type_2 += 'ADAPTATION OUTCOMES'
+
     let sc_sus_ad_comparison = new ComparisonDto()
     sc_sus_ad_comparison.comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
     sc_sus_ad_comparison.comparison_type_2 = 'ADAPTATION OUTCOMES'
@@ -529,6 +546,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_ad_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
       })
+      scale_cat_total[int.id] += int.category_score.value
+      scale_cat_count[int.id] ++
       sc_cat_total[int.id] += int.category_score.value
       sc_sus_ad_total[int.id] = int.category_score.value
     })
@@ -538,6 +557,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       res['adaptation_score'] = int.category_score
       let res2 = sc_sus_ad_comparison.interventions.find(o => o.id === int.id)
       res2['sustained_score'] = int.category_score
+      sustain_cat_total[int.id] += int.category_score.value
+      sustain_cat_count[int.id] ++
       ss_cat_total[int.id] += int.category_score.value
       sc_sus_ad_total[int.id] += int.category_score.value
     })
@@ -566,13 +587,40 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       return int
     })
 
+    let outcome_level_comparison = new ComparisonDto()
+    outcome_level_comparison.comparison_type = 'OUTCOME LEVEL COMPARISON'
+    outcome_level_comparison.comparison_type_2 = comparison_type_2
+    outcome_level_comparison.col_set_1 = [
+      ...col_set_1,
+      { label: '', colspan: 3 }
+    ]
+    outcome_level_comparison.col_set_2 = [
+      ...this.col_set_2,
+      {label: 'SCALE CATEGORY SCORE', code: 'scale_cat_score'},
+      {label: 'SUSTAINED CATEGORY SCORE', code: 'sustained_cat_score'},
+      {label: 'CATEGORY SCORE', code: 'category_score'}
+    ]
+    scaleGhgData.interventions.map(int => {
+      let scale_score = Math.round(scale_cat_total[int.id] / scale_cat_count[int.id])
+      let sustaine_score = Math.round(sustain_cat_total[int.id] / sustain_cat_count[int.id])
+      outcome_level_comparison.interventions.push({
+        id: int.id, name: int.name, type: int.type, status: int.status, 
+        scale_cat_score: this.investorToolService.mapScaleScores(scale_score), 
+        sustained_cat_score: this.investorToolService.mapSustainedScores(sustaine_score),
+        category_score: this.investorToolService.mapScaleScores(Math.round((scale_score + sustaine_score)/2))
+      })
+    })
+
+
     scale_comparison.order = sus_order + 1
     sustained_comparison.order = sus_order + 2
     sc_sus_ghg_comparison.order = sus_order + 3
     sc_sus_ad_comparison.order = sus_order + sdgs.length + 5
+    outcome_level_comparison.order = sc_sus_ad_comparison.order + 1
 
 
-    response.push(scaleGhgData, scalAdaptationData, sustainedGhgData, sustainedAdaptationData, scale_comparison, sustained_comparison, sc_sus_ghg_comparison, sc_sus_ad_comparison)
+    response.push(scaleGhgData, scalAdaptationData, sustainedGhgData, sustainedAdaptationData, scale_comparison, 
+      sustained_comparison, sc_sus_ghg_comparison, sc_sus_ad_comparison, outcome_level_comparison)
 
     response.sort((a, b) => a.order - b.order)
 
