@@ -1019,7 +1019,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Portfolio Tool';
-    let filter = 'asses.tool=:tool '
+    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1063,10 +1063,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId, portfolioID })
+      ).where(filter, { tool, userId, userCountryId, portfolioID }).orderBy('asses.id','DESC')
 
 
-
+  
 
     let result = await paginate(data, options);
     // console.log("result",result)
