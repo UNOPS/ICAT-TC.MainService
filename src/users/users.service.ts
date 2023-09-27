@@ -240,24 +240,28 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.repo.update(user.id, user);
   }
 
-  async syncUser(dto: User) {
+  async syncUser(dto: any) {
     let user = await this.repo.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
     if (user) {
-      user.firstName = dto.firstName;
-      user.lastName = dto.lastName;
-      user.mobile = dto.mobile;
       user.status = dto.status;
-      await this.repo.save(dto);
+      await this.repo.save(user);
     }
     else {
-      let newUUID = uuidv4();
-      let newPassword = ('' + newUUID).substr(0, 6);
-      dto.password = await this.hashPassword(
-        user.password,
-        user.salt,
-      );
-      user.password = newPassword;
-      await this.repo.save(dto);
+      let newUser = new User();
+      newUser.status = dto.status;
+      newUser.firstName = dto.firstName;
+      newUser.lastName = dto.lastName;
+      newUser.email = dto.email;
+      newUser.username = dto.email;
+      newUser.landline = dto.telephone;
+      newUser.mobile = dto.mobile;
+      newUser.salt = '';
+      newUser.password = '';
+      newUser.loginProfile = dto.id;
+      newUser.institution = dto.ins;
+      newUser.country = dto.country;
+      newUser.uniqueIdentification = dto.uniqueIdentification;
+      await this.repo.save(newUser);
     }
   }
 

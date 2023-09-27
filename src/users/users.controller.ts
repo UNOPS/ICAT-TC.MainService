@@ -203,10 +203,7 @@ export class UsersController implements CrudController<User> {
   async syncCountry(
     @Body() dto: any,
   ): Promise<any> {
-    console.log("++++++++++",dto)
-    this.service.syncUser(dto)
-    
-    // this.CountryRepo.save(dto)
+    this.service.syncUser(dto);
   }
 
   @Override()
