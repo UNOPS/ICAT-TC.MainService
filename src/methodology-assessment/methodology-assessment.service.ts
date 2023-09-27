@@ -651,7 +651,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     }
 
    
-    async AssessmentDetailsforTool(tool: string): Promise<any[]> {
+    async AssessmentDetailsforTool(tools: string[]): Promise<any[]> {
       let user = this.userService.currentUser();
       console.log("ussssser : ", (await user).fullname, "and ", (await user).username, "Id :", (await user).id, "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
   
@@ -674,7 +674,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         }
       }
   
-      const filteredResults = assessList.filter(assessment => assessment?.tool === tool);
+      const filteredResults = assessList.filter(assessment =>  tools.includes(assessment?.tool));
   
       filteredResults.sort((a, b) => b.id - a.id);
       return filteredResults
