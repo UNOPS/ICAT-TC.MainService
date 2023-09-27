@@ -1,5 +1,6 @@
 
 // import { Parameter } from 'src/parameter/entity/parameter.entity';
+import { Dirent } from 'fs';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -17,7 +18,7 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @Column()
   intCMApproach: string
 
-  @Column()
+  @Column({default:'DIRECT'})
   otherIntCMApproach: string 
 
   @Column()
@@ -27,7 +28,7 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @JoinColumn()
   cmassessment: Assessment
 
-   @Column()
+   @Column({nullable:true})
   sectoral_boundary: string; 
 
   // @Column()
