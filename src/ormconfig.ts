@@ -74,14 +74,14 @@ export const config: ConnectionOptions = {
  password: 'pradeep123#',
  database: 'tc-main',   */
 //  username: 'root',
-//  password: 'pradeep123#',
-//  database: 'tc-main',  
+ password: 'pradeep123#',
+ database: 'tc-main',  
         /*  username: 'sqluser',
    password: 'password',
     database: 'tc-main-new3',  */    
       username: 'root',
-      password: '1997',
-      database: 'tc_new',
+      // password: '1997',
+      // database: 'tc_new',
      
 
   //  username: 'root',

@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Get,
+  Post,
   Query,
   Request,
   UseGuards,
@@ -13,7 +15,7 @@ import {
   ParsedBody,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { Any, getConnection } from 'typeorm';
+import { Any, Repository, getConnection } from 'typeorm';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { AuditService } from 'src/audit/audit.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -22,6 +24,10 @@ import { Institution } from '../entity/institution.entity';
 import { InstitutionService } from '../service/institution.service';
 import { ApiCreatedResponse } from '@nestjs/swagger';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/methodology-assessment/entities/category.entity';
+import { InstitutionCategory } from '../entity/institution.category.entity';
+import { InstitutionType } from '../entity/institution.type.entity';
 
 @Crud({
   model: {
@@ -63,15 +69,17 @@ import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 export class InstitutionController implements CrudController<Institution> {
   constructor(
     public service: InstitutionService,
+    @InjectRepository(Institution)
+    private readonly repo: Repository<Institution>,
     private readonly auditService: AuditService,
     private readonly tokenDetails: TokenDetails, // @Inject(REQUEST) private request
-  ) {}
+  ) { }
 
   get base(): CrudController<Institution> {
     return this;
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.DATA_COLLECTION_TEAM]))
 
   @Get(
     'getInstitutionDataProvider/institutioninfo/:page/:limit/:filterText/:userId',
@@ -109,7 +117,7 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
   @Get('institution/:page/:limit/:filterText/:userId')
   async getInstiDetails(
     @Request() request,
@@ -121,8 +129,8 @@ export class InstitutionController implements CrudController<Institution> {
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     let userTypeFromTocken: string;
-    let institutionTypeId: number; 
-    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken,institutionTypeId] =
+    let institutionTypeId: number;
+    [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken, institutionTypeId] =
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
         TokenReqestType.sectorId,
@@ -145,10 +153,10 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
 
   @Get('institution/institutioninfo/:filterText/:userId')
-  @ApiCreatedResponse({type: Any})
+  @ApiCreatedResponse({ type: Any })
   async getInsti(
     @Request() request,
     @Query('filterText') filterText: string,
@@ -157,7 +165,7 @@ export class InstitutionController implements CrudController<Institution> {
     let countryIdFromTocken: number;
 
     [countryIdFromTocken] =
-      this.tokenDetails.getDetails([TokenReqestType.countryId ]);
+      this.tokenDetails.getDetails([TokenReqestType.countryId]);
 
 
     return await this.service.getInsDetails(
@@ -166,10 +174,10 @@ export class InstitutionController implements CrudController<Institution> {
     );
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
 
   @Get('deactivateInstituion')
-  @ApiCreatedResponse({type: Any})
+  @ApiCreatedResponse({ type: Any })
   async deactivateInstitution(@Query('instiId') instiId: number): Promise<any> {
     let audit: AuditDto = new AuditDto();
     audit.action = 'Institution Deactivated';
@@ -180,41 +188,41 @@ export class InstitutionController implements CrudController<Institution> {
     return await this.service.softDelete(instiId);
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.DATA_COLLECTION_TEAM]))
   @Get('getInstitutionforAssesment')
-  @ApiCreatedResponse({type: Any})
+  @ApiCreatedResponse({ type: Any })
   async getInstitutionforAssesment(): Promise<any> {
     console.log('wwwwwwwwwwwwwwwwwwww');
-    let countryIdFromTocken:number ;
-  
-    [countryIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId])
+    let countryIdFromTocken: number;
+
+    [countryIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId])
 
 
 
     return await this.service.getInstitutionforAssesment(countryIdFromTocken);
   }
-  
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
+
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.DATA_COLLECTION_TEAM]))
 
   @Get('getInstitutionforApproveData')
-  @ApiCreatedResponse({type: Any})
+  @ApiCreatedResponse({ type: Any })
   async getInstitutionforApproveData(): Promise<any> {
-    
-    let countryIdFromTocken:number ;
-    let sectorIdFromTocken:number;
-  
-    [countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
+
+    let countryIdFromTocken: number;
+    let sectorIdFromTocken: number;
+
+    [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId])
 
 
 
-    return await this.service.getInstitutionforApproveData(countryIdFromTocken,sectorIdFromTocken);
+    return await this.service.getInstitutionforApproveData(countryIdFromTocken, sectorIdFromTocken);
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
 
   @Override()
-  @ApiCreatedResponse({type: Any})
+  @ApiCreatedResponse({ type: Any })
   async createOne(
     @Request() request,
     @ParsedRequest() req: CrudRequest,
@@ -244,7 +252,7 @@ export class InstitutionController implements CrudController<Institution> {
       }
 
       console.log(dto);
-      let newInstitution= await this.service.creteNew(dto);
+      let newInstitution = await this.service.creteNew(dto);
       // let newInstitution= await queryRunner.manager.save(Institution ,dto);
 
       // let audit: AuditDto = new AuditDto();
@@ -299,10 +307,29 @@ export class InstitutionController implements CrudController<Institution> {
   //   } finally {
   //     await queryRunner.release();
   //   }
-   
+
   // }
 
-   @UseGuards(JwtAuthGuard)
+  @Post('syncins')
+  async syncCountry(
+    @Body() dto: any,
+  ): Promise<any> {
+    let ins = new Institution();
+    let cat = new InstitutionCategory();
+    let type = new InstitutionType();
+    type.id = 1
+    cat.id = 1;
+
+    ins.name = dto.mrvInstitution;
+    ins.telephoneNumber = dto.mobile;
+    ins.sectorId = 1
+    ins.country = dto.country;
+    ins.category = cat;
+    ins.type=type;
+    return this.repo.save(ins);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('getInstitutionForManageUsers')
   async getInstitutionForManageUsers(
     @Request() request,
@@ -314,14 +341,14 @@ export class InstitutionController implements CrudController<Institution> {
     let InstitutionIdFromTocken: number;
     let role: string;
 
-    [countryIdFromTocken, sectorIdFromTocken, InstitutionIdFromTocken,role] =this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
-        TokenReqestType.sectorId,
-        TokenReqestType.InstitutionId,
-        TokenReqestType.role,
-      ]);
+    [countryIdFromTocken, sectorIdFromTocken, InstitutionIdFromTocken, role] = this.tokenDetails.getDetails([
+      TokenReqestType.countryId,
+      TokenReqestType.sectorId,
+      TokenReqestType.InstitutionId,
+      TokenReqestType.role,
+    ]);
 
-      let ins=  await this.service.findOne({where:{id:InstitutionIdFromTocken}});
+    let ins = await this.service.findOne({ where: { id: InstitutionIdFromTocken } });
 
     let resault = await this.service.getInstitutionForManageUsers(
       {
@@ -338,7 +365,7 @@ export class InstitutionController implements CrudController<Institution> {
   }
 
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN]))
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM, LoginRole.INSTITUTION_ADMIN]))
 
   @Get('getInstitutionForUsers')
   async getInstitutionForUsers(
@@ -346,11 +373,11 @@ export class InstitutionController implements CrudController<Institution> {
     @Query('insId') insId: number,
     @Query('userType') userType: number,
   ): Promise<any> {
-   
+
 
     let resault = await this.service.getInstitutionForUsers(
-   insId,
-   userType
+      insId,
+      userType
     );
 
     return resault;
@@ -362,12 +389,12 @@ export class InstitutionController implements CrudController<Institution> {
   }
   @Get('getInstituion')
   async getInstituion(
-    @Request() request,   
-    @Query('filterText') type: number,   
-    @Query('countryId') countryId: number, 
+    @Request() request,
+    @Query('filterText') type: number,
+    @Query('countryId') countryId: number,
     @Query('limit') limit: number,
     @Query('page') page: number,
-  ) : Promise<any>{ 
+  ): Promise<any> {
 
     return await this.service.getInstituion(
       {
@@ -378,5 +405,5 @@ export class InstitutionController implements CrudController<Institution> {
       countryId,
     )
   }
-  
+
 }
