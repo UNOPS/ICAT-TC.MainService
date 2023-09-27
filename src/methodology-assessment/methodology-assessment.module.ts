@@ -36,18 +36,18 @@ import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 
 
 @Module({
   controllers: [MethodologyAssessmentController],
   providers: [
     MethodologyAssessmentService,
-    ProjectService,
+    // ProjectService,
     PolicyBarriers,
     TokenDetails,
     UsersService,
     EmailNotificationService,
-
   ],
   imports: [TypeOrmModule.forFeature([
     Methodology,
@@ -79,7 +79,7 @@ import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
   ])],
   exports: [
     MethodologyAssessmentService,
-    ProjectService ,
+    // ProjectService ,
   ]
 })
 export class MethodologyAssessmentModule { }
