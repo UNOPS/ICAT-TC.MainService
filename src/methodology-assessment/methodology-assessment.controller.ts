@@ -29,6 +29,7 @@ import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { OutcomeCategory } from './dto/outcome-category.dto';
+import { GetAssessmentDetailsDto } from './dto/get-assessment-detail.dto';
 
 
 @ApiTags('methodology-assessment')
@@ -293,7 +294,7 @@ export class MethodologyAssessmentController {
     console.log("userrrr",audit2)
    
     try {
-      const response = axios.post(auditlogURL + '/createCountry' , audit2); 
+      // const response = axios.post(auditlogURL + '/createCountry' , audit2); 
   } catch (error) {
       console.log('Error while sending audit log:', error);
   } */
@@ -366,9 +367,9 @@ async uploadFile2(
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('AssessmentDetailsforTool/:tool')
-  async AssessmentDetailsforTool(@Param('tool') tool: string): Promise<any[]> {
-  let res  = await this.methodologyAssessmentService.AssessmentDetailsforTool(tool);
+  @Post('assessment-details-for-tool')
+  async AssessmentDetailsforTool(@Body() req: GetAssessmentDetailsDto ): Promise<any[]> {
+  let res  = await this.methodologyAssessmentService.AssessmentDetailsforTool(req.tools);
     return res;
    
   }
