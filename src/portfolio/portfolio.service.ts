@@ -33,6 +33,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
+    @InjectRepository(SdgAssessment) private readonly sdgAssessmentRepo: Repository<SdgAssessment>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
     private masterDataService: MasterDataService,
@@ -366,12 +367,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       order = 1
       sus_order = 2 + sdgs.length
       for (let sd of sdgs) {
-        order += 1
-        sus_order += 1
-        scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
-        scaleSdgData[sd].order = order
-        sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
-        sustainedSdgData[sd].order = sus_order
+        if (int_data.data.scale_comparisons.sdg[sd]){
+          order += 1
+          sus_order += 1
+          scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
+          scaleSdgData[sd].order = order
+          sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
+          sustainedSdgData[sd].order = sus_order
+        }
       }
 
       scalAdaptationData.interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.adaptation.data })
@@ -656,7 +659,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAlignmentData(pAssessments: PortfolioAssessment[], sdgs: any[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto = new ComparisonDto()
+    let intervention_data = []
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -669,13 +673,34 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
         case 'Investment & Private Sector Tool':
-          data = this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
-          data = this.getAlignmentDataCarbonMarket(pAssessment.assessment)
+          data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment, sdgs)
           break;
       }
+      intervention_data.push({ data: data, intervention: _intervention })
     }
+
+    response.col_set_1 = [
+      { label: "INTERVENTION INFORMATION", colspan: 4 },
+      { label: '', colspan: sdgs.length }
+    ]
+    response.col_set_2 = [
+      ...this.col_set_2,
+    ]
+
+    let cols = []
+    for (let sd of sdgs){
+      cols.push({label: sd.replace('_', ' '), code: sd})
+    }
+
+    for (let int_data of intervention_data){
+      response.interventions.push({...int_data.intervention, ...int_data.data})
+    }
+
+    response.col_set_2.push(...cols)
+    response.sdg_count = sdgs.length
 
     return response
   }
@@ -814,11 +839,30 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAggregationDataPortfolioInvestor(assessement: Assessment) {
-
   }
 
   async getAlignmentDataPortfolioInvestor(assessement: Assessment) {
+    let response = {}
+    let data = this.sdgAssessRepo.createQueryBuilder('sdgAssessment')
+    .innerJoin(
+      'sdgAssessment.assessment',
+      'assessment',
+      'assessment.id = sdgAssessment.assessmentId'
+    )
+    .innerJoinAndSelect(
+      'sdgAssessment.sdg',
+      'sdg',
+      'sdg.id = sdgAssessment.sdgId'
+    )
+    .where('assessment.id = :id', {id: assessement.id})
 
+    let sdgs = await data.getMany()
+
+    sdgs.map(sd => {
+      let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
+      response[code] = sd.answer
+    })
+    return response
   }
 
   async getProcessDataCarbonMarket(assessement: Assessment) {
@@ -967,8 +1011,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
-  async getAlignmentDataCarbonMarket(assessement: Assessment) {
+  async getAlignmentDataCarbonMarket(assessement: Assessment, sdgs: any[]) {
+    let response = {}
+    sdgs.map(sd => {
+      response[sd] = '-'
+    })
 
+    return response
   }
 
   getSDGName(code) {
