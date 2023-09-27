@@ -853,10 +853,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let total=0
 
       // console.log('assessementid',result)
+      if(result.investor_assessment){
       for(let investor of result.investor_assessment){
 
         investor.expected_ghg_mitigation?total+=Number(investor.expected_ghg_mitigation):0
-      }
+      }}
+      
     return total
   }
   async getProcessDataCarbonMarket(assessement: Assessment) {
