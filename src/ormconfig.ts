@@ -73,31 +73,6 @@ export const config: ConnectionOptions = {
   password: 'TCtool23#',
   database: 'main',
 
-<<<<<<< HEAD
-=======
-/*  username: 'root',
- password: 'pradeep123#',
- database: 'tc-main',   */
-//  username: 'root',
-//  password: 'pradeep123#',
-//  database: 'tc-main',  
-  //        username: 'sqluser',
-  //  password: 'password',
-  //   database: 'tc-main-new3',     
-      /* username: 'root',
-        /*  username: 'sqluser',
-   password: 'password',
-    database: 'tc-main-new3',  */    
-      // username: 'root',
-      // password: '1997',
-      // database: 'tc_new',
-     
-
-   username: 'root',
-   database: 'tc-main', 
-   password: '7860150',  
-   // database: 'tc-main-new3',
->>>>>>> 1396e4e07358e7863180e44981a026996204c6ef
 
   
   autoLoadEntities: true, 
