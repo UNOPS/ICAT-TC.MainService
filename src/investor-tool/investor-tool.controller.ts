@@ -100,9 +100,9 @@ export class InvestorToolController {
   }
   
   @UseGuards(JwtAuthGuard)
-  @Get('calculate-final-result/:assessID')
+  @Get('calculate-final-result')
   async calculateFinalResults(@Query('assessID') assessID: number) {
-    // console.log("ssss",assessID)
+    console.log("ssss",assessID)
     let res =  await this.investorToolService.calculateNewAssessmentResults(assessID);
     // console.log("res",res)
     return res;
