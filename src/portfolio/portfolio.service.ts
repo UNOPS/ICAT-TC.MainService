@@ -33,6 +33,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
+    @InjectRepository(SdgAssessment) private readonly sdgAssessmentRepo: Repository<SdgAssessment>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
     private masterDataService: MasterDataService,
@@ -256,12 +257,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       categories = res.categories
       int_categories.push(...res.cat_names)
-      intervention_data.push({ categories: categories, intervention: _intervention })
+      intervention_data.push({ categories: categories, intervention: _intervention, category_scores: res.category_scores })
     }
 
     int_categories = [... new Set(int_categories)]
 
+    let likelihood_comparison = new ComparisonDto()
+
+    likelihood_comparison.col_set_1.push(...col_set_1)
+    likelihood_comparison.col_set_2.push(...this.col_set_2)
+    let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
+      likelihood_comparison.col_set_1.push({label: cat, colspan: 1})
+      likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
@@ -277,6 +285,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.order = idx + 1
       response.push(comparisonData)
     }
+    likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: 'category_score'})
+    for (let int of intervention_data){
+      likelihood_comparison.interventions.push({...int.intervention, ...int.category_scores})
+    }
+    likelihood_comparison.characteristic_count = int_categories.length
+    likelihood_comparison.order = int_categories.length + 1
+    response.push(likelihood_comparison)
+    likelihood_comparison.col_set_1.push({label: '', colsapn: 1})
     response.sort((a, b) => a.order - b.order)
     return response;
   }
@@ -368,12 +384,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       order = 1
       sus_order = 2 + sdgs.length
       for (let sd of sdgs) {
-        order += 1
-        sus_order += 1
-        scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
-        scaleSdgData[sd].order = order
-        sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
-        sustainedSdgData[sd].order = sus_order
+        if (int_data.data.scale_comparisons.sdg[sd]){
+          order += 1
+          sus_order += 1
+          scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
+          scaleSdgData[sd].order = order
+          sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
+          sustainedSdgData[sd].order = sus_order
+        }
       }
 
       scalAdaptationData.interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.adaptation.data })
@@ -668,7 +686,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAlignmentData(pAssessments: PortfolioAssessment[], sdgs: any[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto = new ComparisonDto()
+    let intervention_data = []
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -681,13 +700,34 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
         case 'Investment & Private Sector Tool':
-          data = this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
-          data = this.getAlignmentDataCarbonMarket(pAssessment.assessment)
+          data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment, sdgs)
           break;
       }
+      intervention_data.push({ data: data, intervention: _intervention })
     }
+
+    response.col_set_1 = [
+      { label: "INTERVENTION INFORMATION", colspan: 4 },
+      { label: '', colspan: sdgs.length }
+    ]
+    response.col_set_2 = [
+      ...this.col_set_2,
+    ]
+
+    let cols = []
+    for (let sd of sdgs){
+      cols.push({label: sd.replace('_', ' '), code: sd})
+    }
+
+    for (let int_data of intervention_data){
+      response.interventions.push({...int_data.intervention, ...int_data.data})
+    }
+
+    response.col_set_2.push(...cols)
+    response.sdg_count = sdgs.length
 
     return response
   }
@@ -824,47 +864,63 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sdg: sdg
     }
   }
-  
-  async getAggregationDataPortfolioTool(assessement: Assessment):Promise<number> {
 
-
-    return 0
-  }
-  async getAggregationDataPortfolioInvestor(assessement: Assessment):Promise<number> {
-
-    return 0
-  }
-
-  async getAlignmentDataPortfolioInvestor(assessement: Assessment):Promise<number> {
-
-    return 0;
-  }
-  async getAlignmentDataforTool(assessementid: number):Promise<number> {
-// console.log('assessementid',assessementid)
-      let result= await this.assessmentRepo.createQueryBuilder('asses')
+  async getAlignmentDataforTool(assessementid: number): Promise<number> {
+    let result = await this.assessmentRepo.createQueryBuilder('asses')
       .leftJoinAndMapMany(
         'asses.investor_assessment',
         InvestorAssessment,
         'investor_assessment',
         'investor_assessment.assessment_id = asses.id'
       )
-      .where('asses.id=:assessementid  and investor_assessment.characteristic_id in (16,28)',{assessementid})
+      .where('asses.id=:assessementid  and investor_assessment.characteristic_id in (16,28)', { assessementid })
       .getOne();
-      let total=0
+    let total = 0
 
-      // console.log('assessementid',result)
-      if(result.investor_assessment){
-      for(let investor of result.investor_assessment){
+    if (result.investor_assessment) {
+      for (let investor of result.investor_assessment) {
 
-        investor.expected_ghg_mitigation?total+=Number(investor.expected_ghg_mitigation):0
-      }}
-      
+        investor.expected_ghg_mitigation ? total += Number(investor.expected_ghg_mitigation) : 0
+      }
+    }
+
     return total
   }
+
+  async getAlignmentDataPortfolioInvestor(assessement: Assessment) {
+    let response = {}
+    let data = this.sdgAssessRepo.createQueryBuilder('sdgAssessment')
+      .innerJoin(
+        'sdgAssessment.assessment',
+        'assessment',
+        'assessment.id = sdgAssessment.assessmentId'
+      )
+      .innerJoinAndSelect(
+        'sdgAssessment.sdg',
+        'sdg',
+        'sdg.id = sdgAssessment.sdgId'
+      )
+      .where('assessment.id = :id', { id: assessement.id })
+
+    let sdgs = await data.getMany()
+
+    sdgs.map(sd => {
+      let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
+      response[code] = sd.answer
+    })
+    return response
+  }
+
+  async getAggregationDataPortfolioTool(assessement: Assessment): Promise<number> {
+    return 0
+  }
+  
   async getProcessDataCarbonMarket(assessement: Assessment) {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessement.id)).data
     let categories = []
     let cat_names = []
+    let cat_obj = {}
+    let cat_total = 0
     for await (let cat of data) {
       let obj = {}
       let characteristics = []
@@ -879,12 +935,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       obj['ch_data'] = ch_data
       obj['characteristic_count'] = characteristics.length
       obj['col_set_1'] = { label: cat.name, colspan: characteristics.length + 1 }
+      cat_obj[cat.name] = this.investorToolService.mapSustainedScores(cat.cat_score)
+      cat_total += cat.cat_score
       cat_names.push(cat.name)
       categories.push(obj)
     }
+    cat_obj['category_score'] = this.investorToolService.mapSustainedScores(Math.round(cat_total / cat_names.length))
 
-    return { categories: categories, cat_names: cat_names }
-
+    return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
 
   async getOutcomeDataCarbonMarket(assessement: Assessment) {
@@ -1008,8 +1066,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
-  async getAlignmentDataCarbonMarket(assessement: Assessment) {
+  async getAlignmentDataCarbonMarket(assessement: Assessment, sdgs: any[]) {
+    let response = {}
+    sdgs.map(sd => {
+      response[sd] = '-'
+    })
 
+    return response
   }
 
   getSDGName(code) {
