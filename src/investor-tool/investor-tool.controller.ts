@@ -163,7 +163,7 @@ export class InvestorToolController {
     return {fileName: files[0].filename}
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('sdgSumCalculateInvester')
   async sdgSumCalculate() {
     return await this.investorToolService.sdgSumCalculate();
