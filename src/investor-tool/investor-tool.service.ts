@@ -1614,7 +1614,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Investment & Private Sector Tool';
-    let filter = 'asses.tool=:tool '
+    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null) '
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1641,7 +1641,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId })
+      ).where(filter, { tool, userId, userCountryId }).orderBy('asses.id','DESC')
     let result = await paginate(data, options);
     return result;
   }
