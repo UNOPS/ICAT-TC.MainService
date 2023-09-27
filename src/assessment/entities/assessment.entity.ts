@@ -7,6 +7,7 @@ import { QuAlityCheckStatus } from "src/quality-check/entity/quality-check-statu
 import { VerificationStatus } from "src/verification/entity/verification-status.entity";
 import { User } from "src/users/entity/user.entity";
 import { MethodologyAssessmentParameters } from "src/methodology-assessment/entities/methodology-assessment-parameters.entity";
+import { InvestorAssessment } from "src/investor-tool/entities/investor-assessment.entity";
 // import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
 @Entity()
 export class Assessment extends BaseTrackingEntity{
@@ -99,6 +100,8 @@ export class Assessment extends BaseTrackingEntity{
 
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
+
+  investor_assessment:InvestorAssessment[]=[]
 
 }
 

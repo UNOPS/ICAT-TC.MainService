@@ -212,6 +212,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getPortfolioComparisonData(portfolioId: number) {
+
+ 
     let response = new ComparisonTableDataDto()
     let sdgs: any[] = []
 
@@ -631,27 +633,37 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAggragationData(pAssessments: PortfolioAssessment[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto=new ComparisonDto();
+    let total=0;
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
         type: pAssessment.assessment.climateAction.typeofAction,
-        status: pAssessment.assessment.climateAction.projectStatus?.name
+        status: pAssessment.assessment.climateAction.projectStatus?.name,
+        mitigation:0
       }
 
       let data
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention);
+          break
         case 'Investment & Private Sector Tool':
-          data = this.getAggregationDataPortfolioInvestor(pAssessment.assessment)
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention)
           break;
         case 'Carbon Market Tool':
-          data = this.getAggregationDataCarbonMarket(pAssessment.assessment)
+          // _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          // total+= _intervention.mitigation;
+          // response.interventions.push(_intervention)
           break;
       }
     }
-
+      response.total=total;
     return response
   }
 
@@ -812,15 +824,41 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sdg: sdg
     }
   }
+  
+  async getAggregationDataPortfolioTool(assessement: Assessment):Promise<number> {
 
-  async getAggregationDataPortfolioInvestor(assessement: Assessment) {
 
+    return 0
+  }
+  async getAggregationDataPortfolioInvestor(assessement: Assessment):Promise<number> {
+
+    return 0
   }
 
-  async getAlignmentDataPortfolioInvestor(assessement: Assessment) {
+  async getAlignmentDataPortfolioInvestor(assessement: Assessment):Promise<number> {
 
+    return 0;
   }
+  async getAlignmentDataforTool(assessementid: number):Promise<number> {
+// console.log('assessementid',assessementid)
+      let result= await this.assessmentRepo.createQueryBuilder('asses')
+      .leftJoinAndMapMany(
+        'asses.investor_assessment',
+        InvestorAssessment,
+        'investor_assessment',
+        'investor_assessment.assessment_id = asses.id'
+      )
+      .where('asses.id=:assessementid  and investor_assessment.characteristic_id in (16,28)',{assessementid})
+      .getOne();
+      let total=0
 
+      // console.log('assessementid',result)
+      for(let investor of result.investor_assessment){
+
+        investor.expected_ghg_mitigation?total+=Number(investor.expected_ghg_mitigation):0
+      }
+    return total
+  }
   async getProcessDataCarbonMarket(assessement: Assessment) {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessement.id)).data
     let categories = []
@@ -960,6 +998,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
 
   }
+
 
 
   async getAggregationDataCarbonMarket(assessement: Assessment) {
