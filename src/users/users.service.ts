@@ -221,6 +221,9 @@ export class UsersService extends TypeOrmCrudService<User> {
   async findByUserName(userName: string): Promise<User> {
     return await this.repo.findOne({ where: { username: userName } });
   }
+  async findByUseremail(userName: string): Promise<User> {
+    return await this.repo.findOne({ where: { email: userName } });
+  }
 
   @UseGuards(JwtAuthGuard)
   async userDetailsForAudit() {
@@ -252,7 +255,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   async currentUser(): Promise<User> {
     let userNameFromTocken: string;
     [userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username])
-    let user = this.findByUserName(userNameFromTocken)
+    let user = this.findByUseremail(userNameFromTocken)
     return user
   }
 

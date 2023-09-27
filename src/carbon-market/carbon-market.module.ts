@@ -22,6 +22,14 @@ import { Assessment } from "src/assessment/entities/assessment.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";
+import { UsersService } from "src/users/users.service";
+import { Audit } from "src/audit/entity/audit.entity";
+import { Country } from "src/country/entity/country.entity";
+import { Institution } from "src/institution/entity/institution.entity";
+import { User } from "src/users/entity/user.entity";
+import { UserType } from "src/users/entity/user.type.entity";
+import { EmailNotificationService } from "src/notifications/email.notification.service";
+import { TokenDetails } from "src/utills/token_details";
 
 
 @Module({
@@ -38,7 +46,8 @@ import { Category } from "src/methodology-assessment/entities/category.entity";
       Assessment,
       ParameterRequest,
       Characteristics,
-      Category
+      Category,
+      User, UserType, Institution, Country,Audit,
     ]),
   ],
   controllers: [
@@ -46,15 +55,17 @@ import { Category } from "src/methodology-assessment/entities/category.entity";
     CMQuestionController,
     CMAssessmentQuestionController,
     CMAssessmentAnswerController,
-    CMSeedController
+    CMSeedController,
   ],
   providers: [
     AssessmentCMDetailService,
     CMQuestionService,
     CMAssessmentQuestionService,
     CMAssessmentAnswerService,
-    CMSeedService
+    CMSeedService,
+    TokenDetails, EmailNotificationService,
+    UsersService
   ],
-  exports: [],
+  exports: [CMAssessmentQuestionService],
 })
 export class CarbonMarketModule {}

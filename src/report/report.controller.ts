@@ -31,7 +31,7 @@ export class ReportController {
     private readonly reportHtmlGenarateService: ReportHtmlGenaratesService,
     private readonly assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails
-  ) {}
+  ) { }
 
   @Post()
   create(@Body() createReportDto: CreateReportDto) {
@@ -42,12 +42,6 @@ export class ReportController {
   findAll() {
     return this.reportService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   console.log("test1");
-  //   return this.reportService.findOne(+id);
-  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
@@ -77,41 +71,34 @@ export class ReportController {
     );
   }
 
-  @UseGuards(JwtAuthGuard )
+  @UseGuards(JwtAuthGuard)
   @Post('generate-report')
   async generateReport(
     @Body() req: CreateReportDto
   ): Promise<any> {
-    // res.setHeader('Content-Type', 'application/pdf');
-    // res.setHeader('Content-Disposition', 'inline;filename=yolo.pdf');
     let countryIdFromTocken: number
     [countryIdFromTocken] =
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
       ]);
-
-    // const createReportDto = new CreateReportDto();
-    // createReportDto.assessmentId = req.assessmentId;
     req.reportTitle = req.reportName
     req.reportName = req.reportName + '.pdf'
     const reprtDto: ReportDto = await this.reportService.genarateReportDto(
       req,
     );
-    let report = await this.reportGenarateService.reportGenarate(
+    const report = await this.reportGenarateService.reportGenarate(
       reprtDto.reportName,
       await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
     )
-    let response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
-    console.log(response)
-    // res.send(report)
+    const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
     return response
   }
 
-  @UseGuards(JwtAuthGuard )
+  @UseGuards(JwtAuthGuard)
   @Get('get-reports')
   async getReportData(
-  @Query('climateAction') climateAction: string,
-  @Query('reportName') reportName: string,){
+    @Query('climateAction') climateAction: string,
+    @Query('reportName') reportName: string,) {
 
     let countryIdFromTocken: number;
     [countryIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId])
@@ -138,36 +125,25 @@ export class ReportController {
 
   @Get('test/ReportDto')
   async testReportDto(@Query('id') id: number): Promise<any> {
-    // console.log("reprtDto",id)
     const createReportDto = new CreateReportDto();
     createReportDto.assessmentId = 13;
-    // const reprtDto:ReportDto= await this.reportService.genarateReportDto(createReportDto);
-    // this.assessmentService.getCharacteristicasforReport(338,"")
-    // console.log("reprtDto",await this.assessmentService.getCharacteristicasforReport(338,""))
     let asssCharac = await this.assessmentService.getCharacteristicasforReport(
       id,
-      'outcome',''
+      'outcome', ''
     );
     let catagory = [];
     for (let parameter of asssCharac.parameters) {
-      // console.log(parameter);
       let cat = catagory.find((a) => a.name == parameter.category.name);
       if (cat) {
-        cat.characteristics.push({name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti});
-        cat.rows=cat.characteristics.length;
+        cat.characteristics.push({ name: parameter.characteristics.name, relevance: parameter.relevance, comment: parameter.scoreOrInstitutionJusti });
+        cat.rows = cat.characteristics.length;
       } else {
         catagory.push({
-          rows:1,
+          rows: 1,
           name: parameter.category.name,
-          characteristics: [{name:parameter.characteristics.name,relevance:parameter.relevance,comment:parameter.scoreOrInstitutionJusti}],
+          characteristics: [{ name: parameter.characteristics.name, relevance: parameter.relevance, comment: parameter.scoreOrInstitutionJusti }],
         });
       }
-     
-     
     }
-    // for(let cat of catagory){
-    //   console.log(cat);
-    // }
-    // console.log("reprtDto",reprtDto)
   }
 }

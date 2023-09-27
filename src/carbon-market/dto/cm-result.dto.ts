@@ -19,6 +19,9 @@ export class CMResultDto {
     filePath: string
     isGHG: boolean
     isSDG: boolean
+    isAdaptation: boolean
+    relevance: string
+    adaptationCoBenifit: string
 }
 
 export class SaveCMResultDto {
@@ -44,12 +47,34 @@ export class UniqueCategories{
 export class UniqueCategory{
     name: string
     code: string
+    description: string
     characteristics: UniqueCharacteristic[]
 }
 
 export class UniqueCharacteristic{
     name: string
     code: string
+    description: string
+    main_question: string
     id: number
     questions: CMQuestion[] = []
+}
+
+export class CMScoreDto {
+    process_score: number
+    outcome_score: OutcomeScoreDto
+    message: string
+}
+
+export class OutcomeScoreDto {
+    ghg_score: number
+    sdg_score: number
+    adaptation_score: number
+    outcome_score: number
+    scale_ghg_score: number
+    sustained_ghg_score: number
+    scale_sdg_score: number
+    sustained_sdg_score: number
+    scale_adaptation_score: number
+    sustained_adaptation_score: number
 }
