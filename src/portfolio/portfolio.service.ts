@@ -212,6 +212,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getPortfolioComparisonData(portfolioId: number) {
+
+ 
     let response = new ComparisonTableDataDto()
     let sdgs: any[] = []
 
@@ -631,27 +633,37 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAggragationData(pAssessments: PortfolioAssessment[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto=new ComparisonDto();
+    let total=0;
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
         type: pAssessment.assessment.climateAction.typeofAction,
-        status: pAssessment.assessment.climateAction.projectStatus?.name
+        status: pAssessment.assessment.climateAction.projectStatus?.name,
+        mitigation:0
       }
 
       let data
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention);
+          break
         case 'Investment & Private Sector Tool':
-          data = this.getAggregationDataPortfolioInvestor(pAssessment.assessment)
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention)
           break;
         case 'Carbon Market Tool':
-          data = this.getAggregationDataCarbonMarket(pAssessment.assessment)
+          // _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          // total+= _intervention.mitigation;
+          // response.interventions.push(_intervention)
           break;
       }
     }
-
+      response.total=total;
     return response
   }
 
@@ -716,9 +728,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL').score,
-        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL').score,
-        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL').score,
+        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL')?.score,
+        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL')?.score,
+        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL')?.score,
         category_score: scGHG.category_score
       }
     }
@@ -750,9 +762,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: scAD.category_score
       }
     }
@@ -762,9 +774,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM').score,
-        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM').score,
-        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM').score,
+        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM')?.score,
+        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM')?.score,
+        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM')?.score,
         category_score: susGHG.category_score
       }
     }
@@ -795,9 +807,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: susAD.category_score
       }
     }
@@ -812,15 +824,43 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sdg: sdg
     }
   }
+  
+  async getAggregationDataPortfolioTool(assessement: Assessment):Promise<number> {
 
-  async getAggregationDataPortfolioInvestor(assessement: Assessment) {
 
+    return 0
+  }
+  async getAggregationDataPortfolioInvestor(assessement: Assessment):Promise<number> {
+
+    return 0
   }
 
-  async getAlignmentDataPortfolioInvestor(assessement: Assessment) {
+  async getAlignmentDataPortfolioInvestor(assessement: Assessment):Promise<number> {
 
+    return 0;
   }
+  async getAlignmentDataforTool(assessementid: number):Promise<number> {
+// console.log('assessementid',assessementid)
+      let result= await this.assessmentRepo.createQueryBuilder('asses')
+      .leftJoinAndMapMany(
+        'asses.investor_assessment',
+        InvestorAssessment,
+        'investor_assessment',
+        'investor_assessment.assessment_id = asses.id'
+      )
+      .where('asses.id=:assessementid  and investor_assessment.characteristic_id in (16,28)',{assessementid})
+      .getOne();
+      let total=0
 
+      // console.log('assessementid',result)
+      if(result.investor_assessment){
+      for(let investor of result.investor_assessment){
+
+        investor.expected_ghg_mitigation?total+=Number(investor.expected_ghg_mitigation):0
+      }}
+      
+    return total
+  }
   async getProcessDataCarbonMarket(assessement: Assessment) {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessement.id)).data
     let categories = []
@@ -962,6 +1002,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
+
   async getAggregationDataCarbonMarket(assessement: Assessment) {
 
   }
@@ -978,7 +1019,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Portfolio Tool';
-    let filter = 'asses.tool=:tool '
+    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1022,10 +1063,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId, portfolioID })
+      ).where(filter, { tool, userId, userCountryId, portfolioID }).orderBy('asses.id','DESC')
 
 
-
+  
 
     let result = await paginate(data, options);
     // console.log("result",result)
