@@ -716,9 +716,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL').score,
-        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL').score,
-        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL').score,
+        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL')?.score,
+        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL')?.score,
+        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL')?.score,
         category_score: scGHG.category_score
       }
     }
@@ -750,9 +750,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: scAD.category_score
       }
     }
@@ -762,9 +762,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM').score,
-        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM').score,
-        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM').score,
+        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM')?.score,
+        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM')?.score,
+        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM')?.score,
         category_score: susGHG.category_score
       }
     }
@@ -795,9 +795,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: susAD.category_score
       }
     }
