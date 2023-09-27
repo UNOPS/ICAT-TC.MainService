@@ -255,12 +255,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       categories = res.categories
       int_categories.push(...res.cat_names)
-      intervention_data.push({ categories: categories, intervention: _intervention })
+      intervention_data.push({ categories: categories, intervention: _intervention, category_scores: res.category_scores })
     }
 
     int_categories = [... new Set(int_categories)]
 
+    let likelihood_comparison = new ComparisonDto()
+
+    likelihood_comparison.col_set_1.push(...col_set_1)
+    likelihood_comparison.col_set_2.push(...this.col_set_2)
+    let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
+      likelihood_comparison.col_set_1.push({label: cat, colspan: 1})
+      likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
@@ -276,6 +283,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.order = idx + 1
       response.push(comparisonData)
     }
+    likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: 'category_score'})
+    for (let int of intervention_data){
+      likelihood_comparison.interventions.push({...int.intervention, ...int.category_scores})
+    }
+    likelihood_comparison.characteristic_count = int_categories.length
+    likelihood_comparison.order = int_categories.length + 1
+    response.push(likelihood_comparison)
+    likelihood_comparison.col_set_1.push({label: '', colsapn: 1})
     response.sort((a, b) => a.order - b.order)
     return response;
   }
@@ -869,6 +884,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessement.id)).data
     let categories = []
     let cat_names = []
+    let cat_obj = {}
+    let cat_total = 0
     for await (let cat of data) {
       let obj = {}
       let characteristics = []
@@ -883,12 +900,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       obj['ch_data'] = ch_data
       obj['characteristic_count'] = characteristics.length
       obj['col_set_1'] = { label: cat.name, colspan: characteristics.length + 1 }
+      cat_obj[cat.name] = this.investorToolService.mapSustainedScores(cat.cat_score)
+      cat_total += cat.cat_score
       cat_names.push(cat.name)
       categories.push(obj)
     }
+    cat_obj['category_score'] = this.investorToolService.mapSustainedScores(Math.round(cat_total / cat_names.length))
 
-    return { categories: categories, cat_names: cat_names }
-
+    return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
 
   async getOutcomeDataCarbonMarket(assessement: Assessment) {
