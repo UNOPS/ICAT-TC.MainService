@@ -743,7 +743,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessment: result.id,
         process_score: data?.process_score,
         outcome_score: data?.outcome_score?.outcome_score,
-        intervention: result.climateAction?.policyName
+        intervention: result.climateAction?.policyName,
+        intervention_id: result.climateAction?.intervention_id
       };
     }));
     // return formattedResults
