@@ -384,6 +384,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     sustainedAdaptationData.comparison_type_2 = 'OUTCOMES'
     let order = 0
     let sus_order = 0
+    let outcome_score = {}
 
     for (let [index, int_data] of intervention_data.entries()) {
       if (index === 0) {
@@ -396,6 +397,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         sustainedGhgData.col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
         sustainedAdaptationData.col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.adaptation.col_set_1]
         sustainedAdaptationData.col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
+        outcome_score[int_data.intervention.id] = int_data.data.outcome_score
         for (let sd of sdgs) {
           scaleSdgData[sd] = new ComparisonDto()
           scaleSdgData[sd].comparison_type = 'SCALE COMPARISON'
@@ -556,7 +558,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
         let score = Math.round(sc_sus_sd_total[int.id] / 2)
-        int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+        int['category_score'] = { name: score + ' - ' + this.investorToolService.mapScaleScores(score) , value: score }
         return int
       })
 
@@ -564,14 +566,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       response.push(scaleSdgData[sd], sustainedSdgData[sd], sc_sus_sdgs[sd])
     }
 
-    scale_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
+    scale_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'SCALE CATEGORY SCORE', colspan: 1 })
 
     scale_comparison.col_set_2.push(...[
       { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
 
-    sustained_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
+    sustained_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'SUSTAINED CATEGORY SCORE', colspan: 1 })
     sustained_comparison.col_set_2.push(...[
       { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
@@ -616,7 +618,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     scale_comparison.interventions = scale_comparison.interventions.map(int => {
       let score = Math.round(sc_cat_total[int.id] / (scale_comparison.col_set_2.length - 4))
-      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+      int['category_score'] = { name: score + ' - ' + this.investorToolService.mapScaleScores(score), value: score }
       return int
     })
 
@@ -628,13 +630,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     sc_sus_ghg_comparison.interventions = sc_sus_ghg_comparison.interventions.map(int => {
       let score = Math.round(sc_sus_total[int.id] / 2)
-      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+      int['category_score'] = { name: score + ' - ' + this.investorToolService.mapScaleScores(score), value: score }
       return int
     })
 
     sc_sus_ad_comparison.interventions = sc_sus_ad_comparison.interventions.map(int => {
       let score = Math.round(sc_sus_ad_total[int.id] / 2)
-      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+      int['category_score'] = { name: score  + ' - ' + this.investorToolService.mapScaleScores(score), value: score }
       return int
     })
 
@@ -654,11 +656,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     scaleGhgData.interventions.map(int => {
       let scale_score = Math.round(scale_cat_total[int.id] / scale_cat_count[int.id])
       let sustaine_score = Math.round(sustain_cat_total[int.id] / sustain_cat_count[int.id])
+      let _cat_score = Math.round((scale_score + sustaine_score)/2)
+      console.log(outcome_score)
       outcome_level_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, 
-        scale_cat_score: this.investorToolService.mapScaleScores(scale_score), 
-        sustained_cat_score: this.investorToolService.mapSustainedScores(sustaine_score),
-        category_score: this.investorToolService.mapScaleScores(Math.round((scale_score + sustaine_score)/2))
+        scale_cat_score: scale_score + ' - ' + this.investorToolService.mapScaleScores(scale_score), 
+        sustained_cat_score: sustaine_score + ' - ' + this.investorToolService.mapSustainedScores(sustaine_score),
+        category_score: outcome_score[int.id]  + ' - ' +  this.investorToolService.mapScaleScores(outcome_score[int.id])
       })
     })
 
@@ -766,6 +770,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   async getProcessDataPortfolioInvestor(assessement: Assessment) {
     let categories = []
     let cat_names = []
+    let cat_obj = {}
+    let cat_total = 0
 
     let data = (await this.investorToolService.calculateNewAssessmentResults(assessement.id)).processData
 
@@ -783,26 +789,35 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       obj['ch_data'] = ch_data
       obj['characteristic_count'] = characteristics.length
       obj['col_set_1'] = { label: cat.category, colspan: characteristics.length + 1 }
+      cat_obj[cat.category] = cat.category_score.name
+      cat_total += cat.category_score.value
       cat_names.push(cat.category)
       categories.push(obj)
     }
+    cat_obj['category_score'] = this.investorToolService.mapSustainedScores(Math.round(cat_total / cat_names.length))
 
-    return { categories: categories, cat_names: cat_names }
+    return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
 
   async getOutcomeDataPortfolioInvestor(assessement: Assessment) {
-    let data = (await this.investorToolService.calculateNewAssessmentResults(assessement.id)).outcomeData
+    let res = (await this.investorToolService.calculateNewAssessmentResults(assessement.id))
     let sdg = []
+    let outcome_score = 0
+    outcome_score = res.outcome_score
+    let data = res.outcomeData
 
     let scGHG = data.find(o => o.code === 'SCALE_GHG')
+    let int = scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL')?.score
+    let nat = scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL')?.score
+    let sub = scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL')?.score
 
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL')?.score,
-        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL')?.score,
-        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL')?.score,
-        category_score: scGHG.category_score
+        international: {name: int.value + ' - ' + int.name, value: int.value},
+        national: {name: nat.value + ' - ' + nat.name, value: nat.value},
+        subnational: {name: sub.value + ' - ' + sub.name, value: sub.value},
+        category_score: {name: scGHG.category_score.value + ' - ' + scGHG.category_score.name, value: scGHG.category_score.value}
       }
     }
 
@@ -820,35 +835,43 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       scale_SDs[sd_code] = {
         col_set_1: { label: 'SCALE - ' + sd.name.toUpperCase(), colspan: 4 },
         data: {
-          international: international,
-          national: national,
-          subnational: subnational,
-          category_score: scSD.category_score
+          international: {name: international.value + ' - ' + international.name, value: international.value},
+          national: {name: national.value + ' - ' + national.name, value: national.value},
+          subnational: {name: subnational.value + ' - ' + subnational.name, value: subnational.value},
+          category_score: {name: scSD.category_score.value + ' - ' + scSD.category_score.name, value: scSD.category_score.value}
         }
       }
     }
 
     let scAD = data.find(o => o.code === 'SCALE_ADAPTATION')
 
+    int = scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score
+    nat = scAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score
+    sub = scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score
+
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
-        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
-        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
-        category_score: scAD.category_score
+        international: {name: int.value + ' - ' + int.name, value: int.value},
+        national: {name: nat.value + ' - ' + nat.name, value: nat.value},
+        subnational: {name: sub.value + ' - ' + sub.name, value: sub.value},
+        category_score: {name: scAD.category_score.value + ' - ' + scAD.category_score.name, value: scAD.category_score.value}
       }
     }
 
     let susGHG = data.find(o => o.code === 'SUSTAINED_GHG')
 
+    let _long = susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM')?.score
+    let medium = susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM')?.score
+    let short = susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM')?.score
+
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM')?.score,
-        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM')?.score,
-        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM')?.score,
-        category_score: susGHG.category_score
+        long_term: {name: _long.value + ' - ' + _long.name, value: _long.value},
+        medium_term: {name: medium.value + ' - ' + medium.name, value: medium.value},
+        short_term: {name: short.value + ' - ' + short.name, value: short.value},
+        category_score: {name: susGHG.category_score.value + ' - ' + susGHG.category_score.name, value: susGHG.category_score.value}
       }
     }
 
@@ -865,23 +888,27 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustained_SDs[sd_code] = {
         col_set_1: { label: 'SUSTAINED - ' + sd.name.toUpperCase(), colspan: 4 },
         data: {
-          long_term: long_term,
-          medium_term: medium_term,
-          short_term: short_term,
-          category_score: susSD.category_score
+          long_term: {name: long_term.value + ' - ' + long_term.name, value: long_term.value},
+          medium_term: {name: medium_term.value + ' - ' + medium_term.name, value: medium_term.value},
+          short_term: {name: short_term.value + ' - ' + short_term.name, value: short_term.value},
+          category_score: {name: susSD.category_score.value + ' - ' + susSD.category_score.name, value: susSD.category_score.value}
         }
       }
     }
 
     let susAD = data.find(o => o.code === 'SUSTAINED_ADAPTATION')
 
+    _long = susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score
+    medium = susAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score
+    short = susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score
+
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
-        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
-        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
-        category_score: susAD.category_score
+        long_term: {name: _long.value + ' - ' + _long.name, value: _long.value},
+        medium_term: {name: medium.value + ' - ' + medium.name, value: medium.value},
+        short_term: {name: short.value + ' - ' + short.name, value: short.value},
+        category_score: {name: susAD.category_score.value + ' - ' + susAD.category_score.name, value: susAD.category_score.value}
       }
     }
 
@@ -892,7 +919,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustained_comparisons: {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
-      sdg: sdg
+      sdg: sdg,
+      outcome_score: outcome_score
     }
   }
 
@@ -987,10 +1015,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: { name: this.investorToolService.mapScaleScores(scGHG_int), value: scGHG_int },
-        national: { name: this.investorToolService.mapScaleScores(scGHG_nat), value: scGHG_nat },
-        subnational: { name: this.investorToolService.mapScaleScores(scGHG_sub), value: scGHG_sub },
-        category_score: { name: this.investorToolService.mapScaleScores(result.outcome_score.scale_ghg_score), value: result.outcome_score.scale_ghg_score }
+        international: { name: scGHG_int + ' - ' + this.investorToolService.mapScaleScores(scGHG_int) , value: scGHG_int },
+        national: { name: scGHG_nat + ' - ' +  this.investorToolService.mapScaleScores(scGHG_nat), value: scGHG_nat },
+        subnational: { name: scGHG_sub  + ' - ' +  this.investorToolService.mapScaleScores(scGHG_sub), value: scGHG_sub },
+        category_score: { name: result.outcome_score.scale_ghg_score  + ' - ' + this.investorToolService.mapScaleScores(result.outcome_score.scale_ghg_score), value: result.outcome_score.scale_ghg_score }
       }
     }
 
@@ -1006,10 +1034,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       scale_SDs[sd] = {
         col_set_1: { label: 'SCALE - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
         data: {
-          international: { name: this.investorToolService.mapScaleScores(international), value: international },
-          national: { name: this.investorToolService.mapScaleScores(national), value: national },
-          subnational: { name: this.investorToolService.mapScaleScores(subnational), value: subnational },
-          category_score: { name: this.investorToolService.mapScaleScores(cat_score), value: cat_score }
+          international: { name: international + ' - ' + this.investorToolService.mapScaleScores(international), value: international },
+          national: { name: national  + ' - ' + this.investorToolService.mapScaleScores(national) , value: national },
+          subnational: { name: subnational + ' - ' + this.investorToolService.mapScaleScores(subnational) , value: subnational },
+          category_score: { name: cat_score  + ' - ' + this.investorToolService.mapScaleScores(cat_score), value: cat_score }
         }
       }
     }
@@ -1023,10 +1051,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: { name: this.investorToolService.mapScaleScores(scAD_int), value: scAD_int },
-        national: { name: this.investorToolService.mapScaleScores(scAD_nat), value: scAD_nat },
-        subnational: { name: this.investorToolService.mapScaleScores(scAD_sub), value: scAD_sub },
-        category_score: { name: this.investorToolService.mapScaleScores(scAD_cat_score), value: scAD_cat_score }
+        international: { name: scAD_int + ' - ' + this.investorToolService.mapScaleScores(scAD_int), value: scAD_int },
+        national: { name: scAD_nat  + ' - ' +  this.investorToolService.mapScaleScores(scAD_nat), value: scAD_nat },
+        subnational: { name: scAD_sub  + ' - ' + this.investorToolService.mapScaleScores(scAD_sub), value: scAD_sub },
+        category_score: { name: scAD_cat_score  + ' - ' + this.investorToolService.mapScaleScores(scAD_cat_score), value: scAD_cat_score }
       }
     }
 
@@ -1039,10 +1067,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: { name: this.investorToolService.mapSustainedScores(ssGHG_int), value: ssGHG_int },
-        medium_term: { name: this.investorToolService.mapSustainedScores(ssGHG_nat), value: ssGHG_nat },
-        short_term: { name: this.investorToolService.mapSustainedScores(ssGHG_sub), value: ssGHG_sub },
-        category_score: { name: this.investorToolService.mapSustainedScores(ssGHG_cat_score), value: ssGHG_cat_score }
+        long_term: { name: ssGHG_int + ' - ' + this.investorToolService.mapSustainedScores(ssGHG_int), value: ssGHG_int },
+        medium_term: { name: ssGHG_nat + ' - ' + this.investorToolService.mapSustainedScores(ssGHG_nat), value: ssGHG_nat },
+        short_term: { name: ssGHG_sub + ' - ' + this.investorToolService.mapSustainedScores(ssGHG_sub), value: ssGHG_sub },
+        category_score: { name: ssGHG_cat_score + ' - ' + this.investorToolService.mapSustainedScores(ssGHG_cat_score), value: ssGHG_cat_score }
       }
     }
 
@@ -1055,10 +1083,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustained_SDs[sd] = {
         col_set_1: { label: 'SUSTAINED - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
         data: {
-          long_term: { name: this.investorToolService.mapSustainedScores(long_term), value: long_term },
-          medium_term: { name: this.investorToolService.mapSustainedScores(medium_term), value: medium_term },
-          short_term: { name: this.investorToolService.mapSustainedScores(short_term), value: short_term },
-          category_score: { name: this.investorToolService.mapSustainedScores(cat_score), value: cat_score }
+          long_term: { name: long_term + ' - ' + this.investorToolService.mapSustainedScores(long_term), value: long_term },
+          medium_term: { name: medium_term + ' - ' + this.investorToolService.mapSustainedScores(medium_term), value: medium_term },
+          short_term: { name: short_term + ' - ' + this.investorToolService.mapSustainedScores(short_term), value: short_term },
+          category_score: { name: cat_score + ' - ' + this.investorToolService.mapSustainedScores(cat_score), value: cat_score }
         }
       }
     }
@@ -1071,10 +1099,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: { name: this.investorToolService.mapSustainedScores(susAD_int), value: susAD_int },
-        medium_term: { name: this.investorToolService.mapSustainedScores(susAD_nat), value: susAD_nat },
-        short_term: { name: this.investorToolService.mapSustainedScores(susAD_sub), value: susAD_sub },
-        category_score: { name: this.investorToolService.mapSustainedScores(susAD_cat_score), value: susAD_cat_score }
+        long_term: { name: susAD_int + ' - ' + this.investorToolService.mapSustainedScores(susAD_int), value: susAD_int },
+        medium_term: { name: susAD_nat + ' - ' + this.investorToolService.mapSustainedScores(susAD_nat), value: susAD_nat },
+        short_term: { name: susAD_sub + ' - ' + this.investorToolService.mapSustainedScores(susAD_sub), value: susAD_sub },
+        category_score: { name: susAD_cat_score + ' - ' + this.investorToolService.mapSustainedScores(susAD_cat_score), value: susAD_cat_score }
       }
     }
 
@@ -1085,12 +1113,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustained_comparisons: {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
-      sdg: Object.keys(sdg)
+      sdg: Object.keys(sdg),
+      outcome_score: result.outcome_score.outcome_score
     }
 
   }
-
-
 
   async getAggregationDataCarbonMarket(assessement: Assessment) {
 
