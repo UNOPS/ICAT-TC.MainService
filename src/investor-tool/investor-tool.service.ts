@@ -1589,32 +1589,60 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async sdgSumCalculate(): Promise<any[]> {
 
+    let filter = 'assesment.tool="Investment & Private Sector Tool" '
 
 
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    console.log(userId, userCountryId)
 
+    const sectorSum = this.assessmentRepo
+    .createQueryBuilder('assesment')
+    .leftJoinAndMapMany(
+      'assesment.sdgasses',
+      SdgAssessment,
+      'sdgasses',
+      `assesment.id = sdgasses.assessmentId`,
+    )
+    .leftJoinAndMapOne(
+      'sdgasses.sdg',
+      PortfolioSdg,
+      'sdg',
+      `sdgasses.sdgId = sdg.id`,
+    )
+    if (currentUser?.userType?.name === 'External') {
+      filter = filter + ' and assesment.user_id=:userId '
 
-    const sectorSum = await this.assessmentRepo
-      .createQueryBuilder('assesment')
-      .leftJoinAndMapMany(
-        'assesment.sdgasses',
-        SdgAssessment,
-        'sdgasses',
-        `assesment.id = sdgasses.assessmentId`,
+    }
+    else {
+      console.log('work')
+      filter = filter + ' and country.id=:userCountryId '
+      sectorSum.leftJoinAndMapOne(
+        'assesment.climateAction',
+        ClimateAction,
+        'climateAction',
+        'assesment.climateAction_id = climateAction.id'
       )
       .leftJoinAndMapOne(
-        'sdgasses.sdg',
-        PortfolioSdg,
-        'sdg',
-        `sdgasses.sdgId = sdg.id`,
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
       )
-      .where('assesment.tool="Investment & Private Sector Tool"')
+    }
+
+
+ 
+    sectorSum.where(filter,{userId,userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('COUNT(sdgasses.id)', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
-      .getRawMany();
-    console.log("sectorSum", sectorSum)
-    return sectorSum;
+      ;
+    console.log("sectorSum", await sectorSum.getRawMany())
+    return await sectorSum.getRawMany();
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Investment & Private Sector Tool';
