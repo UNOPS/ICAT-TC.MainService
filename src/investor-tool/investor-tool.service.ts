@@ -1353,7 +1353,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // console.log(char.characteristic,char.recalculated_char_weight)
           char.recalculated_char_weight = (100 * (char.recalculated_char_weight / total_char_weight));
           if (char.recalculated_char_weight%1!=0){
-            console.log("........,",char.ch_code,char.recalculated_char_weight)
+            // console.log("........,",char.ch_code,char.recalculated_char_weight)
             char.recalculated_char_weight =Math.round(char.recalculated_char_weight / 10) * 10 // for  round 50% in recalculated weights in 34% charactersitics
           }
           if (!isNaN(char.likelihood.value)) {
