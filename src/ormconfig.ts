@@ -69,6 +69,9 @@ export const config: ConnectionOptions = {
   host: 'localhost',
   port: 3306,
 
+  /* username: 'root',
+  password: 'TCtool23#',
+  database: 'main', */
 
 /*  username: 'root',
  password: 'pradeep123#',

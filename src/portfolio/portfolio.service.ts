@@ -22,9 +22,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   col_set_2 = [
     { label: 'ID', code: 'id' },
-    { label: 'Intervention Name', code: 'name' },
-    { label: 'Intervention Type', code: 'type' },
-    { label: 'Status', code: 'status' }
+    { label: 'INTERVENTION NAME', code: 'name' },
+    { label: 'INTERVENTION TYPE', code: 'type' },
+    { label: 'STATUS', code: 'status' }
   ]
 
   constructor(
@@ -33,6 +33,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(InvestorAssessment) private readonly investorAssessRepo: Repository<InvestorAssessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
+    @InjectRepository(SdgAssessment) private readonly sdgAssessmentRepo: Repository<SdgAssessment>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
     private masterDataService: MasterDataService,
@@ -179,7 +180,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         let assessmentId = data.assessment.id
         assessementIdArray.push(assessmentId)
       }
-      console.log("knownIds", assessementIdArray)
       data.where('assessment.id IN (:...ids)', { ids: assessementIdArray })
 
     }
@@ -213,6 +213,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getPortfolioComparisonData(portfolioId: number) {
+
+ 
     let response = new ComparisonTableDataDto()
     let sdgs: any[] = []
 
@@ -255,12 +257,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       categories = res.categories
       int_categories.push(...res.cat_names)
-      intervention_data.push({ categories: categories, intervention: _intervention })
+      intervention_data.push({ categories: categories, intervention: _intervention, category_scores: res.category_scores })
     }
 
     int_categories = [... new Set(int_categories)]
 
+    let likelihood_comparison = new ComparisonDto()
+
+    likelihood_comparison.col_set_1.push(...col_set_1)
+    likelihood_comparison.col_set_2.push(...this.col_set_2)
+    let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
+      likelihood_comparison.col_set_1.push({label: cat, colspan: 1})
+      likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
@@ -276,6 +285,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.order = idx + 1
       response.push(comparisonData)
     }
+    likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: 'category_score'})
+    for (let int of intervention_data){
+      likelihood_comparison.interventions.push({...int.intervention, ...int.category_scores})
+    }
+    likelihood_comparison.characteristic_count = int_categories.length
+    likelihood_comparison.order = int_categories.length + 1
+    response.push(likelihood_comparison)
+    likelihood_comparison.col_set_1.push({label: '', colsapn: 1})
     response.sort((a, b) => a.order - b.order)
     return response;
   }
@@ -327,9 +344,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustainedAdaptationData = new ComparisonDto()
 
     scaleGhgData.comparison_type = 'SCALE COMPARISON',
-      scalAdaptationData.comparison_type = 'SCALE COMPARISON'
+      scaleGhgData.comparison_type_2 = 'OUTCOMES'
+    scalAdaptationData.comparison_type = 'SCALE COMPARISON'
+    scalAdaptationData.comparison_type_2 = 'OUTCOMES'
     sustainedGhgData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
+    sustainedGhgData.comparison_type_2 = 'OUTCOMES'
     sustainedAdaptationData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
+    sustainedAdaptationData.comparison_type_2 = 'OUTCOMES'
     let order = 0
     let sus_order = 0
 
@@ -347,10 +368,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         for (let sd of sdgs) {
           scaleSdgData[sd] = new ComparisonDto()
           scaleSdgData[sd].comparison_type = 'SCALE COMPARISON'
+          scaleSdgData[sd].comparison_type_2 = 'OUTCOMES'
           scaleSdgData[sd].col_set_1 = [...col_set_1, int_data.data.scale_comparisons.sdg[sd].col_set_1]
           scaleSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2_scale]
           sustainedSdgData[sd] = new ComparisonDto()
           sustainedSdgData[sd].comparison_type = 'SUSTAINED IN TIME COMPARISON'
+          sustainedSdgData[sd].comparison_type_2 = 'OUTCOMES'
           sustainedSdgData[sd].col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.sdg[sd].col_set_1]
           sustainedSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
         }
@@ -361,12 +384,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       order = 1
       sus_order = 2 + sdgs.length
       for (let sd of sdgs) {
-        order += 1
-        sus_order += 1
-        scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
-        scaleSdgData[sd].order = order
-        sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
-        sustainedSdgData[sd].order = sus_order
+        if (int_data.data.scale_comparisons.sdg[sd]){
+          order += 1
+          sus_order += 1
+          scaleSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.sdg[sd].data })
+          scaleSdgData[sd].order = order
+          sustainedSdgData[sd].interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.sdg[sd].data })
+          sustainedSdgData[sd].order = sus_order
+        }
       }
 
       scalAdaptationData.interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.adaptation.data })
@@ -382,6 +407,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let scale_comparison = new ComparisonDto()
     scale_comparison.comparison_type = 'SCALE COMPARISON'
+    scale_comparison.comparison_type_2 = 'OUTCOMES'
     scale_comparison.col_set_1 = [
       ...col_set_1,
       { label: 'GHG', colspan: 1 }
@@ -392,16 +418,45 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     ]
 
     let sc_cat_total = {}
+    let sc_sus_total = {}
+    let scale_cat_total = {}
+    let scale_cat_count = {}
+    let sustain_cat_total = {}
+    let sustain_cat_count = {}
+    let comparison_type_2 = 'GHG, '
+
+    let sc_sus_col_2 = [
+      { label: 'SCALE CATEGORY SCORE', code: 'scale_score' },
+      { label: 'SUSTAINED CATEGORY SCORE', code: 'sustained_score' },
+      { label: 'CATEGORY SCORE', code: 'category_score' }
+    ]
+
+    let sc_sus_ghg_comparison = new ComparisonDto()
+    sc_sus_ghg_comparison.comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
+    sc_sus_ghg_comparison.comparison_type_2 = 'GHG OUTCOMES'
+    sc_sus_ghg_comparison.col_set_1 = [
+      ...col_set_1,
+      { label: '', colspan: 3 }
+    ]
+    sc_sus_ghg_comparison.col_set_2 = [...this.col_set_2, ...sc_sus_col_2]
 
     scaleGhgData.interventions.map(int => {
       scale_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, ghg_score: int.category_score
       })
-      sc_cat_total[int.id] = int.category_score
+      sc_sus_ghg_comparison.interventions.push({
+        id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+      })
+
+      scale_cat_total[int.id] = int.category_score.value
+      scale_cat_count[int.id] = 1
+      sc_cat_total[int.id] = int.category_score.value
+      sc_sus_total[int.id] = int.category_score.value
     })
 
     let sustained_comparison = new ComparisonDto()
     sustained_comparison.comparison_type = 'SUSTAINED COMPARISON'
+    sustained_comparison.comparison_type_2 = 'OUTCOMES'
     sustained_comparison.col_set_1 = [
       ...col_set_1,
       { label: 'GHG', colspan: 1 }
@@ -417,65 +472,175 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustained_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, ghg_score: int.category_score
       })
-      ss_cat_total[int.id] = int.category_score
+      let res = sc_sus_ghg_comparison.interventions.find(o => o.id === int.id)
+      res['sustained_score'] = int.category_score
+      sustain_cat_total[int.id] = int.category_score.value
+      sustain_cat_count[int.id] = 1
+      ss_cat_total[int.id] = int.category_score.value
+      sc_sus_total[int.id] += int.category_score.value
     })
 
-    for (let sd of sdgs) {
+    let sc_sus_sdgs = {}
+
+    for (let [index, sd] of sdgs.entries()) {
       scale_comparison.col_set_1.push({ label: scaleSdgData[sd].col_set_1[1].label, colspan: 1 })
       scale_comparison.col_set_2.push({ label: 'CATEGORY SCORE', code: sd + '_score' })
 
       sustained_comparison.col_set_1.push({ label: sustainedSdgData[sd].col_set_1[1].label, colspan: 1 })
       sustained_comparison.col_set_2.push({ label: 'CATEGORY SCORE', code: sd + '_score' })
 
+      sc_sus_sdgs[sd] = new ComparisonDto()
+      sc_sus_sdgs[sd].comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
+      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + (scaleSdgData[sd].col_set_1[1].label).split('-')[1]
+      sc_sus_sdgs[sd].col_set_1 = [
+        ...col_set_1,
+        { label: '', colspan: 3 }
+      ]
+      sc_sus_sdgs[sd].col_set_2 = [...this.col_set_2, ...sc_sus_col_2]
+      comparison_type_2 += 'SDG - ' + (scaleSdgData[sd].col_set_1[1].label).split('-')[1] + ' ,'
+
+      let sc_sus_sd_total = {}
+
       scaleSdgData[sd].interventions.map(int => {
         let res = scale_comparison.interventions.find(o => o.id === int.id)
         res[sd + '_score'] = int.category_score
-        sc_cat_total[int.id] = int.category_score
+        sc_sus_sdgs[sd].interventions.push({
+          id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+        })
+        scale_cat_total[int.id] += int.category_score.value
+        scale_cat_count[int.id] ++
+        sc_sus_sd_total[int.id] = int.category_score.value
+        sc_cat_total[int.id] += int.category_score.value
       })
       sustainedSdgData[sd].interventions.map(int => {
         let res = sustained_comparison.interventions.find(o => o.id === int.id)
         res[sd + '_score'] = int.category_score
-        ss_cat_total[int.id] = int.category_score
+        let res2 = sc_sus_sdgs[sd].interventions.find(o => o.id === int.id)
+        res2['sustained_score'] = int.category_score
+        sustain_cat_total[int.id] += int.category_score.value
+        sustain_cat_count[int.id] ++
+        sc_sus_sd_total[int.id] += int.category_score.value
+        ss_cat_total[int.id] += int.category_score.value
       })
-      response.push(scaleSdgData[sd], sustainedSdgData[sd])
+
+      sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
+        let score = Math.round(sc_sus_sd_total[int.id] / 2)
+        int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+        return int
+      })
+
+      sc_sus_sdgs[sd].order = sus_order + 4 + index
+      response.push(scaleSdgData[sd], sustainedSdgData[sd], sc_sus_sdgs[sd])
     }
 
+    scale_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
+
     scale_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaption_score' },
+      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
 
+    sustained_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'CATEGORY SCORE', colspan: 1 })
     sustained_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaption_score' },
+      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
       { label: 'CATEGORY SCORE', code: 'category_score' },
     ])
+
+    comparison_type_2 += 'ADAPTATION OUTCOMES'
+
+    let sc_sus_ad_comparison = new ComparisonDto()
+    sc_sus_ad_comparison.comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
+    sc_sus_ad_comparison.comparison_type_2 = 'ADAPTATION OUTCOMES'
+    sc_sus_ad_comparison.col_set_1 = [
+      ...col_set_1,
+      { label: '', colspan: 3 }
+    ]
+    sc_sus_ad_comparison.col_set_2 = [...this.col_set_2, ...sc_sus_col_2]
+
+    let sc_sus_ad_total = {}
+
 
     scalAdaptationData.interventions.map(int => {
       let res = scale_comparison.interventions.find(o => o.id === int.id)
       res['adaptation_score'] = int.category_score
-      sc_cat_total[int.id] = int.category_score
+      sc_sus_ad_comparison.interventions.push({
+        id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+      })
+      scale_cat_total[int.id] += int.category_score.value
+      scale_cat_count[int.id] ++
+      sc_cat_total[int.id] += int.category_score.value
+      sc_sus_ad_total[int.id] = int.category_score.value
     })
 
     sustainedAdaptationData.interventions.map(int => {
       let res = sustained_comparison.interventions.find(o => o.id === int.id)
       res['adaptation_score'] = int.category_score
-      ss_cat_total[int.id] = int.category_score
+      let res2 = sc_sus_ad_comparison.interventions.find(o => o.id === int.id)
+      res2['sustained_score'] = int.category_score
+      sustain_cat_total[int.id] += int.category_score.value
+      sustain_cat_count[int.id] ++
+      ss_cat_total[int.id] += int.category_score.value
+      sc_sus_ad_total[int.id] += int.category_score.value
     })
 
     scale_comparison.interventions = scale_comparison.interventions.map(int => {
-      int['category_score'] = sc_cat_total[int.id]
+      let score = Math.round(sc_cat_total[int.id] / (scale_comparison.col_set_2.length - 4))
+      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
       return int
     })
 
     sustained_comparison.interventions = sustained_comparison.interventions.map(int => {
-      int['category_score'] = sc_cat_total[int.id]
+      let score = Math.round(ss_cat_total[int.id] / (sustained_comparison.col_set_2.length - 4))
+      int['category_score'] = { name: this.investorToolService.mapSustainedScores(score), value: score }
       return int
     })
 
+    sc_sus_ghg_comparison.interventions = sc_sus_ghg_comparison.interventions.map(int => {
+      let score = Math.round(sc_sus_total[int.id] / 2)
+      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+      return int
+    })
+
+    sc_sus_ad_comparison.interventions = sc_sus_ad_comparison.interventions.map(int => {
+      let score = Math.round(sc_sus_ad_total[int.id] / 2)
+      int['category_score'] = { name: this.investorToolService.mapScaleScores(score), value: score }
+      return int
+    })
+
+    let outcome_level_comparison = new ComparisonDto()
+    outcome_level_comparison.comparison_type = 'OUTCOME LEVEL COMPARISON'
+    outcome_level_comparison.comparison_type_2 = comparison_type_2
+    outcome_level_comparison.col_set_1 = [
+      ...col_set_1,
+      { label: '', colspan: 3 }
+    ]
+    outcome_level_comparison.col_set_2 = [
+      ...this.col_set_2,
+      {label: 'SCALE CATEGORY SCORE', code: 'scale_cat_score'},
+      {label: 'SUSTAINED CATEGORY SCORE', code: 'sustained_cat_score'},
+      {label: 'CATEGORY SCORE', code: 'category_score'}
+    ]
+    scaleGhgData.interventions.map(int => {
+      let scale_score = Math.round(scale_cat_total[int.id] / scale_cat_count[int.id])
+      let sustaine_score = Math.round(sustain_cat_total[int.id] / sustain_cat_count[int.id])
+      outcome_level_comparison.interventions.push({
+        id: int.id, name: int.name, type: int.type, status: int.status, 
+        scale_cat_score: this.investorToolService.mapScaleScores(scale_score), 
+        sustained_cat_score: this.investorToolService.mapSustainedScores(sustaine_score),
+        category_score: this.investorToolService.mapScaleScores(Math.round((scale_score + sustaine_score)/2))
+      })
+    })
+
+
     scale_comparison.order = sus_order + 1
     sustained_comparison.order = sus_order + 2
+    sc_sus_ghg_comparison.order = sus_order + 3
+    sc_sus_ad_comparison.order = sus_order + sdgs.length + 5
+    outcome_level_comparison.order = sc_sus_ad_comparison.order + 1
 
-    response.push(scaleGhgData, scalAdaptationData, sustainedGhgData, sustainedAdaptationData, scale_comparison, sustained_comparison)
+
+    response.push(scaleGhgData, scalAdaptationData, sustainedGhgData, sustainedAdaptationData, scale_comparison, 
+      sustained_comparison, sc_sus_ghg_comparison, sc_sus_ad_comparison, outcome_level_comparison)
 
     response.sort((a, b) => a.order - b.order)
 
@@ -486,32 +651,43 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAggragationData(pAssessments: PortfolioAssessment[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto=new ComparisonDto();
+    let total=0;
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
         type: pAssessment.assessment.climateAction.typeofAction,
-        status: pAssessment.assessment.climateAction.projectStatus?.name
+        status: pAssessment.assessment.climateAction.projectStatus?.name,
+        mitigation:0
       }
 
       let data
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention);
+          break
         case 'Investment & Private Sector Tool':
-          data = this.getAggregationDataPortfolioInvestor(pAssessment.assessment)
+          _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          total+= _intervention.mitigation;
+          response.interventions.push(_intervention)
           break;
         case 'Carbon Market Tool':
-          data = this.getAggregationDataCarbonMarket(pAssessment.assessment)
+          // _intervention.mitigation = await this.getAlignmentDataforTool(pAssessment.assessment.id);
+          // total+= _intervention.mitigation;
+          // response.interventions.push(_intervention)
           break;
       }
     }
-
+      response.total=total;
     return response
   }
 
   async getAlignmentData(pAssessments: PortfolioAssessment[], sdgs: any[]) {
-    let response: ComparisonDto
+    let response: ComparisonDto = new ComparisonDto()
+    let intervention_data = []
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -524,13 +700,34 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'Portfolio Tool':
         case 'Investment & Private Sector Tool':
-          data = this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
         case 'Carbon Market Tool':
-          data = this.getAlignmentDataCarbonMarket(pAssessment.assessment)
+          data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment, sdgs)
           break;
       }
+      intervention_data.push({ data: data, intervention: _intervention })
     }
+
+    response.col_set_1 = [
+      { label: "INTERVENTION INFORMATION", colspan: 4 },
+      { label: '', colspan: sdgs.length }
+    ]
+    response.col_set_2 = [
+      ...this.col_set_2,
+    ]
+
+    let cols = []
+    for (let sd of sdgs){
+      cols.push({label: sd.replace('_', ' '), code: sd})
+    }
+
+    for (let int_data of intervention_data){
+      response.interventions.push({...int_data.intervention, ...int_data.data})
+    }
+
+    response.col_set_2.push(...cols)
+    response.sdg_count = sdgs.length
 
     return response
   }
@@ -571,9 +768,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL').score,
-        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL').score,
-        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL').score,
+        international: scGHG.characteristicData.find(o => o.ch_code === 'MACRO_LEVEL')?.score,
+        national: scGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_LEVEL')?.score,
+        subnational: scGHG.characteristicData.find(o => o.ch_code === 'MICRO_LEVEL')?.score,
         category_score: scGHG.category_score
       }
     }
@@ -605,9 +802,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        international: scAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        national: scAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        subnational: scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: scAD.category_score
       }
     }
@@ -617,9 +814,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM').score,
-        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM').score,
-        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM').score,
+        long_term: susGHG.characteristicData.find(o => o.ch_code === 'LONG_TERM')?.score,
+        medium_term: susGHG.characteristicData.find(o => o.ch_code === 'MEDIUM_TERM')?.score,
+        short_term: susGHG.characteristicData.find(o => o.ch_code === 'SHORT_TERM')?.score,
         category_score: susGHG.category_score
       }
     }
@@ -650,9 +847,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL').score,
-        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL').score,
-        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL').score,
+        long_term: susAD.characteristicData.find(o => o.ch_code === 'INTERNATIONAL')?.score,
+        medium_term: susAD.characteristicData.find(o => o.ch_code === 'NATIONAL')?.score,
+        short_term: susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score,
         category_score: susAD.category_score
       }
     }
@@ -668,38 +865,84 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
   }
 
-  async getAggregationDataPortfolioInvestor(assessement: Assessment) {
+  async getAlignmentDataforTool(assessementid: number): Promise<number> {
+    let result = await this.assessmentRepo.createQueryBuilder('asses')
+      .leftJoinAndMapMany(
+        'asses.investor_assessment',
+        InvestorAssessment,
+        'investor_assessment',
+        'investor_assessment.assessment_id = asses.id'
+      )
+      .where('asses.id=:assessementid  and investor_assessment.characteristic_id in (16,28)', { assessementid })
+      .getOne();
+    let total = 0
 
+    if (result.investor_assessment) {
+      for (let investor of result.investor_assessment) {
+
+        investor.expected_ghg_mitigation ? total += Number(investor.expected_ghg_mitigation) : 0
+      }
+    }
+
+    return total
   }
 
   async getAlignmentDataPortfolioInvestor(assessement: Assessment) {
+    let response = {}
+    let data = this.sdgAssessRepo.createQueryBuilder('sdgAssessment')
+      .innerJoin(
+        'sdgAssessment.assessment',
+        'assessment',
+        'assessment.id = sdgAssessment.assessmentId'
+      )
+      .innerJoinAndSelect(
+        'sdgAssessment.sdg',
+        'sdg',
+        'sdg.id = sdgAssessment.sdgId'
+      )
+      .where('assessment.id = :id', { id: assessement.id })
 
+    let sdgs = await data.getMany()
+
+    sdgs.map(sd => {
+      let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
+      response[code] = sd.answer
+    })
+    return response
   }
 
+  async getAggregationDataPortfolioTool(assessement: Assessment): Promise<number> {
+    return 0
+  }
+  
   async getProcessDataCarbonMarket(assessement: Assessment) {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessement.id)).data
     let categories = []
     let cat_names = []
+    let cat_obj = {}
+    let cat_total = 0
     for await (let cat of data) {
       let obj = {}
       let characteristics = []
       let ch_data = {}
       for await (let ch of cat.characteristic) {
         characteristics.push({ label: ch.name, code: ch.code })
-        ch_data[ch.code] = ch.ch_score
+        ch_data[ch.code] = this.investorToolService.mapSustainedScores(ch.ch_score)
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
-      ch_data['category_score'] = cat.cat_score
+      ch_data['category_score'] = this.investorToolService.mapSustainedScores(cat.cat_score)
       obj['characteristics'] = characteristics
       obj['ch_data'] = ch_data
       obj['characteristic_count'] = characteristics.length
       obj['col_set_1'] = { label: cat.name, colspan: characteristics.length + 1 }
+      cat_obj[cat.name] = this.investorToolService.mapSustainedScores(cat.cat_score)
+      cat_total += cat.cat_score
       cat_names.push(cat.name)
       categories.push(obj)
     }
+    cat_obj['category_score'] = this.investorToolService.mapSustainedScores(Math.round(cat_total / cat_names.length))
 
-    return { categories: categories, cat_names: cat_names }
-
+    return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
 
   async getOutcomeDataCarbonMarket(assessement: Assessment) {
@@ -817,13 +1060,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
+
   async getAggregationDataCarbonMarket(assessement: Assessment) {
 
   }
 
 
-  async getAlignmentDataCarbonMarket(assessement: Assessment) {
+  async getAlignmentDataCarbonMarket(assessement: Assessment, sdgs: any[]) {
+    let response = {}
+    sdgs.map(sd => {
+      response[sd] = '-'
+    })
 
+    return response
   }
 
   getSDGName(code) {
@@ -833,7 +1082,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Portfolio Tool';
-    let filter = 'asses.tool=:tool '
+    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -877,10 +1126,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId, portfolioID })
+      ).where(filter, { tool, userId, userCountryId, portfolioID }).orderBy('asses.id','DESC')
 
 
-
+  
 
     let result = await paginate(data, options);
     // console.log("result",result)
