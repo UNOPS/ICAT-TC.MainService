@@ -204,6 +204,33 @@ export class UsersService extends TypeOrmCrudService<User> {
     return this.repo.save(user);
   }
 
+  async mailcreate(user: User) {
+    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    let newUUID = uuidv4();
+    let newPassword = ('' + newUUID).substr(0, 6);
+    user.password = await this.hashPassword(
+      user.password,
+      user.salt,
+    );
+    user.password = newPassword;
+    var template =
+      'Dear ' + user.firstName + " " + user.lastName +
+      ' <br/>Your username is ' +
+      user.email +
+      '<br/> your login password is : ' +
+      newPassword +
+      ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
+      systemLoginUrl;
+
+    this.emaiService.sendMail(
+      user.email,
+      'Your credentials for ICAT system',
+      '',
+      template,
+    );
+  }
+
+
   async adduser(user: User): Promise<User> {
     console.log(user)
     return await this.repo.save(user);
@@ -213,8 +240,32 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.repo.update(user.id, user);
   }
 
+  async syncUser(dto: any) {
+    let user = await this.repo.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    if (user) {
+      user.status = dto.status;
+      await this.repo.save(user);
+    }
+    else {
+      let newUser = new User();
+      newUser.status = dto.status;
+      newUser.firstName = dto.firstName;
+      newUser.lastName = dto.lastName;
+      newUser.email = dto.email;
+      newUser.username = dto.email;
+      newUser.landline = dto.telephone;
+      newUser.mobile = dto.mobile;
+      newUser.salt = '';
+      newUser.password = '';
+      newUser.loginProfile = dto.id;
+      newUser.institution = dto.ins;
+      newUser.country = dto.country;
+      newUser.uniqueIdentification = dto.uniqueIdentification;
+      await this.repo.save(newUser);
+    }
+  }
+
   async findAll(): Promise<User[]> {
-    console.log("urepo====", this.repo.find())
     return this.repo.find();
   }
 
