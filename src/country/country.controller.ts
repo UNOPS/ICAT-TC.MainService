@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crud, CrudController, CrudRequest, Override, ParsedBody, ParsedRequest } from '@nestjsx/crud';
 import { AuditService } from 'src/audit/audit.service';
@@ -105,11 +105,6 @@ export class CountryController implements CrudController<Country>{
     audit.action = coun.name + ' Country Activated';
     audit.comment = "Country Activated";
     audit.actionStatus = 'Activated';
-    // this.auditService.create(audit);
-    // console.log("audit.......", audit);
-
-
-    // console.log("act-country===", coun)
     return coun;
   }
 
@@ -117,11 +112,16 @@ export class CountryController implements CrudController<Country>{
   async getCountry(
     @Query('countryId') countryId: number,
   ): Promise<any> {
-    // console.log("country111 :",await this.service.getCountry(countryId))
     return await this.service.getCountry(countryId);
   }
 
-  
+
+  @Post('synccountry')
+  async syncCountry(
+    @Body() dto: any,
+  ): Promise<any> {
+    this.CountryRepo.save(dto)
+  }
 
   @Get('country-sector')
   async getCountrySector(
@@ -136,19 +136,8 @@ export class CountryController implements CrudController<Country>{
     let allCountries= await this.CountryRepo.find();
     let countriesWithoutzero=allCountries.filter(object => {
       return object.id !== 0;})
-    // console.log("countriesWithoutzero",countriesWithoutzero)
     return countriesWithoutzero;
   }
 
-  // @Get('findWithoutZeroCountry')
-  // async findWithoutZeroCountry():Promise<Country[]>{
-  //   let allCountries= await this.CountryRepo.find();
-  //   let countriesWithoutzero=allCountries.filter(object => {console.log(object.id)
-  //     return object.id !== 0;})
-  //   console.log("countriesWithoutzero",countriesWithoutzero)
-  //   return countriesWithoutzero;
-  // }
-
-  
 
 }

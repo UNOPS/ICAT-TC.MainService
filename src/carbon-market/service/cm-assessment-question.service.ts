@@ -129,7 +129,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
       resultObj.averageProcess = res.process_score
-      resultObj.averageOutcome = res.outcome_score.outcome_score
+      resultObj.averageOutcome = res.outcome_score?.outcome_score
       await this.resultsRepo.save(resultObj)
 
       this.saveTcValue(assessment.id, res)
@@ -680,7 +680,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       //   tc_score += ans.score
       // })
       // let score = tc_score * 100
-      let score = (result.process_score + result.outcome_score.outcome_score) / 2
+      let score = (result.process_score + result.outcome_score?.outcome_score) / 2
 
       await this.assessmentRepo
         .createQueryBuilder()
