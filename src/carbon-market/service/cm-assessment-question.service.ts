@@ -717,7 +717,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepo.find({
-      relations: ['climateAction']
+      relations: ['climateAction'],
+      order:{
+        id: 'DESC' 
+      }
     });
     // let filteredResults =results
      let filteredResults = results.filter(result => result.tool === tool );
