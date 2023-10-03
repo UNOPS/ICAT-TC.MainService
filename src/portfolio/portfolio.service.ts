@@ -558,7 +558,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       })
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
-        let score = Math.round(sc_sus_sd_total[int.id] / 2)
+        let score = Math.floor(sc_sus_sd_total[int.id] / 2)
         int['category_score'] = { name: score + ' - ' + this.investorToolService.mapScaleScores(score) , value: score }
         return int
       })
@@ -630,13 +630,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     })
 
     sc_sus_ghg_comparison.interventions = sc_sus_ghg_comparison.interventions.map(int => {
-      let score = Math.round(sc_sus_total[int.id] / 2)
+      let score = Math.floor(sc_sus_total[int.id] / 2)
       int['category_score'] = { name: score + ' - ' + this.investorToolService.mapScaleScores(score), value: score }
       return int
     })
 
     sc_sus_ad_comparison.interventions = sc_sus_ad_comparison.interventions.map(int => {
-      let score = Math.round(sc_sus_ad_total[int.id] / 2)
+      let score = Math.floor(sc_sus_ad_total[int.id] / 2)
       int['category_score'] = { name: score  + ' - ' + this.investorToolService.mapScaleScores(score), value: score }
       return int
     })

@@ -1729,6 +1729,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Moderate';
       case 3:
         return 'Major';
+      case null:
+        return 'Empty'
       default:
         return value.toString();
 
