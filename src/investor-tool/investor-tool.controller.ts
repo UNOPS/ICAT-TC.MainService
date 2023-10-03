@@ -88,6 +88,7 @@ export class InvestorToolController {
   @UseGuards(JwtAuthGuard)
   @Get('getSectorCountByTool/:tool')
   async getSectorCountByTool(@Param('tool') tool:string){
+    // console.log(tool)
     return await this.investorToolService.getSectorCountByTool(tool);
   }
 
