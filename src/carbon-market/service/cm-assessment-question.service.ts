@@ -19,6 +19,7 @@ import { Section } from "../entity/section.entity";
 import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
 import { UsersService } from "src/users/users.service";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
+import { MasterDataService } from "src/shared/entities/master-data.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -37,8 +38,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     private parameterRequestRepo: Repository<ParameterRequest>,
     @InjectRepository(Characteristics)
     private characteristicRepo: Repository<Characteristics>,
-    
-    private userService:UsersService
+    private userService:UsersService,
+    private masterDataService: MasterDataService
   ) {
     super(repo);
   }
@@ -450,21 +451,18 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('question.id In (:id)', { id: qIds })
         .getMany()
       let criteria = []
-      answers.forEach(ans => {
-        let obj = {
-          // data:ans,
-          characteristic: ans.assessment_question?.characteristic?.name,
-          ch_code: ans.assessment_question?.characteristic?.code,
-          question: ans?.assessment_question?.question?.label,
-          score: ans?.answer?.label,
-          justification: ans?.assessment_question?.comment,
-          document: ans?.assessment_question?.uploadedDocumentPath,
-          category: ans?.assessment_question?.characteristic?.category,
-          SDG: ans?.assessment_question?.selectedSdg,
-          outcome_score: ans?.selectedScore,
-          weight:  ans.assessment_question?.characteristic?.category.cm_weight
-
-        }
+      for await (let ans of answers) {
+        let obj = new OutcomeResult()
+        obj.characteristic = ans.assessment_question?.characteristic?.name
+        obj.ch_code = ans.assessment_question?.characteristic?.code
+        obj.question = ans?.assessment_question?.question?.label
+        obj.score = ans?.answer?.label
+        obj.justification = ans?.assessment_question?.comment
+        obj.document = ans?.assessment_question?.uploadedDocumentPath
+        obj.category = ans?.assessment_question?.characteristic?.category
+        obj.SDG = ans?.assessment_question?.selectedSdg
+        obj.outcome_score = ans?.selectedScore
+        obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
         // if (obj?.category?.code == 'TECHNOLOGY') {
         //   processData.technology.push(obj)
         // }
@@ -488,10 +486,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
           outcomeData.scale_adaptation.push(obj)
         }
-
-
-
-      })
+      }
 
       answers2.forEach(ans => {
         let obj = {
@@ -685,7 +680,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       await this.assessmentRepo
         .createQueryBuilder()
         .update(Assessment)
-        .set({ tc_value: score })
+        .set({ tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score.outcome_score })
         .where("id = :id", { id: assessmentId })
         .execute()
 
@@ -779,6 +774,29 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     return pagination;
   }
+
+  async getSDGFrequency() {
+    let data = this.repo.createQueryBuilder('assessmentQuestion')
+      .innerJoin(
+        'assessment',
+        'assessment',
+        'assessment.id = assessmentQuestion.assessmentId'
+      )
+      .where('assessmentQuestion.selectedSdg IS not null')
+      .select('assessmentQuestion.selectedSdg as sdg')
+      .addSelect('COUNT (DISTINCT assessment.id) as count')
+      .addGroupBy('assessmentQuestion.selectedSdg')
+
+    let res = await data.execute()
+    let sdgs = this.masterDataService.SDGs
+
+    res.map(o => {
+      o.sdg = sdgs.find(s => s.code === o.sdg).name
+      return o
+    })
+
+    return res
+  }
 }
 
 export class CharacteristicData {
@@ -802,6 +820,19 @@ export class CharacteristicProcessData {
   score: number
   ch_score: number
   questions: QuestionData[]
+}
+
+export class OutcomeResult {
+    characteristic: string
+    ch_code: string
+    question: string
+    score: string
+    justification: string
+    document: string
+    category: Category
+    SDG: string
+    outcome_score: string
+    weight: number
 }
 
 
