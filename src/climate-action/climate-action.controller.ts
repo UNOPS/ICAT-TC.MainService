@@ -22,7 +22,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { PolicySector } from './entity/policy-sectors.entity';
-import { AllBarriersSelected } from './dto/selected-barriers.dto';
+import { AllBarriersSelected, AllPolicySectors } from './dto/selected-barriers.dto';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -389,8 +389,8 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Post("policySectors")
-  async policySectors(@Body() req:PolicySector[]){
-   return await this.service.savepolicySectors(req);
+  async policySectors(@Body() req:AllPolicySectors){
+   return await this.service.savepolicySectors(req.allSectors);
   }
 
   
