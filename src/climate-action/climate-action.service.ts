@@ -386,15 +386,15 @@ async allProject(
       const allowedUserTypes = [
         'Country Admin',
         'Sector Admin',
-        'Technical Team',
+        'Country User',
         'MRV Admin',
         'Data Collection Team',
         'QC Team',
-        'MASTER_ADMIN'
+        'MASTER_ADMIN',
       ];
       const allowedUserTypesForAcceptedInterverntions = [
         'Sector Admin',
-        'Technical Team',
+        'Country User',
         'MRV Admin',
       ];
       if (isUserExternal || isUserVerifier){
