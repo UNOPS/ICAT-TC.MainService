@@ -82,6 +82,12 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
       page: page,
     },);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('get-sdg-frequency')
+  async getSDGFrequency(): Promise<any>{
+    return await this.service.getSDGFrequency()
+  }
   
 
 }

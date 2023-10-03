@@ -1749,6 +1749,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Likely (60-90%)';
       case 3:
         return 'Very likely (90-100%)';
+      case 4:
+        return 'Certainly (100%)'
       default: 
         return value.toString();
     }
