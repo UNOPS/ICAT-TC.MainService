@@ -397,7 +397,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         sustainedGhgData.col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
         sustainedAdaptationData.col_set_1 = [...col_set_1, int_data.data.sustained_comparisons.adaptation.col_set_1]
         sustainedAdaptationData.col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
-        outcome_score[int_data.intervention.id] = int_data.data.outcome_score
         for (let sd of sdgs) {
           scaleSdgData[sd] = new ComparisonDto()
           scaleSdgData[sd].comparison_type = 'SCALE COMPARISON'
@@ -411,6 +410,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           sustainedSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
         }
       }
+
+      outcome_score[int_data.intervention.id] = int_data.data.outcome_score
 
       scaleGhgData.interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.ghg.data })
       scaleGhgData.order = 1
@@ -657,7 +658,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let scale_score = Math.round(scale_cat_total[int.id] / scale_cat_count[int.id])
       let sustaine_score = Math.round(sustain_cat_total[int.id] / sustain_cat_count[int.id])
       let _cat_score = Math.round((scale_score + sustaine_score)/2)
-      console.log(outcome_score)
       outcome_level_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, 
         scale_cat_score: scale_score + ' - ' + this.investorToolService.mapScaleScores(scale_score), 
@@ -803,7 +803,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let res = (await this.investorToolService.calculateNewAssessmentResults(assessement.id))
     let sdg = []
     let outcome_score = 0
-    outcome_score = res.outcome_score
+    outcome_score = res.outcomeScore
     let data = res.outcomeData
 
     let scGHG = data.find(o => o.code === 'SCALE_GHG')
