@@ -170,7 +170,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .createQueryBuilder('sdgasess')
       .leftJoinAndSelect('sdgasess.assessment', 'assessment')
 
-    if (!portfolioId) {
+    if (portfolioId&&Number(portfolioId)) {
       let response = this.portfolioAssessRepo.find({
         relations: ['assessment'],
         where: { portfolio: { id: portfolioId } },
@@ -182,6 +182,37 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       data.where('assessment.id IN (:...ids)', { ids: assessementIdArray })
 
+    }else{
+      let filter = 'assessment.tool="Portfolio Tool" '
+
+
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      let userId = currentUser.id;
+      let userCountryId = currentUser.country?.id;
+      console.log(userId, userCountryId)
+      if (currentUser?.userType?.name === 'External') {
+        filter = filter + ' and assessment.user_id=:userId '
+  
+      }
+      else {
+        filter = filter + ' and country.id=:userCountryId '
+        data.leftJoinAndMapOne(
+          'assessment.climateAction',
+          ClimateAction,
+          'climateAction',
+          'assessment.climateAction_id = climateAction.id'
+        )
+        .leftJoinAndMapOne(
+          'climateAction.country',
+          Country,
+          'country',
+          'climateAction.countryId = country.id'
+        )
+      }
+
+
+      data.where(filter,{userId,userCountryId})
     }
 
     data.leftJoinAndSelect('sdgasess.sdg', 'sdg')
