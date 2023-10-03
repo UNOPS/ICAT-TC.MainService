@@ -3,16 +3,16 @@
 #  This template allows you to validate your NodeJS code.
 #  The workflow allows running tests and code linting on the default branch.
 
-image: node:16
+#image: node:16
 
-pipelines:
-  default:
-    - parallel:
-         - step:
-             name: Deploy user Service
-             caches:
-               - node
-             script:
-             - curl -d "{\"branch\":\"$BITBUCKET_BRANCH\",\"repository_slug\":\"$BITBUCKET_REPO_SLUG\"}" -H "Content-Type:application/json" -X GET http://3.108.9.184/web-api/deploy
+#pipelines:
+  #default:
+    #- parallel:
+        # - step:
+         #    name: Deploy user Service
+          #   caches:
+          #     - node
+           #  script:
+           #  - curl -d "{\"branch\":\"$BITBUCKET_BRANCH\",\"repository_slug\":\"$BITBUCKET_REPO_SLUG\"}" -H "Content-Type:application/json" -X GET http://3.108.9.184/web-api/deploy
             
 
