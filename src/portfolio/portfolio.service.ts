@@ -298,13 +298,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     likelihood_comparison.col_set_2.push(...this.col_set_2)
     let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
-      likelihood_comparison.col_set_1.push({label: cat, colspan: 1})
+      likelihood_comparison.col_set_1.push({label: cat.toUpperCase(), colspan: 1})
       likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()) {
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
+        data.col_set_1 = {...data.col_set_1, label: data.col_set_1.label.toUpperCase(),}
         if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
         if (index === 0) {
           comparisonData.col_set_2.push(...data.characteristics)
@@ -779,7 +780,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let characteristics = []
       let ch_data = {}
       for await (let ch of cat.characteristicData) {
-        characteristics.push({ label: ch.characteristic, code: ch.ch_code })
+        characteristics.push({ label: ch.characteristic.toUpperCase(), code: ch.ch_code })
         ch_data[ch.ch_code] = ch.likelihood.name
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
@@ -985,7 +986,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let characteristics = []
       let ch_data = {}
       for await (let ch of cat.characteristic) {
-        characteristics.push({ label: ch.name, code: ch.code })
+        characteristics.push({ label: ch.name.toUpperCase(), code: ch.code })
         ch_data[ch.code] = this.investorToolService.mapSustainedScores(ch.ch_score)
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
