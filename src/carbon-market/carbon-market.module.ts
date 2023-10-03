@@ -30,6 +30,7 @@ import { User } from "src/users/entity/user.entity";
 import { UserType } from "src/users/entity/user.type.entity";
 import { EmailNotificationService } from "src/notifications/email.notification.service";
 import { TokenDetails } from "src/utills/token_details";
+import { MasterDataService } from "src/shared/entities/master-data.service";
 
 
 @Module({
@@ -64,7 +65,8 @@ import { TokenDetails } from "src/utills/token_details";
     CMAssessmentAnswerService,
     CMSeedService,
     TokenDetails, EmailNotificationService,
-    UsersService
+    UsersService,
+    MasterDataService
   ],
   exports: [CMAssessmentQuestionService],
 })
