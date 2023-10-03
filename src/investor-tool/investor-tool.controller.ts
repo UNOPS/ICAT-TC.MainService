@@ -102,7 +102,7 @@ export class InvestorToolController {
   @UseGuards(JwtAuthGuard)
   @Get('calculate-final-result')
   async calculateFinalResults(@Query('assessID') assessID: number) {
-    console.log("ssss",assessID)
+    // console.log("ssss",assessID)
     let res =  await this.investorToolService.calculateNewAssessmentResults(assessID);
     // console.log("res",res)
     return res;
@@ -163,7 +163,7 @@ export class InvestorToolController {
     return {fileName: files[0].filename}
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('sdgSumCalculateInvester')
   async sdgSumCalculate() {
     return await this.investorToolService.sdgSumCalculate();
