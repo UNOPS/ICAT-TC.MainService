@@ -481,10 +481,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
       })
 
-      scale_cat_total[int.id] = this.addCategoryScores(scale_cat_total[int.id], int.category_score.value)
+      scale_cat_total[int.id] = int.category_score.value
       scale_cat_count[int.id] = 1
-      sc_cat_total[int.id] = this.addCategoryScores(sc_cat_total[int.id], int.category_score.value)
-      sc_sus_total[int.id] = this.addCategoryScores(sc_sus_total[int.id], int.category_score.value)
+      sc_cat_total[int.id] = int.category_score.value
+      sc_sus_total[int.id] = int.category_score.value
     })
 
     let sustained_comparison = new ComparisonDto()
@@ -507,10 +507,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       })
       let res = sc_sus_ghg_comparison.interventions.find(o => o.id === int.id)
       res['sustained_score'] = int.category_score
-      sustain_cat_total[int.id] = this.addCategoryScores(sustain_cat_total[int.id], int.category_score.value)
+      sustain_cat_total[int.id] = int.category_score.value
       sustain_cat_count[int.id] = 1
-      ss_cat_total[int.id] = this.addCategoryScores(ss_cat_total[int.id] , int.category_score.value)
-      sc_sus_total[int.id] = this.addCategoryScores(sc_sus_total[int.id], int.category_score.value)
+      ss_cat_total[int.id] = int.category_score.value
+      sc_sus_total[int.id] += int.category_score.value
     })
 
     let sc_sus_sdgs = {}
@@ -540,20 +540,20 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         sc_sus_sdgs[sd].interventions.push({
           id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
         })
-        scale_cat_total[int.id] = this.addCategoryScores(scale_cat_total[int.id], int.category_score.value)
+        scale_cat_total[int.id] += int.category_score.value
         scale_cat_count[int.id] ++
-        sc_sus_sd_total[int.id] = this.addCategoryScores(sc_sus_sd_total[int.id], int.category_score.value)
-        sc_cat_total[int.id] = this.addCategoryScores(sc_cat_total[int.id], int.category_score.value)
+        sc_sus_sd_total[int.id] = int.category_score.value
+        sc_cat_total[int.id] += int.category_score.value
       })
       sustainedSdgData[sd].interventions.map(int => {
         let res = sustained_comparison.interventions.find(o => o.id === int.id)
         res[sd + '_score'] = int.category_score
         let res2 = sc_sus_sdgs[sd].interventions.find(o => o.id === int.id)
         res2['sustained_score'] = int.category_score
-        sustain_cat_total[int.id] = this.addCategoryScores(sc_cat_total[int.id], int.category_score.value)
+        sustain_cat_total[int.id] += int.category_score.value
         sustain_cat_count[int.id] ++
-        sc_sus_sd_total[int.id] = this.addCategoryScores(sc_sus_sd_total[int.id], int.category_score.value)
-        ss_cat_total[int.id] = this.addCategoryScores(ss_cat_total[int.id], int.category_score.value)
+        sc_sus_sd_total[int.id] += int.category_score.value
+        ss_cat_total[int.id] += int.category_score.value
       })
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
@@ -599,10 +599,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_ad_comparison.interventions.push({
         id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
       })
-      scale_cat_total[int.id] = this.addCategoryScores(scale_cat_total[int.id], int.category_score.value)
+      scale_cat_total[int.id] += int.category_score.value
       scale_cat_count[int.id] ++
-      sc_cat_total[int.id] = this.addCategoryScores(sc_cat_total[int.id], int.category_score.value)
-      sc_sus_ad_total[int.id] = this.addCategoryScores(sc_sus_ad_total[int.id], int.category_score.value)
+      sc_cat_total[int.id] += int.category_score.value
+      sc_sus_ad_total[int.id] = int.category_score.value
     })
 
     sustainedAdaptationData.interventions.map(int => {
@@ -610,10 +610,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       res['adaptation_score'] = int.category_score
       let res2 = sc_sus_ad_comparison.interventions.find(o => o.id === int.id)
       res2['sustained_score'] = int.category_score
-      sustain_cat_total[int.id] += this.addCategoryScores(sustain_cat_total[int.id], int.category_score.value)
+      sustain_cat_total[int.id] += int.category_score.value
       sustain_cat_count[int.id] ++
-      ss_cat_total[int.id] += this.addCategoryScores(ss_cat_total[int.id], int.category_score.value)
-      sc_sus_ad_total[int.id] += this.addCategoryScores(sc_sus_ad_total[int.id], int.category_score.value)
+      ss_cat_total[int.id] += int.category_score.value
+      sc_sus_ad_total[int.id] += int.category_score.value
     })
 
     scale_comparison.interventions = scale_comparison.interventions.map(int => {
