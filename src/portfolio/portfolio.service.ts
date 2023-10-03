@@ -1140,7 +1140,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Portfolio Tool';
-    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null)'
+    let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1164,6 +1164,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         'portfolio_assesmet',
         'asses.id = portfolio_assesmet.assessment_id'
       )
+    }else{
+
+      filter = filter + ' and asses.tool=:tool '
     }
     data.select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
       .leftJoinAndMapOne(
