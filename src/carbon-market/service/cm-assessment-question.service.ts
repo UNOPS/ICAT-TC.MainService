@@ -717,7 +717,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepo.find({
-      relations: ['climateAction']
+      relations: ['climateAction'],
+      order:{
+        id: 'DESC' 
+      }
     });
     // let filteredResults =results
      let filteredResults = results.filter(result => result.tool === tool );
@@ -743,7 +746,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessment: result.id,
         process_score: data?.process_score,
         outcome_score: data?.outcome_score?.outcome_score,
-        intervention: result.climateAction?.policyName
+        intervention: result.climateAction?.policyName,
+        intervention_id: result.climateAction?.intervention_id
       };
     }));
     // return formattedResults

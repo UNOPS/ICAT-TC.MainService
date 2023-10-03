@@ -1223,7 +1223,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async calculateNewAssessmentResults(assesId: number): Promise<any> {
 
-    console.log(assesId)
+    // console.log(assesId)
     let characteristicData: {
       characteristic: string,
       ch_code: string,
@@ -1329,7 +1329,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
               char_weight: x.characteristics.ip_weight,
-              recalculated_char_weight: x.relavance, // for now
+              recalculated_char_weight: x.characteristics.ip_weight, // for now
               isCalulate: (x.relavance == 0 || !x.relavance) ? false : true,
             }
 
@@ -1349,8 +1349,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // console.log(category.category,"total_char_weight",total_char_weight)
       for (let char of category.characteristicData) {
         if (char.isCalulate) {
+          // console.log(char.characteristic,char.recalculated_char_weight,total_char_weight)
           // console.log(char.characteristic,char.recalculated_char_weight)
-          char.recalculated_char_weight = this.roundDown(100 * (char.recalculated_char_weight / total_char_weight));
+          char.recalculated_char_weight = (100 * (char.recalculated_char_weight / total_char_weight));
+          if (char.recalculated_char_weight%1!=0){
+            // console.log("........,",char.ch_code,char.recalculated_char_weight)
+            char.recalculated_char_weight =Math.round(char.recalculated_char_weight / 10) * 10 // for  round 50% in recalculated weights in 34% charactersitics
+          }
           if (!isNaN(char.likelihood.value)) {
             cat_score += this.roundDown(char.recalculated_char_weight * char.likelihood.value) //rounddown
           }
@@ -1457,11 +1462,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             else {
               sdg_total_char = sdg_total_char
             }
+            
           }
           if (char.data.every(element => element.isCalulate === false)) {
-            char.sdg_score = { name: "-", value: null }
+            char.sdg_score = null
           }
           else {
+            // console.log(char.name,sdg_cat_score,sdg_total_char,(sdg_cat_score / sdg_total_char),".........")
             char.sdg_score = this.roundDown(sdg_cat_score / sdg_total_char); //round down
             sdg_count++
             total_sdg_score += char.sdg_score;
@@ -1582,32 +1589,60 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async sdgSumCalculate(): Promise<any[]> {
 
+    let filter = 'assesment.tool="Investment & Private Sector Tool" '
 
 
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    console.log(userId, userCountryId)
 
+    const sectorSum = this.assessmentRepo
+    .createQueryBuilder('assesment')
+    .leftJoinAndMapMany(
+      'assesment.sdgasses',
+      SdgAssessment,
+      'sdgasses',
+      `assesment.id = sdgasses.assessmentId`,
+    )
+    .leftJoinAndMapOne(
+      'sdgasses.sdg',
+      PortfolioSdg,
+      'sdg',
+      `sdgasses.sdgId = sdg.id`,
+    )
+    if (currentUser?.userType?.name === 'External') {
+      filter = filter + ' and assesment.user_id=:userId '
 
-    const sectorSum = await this.assessmentRepo
-      .createQueryBuilder('assesment')
-      .leftJoinAndMapMany(
-        'assesment.sdgasses',
-        SdgAssessment,
-        'sdgasses',
-        `assesment.id = sdgasses.assessmentId`,
+    }
+    else {
+      console.log('work')
+      filter = filter + ' and country.id=:userCountryId '
+      sectorSum.leftJoinAndMapOne(
+        'assesment.climateAction',
+        ClimateAction,
+        'climateAction',
+        'assesment.climateAction_id = climateAction.id'
       )
       .leftJoinAndMapOne(
-        'sdgasses.sdg',
-        PortfolioSdg,
-        'sdg',
-        `sdgasses.sdgId = sdg.id`,
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
       )
-      .where('assesment.tool="Investment & Private Sector Tool"')
+    }
+
+
+ 
+    sectorSum.where(filter,{userId,userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('COUNT(sdgasses.id)', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
-      .getRawMany();
-    console.log("sectorSum", sectorSum)
-    return sectorSum;
+      ;
+    console.log("sectorSum", await sectorSum.getRawMany())
+    return await sectorSum.getRawMany();
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Investment & Private Sector Tool';
@@ -1647,7 +1682,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       return Math.floor(value)
     }
     else{
-      return Math.round(value)
+      return Math.ceil(value)
     }
   }
   mapRelevance(value: number) {
@@ -1675,6 +1710,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Very likely (90-100%)';
     }
   }
+  
 
   mapScaleScores(value: number) {
     // console.log('mapScaleScores', value)
