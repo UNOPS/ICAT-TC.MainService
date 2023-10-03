@@ -1713,7 +1713,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
 
   mapScaleScores(value: number) {
-    // console.log('mapScaleScores', value)
     switch (+value) {
       case -1:
         return 'Minor Negative';
