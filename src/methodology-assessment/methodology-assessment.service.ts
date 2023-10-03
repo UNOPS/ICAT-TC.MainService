@@ -1268,20 +1268,26 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepository.find({
-      relations: ['climateAction']
+      relations: ['climateAction','user']
     });
   
-     let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+    //  let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
+     let filteredResults = results.filter(result => result.tool === tool );
      console.log("current user:",currentUser?.userType?.name)
      if(isUserExternal){
+      console.log("external user results",currentUser?.id)
       filteredResults= filteredResults.filter(result => 
-        {if (result?.user?.id===currentUser?.id){
+        
+        { 
+          if (result?.user?.id===currentUser?.id){
+         
           return result
         }})
         
      }
      else {
       filteredResults= filteredResults.filter(result => {
+        
         // console.log(result?.climateAction?.country,currentUser?.country?.id)
         if(result?.climateAction?.country?.id===currentUser?.country?.id){
           // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
