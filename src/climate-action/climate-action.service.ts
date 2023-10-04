@@ -356,10 +356,10 @@ async allProject(
         'user.id = dr.user_id',
       )
       .leftJoinAndMapOne(
-        'dr.country',
+        'user.country',
          Country,
         'cntry',
-        'cntry.id = dr.countryId',
+        'cntry.id = user.countryId',
       )
       .leftJoinAndMapOne(
         'user.institution',
@@ -407,6 +407,9 @@ async allProject(
       else if (isUsersFilterByInstitute){
         console.log("+++++++++++",isUsersFilterByInstitute)
         data.andWhere('ins.id = :insId', { insId: currentUser?.institution?.id  })
+      }
+      else{
+        data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
       }
       // accpeted policies showing
       if  (!allowedUserTypesForAcceptedInterverntions.includes(currentUser?.userType?.name)){
