@@ -452,7 +452,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .getMany()
       let criteria = []
       for await (let ans of answers) {
-        if ([2323,2324,2325].includes(ans.assessment_question.id)) console.log(ans?.assessment_question?.id, ans?.assessment_question?.selectedSdg)
         let obj = new OutcomeResult()
         obj.characteristic = ans.assessment_question?.characteristic?.name
         obj.ch_code = ans.assessment_question?.characteristic?.code
@@ -462,7 +461,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         obj.document = ans?.assessment_question?.uploadedDocumentPath
         obj.category = ans?.assessment_question?.characteristic?.category
         obj.SDG = ans?.assessment_question?.selectedSdg
-        if ([2323,2324,2325].includes(ans.assessment_question.id)) console.log(obj)
         obj.outcome_score = ans?.selectedScore
         obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
         // if (obj?.category?.code == 'TECHNOLOGY') {
@@ -481,7 +479,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           outcomeData.sustained_GHGs.push(obj)
         } else if (obj?.category?.code == 'SCALE_SD') {
           outcomeData.scale_SDs.push(obj)
-          console.log(outcomeData.scale_SDs)
         } else if (obj?.category?.code == 'SUSTAINED_SD') {
           outcomeData.sustained_SDs.push(obj)
         } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
@@ -683,7 +680,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       await this.assessmentRepo
         .createQueryBuilder()
         .update(Assessment)
-        .set({ tc_value: score })
+        .set({ tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score.outcome_score })
         .where("id = :id", { id: assessmentId })
         .execute()
 
