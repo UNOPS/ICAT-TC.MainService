@@ -547,7 +547,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         if (res) {
           res[sd + '_score'] = int.category_score
           sc_sus_sdgs[sd].interventions.push({
-            id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+            id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
           })
           scale_cat_total[int.assessment_id] += int.category_score.value
           scale_cat_count[int.assessment_id]++
@@ -559,19 +559,21 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         let res = sustained_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
         if (res) {
           res[sd + '_score'] = int.category_score
-          let res2 = sc_sus_sdgs[sd].interventions.find(o => o.assessment_id === int.assessment_id)
-          if (res2){
-            res2['sustained_score'] = int.category_score
-            sc_sus_sd_total[int.assessment_id] += int.category_score.value
-          }
-          sustain_cat_total[int.assessment_id] += int.category_score.value
-          sustain_cat_count[int.assessment_id]++
-          ss_cat_total[int.assessment_id] += int.category_score.value
         }
+        let res2 = sc_sus_sdgs[sd].interventions.find(o => o.assessment_id === int.assessment_id)
+        if (res2){
+          res2['sustained_score'] = int.category_score
+        }
+        sc_sus_sd_total[int.assessment_id] += int.category_score.value
+        sustain_cat_total[int.assessment_id] += int.category_score.value
+        sustain_cat_count[int.assessment_id]++
+        ss_cat_total[int.assessment_id] += int.category_score.value
       })
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
+        console.log("574", int)
         let score = Math.floor(sc_sus_sd_total[int.assessment_id] / 2)
+        // console.log(sd, score)
         int['category_score'] = this.mapNameAndValue(this.investorToolService.mapScaleScores(score), score)
         return int
       })
@@ -611,7 +613,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let res = scale_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
       res['adaptation_score'] = int.category_score
       sc_sus_ad_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
       })
       scale_cat_total[int.assessment_id] += int.category_score.value
       scale_cat_count[int.assessment_id]++
