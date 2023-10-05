@@ -463,6 +463,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         obj.SDG = ans?.assessment_question?.selectedSdg
         obj.outcome_score = ans?.selectedScore
         obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
+        obj.starting_situation = ans?.assessment_question?.startingSituation
+        obj.expected_impact = ans?.assessment_question?.expectedImpact
+        obj.SDG_indicator = ans?.assessment_question?.sdgIndicator
+        obj.adaptation = ans?.assessment_question?.adaptationCoBenifit
         // if (obj?.category?.code == 'TECHNOLOGY') {
         //   processData.technology.push(obj)
         // }
@@ -572,6 +576,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.relevance = chs[ch][0].relevance
         _obj.weight = chs[ch][0].characteristic.cm_weight
         let questions = []
+        let raw_questions = []
         let score = 0
         for (let q of chs[ch]) {
           let o = new QuestionData()
@@ -580,8 +585,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.score = q.assessmentAnswers[0].answer.score_portion
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
+          raw_questions.push(o)
         }
         _obj.questions = questions
+        _obj.raw_questions = raw_questions
         _obj.ch_score = Math.round(score)
         return _obj
       })
@@ -820,6 +827,7 @@ export class CharacteristicProcessData {
   score: number
   ch_score: number
   questions: QuestionData[]
+  raw_questions: QuestionData[]
 }
 
 export class OutcomeResult {
@@ -833,6 +841,11 @@ export class OutcomeResult {
     SDG: string
     outcome_score: string
     weight: number
+    starting_situation: string
+    expected_impact: string
+    SDG_indicator: string
+    adaptation: string
+
 }
 
 
