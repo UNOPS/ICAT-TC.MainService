@@ -858,7 +858,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           international: this.mapNameAndValue(international.name, international.value),
           national: this.mapNameAndValue(national.name, national.value),
           subnational: this.mapNameAndValue(subnational.name, subnational.value),
-          category_score: this.mapNameAndValue(scSD.category_score.name, scSD.category_score.value) 
+          category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(sd.sdg_score), sd.sdg_score) 
         }
       }
     }
