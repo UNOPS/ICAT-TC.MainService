@@ -783,27 +783,37 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
   async getSDGFrequency() {
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+  
     let data = this.repo.createQueryBuilder('assessmentQuestion')
-      .innerJoin(
-        'assessment',
-        'assessment',
-        'assessment.id = assessmentQuestion.assessmentId'
-      )
-      .where('assessmentQuestion.selectedSdg IS not null')
+      .innerJoin('assessment', 'assessment', 'assessment.id = assessmentQuestion.assessmentId')
+      .innerJoin('assessment.user', 'user')
+      .innerJoin('user.country', 'cntry')
+      .where('assessmentQuestion.selectedSdg IS NOT NULL')
       .select('assessmentQuestion.selectedSdg as sdg')
-      .addSelect('COUNT (DISTINCT assessment.id) as count')
-      .addGroupBy('assessmentQuestion.selectedSdg')
-
-    let res = await data.execute()
-    let sdgs = this.masterDataService.SDGs
-
+      .addSelect('COUNT(DISTINCT assessment.id) as count')
+      .addGroupBy('assessmentQuestion.selectedSdg');
+  
+    if (isUserExternal) {
+      data.andWhere('user.id = :userId', { userId: currentUser.id });
+    } else {
+      data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id });
+    }
+  
+    let res = await data.execute();
+    let sdgs = this.masterDataService.SDGs;
+  
     res.map(o => {
-      o.sdg = sdgs.find(s => s.code === o.sdg).name
-      return o
-    })
-
-    return res
+      o.sdg = sdgs.find(s => s.code === o.sdg).name;
+      return o;
+    });
+  
+    return res;
   }
+  
+  
 }
 
 export class CharacteristicData {
