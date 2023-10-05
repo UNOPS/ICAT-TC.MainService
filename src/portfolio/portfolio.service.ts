@@ -351,7 +351,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
         type: pAssessment.assessment.climateAction.typeofAction,
-        status: pAssessment.assessment.climateAction.projectStatus?.name
+        status: pAssessment.assessment.climateAction.projectStatus?.name,
+        assessment_id: pAssessment.assessment.id
       }
 
       let data
@@ -482,10 +483,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     scaleGhgData.interventions.map(int => {
       scale_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, ghg_score: int.category_score
+        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, ghg_score: int.category_score
       })
       sc_sus_ghg_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
       })
 
       scale_cat_total[int.id] = int.category_score.value
@@ -542,25 +543,29 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let sc_sus_sd_total = {}
 
       scaleSdgData[sd].interventions.map(int => {
-        let res = scale_comparison.interventions.find(o => o.id === int.id)
-        res[sd + '_score'] = int.category_score
-        sc_sus_sdgs[sd].interventions.push({
-          id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
-        })
-        scale_cat_total[int.id] += int.category_score.value
-        scale_cat_count[int.id]++
-        sc_sus_sd_total[int.id] = int.category_score.value
-        sc_cat_total[int.id] += int.category_score.value
+        let res = scale_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
+        if (res) {
+          res[sd + '_score'] = int.category_score
+          sc_sus_sdgs[sd].interventions.push({
+            id: int.id, name: int.name, type: int.type, status: int.status, scale_score: int.category_score
+          })
+          scale_cat_total[int.id] += int.category_score.value
+          scale_cat_count[int.id]++
+          sc_sus_sd_total[int.id] = int.category_score.value
+          sc_cat_total[int.id] += int.category_score.value
+        }
       })
       sustainedSdgData[sd].interventions.map(int => {
-        let res = sustained_comparison.interventions.find(o => o.id === int.id)
-        res[sd + '_score'] = int.category_score
-        let res2 = sc_sus_sdgs[sd].interventions.find(o => o.id === int.id)
-        res2['sustained_score'] = int.category_score
-        sustain_cat_total[int.id] += int.category_score.value
-        sustain_cat_count[int.id]++
-        sc_sus_sd_total[int.id] += int.category_score.value
-        ss_cat_total[int.id] += int.category_score.value
+        let res = sustained_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
+        if (res) {
+          res[sd + '_score'] = int.category_score
+          let res2 = sc_sus_sdgs[sd].interventions.find(o => o.assessment_id === int.assessment_id)
+          res2['sustained_score'] = int.category_score
+          sustain_cat_total[int.id] += int.category_score.value
+          sustain_cat_count[int.id]++
+          sc_sus_sd_total[int.id] += int.category_score.value
+          ss_cat_total[int.id] += int.category_score.value
+        }
       })
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
