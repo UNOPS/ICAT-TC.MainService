@@ -265,7 +265,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                    if(item.value || item.justification){
                      item.investorAssessment =x
                      await this.indicatorDetailsRepo.save(item)
-                     console.log("saved",item.question.id, item.value,item.justification)
+                    //  console.log("saved",item.question.id, item.value,item.justification)
                    }
                  }
              })
@@ -1421,7 +1421,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
               isCalulate: (x.score == null) ? false : true,
-              sdg: (categoryData.isSDG) ? (x?.portfolioSdg?.name) : ''
+              sdg: (categoryData.isSDG) ? ('SDG ' + x?.portfolioSdg?.number + ' - ' + x?.portfolioSdg?.name) : ''
             }
           )
         }
@@ -1587,16 +1587,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       where: { assessment: { id: assessmentId } },
     });
   }
-  async sdgSumCalculate(): Promise<any[]> {
+  async sdgSumCalculate(tool: string): Promise<any[]> {
 
-    let filter = 'assesment.tool="Investment & Private Sector Tool" '
+    let filter = 'assesment.tool= :tool '
 
 
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
-    console.log(userId, userCountryId)
 
     const sectorSum = this.assessmentRepo
     .createQueryBuilder('assesment')
@@ -1635,8 +1634,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
  
-    sectorSum.where(filter,{userId,userCountryId})
+    sectorSum.where(filter,{tool: tool, userId: userId, userCountryId: userCountryId})
       .select('sdg.name', 'sdg')
+      .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasses.id)', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')

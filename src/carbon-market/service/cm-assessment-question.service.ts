@@ -396,11 +396,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           'question',
           'question.id = ans.assessmentQuestionId'
         )
-        // .innerJoinAndSelect(
-        //   'question.selectedSdg',
-        //   'sdg',
-        //   'question.selectedSdgId = sdg.id'
-        // )
+        .leftJoinAndSelect(
+          'question.selectedSdg',
+          'sdg',
+          'question.selectedSdgId = sdg.id'
+        )
         .leftJoinAndMapOne(
           'ans.answer',
           CMAnswer,
@@ -479,7 +479,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         obj.justification = ans?.assessment_question?.comment
         obj.document = ans?.assessment_question?.uploadedDocumentPath
         obj.category = ans?.assessment_question?.characteristic?.category
-        obj.SDG = ans?.assessment_question?.selectedSdg?.name
+        obj.SDG = 'SDG ' + ans?.assessment_question?.selectedSdg?.number + ' - ' + ans?.assessment_question?.selectedSdg?.name
         obj.outcome_score = ans?.selectedScore
         obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
         obj.starting_situation = ans?.assessment_question?.startingSituation
