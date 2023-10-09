@@ -23,6 +23,8 @@ export class InvestorQuestions extends BaseTrackingEntity {
     @Column({ nullable: true})
     isMain : boolean;
 
+    @Column({  type:"mediumtext" , nullable: true })
+    tooltip : string; 
     
 
 
