@@ -1705,7 +1705,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 2:
         return 'Possible (33-66%)';
       case 3:
-        return 'Likely (60-90%)';
+        return 'Likely (66-90%)';
       case 4:
         return 'Very likely (90-100%)';
     }
@@ -1745,7 +1745,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 1:
         return 'Possible (33-66%)';
       case 2:
-        return 'Likely (60-90%)';
+        return 'Likely (66-90%)';
       case 3:
         return 'Very likely (90-100%)';
       case 4:
