@@ -1729,7 +1729,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 3:
         return 'Major';
       case null:
-        return 'Empty'
+        return 'Outside assessment boundaries'
       default:
         return value.toString();
 
