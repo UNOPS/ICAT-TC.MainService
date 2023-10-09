@@ -216,6 +216,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     data.leftJoinAndSelect('sdgasess.sdg', 'sdg')
       .select('sdg.name', 'sdg')
+      .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasess.id)', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
@@ -532,13 +533,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       sc_sus_sdgs[sd] = new ComparisonDto()
       sc_sus_sdgs[sd].comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
-      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + (scaleSdgData[sd].col_set_1[1].label).split('-')[1]
+      let label = (scaleSdgData[sd].col_set_1[1].label).split('-')
+      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1] + ' - ' + label[2]
       sc_sus_sdgs[sd].col_set_1 = [
         ...col_set_1,
         { label: '', colspan: 3 }
       ]
       sc_sus_sdgs[sd].col_set_2 = [...this.col_set_2, ...sc_sus_col_2]
-      comparison_type_2 += 'SDG - ' + (scaleSdgData[sd].col_set_1[1].label).split('-')[1] + ' ,'
+      comparison_type_2 += label[1] + ' - ' + label[2] + ' ,'
 
       let sc_sus_sd_total = {}
 
@@ -1054,7 +1056,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let subnational = data.scale_SDs.find(o => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd).outcome_score
       let cat_score = Math.floor((+international + +national + +subnational) / 3)
       scale_SDs[sd] = {
-        col_set_1: { label: 'SCALE - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'SCALE - ' + sd.toUpperCase(), colspan: 4 },
         data: {
           international: this.mapNameAndValue(this.investorToolService.mapScaleScores(international), international),
           national: this.mapNameAndValue(this.investorToolService.mapScaleScores(national), national),
@@ -1103,7 +1105,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let short_term = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd).outcome_score
       let cat_score = Math.floor((+long_term + +medium_term + +short_term) / 3)
       sustained_SDs[sd] = {
-        col_set_1: { label: 'SUSTAINED - ' + this.getSDGName(sd).toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'SUSTAINED - ' + sd.toUpperCase(), colspan: 4 },
         data: {
           long_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(long_term), long_term),
           medium_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(medium_term), medium_term),
@@ -1155,10 +1157,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return response
   }
 
-  getSDGName(code) {
-    let sdg = this.masterDataService.SDGs.find(o => o.code === code)
-    return sdg.name
-  }
+  // getSDGName(code) {
+  //   let sdg = this.masterDataService.SDGs.find(o => o.code === code)
+  //   return sdg.name
+  // }
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'Portfolio Tool';
