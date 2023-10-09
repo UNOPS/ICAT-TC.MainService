@@ -298,14 +298,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     likelihood_comparison.col_set_2.push(...this.col_set_2)
     let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
-      likelihood_comparison.col_set_1.push({label: cat.toUpperCase(), colspan: 1})
+      likelihood_comparison.col_set_1.push({label: 'CATEGORY - ' + cat.toUpperCase(), colspan: 1})
       likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()) {
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
-        data.col_set_1 = {...data.col_set_1, label: data.col_set_1.label.toUpperCase(),}
+        data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
         if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
         if (index === 0) {
           comparisonData.col_set_2.push(...data.characteristics)

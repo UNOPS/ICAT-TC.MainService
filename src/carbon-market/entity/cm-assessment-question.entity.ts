@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 import { CMQuestion } from './cm-question.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { CMAssessmentAnswer } from './cm-assessment-answer.entity';
+import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
 
 
 @Entity()
@@ -32,9 +33,6 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   expectedImpact: string
 
   @Column({nullable: true})
-  selectedSdg: string
-
-  @Column({nullable: true})
   uploadedDocumentPath: string
 
   @Column({nullable: true})
@@ -46,6 +44,11 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @ManyToOne((type) => Characteristics, {nullable: true})
   @JoinColumn()
   characteristic: Characteristics
+  
+
+  @ManyToOne((type) => PortfolioSdg, { nullable: true })
+  @JoinColumn()
+  selectedSdg: PortfolioSdg
 
   @ManyToOne((type) => CMQuestion, { nullable: true })
   @JoinColumn()
