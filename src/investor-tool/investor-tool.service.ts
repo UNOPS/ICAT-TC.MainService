@@ -1713,7 +1713,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
 
   mapScaleScores(value: number) {
-    switch (+value) {
+    if (value !== null){
+      value = +value
+    }
+    switch (value) {
       case -1:
         return 'Minor Negative';
       case -2:
@@ -1737,7 +1740,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   mapSustainedScores(value: number) {
-    switch (+value) {
+    if (value !== null){
+      value = +value
+    }
+    switch (value) {
       case -1:
         return 'Unlikely (0-10%)';
       case 0:
@@ -1750,8 +1756,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Very likely (90-100%)';
       case 4:
         return 'Certainly (100%)'
-      default: 
+      case null:
+        return 'Empty'
+      default:
         return value.toString();
+    }
+  }
+
+  async saveSectorsCovered(sectors: InvestorSector[]){
+    let res = await this.investorSectorRepo.save(sectors)
+    if (res) {
+      return true
+    } else {
+      return false
     }
   }
 }

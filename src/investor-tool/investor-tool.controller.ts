@@ -182,6 +182,11 @@ export class InvestorToolController {
     },);
   }
 
+  @Post('save-sectors-covered')
+  async saveSectorsCovered(@Body() req: SectorsCoverdDto){
+    return await this.investorToolService.saveSectorsCovered(req.sectors)
+  }
+
 
 
 }
