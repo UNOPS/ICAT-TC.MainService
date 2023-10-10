@@ -41,9 +41,13 @@ export class ReportContentOne {
     opportunities:string="";
     assessmetType:string="";
     assessmentBoundary:string="";
-    impactCoverd:string=""
+    impactCoverd:string="";
+    sectorCoverd:string="";
+    geograpycalCover:string="";
+    principles:string="";
 
-
+    understanPolicyOrActions :object[]=[];
+    barriers:object[]=[];
     policyOrActionsDetails:object[]=[];
     contextOfPolicy :object[]=[];
     prossescharacteristics:object[]=[];
@@ -57,6 +61,13 @@ export class ReportContentTwo {
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2
+    scale_ghg:object[]=[]
+    scale_sd:object[]=[]
+    sustained_ghg:object[]=[]
+    sustained_sd:object[]=[]
+    scale_adaptation:object[]=[]
+    sustained_adaptation:object[]=[]
+
     prossesExAnteAssesment:object[]=[];
     outcomeExAnteAssesment:object[]=[];
     prossesExAnteAnalysis:object[]=[]; 
