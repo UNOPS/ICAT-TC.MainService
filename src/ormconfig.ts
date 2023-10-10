@@ -75,10 +75,7 @@ export const config: ConnectionOptions = {
 
 /*  username: 'root',
  password: 'pradeep123#',
- database: 'tc-main',   */
-//  username: 'root',
-//  password: 'pradeep123#',
-//  database: 'tc-main',  
+ database: 'tc-main',   */ 
            username: 'sqluser',
    password: 'password',
     database: 'tc-main-new3'  , 
@@ -89,8 +86,7 @@ export const config: ConnectionOptions = {
 
   //  username: 'root',
   //  database: 'tc-main', 
-  //  password: '7860150',  
-   // database: 'tc-main-new3',
+  //  password: '7860150',  ,
 
   
   autoLoadEntities: true, 
@@ -103,7 +99,7 @@ ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters
 PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: true,  
+  synchronize: false,  
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
