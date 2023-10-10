@@ -1335,12 +1335,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number,
-      aggregatedScore:any,
+      aggregatedScore:{
+        name: string
+        value: number|null
+      },
     } = {
       processData: [],
       processScore: 0,
       outcomeScore: 0,
-      aggregatedScore:null,
+      aggregatedScore:{
+        name: '',
+        value: null
+      },
       outcomeData: []
     }
 
@@ -1386,6 +1392,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     //Assigning values 
     let total_cat_weight = 0;
     let process_score = 0;
+    let sdgArray =new Array()
     for (let category of categoryDataArray) {
       let total_char_weight = 0
       let cat_score = 0
@@ -1521,7 +1528,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (sdg_count != 0) {
           // console.log(isSutained,category.code)
           category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; //round down
-          total_outcome_cat_weight += category.category_weight * category.category_score.value;
+          sdgArray.push(category)
+          // total_outcome_cat_weight += category.category_weight * category.category_score.value;
           // console.log(category.category, category.category_weight * category.category_score.value)
         }
 
@@ -1544,27 +1552,33 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         else {
           category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
+          
           // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
     }
+    
     let aggre_Score =0;
     let sdg_count_aggre =0
-    for (let category of outcomeArray){
-      if (category.isSDG && category.category_score.value!=undefined){
-        aggre_Score +=category.category_score.value
+    let final_aggre_score =0
+    for (let category of sdgArray){
+        aggre_Score += category.category_score.value
         sdg_count_aggre++
-      }
     }
     if(sdg_count_aggre!=0){
-      finalProcessDataArray.aggregatedScore =aggre_Score/sdg_count_aggre;
+      finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/sdg_count_aggre);
+      finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre))
+      total_outcome_cat_weight += 50*final_aggre_score;
+      console.log("22")
     }
     else{
-      aggre_Score = null;
+      finalProcessDataArray.aggregatedScore.value = null;
+      finalProcessDataArray.aggregatedScore.name = '-'
+      console.log("11")
     }
-    finalProcessDataArray.aggregatedScore = aggre_Score;
     finalProcessDataArray.outcomeData = outcomeArray;
     finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+    
     await this.assessmentRepo
     .createQueryBuilder()
     .update(Assessment)
