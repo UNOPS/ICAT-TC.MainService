@@ -3,6 +3,8 @@ import { CMAnswer } from "../entity/cm-answer.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { Institution } from "src/institution/entity/institution.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
+import { Portfolio } from "src/portfolio/entities/portfolio.entity";
+import { PortfolioSdg } from "src/investor-tool/entities/portfolio-sdg.entity";
 
 export class CMResultDto {
     question: CMQuestion
@@ -14,7 +16,8 @@ export class CMResultDto {
     sdgIndicator: string
     startingSituation: string
     expectedImpact: string
-    selectedSdg: string
+    // selectedSdgLength: number
+    selectedSdg: PortfolioSdg = new PortfolioSdg()
     selectedScore: scoreDto
     filePath: string
     isGHG: boolean
@@ -27,6 +30,7 @@ export class CMResultDto {
 export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
+
 }
 
 export class CalculateDto {
