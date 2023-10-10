@@ -69,24 +69,25 @@ export const config: ConnectionOptions = {
   host: 'localhost',
   port: 3306,
 
-  /* username: 'root',
-  password: 'TCtool23#',
-  database: 'main', */
 
 /*  username: 'root',
  password: 'pradeep123#',
- database: 'tc-main',   */ 
-           username: 'sqluser',
-   password: 'password',
-    database: 'tc-main-new3'  , 
-      /* username: 'root',
+ database: 'tc-main',   */
+//  username: 'root',
+//  password: 'pradeep123#',
+//  database: 'tc-main',  
+  //          username: 'sqluser',
+  //  password: 'password',
+  //   database: 'tc-main-new3' */    
+      username: 'root',
       password: '1997',
-      database: 'tc_new', */
+      database: 'tc_new',
      
 
   //  username: 'root',
   //  database: 'tc-main', 
-  //  password: '7860150',  ,
+  //  password: '7860150',  
+   // database: 'tc-main-new3',
 
   
   autoLoadEntities: true, 
