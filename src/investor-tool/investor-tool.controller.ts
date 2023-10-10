@@ -78,6 +78,10 @@ export class InvestorToolController {
   @UseGuards(JwtAuthGuard)
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
+
+    if(tool =="All Option"){
+      return await this.investorToolService.findAllSectorCount();
+    }
     return await this.investorToolService.findSectorCount(tool);
   }
   @UseGuards(JwtAuthGuard)
@@ -171,12 +175,31 @@ export class InvestorToolController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('sdgSumAllCalculateInvester')
+  async sdgSumAllCalculate() {
+    return await this.investorToolService.sdgSumALLCalculate();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
     @Query('limit') limit: number
     ):Promise<any> {
     return await this.investorToolService.getDashboardData( {
+      limit: limit,
+      page: page,
+    },);
+  }
+
+  
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-data')
+  async getDashboardAllData(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+    ):Promise<any> {
+    return await this.investorToolService.getDashboardAllData( {
       limit: limit,
       page: page,
     },);
