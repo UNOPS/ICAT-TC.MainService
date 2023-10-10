@@ -4,6 +4,7 @@ import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { InvestorTool } from "./investor-tool.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { AssessmentCMDetail } from "src/carbon-market/entity/assessment-cm-detail.entity";
 
 @Entity()
 export class InvestorSector extends BaseTrackingEntity {
@@ -14,9 +15,13 @@ export class InvestorSector extends BaseTrackingEntity {
     @Column({ nullable: true })
     name: string;
 
-    @ManyToOne((type) => InvestorTool, { cascade: false })
+    @ManyToOne((type) => InvestorTool, { cascade: false, nullable: true})
     @JoinColumn({ name: 'investortool_id' })
     investorTool?: InvestorTool;
+
+    @ManyToOne((type) => AssessmentCMDetail, { cascade: false, nullable: true })
+    @JoinColumn()
+    assessmentCMDetail?: AssessmentCMDetail;
 
     @ManyToOne((type) => Sector, { cascade: false,eager:true })
     @JoinColumn({ name: 'sector_id' })
