@@ -1315,7 +1315,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   mapNameAndValue(name, value){
     if (value === null || value === '-' || value === undefined || Number.isNaN(value)){
-      return {name: 'Empty', value: null}
+      return {name: 'Outside assessment boundaries', value: null}
     } else {
       return {name: value + ' - ' + name, value: value}
     }
