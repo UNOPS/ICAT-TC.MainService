@@ -79,7 +79,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     if (createInvestorToolDto.investortool) {
       let assessment = createInvestorToolDto.investortool.assessment;
-      console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
+      // console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
       let investor = new InvestorTool();
       investor.assessment = assessment;
       investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
@@ -104,7 +104,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         investorImpacts.name = impacts.name;
         let a = await this.investorImpactRepo.save(investorImpacts)
       }
-      console.log("created investor tool,", createInvestorToolDto)
+      // console.log("created investor tool,", createInvestorToolDto)
       return result;
     }
     else {
@@ -1293,10 +1293,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number,
+      aggregatedScore:any,
     } = {
       processData: [],
       processScore: 0,
       outcomeScore: 0,
+      aggregatedScore:null,
       outcomeData: []
     }
 
@@ -1504,6 +1506,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       }
     }
+    let aggre_Score =0;
+    let sdg_count_aggre =0
+    for (let category of outcomeArray){
+      if (category.isSDG && category.category_score.value!=undefined){
+        aggre_Score +=category.category_score.value
+        sdg_count_aggre++
+      }
+    }
+    if(sdg_count_aggre!=0){
+      finalProcessDataArray.aggregatedScore =aggre_Score/sdg_count_aggre;
+    }
+    else{
+      aggre_Score = null;
+    }
+    finalProcessDataArray.aggregatedScore = aggre_Score;
     finalProcessDataArray.outcomeData = outcomeArray;
     finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
     await this.assessmentRepo
