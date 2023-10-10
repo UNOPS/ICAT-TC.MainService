@@ -4,7 +4,7 @@ import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
-import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
+import { FinalInvestorAssessmentDto, SectorsCoverdDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -169,9 +169,9 @@ export class InvestorToolController {
     // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
   @UseGuards(JwtAuthGuard)
-  @Get('sdgSumCalculateInvester')
-  async sdgSumCalculate() {
-    return await this.investorToolService.sdgSumCalculate();
+  @Get('sdgSumCalculateInvester/:tool')
+  async sdgSumCalculate(@Param('tool') tool: string) {
+    return await this.investorToolService.sdgSumCalculate(tool);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -192,6 +192,10 @@ export class InvestorToolController {
     },);
   }
 
+  @Post('save-sectors-covered')
+  async saveSectorsCovered(@Body() req: SectorsCoverdDto){
+    return await this.investorToolService.saveSectorsCovered(req.sectors)
+  }
   
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-all-data')
