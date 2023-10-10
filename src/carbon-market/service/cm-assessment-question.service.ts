@@ -228,6 +228,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessment',
         'assessment.id = aq.assessmentId'
       )
+      .leftJoinAndSelect(
+        'aq.selectedSdg',
+        'selectedSdg',
+        'aq.selectedSdgId = selectedSdg.id'
+      )
       .innerJoinAndSelect(
         'aq.characteristic',
         'characteristic',
@@ -313,14 +318,19 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
     let sdgs = await this.getSelectedSDGs(assessementId)
     let obj = {}
+    let sdgs_score = {}
     for (let cat of categories) {
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
+      // console.log("319", qs)
       let score: number
       if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
         // selected_sdg_count = [... new Set(qs.map(q => q.selectedSdg))].length
         selected_sdg_count = sdgs.length
         score = qs.reduce((accumulator, object) => {
+          console.log("331", +object.assessmentAnswers[0]?.selectedScore)
+          if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
+          else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
           return accumulator + +object.assessmentAnswers[0]?.selectedScore;
         }, 0);
         score = score / selected_sdg_count / 3
@@ -335,6 +345,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         weight: qs[0].characteristic.category.cm_weight
       }
     }
+    
+    for (let key of Object.keys(sdgs_score)){
+      sdgs_score[key] = Math.floor(sdgs_score[key]/6)
+    }
+
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
     let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0; 
     let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
@@ -368,7 +383,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       scale_sdg_score: Math.round(scale_sdg_score),
       sustained_sdg_score: Math.round(sustained_sdg_score),
       scale_adaptation_score: Math.round(scale_adaptation_score),
-      sustained_adaptation_score: Math.round(sustained_adaptation_score)
+      sustained_adaptation_score: Math.round(sustained_adaptation_score),
+      sdgs_score: sdgs_score
     }
   }
 
