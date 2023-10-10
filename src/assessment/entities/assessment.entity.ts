@@ -8,7 +8,9 @@ import { VerificationStatus } from "src/verification/entity/verification-status.
 import { User } from "src/users/entity/user.entity";
 import { MethodologyAssessmentParameters } from "src/methodology-assessment/entities/methodology-assessment-parameters.entity";
 import { InvestorAssessment } from "src/investor-tool/entities/investor-assessment.entity";
-// import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
+import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
+import { AssessmentBarriers } from "src/methodology-assessment/entities/assessmentbarriers.entity";
+import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 @Entity()
 export class Assessment extends BaseTrackingEntity{
 
@@ -102,6 +104,12 @@ export class Assessment extends BaseTrackingEntity{
   outcome_score: number;
 
   investor_assessment:InvestorAssessment[]=[]
+
+  investor_tool:InvestorTool;
+
+  investor_sector:InvestorSector[];
+
+  assessment_barriers:AssessmentBarriers[];
 
 }
 

@@ -90,7 +90,7 @@ export const config: ConnectionOptions = {
    username: 'root',
    database: 'tc-main', 
    password: '7860150',  
-   // database: 'tc-main-new3',
+   // database: 'tc-main-new3', 
 
   
   autoLoadEntities: true, 

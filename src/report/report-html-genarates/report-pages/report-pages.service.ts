@@ -64,22 +64,17 @@ export class ReportPagesService {
   <div class="content">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	DEFINING THE ASSESSMENT (PART I & II) ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
-  
-    
-    <div class="table-of-content-sub-header-item"><div >1.1	General information about the assessment ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.2	Describe the policy or action  ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.3	Understanding the context of policy or action  ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.4	Choosing transformational change characteristics to assess ....................................................................................................................................................</div><div ><bdi>.....12</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
   
 
-    <div class="table-of-content-header-item"><div >2.	IMPACT ASSESSMENT (PART III).................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.1	Assessment of the starting situation  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Ex-ante assessment....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.3	Ex-post assessment....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Monitoring (Part IV)....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.5	Decision making and using results (Part V) ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-
+    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
   </div>
 
   
@@ -100,71 +95,16 @@ export class ReportPagesService {
     let pageNumber = 5;
     const policyOrActionsDetails = contentOne.policyOrActionsDetails;
 
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
     const page_1 = `  <div id="page_9" class="page text-center" >
-  ${header}
-  <div class="content">
-  <div  class="main_header text-start">1 INTRODUCTION</div>
-  <div  class="main_header_sub text-start">1.1	General information about the assessment</div> 
-  <div class="list">  
-  <ul>
-  <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Name of Policy: ${contentOne.policyName?contentOne.policyName:'-'}</p>
-  </blockquote></li>
-  <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesment done by: ${
-      contentOne.assesmentPersonOrOrganization? contentOne.assesmentPersonOrOrganization:'-'
-    }</p>
-  </blockquote></li>
-  <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesmet Year: ${contentOne.assessmentYear?contentOne.assessmentYear:'-'}</p>
-  </blockquote></li>
-  <li><blockquote class="blockquote  ">
-  <p class="mb-0 lh-base">Audience: ${contentOne.intendedAudience?contentOne.intendedAudience:'-'}</p>
-</blockquote>
-</li>
-<li><blockquote class="blockquote  ">
-<p class="mb-0 lh-base">Objectives: ${contentOne.objectives.length>0?'':'-'}</p>
-</blockquote>${contentOne.objectives.length>0?`<ul>${contentOne.objectives.map(a=>`<li><i class="bi bi-dash"></i><blockquote class="blockquote  ">
-<p class="mb-0 lh-base">${a.objectives.name}</p>
-</blockquote></li>`).join('')}
-</ul>`:''}
-
-</li>
-<li><blockquote class="blockquote  ">
-<p class="mb-0 lh-base">Opportunities : ${contentOne.opportunities?contentOne.opportunities:'-'}</p>
-</blockquote></li>
-  <li><blockquote class="blockquote  ">
-    <p class="mb-0 lh-base">Assesment type: ${contentOne.assessmetType?contentOne.assessmetType:'-'}</p>
-  </blockquote></li>
-  <li><blockquote class="blockquote  ">
-  <p class="mb-0 lh-base">Boundary : ${contentOne.assessmentBoundary?contentOne.assessmentBoundary:'-'}</p>
-</blockquote></li>
-<li><blockquote class="blockquote  ">
-<p class="mb-0 lh-base">Impacts covered: ${contentOne.impactCoverd?contentOne.impactCoverd:'-'}</p>
-</blockquote></li>
-</ul>
-</div>
-
-
-
-  
-  </div>
-  
-  ${footer.replace('#pageNumber#', pageNumber.toString())}
-  
-   </div>`;
-
-
-
-
-   const page_2 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-  
+   <div  class="main_header text-start">1 Single Intervention Information</div>
  
- <div  class="main_header_sub text-start">1.2	Describe the policy or action </div> 
+ <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
         <div class="report-table-sm">
-        <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+       
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
@@ -194,54 +134,16 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', pageNumber.toString())}
    
     </div>`;
-    const understanPolicyOrActions = [
-      {
-        Time_periods: 'Long-term (≥15 years)',
-        description: 'description 1',
-      },
-      {
-        Time_periods: 'Medium-term (≥5 years and greater than 15 years)',
-        description: 'description 2',
-      },
-      {
-        Time_periods: 'Short-term (greater than 5 years)',
-        description: 'description 3',
-      },
-    ];
-    const barriers = [
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-    ];
-    const page_3 = `  <div id="page_9" class="page text-center" >
+    const understanPolicyOrActions = contentOne.understanPolicyOrActions;
+    const barriers = contentOne.barriers;
+    const page_2 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    
-   <div  class="main_header_sub text-start">1.3	Understanding the context of policy or action </div> 
-          <blockquote class=" paragraph blockquote text-start ">
-            <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-              took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-              </p>
-          </blockquote>
+   <div  class="main_header_sub text-start">1.2	Understanding the context of policy or action </div> 
+      
         
         <div class="report-table-sm">
-        <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
@@ -274,14 +176,8 @@ export class ReportPagesService {
           </tbody>
         </table>
       </div>
-      <blockquote class=" paragraph blockquote text-start ">
-      <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-       Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-        </p>
-    </blockquote>
+     
     <div class="report-table-sm">
-    <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -311,6 +207,72 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', pageNumber.toString())}
    
     </div>`;
+
+    const page_3 = `  <div id="page_9" class="page text-center" >
+  ${header}
+  <div class="content">
+
+  <div  class="main_header_sub text-start">1.3	Assessment information</div> 
+
+  <div class="report-table-sm">
+  <table class="table  table-bordered border-dark">
+    <thead class="table-primary  border-dark">
+      <tr>
+        <th scope="col">Information</th>
+        <th scope="col">Description </th>
+      
+      </tr>
+    </thead>
+    <tbody class="table-active">
+    <tr><td>
+    Assesment type
+    </td><td> 
+    ${
+      contentOne.assessmetType ? contentOne.assessmetType : 'N/A'
+    }
+    </td></tr>
+    <tr><td>
+    Geographical area covered
+    </td><td> 
+    ${
+      contentOne.geograpycalCover ? contentOne.geograpycalCover : 'N/A'
+    }
+    </td></tr>
+    <tr><td>
+    Sectors covered 
+    </td><td> 
+    ${
+      contentOne.sectorCoverd ? contentOne.sectorCoverd : 'N/A'
+    }
+    </td></tr>
+    <tr><td>
+    Opportunities for stakeholders to participate in the assessment
+    </td><td> 
+    ${
+      contentOne.opportunities ? contentOne.opportunities : 'N/A'
+    }
+    </td></tr>
+    <tr><td>
+    Principles on which the assessment is based
+    </td><td> 
+    ${
+      contentOne.principles ? contentOne.principles : 'N/A'
+    }
+    </td></tr>
+    
+    </tbody>
+  </table>
+</div>
+
+
+
+
+  
+  </div>
+  
+  ${footer.replace('#pageNumber#', pageNumber.toString())}
+  
+   </div>`;
 
     const catagory_out = contentOne.outcomecharacteristics;
 
@@ -345,19 +307,19 @@ export class ReportPagesService {
           if (!index) {
             return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
-      <td>${b.name?b.name:'-'}</td>
-      <td>${b.comment?b.comment:"-"}</td>
-      <td>${b.relevance?b.relevance:"-"}</td>
+      <td>${b.name ? b.name : '-'}</td>
+      <td>${b.comment ? b.comment : '-'}</td>
+      <td>${b.relevance ? b.relevance : '-'}</td>
      </tr>`;
           } else {
             return `<tr>
-            <td>${b.name?b.name:'-'}</td>
-            <td>${b.comment?b.comment:"-"}</td>
-            <td>${b.relevance?b.relevance:"-"}</td>
+            <td>${b.name ? b.name : '-'}</td>
+            <td>${b.comment ? b.comment : '-'}</td>
+            <td>${b.relevance ? b.relevance : '-'}</td>
             </tr>`;
           }
         })
-        .join('')
+        .join(''),
     )
     .join('')}
   
@@ -371,8 +333,8 @@ export class ReportPagesService {
     
      </div>`;
 
-     const catagory_process = contentOne.prossescharacteristics;
-     const page_5= `  <div id="page_9" class="page text-center" >
+    const catagory_process = contentOne.prossescharacteristics;
+    const page_5 = `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
    
@@ -403,15 +365,15 @@ export class ReportPagesService {
            if (!index) {
              return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
-       <td>${b.name?b.name:'-'}</td>
-       <td>${b.comment?b.comment:"-"}</td>
-       <td>${b.relevance?b.relevance:"-"}</td>
+       <td>${b.name ? b.name : '-'}</td>
+       <td>${b.comment ? b.comment : '-'}</td>
+       <td>${b.relevance ? b.relevance : '-'}</td>
       </tr>`;
            } else {
              return `<tr>
-             <td>${b.name?b.name:'-'}</td>
-             <td>${b.comment?b.comment:"-"}</td>
-             <td>${b.relevance?b.relevance:"-"}</td>
+             <td>${b.name ? b.name : '-'}</td>
+             <td>${b.comment ? b.comment : '-'}</td>
+             <td>${b.relevance ? b.relevance : '-'}</td>
              </tr>`;
            }
          })
@@ -428,7 +390,7 @@ export class ReportPagesService {
      ${footer.replace('#pageNumber#', pageNumber.toString())}
      
       </div>`;
-    return page_1 + page_2 + page_3+page_4+page_5;
+    return page_1 + page_2 + page_3;
   }
 
   contentTwo(
@@ -437,19 +399,15 @@ export class ReportPagesService {
     contentTwo: ReportContentTwo,
   ): string {
     let pageNumber = 5;
-    const prossesAssesmentStartingSituation = contentTwo.prossesAssesmentStartingSituation;
+    const prossesAssesmentStartingSituation =
+      contentTwo.prossesAssesmentStartingSituation;
 
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
-  <div  class="main_header text-start">2.	IMPACT ASSESSMENT (PART III)</div>
-  <div  class="main_header_sub text-start">2.1	Assessment of the starting situation </div> 
-  <blockquote class=" paragraph blockquote text-start ">
-  <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-   Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-    took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-    </p>
-</blockquote>
+  <div  class="main_header text-start">2.	IMPACT ASSESSMENT</div>
+  <div  class="main_header_sub text-start">2.1	Process characteristics assessment   </div> 
+
 
 
 <div class="report-table-sm">
@@ -459,7 +417,10 @@ export class ReportPagesService {
     <tr>
       <th scope="col">Category</th>
       <th scope="col">Process Characteristic</th>
-      <th scope="col">Indicators</th>
+      <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+      <th scope="col">Likelihood score  </th>
+      <th scope="col">Rationale justifying the score  </th>
+      <th scope="col">Supporting Documents Supplied </th>
     </tr>
   </thead>
   <tbody class="table-active">
@@ -470,14 +431,24 @@ export class ReportPagesService {
           if (!index) {
             return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
-      <td>${b.name?b.name:'-'}</td>
-      <td>${b.indicator?b.indicator:"-"}</td>
+      <td>${b.name ? b.name : '-'}</td>
+      <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+      <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+      <td>${
+        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+      }</td>
     
      </tr>`;
           } else {
             return `<tr>
-            <td>${b.name?b.name:'-'}</td>
-            <td>${b.indicator?b.indicator:"-"}</td>
+            <td>${b.name ? b.name : '-'}</td>
+      <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+      <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+      <td>${
+        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+      }</td>
             </tr>`;
           }
         })
@@ -492,12 +463,7 @@ export class ReportPagesService {
   </tbody>
 </table>
 </div>
-<blockquote class=" paragraph blockquote text-start ">
-<p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
- Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-  took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-  </p>
-</blockquote>
+
 
 
   </div>
@@ -506,18 +472,14 @@ export class ReportPagesService {
   
    </div>`;
 
-   const outcomeAssesmentStartingSituation = contentTwo.outcomeAssesmentStartingSituation;
+    const scale_ghg =
+      contentTwo.scale_ghg;
     const page_2 = `  <div id="page_5" class="page text-center" >
    ${header}
    <div class="content">
-  
+   <div  class="main_header_sub text-start">2.1	Outcomes characteristics assessment  </div> 
     
-   <blockquote class=" paragraph blockquote text-start ">
-   <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-     took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-     </p>
- </blockquote>
+
  
  
  <div class="report-table-sm">
@@ -527,31 +489,38 @@ export class ReportPagesService {
      <tr>
        <th scope="col">Category</th>
        <th scope="col">Outcome Characteristic</th>
-       <th scope="col">Indicators </th>
+       <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+       <th scope="col">Score  </th>
+       <th scope="col">Rationale justifying the score </th>
      </tr>
    </thead>
    <tbody class="table-active">
-   ${outcomeAssesmentStartingSituation
-    .map((a: { rows: number; name: string; characteristics: any[] }) =>
-      a.characteristics
-        .map((b, index) => {
-          if (!index) {
-            return `<tr>
+   ${scale_ghg
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
-      <td>${b.name?b.name:'-'}</td>
-      <td>${b.indicator?b.indicator:"-"}</td>
+      <td>${b.name ? b.name : '-'}</td>
+      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      <td>${b.score ? b.score : '-'}</td>
+      <td>${b.ustifying ? b.ustifying : '-'}</td>
+      
     
      </tr>`;
-          } else {
-            return `<tr>
-            <td>${b.name?b.name:'-'}</td>
-            <td>${b.indicator?b.indicator:"-"}</td>
+           } else {
+             return `<tr>
+             <td>${b.name ? b.name : '-'}</td>
+             <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+             <td>${b.score ? b.score : '-'}</td>
+             <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-          }
-        })
-        .join(''),
-    )
-    .join('')}
+           }
+         })
+         .join(''),
+     )
+     .join('')}
  
  
    </tbody>
@@ -570,7 +539,9 @@ export class ReportPagesService {
     const page_3 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
-    <div  class="main_header_sub text-start">2.2	${contentTwo.assesmentType} assessment </div> 
+    <div  class="main_header_sub text-start">2.2	${
+      contentTwo.assesmentType
+    } assessment </div> 
     <blockquote class=" paragraph blockquote text-start ">
     <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
@@ -600,20 +571,24 @@ export class ReportPagesService {
             if (!index) {
               return `<tr>
         <td rowspan="${a.rows}" >${a.name}</td>
-        <td>${b.name?b.name:'-'}</td>
-        <td>${b.score?b.score:"-"}</td>
-        <td>${b.justifying_score?b.justifying_score:"-"}</td>
-        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
-        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
+        <td>${
+          b.indicator_starting_value ? b.indicator_starting_value : '-'
+        }</td>
+        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
       
        </tr>`;
             } else {
               return `<tr>
-              <td>${b.name?b.name:'-'}</td>
-              <td>${b.score?b.score:"-"}</td>
-        <td>${b.justifying_score?b.justifying_score:"-"}</td>
-        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
-        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+              <td>${b.name ? b.name : '-'}</td>
+              <td>${b.score ? b.score : '-'}</td>
+        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
+        <td>${
+          b.indicator_starting_value ? b.indicator_starting_value : '-'
+        }</td>
+        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
               </tr>`;
             }
           })
@@ -634,8 +609,7 @@ export class ReportPagesService {
     
      </div>`;
 
-
-     const outcomeExAnteAssesment = contentTwo.outcomeExAnteAssesment;
+    const outcomeExAnteAssesment = contentTwo.outcomeExAnteAssesment;
 
     const page_4 = `  <div id="page_5" class="page text-center" >
     ${header}
@@ -671,20 +645,24 @@ export class ReportPagesService {
             if (!index) {
               return `<tr>
         <td rowspan="${a.rows}" >${a.name}</td>
-        <td>${b.name?b.name:'-'}</td>
-        <td>${b.score?b.score:"-"}</td>
-        <td>${b.justifying_score?b.justifying_score:"-"}</td>
-        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
-        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
+        <td>${
+          b.indicator_starting_value ? b.indicator_starting_value : '-'
+        }</td>
+        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
       
        </tr>`;
             } else {
               return `<tr>
-              <td>${b.name?b.name:'-'}</td>
-              <td>${b.score?b.score:"-"}</td>
-        <td>${b.justifying_score?b.justifying_score:"-"}</td>
-        <td>${b.indicator_starting_value?b.indicator_starting_value:"-"}</td>
-        <td>${b.indicator_value?b.indicator_value:"-"}</td>
+              <td>${b.name ? b.name : '-'}</td>
+              <td>${b.score ? b.score : '-'}</td>
+        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
+        <td>${
+          b.indicator_starting_value ? b.indicator_starting_value : '-'
+        }</td>
+        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
               </tr>`;
             }
           })
@@ -705,8 +683,7 @@ export class ReportPagesService {
     
      </div>`;
 
-
-     const prossesDescribeResult = contentTwo.prossesDescribeResult;
+    const prossesDescribeResult = contentTwo.prossesDescribeResult;
     const page_5 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
@@ -734,23 +711,22 @@ export class ReportPagesService {
      </thead>
      <tbody class="table-active">
      ${prossesDescribeResult
-      .map((a: {
-        relative_importance: any;
-        score: any;
-        justifying_score: any;  name: string;  
-}) =>
-        {
-           
-              return `<tr>
-              <td>${a.name?a.name:'-'}</td>
-              <td>${a.score?a.score:"-"}</td>
-             <td>${a.justifying_score?a.justifying_score:"-"}</td>
-             <td>${a.relative_importance?a.relative_importance:"-"}</td>
+       .map(
+         (a: {
+           relative_importance: any;
+           score: any;
+           justifying_score: any;
+           name: string;
+         }) => {
+           return `<tr>
+              <td>${a.name ? a.name : '-'}</td>
+              <td>${a.score ? a.score : '-'}</td>
+             <td>${a.justifying_score ? a.justifying_score : '-'}</td>
+             <td>${a.relative_importance ? a.relative_importance : '-'}</td>
               </tr>`;
-            
-          }
-      )
-      .join('')}
+         },
+       )
+       .join('')}
     
    
      </tbody>
@@ -765,7 +741,7 @@ export class ReportPagesService {
      
       </div>`;
 
-      const outcomeDescribeResult = contentTwo.outcomeDescribeResult;
+    const outcomeDescribeResult = contentTwo.outcomeDescribeResult;
     const page_6 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
@@ -793,21 +769,20 @@ export class ReportPagesService {
   </thead>
   <tbody class="table-active">
   ${outcomeDescribeResult
-    .map((a: {
-      relative_importance: any;
-      score: any;
-      justifying_score: any;  name: string;  
-}) =>
-      {
-         
-            return `<tr>
-            <td>${a.name?a.name:'-'}</td>
-            <td>${a.score?a.score:"-"}</td>
-           <td>${a.justifying_score?a.justifying_score:"-"}</td>
+    .map(
+      (a: {
+        relative_importance: any;
+        score: any;
+        justifying_score: any;
+        name: string;
+      }) => {
+        return `<tr>
+            <td>${a.name ? a.name : '-'}</td>
+            <td>${a.score ? a.score : '-'}</td>
+           <td>${a.justifying_score ? a.justifying_score : '-'}</td>
           
             </tr>`;
-          
-        }
+      },
     )
     .join('')}
  
@@ -1312,10 +1287,10 @@ export class ReportPagesService {
     return (
       page_1 +
       page_2 +
-      page_3 +
-      page_4 +
-      page_5 +
-      page_6 +
+      // page_3 +
+      // page_4 +
+      // page_5 +
+      // page_6 +
       // page_7 +
       // page_8 +
       // page_9 +

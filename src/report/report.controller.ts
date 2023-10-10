@@ -71,6 +71,29 @@ export class ReportController {
     );
   }
 
+  // @UseGuards(JwtAuthGuard)
+  // @Post('generate-report')
+  // async generateReport(
+  //   @Body() req: CreateReportDto
+  // ): Promise<any> {
+  //   let countryIdFromTocken: number
+  //   [countryIdFromTocken] =
+  //     this.tokenDetails.getDetails([
+  //       TokenReqestType.countryId,
+  //     ]);
+  //   req.reportTitle = req.reportName
+  //   req.reportName = req.reportName + '.pdf'
+  //   const reprtDto: ReportDto = await this.reportService.genarateReportDto(
+  //     req,
+  //   );
+  //   const report = await this.reportGenarateService.reportGenarate(
+  //     reprtDto.reportName,
+  //     await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
+  //   )
+  //   const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+  //   return response
+  // }
+
   @UseGuards(JwtAuthGuard)
   @Post('generate-report')
   async generateReport(
@@ -129,7 +152,7 @@ export class ReportController {
     createReportDto.assessmentId = 13;
     let asssCharac = await this.assessmentService.getCharacteristicasforReport(
       id,
-      'outcome', ''
+      'outcome', '',''
     );
     let catagory = [];
     for (let parameter of asssCharac.parameters) {
