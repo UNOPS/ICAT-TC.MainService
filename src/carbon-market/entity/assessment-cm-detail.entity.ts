@@ -31,8 +31,8 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
    @Column({nullable:true})
   sectoral_boundary: string; 
 
-  @Column({ nullable: true })
-  geographicalAreasCovered: string;
+  // @Column({ nullable: true })
+  // geographicalAreasCovered: string;
 
   // @Column()
   // temporal_boundary: string;
