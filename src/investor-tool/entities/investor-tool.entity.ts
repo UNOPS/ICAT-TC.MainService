@@ -15,8 +15,8 @@ export class InvestorTool extends BaseTrackingEntity {
     @Column({ nullable: true })
     level_of_implemetation: string;
 
-    @Column({ nullable: true })
-    geographical_areas_covered: string;
+    // @Column({ nullable: true })
+    // geographical_areas_covered: string;
 
     @Column({ nullable: true })
     national_country: string;

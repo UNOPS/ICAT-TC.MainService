@@ -4,7 +4,7 @@ import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
-import { FinalInvestorAssessmentDto, SectorsCoverdDto } from './dto/final-investor-assessment.dto';
+import { FinalInvestorAssessmentDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -192,9 +192,9 @@ export class InvestorToolController {
     },);
   }
 
-  @Post('save-sectors-covered')
-  async saveSectorsCovered(@Body() req: SectorsCoverdDto){
-    return await this.investorToolService.saveSectorsCovered(req.sectors)
+  @Post('save-tool-multiselect')
+  async saveToolsMultiSelect(@Body() req: ToolsMultiselectDto){
+    return await this.investorToolService.saveToolsMultiSelect(req)
   }
   
   @UseGuards(JwtAuthGuard)
