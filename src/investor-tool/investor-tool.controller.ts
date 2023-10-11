@@ -28,6 +28,11 @@ export class InvestorToolController {
     return await this.investorToolService.findAllSectorData(assessmentId);
   }
 
+  @Get('findAllGeographicalAreaData/:assessmentId')
+  async findAllGeographicalAreaData(@Param('assessmentId') assessmentId: number) {
+    return await this.investorToolService.findAllGeographicalAreaData(assessmentId);
+  }
+
   @Get('findAllImpactCoverData/:assessmentId')
   async findAllImpactCoverData(@Param('assessmentId') assessmentId: number) {
     return await this.investorToolService.findAllImpactCoverData(assessmentId);
