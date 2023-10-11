@@ -143,6 +143,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     });
   }
 
+  async findAllGeographicalAreaData(assessmentId: number) {
+    return this.geographicalAreaRepo.find({
+      relations: ['assessment'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
   async findAllImpactCoverData(assessmentId: number) {
     return this.investorImpactRepo.find({
       relations: ['assessment'],

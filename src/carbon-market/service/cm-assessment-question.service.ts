@@ -718,13 +718,19 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       // })
       // let score = tc_score * 100
       let score = (result.process_score + result.outcome_score?.outcome_score) / 2
+      let update_score = {}
+      if (result.process_score){
+        update_score = { tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score }
+      }
 
-      await this.assessmentRepo
-        .createQueryBuilder()
-        .update(Assessment)
-        .set({ tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score.outcome_score })
-        .where("id = :id", { id: assessmentId })
-        .execute()
+      if (update_score['tc_value']) {
+        await this.assessmentRepo
+          .createQueryBuilder()
+          .update(Assessment)
+          .set({ tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score })
+          .where("id = :id", { id: assessmentId })
+          .execute()
+      }
 
     }
 
