@@ -33,10 +33,10 @@ export class Assessment extends BaseTrackingEntity{
     tool: string;
 
     @Column({ nullable: true })
-    from: string;
+    from: Date;
 
     @Column({ nullable: true })
-    to: string;
+    to: Date;
 
     @Column({ nullable: true })
     assessment_method: string; //track , track 2

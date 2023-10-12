@@ -33,6 +33,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 const schema = {
   'id': {
@@ -67,7 +68,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     private userService: UsersService,
-    private methAssessService: MethodologyAssessmentService
+    private methAssessService: MethodologyAssessmentService,
+    private masterDataService: MasterDataService
 
   ) {
     super(repo)
@@ -625,12 +627,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async createFinalAssessmentIndirect(request: any): Promise<any> {
     console.log("request", request)
     let tool: any;
-    if (request[0].data[0].assessment.tool === 'Investment & Private Sector Tool') {
-      tool = Tool.Investor_tool
-    }
-    else if (request[0].data[0].assessment.tool === 'Portfolio Tool') {
-      tool = Tool.Portfolio_tool
-    }
+    // if (request[0].data[0].assessment.tool === 'Investment & Private Sector Tool') {
+    //   tool = Tool.Investor_tool
+    // }
+    // else if (request[0].data[0].assessment.tool === 'Portfolio Tool') {
+    //   tool = Tool.Portfolio_tool
+    // }
+
+    tool = request[0].data[0].assessment.tool
 
     for (let req of request) {
       for (let assess of req.data) {
@@ -1720,7 +1724,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return await sectorSum.getRawMany();
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
-    let tool = 'Investment & Private Sector Tool';
+    let tool = 'INVESTOR';
     let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null) '
     let user = this.userService.currentUser();
     const currentUser = await user;
