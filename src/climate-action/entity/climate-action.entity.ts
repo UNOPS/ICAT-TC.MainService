@@ -266,6 +266,9 @@ export class ClimateAction extends BaseTrackingEntity {
 
   @Column({ type: 'longtext', default: null, nullable: true })
   phase_of_transformation: string;
+  
+  @Column({ type: 'longtext', default: null, nullable: true })
+  change_in_system: string;
 
   //location
 

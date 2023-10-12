@@ -79,7 +79,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     if (createInvestorToolDto.investortool) {
       let assessment = createInvestorToolDto.investortool.assessment;
-      console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
+      // console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
       let investor = new InvestorTool();
       investor.assessment = assessment;
       investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
@@ -104,7 +104,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         investorImpacts.name = impacts.name;
         let a = await this.investorImpactRepo.save(investorImpacts)
       }
-      console.log("created investor tool,", createInvestorToolDto)
+      // console.log("created investor tool,", createInvestorToolDto)
       return result;
     }
     else {
@@ -265,7 +265,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                    if(item.value || item.justification){
                      item.investorAssessment =x
                      await this.indicatorDetailsRepo.save(item)
-                     console.log("saved",item.question.id, item.value,item.justification)
+                    //  console.log("saved",item.question.id, item.value,item.justification)
                    }
                  }
              })
@@ -954,6 +954,48 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return result;
   }
 
+  async findAllSectorCount(): Promise<any[]> {
+    // console.log(tool)
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+    let data = await this.investorSectorRepo
+      .createQueryBuilder('investorSector')
+      .leftJoinAndSelect('investorSector.assessment', 'assessment')
+      .leftJoinAndSelect('assessment.climateAction', 'intervention')
+      .leftJoinAndMapOne(
+        'assessment.user',
+        User,
+        'user',
+        'user.id = assessment.user_id',
+      )
+      .leftJoinAndMapOne(
+        'user.country',
+        Country,
+        'cntry',
+        'cntry.id = user.countryId',
+      )
+
+    if (isUserExternal) {
+      data.andWhere('user.id = :userId', { userId: currentUser.id })
+
+    }
+    else {
+      data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+
+    }
+
+    let result = await data
+      .leftJoinAndSelect('investorSector.sector', 'sector')
+      .select('sector.name', 'sector')
+      .addSelect('COUNT(investorSector.id)', 'count')
+      .groupBy('sector.name')
+      .having('sector IS NOT NULL')
+      .getRawMany();
+
+    return result;
+  }
+
   async getTCValueByAssessment(tool: string): Promise<any> {
     let user = this.userService.currentUser();
     const currentUser = await user;
@@ -1293,10 +1335,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number,
+      aggregatedScore:any,
     } = {
       processData: [],
       processScore: 0,
       outcomeScore: 0,
+      aggregatedScore:null,
       outcomeData: []
     }
 
@@ -1421,7 +1465,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
               isCalulate: (x.score == null) ? false : true,
-              sdg: (categoryData.isSDG) ? (x?.portfolioSdg?.name) : ''
+              sdg: (categoryData.isSDG) ? ('SDG ' + x?.portfolioSdg?.number + ' - ' + x?.portfolioSdg?.name) : ''
             }
           )
         }
@@ -1504,6 +1548,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       }
     }
+    let aggre_Score =0;
+    let sdg_count_aggre =0
+    for (let category of outcomeArray){
+      if (category.isSDG && category.category_score.value!=undefined){
+        aggre_Score +=category.category_score.value
+        sdg_count_aggre++
+      }
+    }
+    if(sdg_count_aggre!=0){
+      finalProcessDataArray.aggregatedScore =aggre_Score/sdg_count_aggre;
+    }
+    else{
+      aggre_Score = null;
+    }
+    finalProcessDataArray.aggregatedScore = aggre_Score;
     finalProcessDataArray.outcomeData = outcomeArray;
     finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
     await this.assessmentRepo
@@ -1587,16 +1646,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       where: { assessment: { id: assessmentId } },
     });
   }
-  async sdgSumCalculate(): Promise<any[]> {
+  async sdgSumCalculate(tool: string): Promise<any[]> {
 
-    let filter = 'assesment.tool="Investment & Private Sector Tool" '
+    let filter = 'assesment.tool= :tool '
 
 
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
-    console.log(userId, userCountryId)
 
     const sectorSum = this.assessmentRepo
     .createQueryBuilder('assesment')
@@ -1635,8 +1693,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
  
-    sectorSum.where(filter,{userId,userCountryId})
+    sectorSum.where(filter,{tool: tool, userId: userId, userCountryId: userCountryId})
       .select('sdg.name', 'sdg')
+      .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasses.id)', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
@@ -1677,6 +1736,99 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let result = await paginate(data, options);
     return result;
   }
+
+  async sdgSumALLCalculate(): Promise<any[]> {
+
+    let filter = ''
+
+
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    console.log(userId, userCountryId)
+
+    const sectorSum = this.assessmentRepo
+    .createQueryBuilder('assesment')
+    .leftJoinAndMapMany(
+      'assesment.sdgasses',
+      SdgAssessment,
+      'sdgasses',
+      `assesment.id = sdgasses.assessmentId`,
+    )
+    .leftJoinAndMapOne(
+      'sdgasses.sdg',
+      PortfolioSdg,
+      'sdg',
+      `sdgasses.sdgId = sdg.id`,
+    )
+    if (currentUser?.userType?.name === 'External') {
+      filter = filter + ' assesment.user_id=:userId '
+
+    }
+    else {
+      console.log('work')
+      filter = filter + ' country.id=:userCountryId '
+      sectorSum.leftJoinAndMapOne(
+        'assesment.climateAction',
+        ClimateAction,
+        'climateAction',
+        'assesment.climateAction_id = climateAction.id'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      )
+    }
+
+
+ 
+    sectorSum.where(filter,{userId,userCountryId})
+      .select('sdg.name', 'sdg')
+      .addSelect('COUNT(sdgasses.id)', 'count')
+      .groupBy('sdg.name')
+      .having('sdg IS NOT NULL')
+      ;
+    console.log("sectorSum", await sectorSum.getRawMany())
+    return await sectorSum.getRawMany();
+  }
+
+  async getDashboardAllData(options: IPaginationOptions): Promise<Pagination<any>> {
+    // let tool = 'Investment & Private Sector Tool';
+    let filter = '(asses.process_score is not null and asses.outcome_score is not null) '
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    console.log(userId, userCountryId)
+    if (currentUser?.userType?.name === 'External') {
+      filter = filter + ' and asses.user_id=:userId '
+
+    }
+    else {
+      filter = filter + ' and country.id=:userCountryId '
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+    let result = await paginate(data, options);
+    return result;
+  }
+
   roundDown(value: number) {
     if(value>0){
       return Math.floor(value)
@@ -1713,7 +1865,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   
 
   mapScaleScores(value: number) {
-    switch (+value) {
+    if (value !== null){
+      value = +value
+    }
+    switch (value) {
       case -1:
         return 'Minor Negative';
       case -2:
@@ -1729,7 +1884,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 3:
         return 'Major';
       case null:
-        return 'Empty'
+        return 'Outside assessment boundaries'
       default:
         return value.toString();
 
@@ -1737,7 +1892,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   mapSustainedScores(value: number) {
-    switch (+value) {
+    if (value !== null){
+      value = +value
+    }
+    switch (value) {
       case -1:
         return 'Unlikely (0-10%)';
       case 0:
@@ -1750,8 +1908,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Very likely (90-100%)';
       case 4:
         return 'Certainly (100%)'
-      default: 
+      case null:
+        return 'Empty'
+      default:
         return value.toString();
+    }
+  }
+
+  async saveSectorsCovered(sectors: InvestorSector[]){
+    let res = await this.investorSectorRepo.save(sectors)
+    if (res) {
+      return true
+    } else {
+      return false
     }
   }
 }
