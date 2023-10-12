@@ -11,7 +11,7 @@ export const sections = [
         name: 'Section 3: Tranformational Change Indicators',
         code: 'SECTION_3',
         order: 2,
-        description: 'This section of the carbon markets tool will examine the potential of the intervention to contribute to fundamental, sustained change. The 2021 ‘Promoting transformational change through carbon markets’ report builds on the original ICAT Transformational Change Assessment Methodology  and defines four main drivers of change: 1) technology change, 2) agents of change, 3) incentives for change, and 4) norms and behavioural change, which are operationalized in form of indicators from the responses to the following questions. Indicators from responses to questions in this section will be weighted and form the overall transformational change score.'
+        description: 'This section of the carbon markets tool will examine the potential of the intervention to contribute to fundamental, sustained change. The 2021 ‘Promoting transformational change through carbon markets’ report builds on the original ICAT Transformational Change Assessment Methodology  and defines four main drivers of change: 1) technology change, 2) agents of change, 3) incentives for change, and 4) norms and behavioral change, which are operationalized in form of indicators from the responses to the following questions. Indicators from responses to questions in this section will be weighted and form the overall transformational change score.'
     }
 ]
 
@@ -1385,15 +1385,15 @@ export const characteristic = [
         name: 'Awareness',
         code: 'AWARENESS',
         category_id: 4,
-        description: 'An intervention may include components oriented to raise awareness and increase support for low-carbon solutions that may contribute to change norms and behaviours among diverse groups of stakeholders. Such a component can take the shape of campaigns and sensitization of policymakers and consumers, information dissemination within the institutions using various means etc',
+        description: 'An intervention may include components oriented to raise awareness and increase support for low-carbon solutions that may contribute to change norms and behaviors among diverse groups of stakeholders. Such a component can take the shape of campaigns and sensitization of policymakers and consumers, information dissemination within the institutions using various means etc',
         main_question: 'Does the intervention support awareness raising and education for sustainability transition?',
         weight: 46
     },
     {
-        name: 'Behaviour',
+        name: 'Behavior',
         code: 'BEHAVIOUR',
         category_id: 4,
-        description: 'In order for transformational change to happen, a shift in the lifestyle and common practices of a large majority of the population has to take place. An intervention may influence consumers\' behaviour with actions such as peak energy savings, cash incentives for using alternative transport models, rewards for recycling, etc.',
+        description: 'In order for transformational change to happen, a shift in the lifestyle and common practices of a large majority of the population has to take place. An intervention may influence consumers\' behavior with actions such as peak energy savings, cash incentives for using alternative transport models, rewards for recycling, etc.',
         main_question: 'Does the policy support measures that discourage high-carbon lifestyle and practices and promote low-carbon solutions?',
         weight: 27
     },
@@ -1401,7 +1401,7 @@ export const characteristic = [
         name: 'Social Norms',
         code: 'SOCIAL_NORMS',
         category_id: 4,
-        description: 'Social norms refers to those behaviours and practices that have become widely accepted and enjoy broad and deeply entrenched support within the society. An intervention can contribute to low-carbon lifestyle and practices becoming the prevalent societal norm. Some examples of this are the willingness to pay for pollution, the valorization of natural resources, the widespread adoption of energy efficiency measures within the households, etc.',
+        description: 'Social norms refers to those behaviors and practices that have become widely accepted and enjoy broad and deeply entrenched support within the society. An intervention can contribute to low-carbon lifestyle and practices becoming the prevalent societal norm. Some examples of this are the willingness to pay for pollution, the valorization of natural resources, the widespread adoption of energy efficiency measures within the households, etc.',
         main_question: 'Does the intervention affect norms within society that align with and further promote low-carbon and sustainable development?',
         weight: 27
     },
@@ -1573,7 +1573,7 @@ export const categories = [
     {
         name: 'Norms and behavioural change',
         code: 'NORMS',
-        description: 'Include processes that influence awareness and behaviour of people to drive a long-lasting change in societal norms and practices.',
+        description: 'Include processes that influence awareness and behavior of people to drive a long-lasting change in societal norms and practices.',
         weight: 10
     },
     {
