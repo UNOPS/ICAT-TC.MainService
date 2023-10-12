@@ -692,9 +692,10 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
     );
   let scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
   if (asssCharacteristicasscaleghg) {
-    scale_sd.name='SDG Scale of the Outcome'
+    scale_sd.name='SDG Scale of the Outcome';
     const filterinsass=asssCharacteristicasscalesd.investor_assessment.filter(a=>a.portfolioSdg);
     scale_sd.rows=filterinsass.length
+    scale_sd.sdg=[];
     for (let invesass of filterinsass) {
      
 
@@ -757,7 +758,8 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
   );
 let sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
 if (asssCharacteristicassustainedsd) {
-  sustained_sd.name='SDG Time frame over which the outcome is sustained'
+  sustained_sd.name='SDG Time frame over which the outcome is sustained';
+  sustained_sd.sdg=[];
   const filterinsasssustained_sd=asssCharacteristicassustainedsd.investor_assessment.filter(a=>a.portfolioSdg);
   sustained_sd.rows=filterinsasssustained_sd.length
   for (let invesass of filterinsasssustained_sd) {
