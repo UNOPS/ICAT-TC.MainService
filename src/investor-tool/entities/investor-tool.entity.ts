@@ -33,7 +33,6 @@ export class InvestorTool extends BaseTrackingEntity {
     @JoinColumn({ name: 'assessment_id' })
     assessment: Assessment;
 
-    @ApiHideProperty()
-    geographical_areas_covered:GeographicalAreasCovered[];
+
 }
 

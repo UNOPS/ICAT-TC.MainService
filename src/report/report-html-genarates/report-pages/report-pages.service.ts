@@ -675,8 +675,9 @@ export class ReportPagesService {
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-
+    
     const scale_sd = contentTwo.scale_sd;
+    
     const page_4 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
