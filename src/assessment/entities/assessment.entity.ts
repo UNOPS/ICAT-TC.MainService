@@ -8,7 +8,14 @@ import { VerificationStatus } from "src/verification/entity/verification-status.
 import { User } from "src/users/entity/user.entity";
 import { MethodologyAssessmentParameters } from "src/methodology-assessment/entities/methodology-assessment-parameters.entity";
 import { InvestorAssessment } from "src/investor-tool/entities/investor-assessment.entity";
-// import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
+import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
+import { AssessmentBarriers } from "src/methodology-assessment/entities/assessmentbarriers.entity";
+import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity";
+import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
+
 @Entity()
 export class Assessment extends BaseTrackingEntity{
 
@@ -101,6 +108,7 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
 
+  
   @Column({ type: 'longtext', default: null, nullable: true })
   envisioned_change: string;
 
@@ -119,7 +127,19 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'longtext', default: null, nullable: true })
   change_in_system: string;
 
+
+
+  @ApiHideProperty()
   investor_assessment:InvestorAssessment[]=[]
+  @ApiHideProperty()
+  policy_barrier:PolicyBarriers[];
+  @ApiHideProperty()
+  investor_tool:InvestorTool;
+  @ApiHideProperty()
+  investor_sector:InvestorSector[];
+  @ApiHideProperty()
+  assessment_barriers:AssessmentBarriers[];
+  
 
 }
 
