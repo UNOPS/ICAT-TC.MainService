@@ -45,6 +45,7 @@ import { Objectives } from 'src/methodology-assessment/entities/objectives.entit
 import { ParameterStatus } from 'src/methodology-assessment/entities/parameterStatus.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './entities/portfolio_question-details.entity';
+import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -83,7 +84,8 @@ import { PortfolioQuestionDetails } from './entities/portfolio_question-details.
     MethodologyParameters,
     CalculationResults,
     PortfolioQuestions,
-    PortfolioQuestionDetails
+    PortfolioQuestionDetails,
+    GeographicalAreasCovered
     
     
   ])],
