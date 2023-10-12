@@ -144,6 +144,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
   ): Promise<ReportContentOne> {
     const reportContentOne = new ReportContentOne();
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
+    console.log("assessmentId",assessmentId)
    
     // console.log(asse)
     // reportContentOne.policyName = asse.climateAction.policyName;
@@ -210,8 +211,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Geographic coverage',
-        description: asse.investor_tool?.geographical_areas_covered
-          ? asse.investor_tool.geographical_areas_covered.map(a=>a.name).join(',')
+        description: asse.geographical_areas_covered
+          ? asse.geographical_areas_covered.map(a=>a.name).join(',')
           : 'N/A',
       },
       {
@@ -460,7 +461,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       await this.assessmentService.getCharacteristicasforReport(
         assessmentId,
         'outcome',
-        'GHG Scale of the Outcome',
+        'Scale GHGs',
         '',
       );
     let scale_ghg = [];
@@ -516,7 +517,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'GHG Time frame over which the outcome is sustained',
+      'Sustained nature-GHGs',
       '',
     );
   let sustained_ghg = [];
@@ -571,7 +572,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'Adaptation Scale of the Outcome',
+    'Scale Adaptation',
     '',
   );
 let scale_adaptation = [];
@@ -628,7 +629,7 @@ let asssCharacteristicassustained_adaptation =
 await this.assessmentService.getCharacteristicasforReport(
   assessmentId,
   'outcome',
-  'Adaptation Time frame over which the outcome is sustained',
+  'Sustained Adaptation',
   '',
 );
 let sustained_adaptation = [];
@@ -687,15 +688,18 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'SDG Scale of the Outcome',
+      'Scale SD',
       '',
     );
+    
   let scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
+  
+  
   if (asssCharacteristicasscaleghg) {
     scale_sd.name='SDG Scale of the Outcome';
     const filterinsass=asssCharacteristicasscalesd.investor_assessment.filter(a=>a.portfolioSdg);
     scale_sd.rows=filterinsass.length
-    scale_sd.sdg=[];
+    
     for (let invesass of filterinsass) {
      
 
@@ -746,20 +750,22 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
       
     
     }
-    reportContentTwo.scale_sd = scale_sd;
+   
   }
-
+  reportContentTwo.scale_sd = scale_sd;
   let asssCharacteristicassustainedsd=
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'SDG Time frame over which the outcome is sustained',
+    'Sustained nature-SD',
     '',
   );
+ 
 let sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
+
 if (asssCharacteristicassustainedsd) {
   sustained_sd.name='SDG Time frame over which the outcome is sustained';
-  sustained_sd.sdg=[];
+ 
   const filterinsasssustained_sd=asssCharacteristicassustainedsd.investor_assessment.filter(a=>a.portfolioSdg);
   sustained_sd.rows=filterinsasssustained_sd.length
   for (let invesass of filterinsasssustained_sd) {
@@ -812,9 +818,9 @@ if (asssCharacteristicassustainedsd) {
     
   
   }
-  reportContentTwo.sustained_sd = sustained_sd;
+  
 }
-
+reportContentTwo.sustained_sd = sustained_sd;
 
 
 let res =  await this.investorToolService.calculateNewAssessmentResults(assessmentId);

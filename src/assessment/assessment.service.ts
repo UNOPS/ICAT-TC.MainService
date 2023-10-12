@@ -165,7 +165,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     userName: string,
   ): Promise<any> {
     let userItem = await this.userService.findByUserName(userName);
-    console.log('userItem', userItem);
+    // console.log('userItem', userItem);
 
     var data = this.repo
       .createQueryBuilder('as')
@@ -189,7 +189,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id }});
-      console.log('dataRequestItem', dataRequestItem);
+      // console.log('dataRequestItem', dataRequestItem);
       let originalStatus = dataRequestItem.qaStatus;
       dataRequestItem.qaStatus = updateDataRequestDto.status;
 
@@ -200,7 +200,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       // console.log("insSec", insSec)
 
       this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
+        // console.log('res', res);
       });
     }
   //   let user:User[];
@@ -311,17 +311,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       //   'barriers',
       //   `assessment_barriers.barriers_id = barriers.id`,
       // )
-      .leftJoinAndMapOne(
-        'asse.investor_tool',
-        InvestorTool,
-        'investor_tool',
-        `investor_tool.assessment_id = asse.id`,
-      )
-      .leftJoinAndMapOne(
-        'investor_tool.geographical_areas_covered',
+      
+      .leftJoinAndMapMany(
+        'asse.geographical_areas_covered',
         GeographicalAreasCovered,
         'geographical_areas_covered',
-        `geographical_areas_covered.investorToolId = investor_tool.id`,
+        `geographical_areas_covered.assessmentId = asse.id`,
       )
       .leftJoinAndMapOne(
         'asse.climateAction',
