@@ -33,6 +33,8 @@ import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessme
 import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
 import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
+import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
+import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -363,7 +365,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
     let data = await this.repo
       .createQueryBuilder('asse') 
-
     
       .leftJoinAndMapMany(
         'asse.investor_assessment',
@@ -383,6 +384,19 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'characteristics',
         `characteristics.id = investor_assessment.characteristic_id`,
       )
+      .leftJoinAndMapOne(
+        'investor_assessment.portfolioSdg',
+        PortfolioSdg,
+        'portfolioSdg',
+        `portfolioSdg.id = investor_assessment.portfolioSdg_id`,
+      )
+      .leftJoinAndMapOne(
+        'portfolioSdg.sdg_assessment',
+        SdgAssessment,
+        'sdg_assessment',
+        `sdg_assessment.sdgId = portfolioSdg.id and sdg_assessment.assessmentId=asse.id`,
+      )
+    
       // .leftJoinAndMapOne(
       //   'parameters.indicator',
       //   Indicators,

@@ -61,12 +61,15 @@ export class ReportContentTwo {
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2
-    scale_ghg:object[]=[]
-    scale_sd:object[]=[]
-    sustained_ghg:object[]=[]
-    sustained_sd:object[]=[]
-    scale_adaptation:object[]=[]
-    sustained_adaptation:object[]=[]
+    scale_ghg:object[]=[];
+    scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    sustained_ghg:object[]=[];
+    sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    scale_adaptation:object[]=[];
+    sustained_adaptation:object[]=[];
+
+    process_categories_assessment:object[]=[];
+    outcomes_categories_assessment:object[]=[];
 
     prossesExAnteAssesment:object[]=[];
     outcomeExAnteAssesment:object[]=[];
