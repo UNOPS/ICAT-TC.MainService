@@ -23,6 +23,7 @@ import {
 import { ActionArea } from 'src/master-data/action-area/entity/action-area.entity';
 import { PolicyBarriers } from './policy-barriers.entity';
 import { User } from 'src/users/entity/user.entity';
+import { PolicySector } from './policy-sectors.entity';
 
 @Entity({ name: 'climateaction'})
 export class ClimateAction extends BaseTrackingEntity {
@@ -307,5 +308,5 @@ export class ClimateAction extends BaseTrackingEntity {
   user?: User; 
 
   
-  
+  policy_sector:PolicySector[];
 }
