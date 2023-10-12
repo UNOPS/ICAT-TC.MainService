@@ -89,3 +89,41 @@ export class ReportContentTwo {
 
 
 }
+
+
+export class ComparisonReportDto {
+    reportName:string='';
+    coverPage:ComparisonReportReportCoverPage=new ComparisonReportReportCoverPage()
+    tableOfContent:ComparisonReportReportTableOfContent=new ComparisonReportReportTableOfContent()
+    contentOne:ComparisonReportReportContentOne=new ComparisonReportReportContentOne()
+    contentTwo:ComparisonReportReportContentTwo=new ComparisonReportReportContentTwo()
+    contentThree:ComparisonReportReportContentThree=new ComparisonReportReportContentThree()
+    contentFour:ComparisonReportReportContentFour=new ComparisonReportReportContentFour()
+ 
+ }
+
+ export class ComparisonReportReportCoverPage {
+    generateReportName: string = "";
+    reportName: string = "";
+   
+    companyLogoLink: string = "";
+  
+    document_prepared_by: string = "";
+    ICATLogoLink: string = "";
+    reportDate: string = "";
+   
+    companyAdressLine1 = ""
+    companyAdressLine2 = ""
+    companyAdressLine3 = ""
+    companyregistrationNumber = ""
+    companyEmailAdress = ""
+    companyFax = ""
+    companyTelephone = ""
+
+}
+
+export class ComparisonReportReportTableOfContent {}
+export class ComparisonReportReportContentOne {}
+export class ComparisonReportReportContentTwo {}
+export class ComparisonReportReportContentThree {}
+export class ComparisonReportReportContentFour {}
