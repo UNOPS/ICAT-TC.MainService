@@ -933,7 +933,7 @@ export class ReportPagesService {
      <td>test value</td>
      </tr>
      <tr>
-     <td>Behaviour</td>
+     <td>Behavior</td>
      <td>test value</td>
      <td>test value</td>
      <td>test value</td>
@@ -1068,7 +1068,7 @@ export class ReportPagesService {
      <td>test value</td>
      </tr>
      <tr>
-     <td>Behaviour</td>
+     <td>Behavior</td>
      <td>test value</td>
      <td>test value</td>
      <td>test value</td>
