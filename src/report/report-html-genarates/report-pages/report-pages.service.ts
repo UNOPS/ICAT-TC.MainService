@@ -62,24 +62,24 @@ export class ReportPagesService {
     footer: string,
     tableOfContent: ReportTableOfContent,
   ): string {
-    let pageNumber = 5;
+    let pageNumber = 1;
 
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............3</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............4</bdi></div> </div>
   
 
-    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
   </div>
 
   
@@ -97,7 +97,7 @@ export class ReportPagesService {
     footer: string,
     contentOne: ReportContentOne,
   ): string {
-    let pageNumber = 5;
+    let pageNumber = 2;
     const policyOrActionsDetails = contentOne.policyOrActionsDetails;
 
     // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
@@ -136,7 +136,7 @@ export class ReportPagesService {
    
    </div>
    
-   ${footer.replace('#pageNumber#', pageNumber.toString())}
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
     const understanPolicyOrActions = contentOne.understanPolicyOrActions;
@@ -209,7 +209,7 @@ export class ReportPagesService {
   
    </div>
    
-   ${footer.replace('#pageNumber#', pageNumber.toString())}
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
 
@@ -265,7 +265,7 @@ export class ReportPagesService {
   
   </div>
   
-  ${footer.replace('#pageNumber#', pageNumber.toString())}
+  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
   
    </div>`;
 
@@ -472,7 +472,7 @@ export class ReportPagesService {
     const page_2 = `  <div id="page_5" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header_sub text-start">2.1	Outcomes characteristics assessment  </div> 
+   <div  class="main_header_sub text-start">2.2	Outcomes characteristics assessment  </div> 
     
 
  
