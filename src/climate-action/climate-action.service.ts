@@ -584,7 +584,14 @@ async allProject(
       });
       return modifiedArray
   }
-  
+  async getLastID(): Promise<ClimateAction[]> {
+    const result = await this.repo
+        .createQueryBuilder('intervention')
+        .orderBy('intervention.id', 'DESC')
+        .take(1) 
+        .getMany();
+    return result
+  }
 
 
 }
