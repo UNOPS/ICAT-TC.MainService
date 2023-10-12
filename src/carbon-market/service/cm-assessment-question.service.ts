@@ -16,10 +16,11 @@ import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
-import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
 import { UsersService } from "src/users/users.service";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { MasterDataService } from "src/shared/entities/master-data.service";
+import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { PortfolioSdg } from "src/investor-tool/entities/portfolio-sdg.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -39,7 +40,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     @InjectRepository(Characteristics)
     private characteristicRepo: Repository<Characteristics>,
     private userService:UsersService,
-    private masterDataService: MasterDataService
+    private masterDataService: MasterDataService,
+    @InjectRepository(SdgAssessment)
+    private sdgAssessmentRepo: Repository<SdgAssessment>
   ) {
     super(repo);
   }
@@ -58,7 +61,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
     let a_ans: any[]
     let _answers = []
-    let selectedSdgs = result.map(res => res.selectedSdg)
+    let selectedSdgs = []
+    result.forEach(res => {
+      if(res.selectedSdg.id !== undefined) {
+        let obj = new SdgAssessment()
+        obj.assessment = assessment
+        obj.sdg = res.selectedSdg
+        selectedSdgs.push(obj) 
+      }
+    })
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -70,7 +81,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.sdgIndicator = res.sdgIndicator;
       ass_question.startingSituation = res.startingSituation;
       ass_question.expectedImpact = res.expectedImpact;
-      ass_question.selectedSdg = res.selectedSdg;
+      if (res.selectedSdg.id) ass_question.selectedSdg = res.selectedSdg;
       ass_question.uploadedDocumentPath = res.filePath;
       ass_question.relevance = res.relevance;
       ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
@@ -114,6 +125,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     }
     try {
+      let res = await this.sdgAssessmentRepo.save(selectedSdgs)
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
       console.log(err)
@@ -216,6 +228,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessment',
         'assessment.id = aq.assessmentId'
       )
+      .leftJoinAndSelect(
+        'aq.selectedSdg',
+        'selectedSdg',
+        'aq.selectedSdgId = selectedSdg.id'
+      )
       .innerJoinAndSelect(
         'aq.characteristic',
         'characteristic',
@@ -242,7 +259,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     if (cmAssessmentQuestions_outcome.length > 0) {
-      response.outcome_score = await this.calculateOutcomeResult(cmAssessmentQuestions_outcome)
+      response.outcome_score = await this.calculateOutcomeResult(cmAssessmentQuestions_outcome, assessmentId)
     } else {
       response.message += 'No questions found for outcome. '
     }
@@ -297,16 +314,23 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return process_score
   }
 
-  async calculateOutcomeResult(questions: CMAssessmentQuestion[]) {
+  async calculateOutcomeResult(questions: CMAssessmentQuestion[], assessementId: number) {
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
+    let sdgs = await this.getSelectedSDGs(assessementId)
     let obj = {}
+    let sdgs_score = {}
     for (let cat of categories) {
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
+      // console.log("319", qs)
       let score: number
       if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        selected_sdg_count = [... new Set(qs.map(q => q.selectedSdg))].length
+        // selected_sdg_count = [... new Set(qs.map(q => q.selectedSdg))].length
+        selected_sdg_count = sdgs.length
         score = qs.reduce((accumulator, object) => {
+          console.log("331", +object.assessmentAnswers[0]?.selectedScore)
+          if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
+          else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
           return accumulator + +object.assessmentAnswers[0]?.selectedScore;
         }, 0);
         score = score / selected_sdg_count / 3
@@ -321,6 +345,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         weight: qs[0].characteristic.category.cm_weight
       }
     }
+    
+    for (let key of Object.keys(sdgs_score)){
+      sdgs_score[key] = Math.floor(sdgs_score[key]/6)
+    }
+
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
     let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0; 
     let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
@@ -354,7 +383,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       scale_sdg_score: Math.round(scale_sdg_score),
       sustained_sdg_score: Math.round(sustained_sdg_score),
       scale_adaptation_score: Math.round(scale_adaptation_score),
-      sustained_adaptation_score: Math.round(sustained_adaptation_score)
+      sustained_adaptation_score: Math.round(sustained_adaptation_score),
+      sdgs_score: sdgs_score
     }
   }
 
@@ -381,6 +411,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           'ans.assessment_question',
           'question',
           'question.id = ans.assessmentQuestionId'
+        )
+        .leftJoinAndSelect(
+          'question.selectedSdg',
+          'sdg',
+          'question.selectedSdgId = sdg.id'
         )
         .leftJoinAndMapOne(
           'ans.answer',
@@ -460,7 +495,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         obj.justification = ans?.assessment_question?.comment
         obj.document = ans?.assessment_question?.uploadedDocumentPath
         obj.category = ans?.assessment_question?.characteristic?.category
-        obj.SDG = ans?.assessment_question?.selectedSdg
+        obj.SDG = 'SDG ' + ans?.assessment_question?.selectedSdg?.number + ' - ' + ans?.assessment_question?.selectedSdg?.name
         obj.outcome_score = ans?.selectedScore
         obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
         obj.starting_situation = ans?.assessment_question?.startingSituation
@@ -735,9 +770,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
      }
      else {
       filteredResults= filteredResults.filter(result => {
-        // console.log(result?.climateAction?.country,currentUser?.country?.id)
         if(result?.climateAction?.country?.id===currentUser?.country?.id){
-          // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
           return result;
         }})
      }
@@ -752,9 +785,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         intervention_id: result.climateAction?.intervention_id
       };
     }));
-    // return formattedResults
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
-    // console.log(filteredData)
     return this.paginateArray(filteredData,options)
   }
   async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
@@ -811,6 +842,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     });
   
     return res;
+  }
+
+  async getSelectedSDGs(assessmnetId: number) {
+    return await this.sdgAssessmentRepo.createQueryBuilder('sdg')
+      .innerJoin(
+        'sdg.assessment',
+        'assessment',
+        'sdg.assessmentId = assessment.id'
+      )
+      .where('assessment.id = :id', {id: assessmnetId})
+      .getMany()
   }
   
   

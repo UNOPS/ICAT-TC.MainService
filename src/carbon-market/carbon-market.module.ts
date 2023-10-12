@@ -31,6 +31,7 @@ import { UserType } from "src/users/entity/user.type.entity";
 import { EmailNotificationService } from "src/notifications/email.notification.service";
 import { TokenDetails } from "src/utills/token_details";
 import { MasterDataService } from "src/shared/entities/master-data.service";
+import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 
 
 @Module({
@@ -49,6 +50,7 @@ import { MasterDataService } from "src/shared/entities/master-data.service";
       Characteristics,
       Category,
       User, UserType, Institution, Country,Audit,
+      SdgAssessment
     ]),
   ],
   controllers: [
