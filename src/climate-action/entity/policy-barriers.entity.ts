@@ -4,6 +4,7 @@ import { Characteristics } from "src/methodology-assessment/entities/characteris
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { BarrierCategory } from "./barrier-category.entity";
+import { Assessment } from "src/assessment/entities/assessment.entity";
 
 @Entity({ name: 'policy-barriers' })
 export class PolicyBarriers extends BaseTrackingEntity {
@@ -30,5 +31,8 @@ export class PolicyBarriers extends BaseTrackingEntity {
 
     @OneToMany(() => BarrierCategory,(barrierCategory) => barrierCategory.barriers)
     barrierCategory: BarrierCategory[];
+
+    @ManyToOne(() => Assessment, { cascade: false, eager: true, })
+    assessment: Assessment;
 
 }
