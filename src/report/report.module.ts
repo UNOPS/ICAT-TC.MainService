@@ -57,6 +57,7 @@ import { User } from 'src/users/entity/user.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodology-assessment.module';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 @Module({
   imports: [
@@ -108,7 +109,7 @@ import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographica
     MethodologyAssessmentModule
   ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService, MasterDataService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService],
 })
 export class ReportModule {}
