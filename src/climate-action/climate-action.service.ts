@@ -124,9 +124,10 @@ async save(req:AllBarriersSelected){
   for(let re of req.allBarriers){
     let policyBarrier = new PolicyBarriers()
     policyBarrier.barrier = re.barrier;
-    policyBarrier.climateAction = req.climateAction
-    policyBarrier.explanation = re.explanation
-    policyBarrier.is_affected = re.affectedbyIntervention
+    policyBarrier.climateAction = req.climateAction;
+    policyBarrier.explanation = re.explanation;
+    policyBarrier.is_affected = re.affectedbyIntervention;
+    policyBarrier.assessment =req.assessment;
     console.log("barrier",policyBarrier)
     let barrier = await this.PolicyBarriersRepo.save(policyBarrier);
 

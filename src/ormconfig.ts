@@ -61,6 +61,7 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
 import { BarrierCategory } from './climate-action/entity/barrier-category.entity';
 import { PortfolioQuestions } from './investor-tool/entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_question-details.entity';
+import { GeographicalAreasCovered } from './investor-tool/entities/geographical-areas-covered.entity';
 
 
 export const config: ConnectionOptions = {
@@ -68,18 +69,30 @@ export const config: ConnectionOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
+ 
+//  username: 'root',
+//  password: 'pradeep123#',
+//  database: 'tc-main',  
+  //          username: 'sqluser',
+  //  password: 'password',
+  //   database: 'tc-main-new3'  , 
+      /* username: 'root',
+  //   database: 'tc-main-new3' */    
+   /*    username: 'root',
 
  /* username: 'root',
  password: 'pradeep123#',
  database: 'tc-main',   */
-      username: 'root',
-      password: '1997',
-      database: 'tc_new',
-     
-      /* username: 'sqluser',
-        password: 'password',
-         database: 'tc-main-new3', */
 
+     
+      // username: 'sqluser',
+      //   password: 'password',
+      //    database: 'tc-main-new3',
+
+   username: 'root',
+   database: 'tc-main', 
+   password: '7860150',  
+   // database: 'tc-main-new3', 
   //  password: '7860150',  
 
   
@@ -90,10 +103,10 @@ export const config: ConnectionOptions = {
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
 ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification,
-PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails],
+PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false,  
+  synchronize: true, 
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
