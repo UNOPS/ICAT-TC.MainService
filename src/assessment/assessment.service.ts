@@ -35,6 +35,9 @@ import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entit
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
 import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
+import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -267,6 +270,24 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     let data = await this.repo
       .createQueryBuilder('asse')
       .leftJoinAndMapMany(
+        'asse.policy_barrier',
+        PolicyBarriers,
+        'policy_barrier',
+        `policy_barrier.assessmentId = asse.id`,
+      )
+      .leftJoinAndMapMany(
+        'policy_barrier.barrierCategory',
+        BarrierCategory,
+        'barrierCategory',
+        `barrierCategory.barriersId = policy_barrier.id`,
+      )
+      .leftJoinAndMapOne(
+        'barrierCategory.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = barrierCategory.characteristicsId`,
+      )
+      .leftJoinAndMapMany(
         'asse.investor_sector',
         InvestorSector,
         'investor_sector',
@@ -295,6 +316,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         InvestorTool,
         'investor_tool',
         `investor_tool.assessment_id = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'investor_tool.geographical_areas_covered',
+        GeographicalAreasCovered,
+        'geographical_areas_covered',
+        `geographical_areas_covered.investorToolId = investor_tool.id`,
       )
       .leftJoinAndMapOne(
         'asse.climateAction',

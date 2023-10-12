@@ -56,6 +56,7 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { User } from 'src/users/entity/user.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodology-assessment.module';
+import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 
 @Module({
   imports: [
@@ -98,7 +99,8 @@ import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodol
       MethodologyParameters,
       CalculationResults,
       PortfolioQuestions,
-      PortfolioQuestionDetails
+      PortfolioQuestionDetails,
+      GeographicalAreasCovered
     ]), 
     UsersModule,
     CountryModule,

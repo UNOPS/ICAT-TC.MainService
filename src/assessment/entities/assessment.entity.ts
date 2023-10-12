@@ -13,6 +13,8 @@ import { AssessmentBarriers } from "src/methodology-assessment/entities/assessme
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 import { ApiHideProperty } from "@nestjs/swagger";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity";
+import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 
 @Entity()
 export class Assessment extends BaseTrackingEntity{
@@ -106,15 +108,38 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
 
+  
+  @Column({ type: 'longtext', default: null, nullable: true })
+  envisioned_change: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_short: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_medium: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_long: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  phase_of_transformation: string;
+  
+  @Column({ type: 'longtext', default: null, nullable: true })
+  change_in_system: string;
+
+
+
   @ApiHideProperty()
   investor_assessment:InvestorAssessment[]=[]
-  
+  @ApiHideProperty()
+  policy_barrier:PolicyBarriers[];
   @ApiHideProperty()
   investor_tool:InvestorTool;
   @ApiHideProperty()
   investor_sector:InvestorSector[];
   @ApiHideProperty()
   assessment_barriers:AssessmentBarriers[];
+  
 
 }
 

@@ -159,10 +159,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentOne.sectorCoverd = asse.investor_sector&&asse.investor_sector.length?asse.investor_sector
       ?.map((a) => a.sector.name)
       .join(','): 'N/A';
-    reportContentOne.geograpycalCover = asse.investor_tool
-      ?.geographical_areas_covered
-      ? asse.investor_tool.geographical_areas_covered
-      : 'N/A';
+    // reportContentOne.geograpycalCover = asse.investor_tool
+    //   ?.geographical_areas_covered
+    //   ? asse.investor_tool.geographical_areas_covered
+    //   : 'N/A';
     reportContentOne.policyOrActionsDetails = [
       {
         information: 'Name',
@@ -211,7 +211,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       {
         information: 'Geographic coverage',
         description: asse.investor_tool?.geographical_areas_covered
-          ? asse.investor_tool.geographical_areas_covered
+          ? asse.investor_tool.geographical_areas_covered.map(a=>a.name).join(',')
           : 'N/A',
       },
       {
@@ -234,41 +234,58 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
     ];
 
-    reportContentOne.understanPolicyOrActions = [
+    reportContentOne.understanPolicyOrActions = [ 
+      
+      {
+        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+        description: asse.envisioned_change?asse.envisioned_change :'N/A',
+      },
       {
         Time_periods: 'Long-term (≥15 years)',
-        description: 'description 1',
+        description: asse.vision_long?asse.vision_long :'N/A',
       },
       {
-        Time_periods: 'Medium-term (≥5 years and greater than 15 years)',
-        description: 'description 2',
+        Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
+        description: asse.vision_medium?asse.vision_medium :'N/A',
       },
       {
-        Time_periods: 'Short-term (greater than 5 years)',
-        description: 'description 3',
+        Time_periods: 'Short-term (&lt; 5 years)',
+        description: asse.vision_short?asse.vision_short :'N/A',
+      },
+      {
+        Time_periods: 'Phase of transformation',
+        description: asse.phase_of_transformation?asse.phase_of_transformation :'N/A',
       },
     ];
 
-    reportContentOne.barriers = [
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-      {
-        barrier: 'test barrier',
-        explanation: 'test explanation',
-        characteristics_affected: 'test characteristics_affected',
-        barrier_directly_targeted: 'test barrier_directly_targeted',
-      },
-    ];
+         
+    // reportContentOne.barriers = [
+    //   {
+    //     barrier: 'test barrier',
+    //     explanation: 'test explanation',
+    //     characteristics_affected: 'test characteristics_affected',
+    //     barrier_directly_targeted: 'test barrier_directly_targeted',
+    //   },
+    //   {
+    //     barrier: 'test barrier',
+    //     explanation: 'test explanation',
+    //     characteristics_affected: 'test characteristics_affected',
+    //     barrier_directly_targeted: 'test barrier_directly_targeted',
+    //   },
+    //   {
+    //     barrier: 'test barrier',
+    //     explanation: 'test explanation',
+    //     characteristics_affected: 'test characteristics_affected',
+    //     barrier_directly_targeted: 'test barrier_directly_targeted',
+    //   },
+    // ];
+    reportContentOne.barriers=[]
+    asse.policy_barrier.map(a=>{
+      reportContentOne.barriers.push({  barrier: a.barrier?a.barrier:'N/A',
+      explanation: a.explanation?a.explanation:'N/A',
+      characteristics_affected: a.barrierCategory?a.barrierCategory.map(b=>b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(','):'N/A',
+      barrier_directly_targeted: a.is_affected?'YES':'NO',})
+    })
     reportContentOne.contextOfPolicy = [];
 
     // let asssCharacProcess =
