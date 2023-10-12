@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReportDto } from './dto/create-report.dto';
+import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { AssessmentDto } from './dto/assessment.dto';
 import {
@@ -7,6 +7,7 @@ import {
   ReportCoverPage,
   ReportContentOne,
   ReportContentTwo,
+  ComparisonReportDto,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -933,4 +934,19 @@ reportContentTwo.outcomes_categories_assessment=res.outcomeData;
   genarateAssessmentDto(): AssessmentDto {
     return new AssessmentDto();
   }
+
+
+
+
+  async genarateComparisonReportDto(
+    createReportDto: CreateComparisonReportDto,
+  ): Promise<ComparisonReportDto> {
+    const comparisonReportDto = new ComparisonReportDto();
+
+
+  return comparisonReportDto;
+  }
 }
+
+
+

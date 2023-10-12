@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import {
+  ComparisonReportReportContentFour,
+  ComparisonReportReportContentOne,
+  ComparisonReportReportContentThree,
+  ComparisonReportReportContentTwo,
+  ComparisonReportReportTableOfContent,
   ReportContentOne,
   ReportContentTwo,
   ReportCoverPage,
@@ -1510,5 +1515,115 @@ export class ReportPagesService {
       // page_10 +
       // page_11
     );
+  }
+
+
+
+
+  comparisonCoverPage(coverPage: ReportCoverPage): string {
+    const cover = `<div id="cover">
+    <div  style="height: 250px;">
+    <!-- <div  class="row ">
+       <div  class="col ">
+       <img height="50px" src="./logo.png" >
+       </div>                
+   </div> -->
+   <div class="row ">
+       <div class="col h2 d-flex justify-content-center">
+         ${coverPage.generateReportName}
+       </div>
+   </div>
+   <div class="row ">
+       <div class="col h4 d-flex justify-content-center">
+         Logo
+       </div>
+   </div>
+   <div class="row ">
+       <div class="col h4 d-flex justify-content-center">
+         Document Prepared By ${coverPage.document_prepared_by}
+       </div>
+   </div>
+   <div class="row ">
+     <div class="col h4 d-flex justify-content-center">
+       Contact Information 
+     </div>
+ </div>
+   <div class="row ">
+     <div class="col h4 d-flex justify-content-center">
+       Report Date:${coverPage.reportDate}
+     </div>
+ </div>
+ </div>
+ <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+       <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
+ </div>
+    </div>`;
+
+    return cover;
+  }
+
+
+  comparisonTableOfContent(
+    header: string,
+    footer: string,
+    tableOfContent: ComparisonReportReportTableOfContent,
+  ): string {
+    let pageNumber = 5;
+
+    const page_one = `  <div id="page_5" class="page text-center" >
+  ${header}
+  <div class="content">
+  <div class="table-of-content ">
+  <div  class="table-of-content-main-headers text-start">Table of Contents</div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
+  
+
+    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+  </div>
+
+  
+  </div>
+  
+  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+  
+   </div>`;
+
+    return page_one;
+  }
+
+  comparisonContentOne(
+    header: string,
+    footer: string,
+    contentOne: ComparisonReportReportContentOne,
+  ): string {
+return ''
+  }
+  comparisonContentTwo(
+    header: string,
+    footer: string,
+    contentOne: ComparisonReportReportContentTwo,
+  ): string {
+    return ''
+  }
+  comparisonContentThree(
+    header: string,
+    footer: string,
+    contentOne: ComparisonReportReportContentThree,
+  ): string {
+    return ''
+  }
+  comparisonContentFour(
+    header: string,
+    footer: string,
+    contentOne: ComparisonReportReportContentFour,
+  ): string {
+    return ''
   }
 }

@@ -11,11 +11,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
-import { CreateReportDto } from './dto/create-report.dto';
+import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ReportGenaratesService } from './report-genarates/report-genarates.service';
 import { ReportHtmlGenaratesService } from './report-html-genarates/report-html-genarates.service';
-import { ReportDto } from './dto/report.dto';
+import { ComparisonReportDto, ReportDto } from './dto/report.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AssessmentDto } from './dto/assessment.dto';
 import { AssessmentService } from 'src/assessment/assessment.service';
@@ -114,6 +114,29 @@ export class ReportController {
       await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
     )
     const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+    return response
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('generate-comparisonreport')
+  async generateComparisonReport(
+    @Body() req: CreateComparisonReportDto
+  ): Promise<any> {
+    let countryIdFromTocken: number
+    [countryIdFromTocken] =
+      this.tokenDetails.getDetails([
+        TokenReqestType.countryId,
+      ]);
+    req.reportTitle = req.reportName
+    req.reportName = req.reportName + '.pdf'
+    const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
+      req,
+    );
+    const report = await this.reportGenarateService.reportGenarate(
+      reprtDto.reportName,
+      await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
+    )
+     const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
     return response
   }
 
