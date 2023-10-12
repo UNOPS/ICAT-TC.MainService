@@ -101,6 +101,24 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
 
+  @Column({ type: 'longtext', default: null, nullable: true })
+  envisioned_change: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_short: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_medium: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  vision_long: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  phase_of_transformation: string;
+  
+  @Column({ type: 'longtext', default: null, nullable: true })
+  change_in_system: string;
+
   investor_assessment:InvestorAssessment[]=[]
 
 }
