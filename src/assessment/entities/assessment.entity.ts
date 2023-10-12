@@ -11,6 +11,9 @@ import { InvestorAssessment } from "src/investor-tool/entities/investor-assessme
 import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
 import { AssessmentBarriers } from "src/methodology-assessment/entities/assessmentbarriers.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+
 @Entity()
 export class Assessment extends BaseTrackingEntity{
 
@@ -103,12 +106,14 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
 
+  @ApiHideProperty()
   investor_assessment:InvestorAssessment[]=[]
-
+  
+  @ApiHideProperty()
   investor_tool:InvestorTool;
-
+  @ApiHideProperty()
   investor_sector:InvestorSector[];
-
+  @ApiHideProperty()
   assessment_barriers:AssessmentBarriers[];
 
 }

@@ -227,37 +227,27 @@ export class ReportPagesService {
     <tr><td>
     Assesment type
     </td><td> 
-    ${
-      contentOne.assessmetType ? contentOne.assessmetType : 'N/A'
-    }
+    ${contentOne.assessmetType ? contentOne.assessmetType : 'N/A'}
     </td></tr>
     <tr><td>
     Geographical area covered
     </td><td> 
-    ${
-      contentOne.geograpycalCover ? contentOne.geograpycalCover : 'N/A'
-    }
+    ${contentOne.geograpycalCover ? contentOne.geograpycalCover : 'N/A'}
     </td></tr>
     <tr><td>
     Sectors covered 
     </td><td> 
-    ${
-      contentOne.sectorCoverd ? contentOne.sectorCoverd : 'N/A'
-    }
+    ${contentOne.sectorCoverd ? contentOne.sectorCoverd : 'N/A'}
     </td></tr>
     <tr><td>
     Opportunities for stakeholders to participate in the assessment
     </td><td> 
-    ${
-      contentOne.opportunities ? contentOne.opportunities : 'N/A'
-    }
+    ${contentOne.opportunities ? contentOne.opportunities : 'N/A'}
     </td></tr>
     <tr><td>
     Principles on which the assessment is based
     </td><td> 
-    ${
-      contentOne.principles ? contentOne.principles : 'N/A'
-    }
+    ${contentOne.principles ? contentOne.principles : 'N/A'}
     </td></tr>
     
     </tbody>
@@ -472,8 +462,8 @@ export class ReportPagesService {
   
    </div>`;
 
-    const scale_ghg =
-      contentTwo.scale_ghg;
+    const scale_ghg = contentTwo.scale_ghg;
+    const sustained_ghg = contentTwo.sustained_ghg;
     const page_2 = `  <div id="page_5" class="page text-center" >
    ${header}
    <div class="content">
@@ -526,7 +516,50 @@ export class ReportPagesService {
    </tbody>
  </table>
  </div>
-
+ <div class="report-table-sm">
+ <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+ <table class="table  table-bordered border-dark">
+   <thead class="table-primary  border-dark">
+     <tr>
+       <th scope="col">Category</th>
+       <th scope="col">Outcome Characteristic</th>
+       <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+       <th scope="col">Score  </th>
+       <th scope="col">Rationale justifying the score </th>
+     </tr>
+   </thead>
+   <tbody class="table-active">
+   ${sustained_ghg
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
+      <td rowspan="${a.rows}" >${a.name}</td>
+      <td>${b.name ? b.name : '-'}</td>
+      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      <td>${b.score ? b.score : '-'}</td>
+      <td>${b.ustifying ? b.ustifying : '-'}</td>
+      
+    
+     </tr>`;
+           } else {
+             return `<tr>
+             <td>${b.name ? b.name : '-'}</td>
+             <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+             <td>${b.score ? b.score : '-'}</td>
+             <td>${b.ustifying ? b.ustifying : '-'}</td>
+            </tr>`;
+           }
+         })
+         .join(''),
+     )
+     .join('')}
+ 
+ 
+   </tbody>
+ </table>
+ </div>
  
  
    </div>
@@ -535,95 +568,13 @@ export class ReportPagesService {
    
     </div>`;
 
-    const prossesExAnteAssesment = contentTwo.prossesExAnteAssesment;
+    const scale_adaptation = contentTwo.scale_adaptation;
+    const sustained_adaptation = contentTwo.sustained_adaptation;
+
     const page_3 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
-    <div  class="main_header_sub text-start">2.2	${
-      contentTwo.assesmentType
-    } assessment </div> 
-    <blockquote class=" paragraph blockquote text-start ">
-    <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-     Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-      took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-      </p>
-  </blockquote>
-  
-  
-  <div class="report-table-sm">
-  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
-  <table class="table  table-bordered border-dark">
-    <thead class="table-primary  border-dark">
-      <tr>
-        <th scope="col">Category</th>
-        <th scope="col">Process Characteristic</th>
-        <th scope="col">Score</th>
-        <th scope="col">Rationale justifying the score </th>
-        <th scope="col">Indicator value at starting situation</th>
-        <th scope="col">Indicator value observed  </th>
-      </tr>
-    </thead>
-    <tbody class="table-active">
-    ${prossesExAnteAssesment
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            if (!index) {
-              return `<tr>
-        <td rowspan="${a.rows}" >${a.name}</td>
-        <td>${b.name ? b.name : '-'}</td>
-        <td>${b.score ? b.score : '-'}</td>
-        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
-        <td>${
-          b.indicator_starting_value ? b.indicator_starting_value : '-'
-        }</td>
-        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
-      
-       </tr>`;
-            } else {
-              return `<tr>
-              <td>${b.name ? b.name : '-'}</td>
-              <td>${b.score ? b.score : '-'}</td>
-        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
-        <td>${
-          b.indicator_starting_value ? b.indicator_starting_value : '-'
-        }</td>
-        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
-              </tr>`;
-            }
-          })
-          .join(''),
-      )
-      .join('')}
-  
-  
-    </tbody>
-  </table>
-  </div>
  
-  
-  
-    </div>
-    
-    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-    
-     </div>`;
-
-    const outcomeExAnteAssesment = contentTwo.outcomeExAnteAssesment;
-
-    const page_4 = `  <div id="page_5" class="page text-center" >
-    ${header}
-    <div class="content">
-   
-  
-    <blockquote class=" paragraph blockquote text-start ">
-    <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-     Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-      took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-      </p>
-  </blockquote>
-  
-  
   <div class="report-table-sm">
   <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
   <table class="table  table-bordered border-dark">
@@ -631,42 +582,178 @@ export class ReportPagesService {
       <tr>
         <th scope="col">Category</th>
         <th scope="col">Outcome Characteristic</th>
-        <th scope="col">Score</th>
+        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score </th>
-        <th scope="col">Indicator value at starting situation </th>
-        <th scope="col">Indicator value observed </th>
       </tr>
     </thead>
     <tbody class="table-active">
-    ${outcomeExAnteAssesment
+    ${scale_adaptation
       .map((a: { rows: number; name: string; characteristics: any[] }) =>
         a.characteristics
           .map((b, index) => {
             if (!index) {
               return `<tr>
-        <td rowspan="${a.rows}" >${a.name}</td>
-        <td>${b.name ? b.name : '-'}</td>
-        <td>${b.score ? b.score : '-'}</td>
-        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
-        <td>${
-          b.indicator_starting_value ? b.indicator_starting_value : '-'
-        }</td>
-        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
-      
-       </tr>`;
+       <td rowspan="${a.rows}" >${a.name}</td>
+       <td>${b.name ? b.name : '-'}</td>
+       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       <td>${b.score ? b.score : '-'}</td>
+       <td>${b.ustifying ? b.ustifying : '-'}</td>
+       
+     
+      </tr>`;
             } else {
               return `<tr>
               <td>${b.name ? b.name : '-'}</td>
+              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
-        <td>${b.justifying_score ? b.justifying_score : '-'}</td>
-        <td>${
-          b.indicator_starting_value ? b.indicator_starting_value : '-'
-        }</td>
-        <td>${b.indicator_value ? b.indicator_value : '-'}</td>
-              </tr>`;
+              <td>${b.ustifying ? b.ustifying : '-'}</td>
+             </tr>`;
             }
           })
           .join(''),
+      )
+      .join('')}
+  
+  
+    </tbody>
+  </table>
+  </div>
+  <div class="report-table-sm">
+  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  <table class="table  table-bordered border-dark">
+    <thead class="table-primary  border-dark">
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        <th scope="col">Score  </th>
+        <th scope="col">Rationale justifying the score </th>
+      </tr>
+    </thead>
+    <tbody class="table-active">
+    ${sustained_adaptation
+      .map((a: { rows: number; name: string; characteristics: any[] }) =>
+        a.characteristics
+          .map((b, index) => {
+            if (!index) {
+              return `<tr>
+       <td rowspan="${a.rows}" >${a.name}</td>
+       <td>${b.name ? b.name : '-'}</td>
+       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       <td>${b.score ? b.score : '-'}</td>
+       <td>${b.ustifying ? b.ustifying : '-'}</td>
+       
+     
+      </tr>`;
+            } else {
+              return `<tr>
+              <td>${b.name ? b.name : '-'}</td>
+              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+              <td>${b.score ? b.score : '-'}</td>
+              <td>${b.ustifying ? b.ustifying : '-'}</td>
+             </tr>`;
+            }
+          })
+          .join(''),
+      )
+      .join('')}
+  
+  
+    </tbody>
+  </table>
+  </div>
+  
+  
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+    const scale_sd = contentTwo.scale_sd;
+    const page_4 = `  <div id="page_5" class="page text-center" >
+    ${header}
+    <div class="content">
+   
+  
+  
+  <div class="report-table-sm">
+  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  <table class="table  table-bordered border-dark">
+    <thead class="table-primary  border-dark">
+      <tr>
+      <th scope="col">Category</th>
+      <th scope="col">Sustainable Development Goal</th>
+      <th scope="col">Could the intervention have an impact on this particular SDG?</th>
+      <th scope="col">Outcome Characteristic</th>
+      <th scope="col">Is the characteristic within the assessment boundaries?</th>
+      <th scope="col">Score  </th>
+      <th scope="col">Rationale justifying the score</th>
+      </tr>
+    </thead>
+    <tbody class="table-active">
+    
+    ${scale_sd.sdg
+      .map(
+        (
+          a: {
+            rows: number;
+            name: string;
+            impact: string;
+            characteristics: any[];
+          },
+          index,
+        ) => {
+          if (!index) {
+            return a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+      <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
+      <td rowspan="${a.rows}" >${a.name}</td>
+      <td rowspan="${a.rows}" >${a.impact}</td>
+      <td>${b.name ? b.name : '-'}</td>
+      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      <td>${b.score ? b.score : '-'}</td>
+      <td>${b.ustifying ? b.ustifying : '-'}</td>
+    
+     </tr>`;
+                } else {
+                  return `<tr>
+            <td>${b.name ? b.name : '-'}</td>
+    <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+    <td>${b.score ? b.score : '-'}</td>
+    <td>${b.ustifying ? b.ustifying : '-'}</td>
+            </tr>`;
+                }
+              })
+              .join('');
+          } else {
+            return a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+<td rowspan="${a.rows}" >${a.name}</td>
+<td rowspan="${a.rows}" >${a.impact}</td>
+<td>${b.name ? b.name : '-'}</td>
+<td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+<td>${b.score ? b.score : '-'}</td>
+<td>${b.ustifying ? b.ustifying : '-'}</td>
+
+</tr>`;
+                } else {
+                  return `<tr>
+   <td>${b.name ? b.name : '-'}</td>
+<td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+<td>${b.score ? b.score : '-'}</td>
+<td>${b.ustifying ? b.ustifying : '-'}</td>
+   </tr>`;
+                }
+              })
+              .join('');
+          }
+        },
       )
       .join('')}
   
@@ -683,18 +770,116 @@ export class ReportPagesService {
     
      </div>`;
 
-    const prossesDescribeResult = contentTwo.prossesDescribeResult;
+    const sustained_sd = contentTwo.sustained_sd;
+
     const page_5 = `  <div id="page_5" class="page text-center" >
+    ${header}
+    <div class="content">
+   
+  
+   
+  
+  
+    <div class="report-table-sm">
+    <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+        <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Sustainable Development Goal</th>
+        <th scope="col">Could the intervention have an impact on this particular SDG?</th>
+        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Is the characteristic within the assessment boundaries?</th>
+        <th scope="col">Score  </th>
+        <th scope="col">Rationale justifying the score</th>
+        </tr>
+      </thead>
+      <tbody class="table-active">
+      
+      ${sustained_sd.sdg
+        .map(
+          (
+            a: {
+              rows: number;
+              name: string;
+              impact: string;
+              characteristics: any[];
+            },
+            index,
+          ) => {
+            if (!index) {
+              return a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
+        <td rowspan="${sustained_sd.rows}" >${sustained_sd.name}</td>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td rowspan="${a.rows}" >${a.impact}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.ustifying ? b.ustifying : '-'}</td>
+      
+       </tr>`;
+                  } else {
+                    return `<tr>
+              <td>${b.name ? b.name : '-'}</td>
+      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      <td>${b.score ? b.score : '-'}</td>
+      <td>${b.ustifying ? b.ustifying : '-'}</td>
+              </tr>`;
+                  }
+                })
+                .join('');
+            } else {
+              return a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
+  <td rowspan="${a.rows}" >${a.name}</td>
+  <td rowspan="${a.rows}" >${a.impact}</td>
+  <td>${b.name ? b.name : '-'}</td>
+  <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+  <td>${b.score ? b.score : '-'}</td>
+  <td>${b.ustifying ? b.ustifying : '-'}</td>
+  
+  </tr>`;
+                  } else {
+                    return `<tr>
+     <td>${b.name ? b.name : '-'}</td>
+  <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+  <td>${b.score ? b.score : '-'}</td>
+  <td>${b.ustifying ? b.ustifying : '-'}</td>
+     </tr>`;
+                  }
+                })
+                .join('');
+            }
+          },
+        )
+        .join('')}
+    
+    
+      </tbody>
+    </table>
+    </div>
+ 
+  
+  
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+
+    let process_categories_assessment=contentTwo.process_categories_assessment;
+    let outcomes_categories_assessment=contentTwo.outcomes_categories_assessment;
+    
+    const page_6 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
-    
-   
-     <blockquote class=" paragraph blockquote text-start ">
-     <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-       took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-       </p>
-   </blockquote>
+     <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
    <div class="report-table-sm">
@@ -703,26 +888,23 @@ export class ReportPagesService {
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Score</th>
-         <th scope="col">Rationale for scoring </th>
-         <th scope="col">Relative importance of category including rationale</th>
+         <th scope="col">Category	Aggrgated Score</th>
+      
          
        </tr>
      </thead>
      <tbody class="table-active">
-     ${prossesDescribeResult
+     ${process_categories_assessment
        .map(
          (a: {
-           relative_importance: any;
-           score: any;
-           justifying_score: any;
-           name: string;
+          category: any;
+          category_score: any;
+           
          }) => {
            return `<tr>
-              <td>${a.name ? a.name : '-'}</td>
-              <td>${a.score ? a.score : '-'}</td>
-             <td>${a.justifying_score ? a.justifying_score : '-'}</td>
-             <td>${a.relative_importance ? a.relative_importance : '-'}</td>
+           <td>${a.category ? a.category : '-'}</td>
+           <td>${a.category_score.value ? a.category_score.value : '-'}</td>
+             
               </tr>`;
          },
        )
@@ -733,7 +915,40 @@ export class ReportPagesService {
    </table>
    </div>
   
+   <div  class="main_header_sub text-start">2.4	Outcomes categories assessment </div> 
+
+   <div class="report-table-sm">
+   <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Category	Aggrgated Score</th>
+      
+         
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${outcomes_categories_assessment
+       .map(
+        (a: {
+          category: any;
+          category_score: any;
+           
+         }) => {
+           return `<tr>
+           <td>${a.category ? a.category : '-'}</td>
+           <td>${a.category_score.value ? a.category_score.value : '-'}</td>
+             
+              </tr>`;
+         },
+       )
+       .join('')}
+    
    
+     </tbody>
+   </table>
+   </div>
    
      </div>
      
@@ -742,7 +957,7 @@ export class ReportPagesService {
       </div>`;
 
     const outcomeDescribeResult = contentTwo.outcomeDescribeResult;
-    const page_6 = `  <div id="page_5" class="page text-center" >
+    const page_7 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
      
@@ -799,7 +1014,7 @@ export class ReportPagesService {
       
        </div>`;
 
-    const page_7 = `  <div id="page_5" class="page text-center" >
+    const page_8= `  <div id="page_5" class="page text-center" >
        ${header}
        <div class="content">
        <div  class="main_header_sub text-start">2.3	Ex-post assessment </div> 
@@ -934,7 +1149,7 @@ export class ReportPagesService {
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-    const page_8 = `  <div id="page_5" class="page text-center" >
+    const page_9 = `  <div id="page_5" class="page text-center" >
        ${header}
        <div class="content">
       
@@ -1069,7 +1284,7 @@ export class ReportPagesService {
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-    const page_9 = `  <div id="page_5" class="page text-center" >
+    const page_10 = `  <div id="page_5" class="page text-center" >
         ${header}
         <div class="content">
        
@@ -1133,7 +1348,7 @@ export class ReportPagesService {
         
          </div>`;
 
-    const page_10 = `  <div id="page_5" class="page text-center" >
+    const page_11 = `  <div id="page_5" class="page text-center" >
          ${header}
          <div class="content">
         
@@ -1197,7 +1412,7 @@ export class ReportPagesService {
          
           </div>`;
 
-    const page_11 = `  <div id="page_5" class="page text-center" >
+    const page_12 = `  <div id="page_5" class="page text-center" >
          ${header}
          <div class="content">
          <div  class="main_header_sub text-start">2.4	Monitoring (Part IV)</div> 
@@ -1285,17 +1500,15 @@ export class ReportPagesService {
           </div>`;
 
     return (
-      page_1 +
-      page_2 +
-      // page_3 +
-      // page_4 +
-      // page_5 +
-      // page_6 +
+      page_1 + page_2 + page_3+
+      page_4 +
+      page_5 +
+      page_6 
       // page_7 +
       // page_8 +
       // page_9 +
       // page_10 +
-      page_11
+      // page_11
     );
   }
 }
