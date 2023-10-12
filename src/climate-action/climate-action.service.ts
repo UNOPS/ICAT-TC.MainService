@@ -135,6 +135,7 @@ async save(req:AllBarriersSelected){
       barrierCategory.barriers = barrier;
       barrierCategory.characteristics =char;
       barrierCategory.climateAction = req.climateAction
+      barrierCategory.assessment =req.assessment;
       console.log("barrierCategory",barrierCategory)
       let result = await this.barrierCategoryRepo.save(barrierCategory);
       console.log("saved")
