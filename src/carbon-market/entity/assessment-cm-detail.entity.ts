@@ -2,8 +2,10 @@
 // import { Parameter } from 'src/parameter/entity/parameter.entity';
 import { Dirent } from 'fs';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
+import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 
 @Entity()
@@ -31,8 +33,14 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
    @Column({nullable:true})
   sectoral_boundary: string; 
 
-  @Column({ nullable: true })
-  geographicalAreasCovered: string;
+  @ManyToMany((type) => GeographicalAreasCovered, (area)=> area.assessmentCMDetail)
+  geographicalAreasCovered: GeographicalAreasCovered[]
+
+  @ManyToMany((type) => InvestorSector, (sector)=> sector.assessmentCMDetail)
+  sectorsCovered: InvestorSector[]
+
+  // @Column({ nullable: true })
+  // geographicalAreasCovered: string;
 
   // @Column()
   // temporal_boundary: string;

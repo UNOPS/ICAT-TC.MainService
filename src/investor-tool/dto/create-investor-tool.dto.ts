@@ -4,8 +4,15 @@ import { ImpactCovered } from "../entities/impact-covered.entity";
 import { InvestorAssessment } from "../entities/investor-assessment.entity";
 
 export class CreateInvestorToolDto {
-    investortool:InvestorTool;
-    sectors:Sector[];
-    impacts:ImpactCovered[];
-    assess:InvestorAssessment;
+    investortool: InvestorTool;
+    sectors: Sector[];
+    impacts: ImpactCovered[];
+    assess: InvestorAssessment;
+    geographicalAreas: GeographicalAreasCoveredDto[]
+}
+
+export class GeographicalAreasCoveredDto {
+    id: number
+    name: string
+    code: string
 }
