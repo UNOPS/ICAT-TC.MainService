@@ -756,7 +756,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-    let tool = 'Carbon Market Tool';
+    let tool = 'CARBON_MARKET';
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
     
     const results = await this.assessmentRepo.find({

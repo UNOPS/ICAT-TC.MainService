@@ -187,7 +187,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       data.where('assessment.id IN (:...ids)', { ids: assessmentIdArray })
 
     }else{
-      let filter = 'assessment.tool="Portfolio Tool" '
+      let filter = 'assessment.tool="PORTFOLIO" '
 
 
       let user = this.userService.currentUser();
@@ -290,11 +290,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let categories
       let res
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           res = await this.getProcessDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -370,11 +370,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -748,17 +748,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
+        case 'PORTFOLIO':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention);
           break
-        case 'Investment & Private Sector Tool':
+        case 'INVESTOR':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           // _intervention.mitigation = await this.getAggregationDataCarbonMarket(pAssessment.assessment);
           // total+= _intervention.mitigation;
           // response.interventions.push(_intervention)
@@ -783,11 +783,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -1266,7 +1266,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   // }
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
-    let tool = 'Portfolio Tool';
+    let tool = 'PORTFOLIO';
     let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;

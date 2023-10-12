@@ -63,7 +63,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
 
   async getPrerequisite(): Promise<any> {
-    let tool = 'Carbon Market Tool';
+    let tool = 'CARBON_MARKET';
     // let qustionCode ='S-2-C-3-Q-2';
     let answerCode1 ='S-2-C-3-Q-2-A-2'; //no
     let answerCode2 ='S-2-C-3-Q-2-A-3'; // not sure

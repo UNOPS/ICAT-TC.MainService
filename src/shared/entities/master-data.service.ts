@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 export class MasterDataService {
 
     private _SDGs: {id: number, name: string, code: string}[] = []
+    private _tools: {id: number, name: string, code: string}[] = []
 
     constructor() {
         this.SDGs = [
@@ -25,14 +26,37 @@ export class MasterDataService {
             { id: 1, name: 'Peace, justice and strong institutions', code: 'PEACE_JUSTICE_AND_STRING_INSTITUTIONS' },
             { id: 1, name: 'Partnerships for the goals', code: 'PARTNERSHIPS_FOR_THE_GOALS' }
         ]
+
+        this.tools = [
+            {id: 1, name: 'Other Interventions', code: 'PORTFOLIO'},
+            {id: 2, name: 'Carbon Market Tool', code: 'CARBON_MARKET'},
+            {id: 3, name: 'Investor & Private Sector Tool', code: 'INVESTOR'},
+          ]
     }
 
-    set SDGs(value: {id: number, name: string, code: string}[]) {
+    set SDGs(value: { id: number, name: string, code: string }[]) {
         this._SDGs = value;
     }
 
-    get SDGs(): {id: number, name: string, code: string}[] {
+    get SDGs(): { id: number, name: string, code: string }[] {
         return this._SDGs;
+    }
+
+    set tools(value: { id: number; name: string; code: string }[]) {
+        this._tools = value;
+    }
+
+    get tools(): { id: number; name: string; code: string }[] {
+        return this._tools;
+    }
+
+    getToolName(code: string) {
+        let tool = this.tools.find(o => o.code === code)
+        if (tool) {
+            return tool.name
+        } else {
+            return ''
+        }
     }
 
 
