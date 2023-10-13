@@ -134,7 +134,7 @@ export class ComparisonReportReportContentTwo {
     prosses_agent:object[]=[] //ex=[{id:'',name:'',type:'',status:'',entrepreneurs:'',coalition :'',scaleup:'',score:''}]
     prosses_incentive:object[]=[] //ex=[{id:'',name:'',type:'',status:'',economic :'',disincentives:'',institutional :'',score:''}]
     prosses_norms:object[]=[] //ex=[{id:'',name:'',type:'',status:'',awareness:'',behavior:'',norms:'',score:''}]
-
+    process_score:object[]=[]
 }
 export class ComparisonReportReportContentThree {}
 export class ComparisonReportReportContentFour {}

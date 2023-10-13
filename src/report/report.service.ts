@@ -154,7 +154,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
     console.log("assessmentId",assessmentId)
    
-    // console.log(asse)
+
     // reportContentOne.policyName = asse.climateAction.policyName;
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
     // reportContentOne.assessmentYear = asse.year;
@@ -168,10 +168,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentOne.sectorCoverd = asse.investor_sector&&asse.investor_sector.length?asse.investor_sector
       ?.map((a) => a.sector.name)
       .join(','): 'N/A';
-    // reportContentOne.geograpycalCover = asse.investor_tool
-    //   ?.geographical_areas_covered
-    //   ? asse.investor_tool.geographical_areas_covered
-    //   : 'N/A';
+    reportContentOne.geograpycalCover =asse.geographical_areas_covered&&asse.geographical_areas_covered.length?asse.geographical_areas_covered
+    ?.map((a) => a.name)
+    .join(','): 'N/A';;
     reportContentOne.policyOrActionsDetails = [
       {
         information: 'Name',
@@ -219,8 +218,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Geographic coverage',
-        description: asse.geographical_areas_covered
-          ? asse.geographical_areas_covered.map(a=>a.name).join(',')
+        description: asse.climateAction.geographicCoverage
+          ? asse.climateAction.geographicCoverage
           : 'N/A',
       },
       {

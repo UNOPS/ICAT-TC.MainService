@@ -29,20 +29,15 @@ export class ReportPagesService {
        </div>
    </div>
    <div class="row ">
-       <div class="col h4 d-flex justify-content-center">
-         Logo
-       </div>
+   <div class="col h4 d-flex justify-content-center">
+      
    </div>
-   <div class="row ">
-       <div class="col h4 d-flex justify-content-center">
-         Document Prepared By ${coverPage.document_prepared_by}
-       </div>
-   </div>
-   <div class="row ">
-     <div class="col h4 d-flex justify-content-center">
-       Contact Information 
-     </div>
- </div>
+</div>
+<div class="row ">
+<div class="col h4 d-flex justify-content-center">
+  
+</div>
+</div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
        Report Date:${coverPage.reportDate}
@@ -675,9 +670,9 @@ export class ReportPagesService {
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-    
+
     const scale_sd = contentTwo.scale_sd;
-    
+
     const page_4 = `  <div id="page_5" class="page text-center" >
     ${header}
     <div class="content">
@@ -878,10 +873,11 @@ export class ReportPagesService {
     
      </div>`;
 
+    let process_categories_assessment =
+      contentTwo.process_categories_assessment;
+    let outcomes_categories_assessment =
+      contentTwo.outcomes_categories_assessment;
 
-    let process_categories_assessment=contentTwo.process_categories_assessment;
-    let outcomes_categories_assessment=contentTwo.outcomes_categories_assessment;
-    
     const page_6 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
@@ -901,19 +897,18 @@ export class ReportPagesService {
      </thead>
      <tbody class="table-active">
      ${process_categories_assessment
-       .map(
-         (a: {
-          category: any;
-          category_score: any;
-           
-         }) => {
-           return `<tr>
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
            <td>${a.category ? a.category : '-'}</td>
-           <td>${a.category_score.value ? a.category_score.value : '-'}</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
              
               </tr>`;
-         },
-       )
+       })
        .join('')}
     
    
@@ -936,19 +931,18 @@ export class ReportPagesService {
      </thead>
      <tbody class="table-active">
      ${outcomes_categories_assessment
-       .map(
-        (a: {
-          category: any;
-          category_score: any;
-           
-         }) => {
-           return `<tr>
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
            <td>${a.category ? a.category : '-'}</td>
-           <td>${a.category_score.value ? a.category_score.value : '-'}</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
              
               </tr>`;
-         },
-       )
+       })
        .join('')}
     
    
@@ -1020,7 +1014,7 @@ export class ReportPagesService {
       
        </div>`;
 
-    const page_8= `  <div id="page_5" class="page text-center" >
+    const page_8 = `  <div id="page_5" class="page text-center" >
        ${header}
        <div class="content">
        <div  class="main_header_sub text-start">2.3	Ex-post assessment </div> 
@@ -1506,10 +1500,7 @@ export class ReportPagesService {
           </div>`;
 
     return (
-      page_1 + page_2 + page_3+
-      page_4 +
-      page_5 +
-      page_6 
+      page_1 + page_2 + page_3 + page_4 + page_5 + page_6
       // page_7 +
       // page_8 +
       // page_9 +
@@ -1517,9 +1508,6 @@ export class ReportPagesService {
       // page_11
     );
   }
-
-
-
 
   comparisonCoverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
@@ -1562,7 +1550,6 @@ export class ReportPagesService {
 
     return cover;
   }
-
 
   comparisonTableOfContent(
     header: string,
@@ -1654,11 +1641,7 @@ export class ReportPagesService {
           ${intervation_details
             .map(
               (a: { id: string; name: string }) =>
-                '<tr><td>' +
-                a.id +
-                '</td><td>' +
-                a.name +
-                '</td></tr>',
+                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
             )
             .join('')}
           </tbody>
@@ -1672,9 +1655,7 @@ export class ReportPagesService {
    
     </div>`;
 
-
-
-return page_1
+    return page_1;
   }
   comparisonContentTwo(
     header: string,
@@ -1731,11 +1712,7 @@ return page_1
           ${prosses_agent
             .map(
               (a: { id: string; name: string }) =>
-                '<tr><td>' +
-                a.id +
-                '</td><td>' +
-                a.name +
-                '</td></tr>',
+                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
             )
             .join('')}
           </tbody>
@@ -1749,24 +1726,22 @@ return page_1
    
     </div>`;
 
+    return page_1;
 
-
-return page_1
-
-    return ''
+    return '';
   }
   comparisonContentThree(
     header: string,
     footer: string,
     contentOne: ComparisonReportReportContentThree,
   ): string {
-    return ''
+    return '';
   }
   comparisonContentFour(
     header: string,
     footer: string,
     contentOne: ComparisonReportReportContentFour,
   ): string {
-    return ''
+    return '';
   }
 }
