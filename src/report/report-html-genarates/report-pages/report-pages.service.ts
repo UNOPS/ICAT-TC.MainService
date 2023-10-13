@@ -1667,6 +1667,7 @@ export class ReportPagesService {
     const prosses_agent = content.prosses_agent;
     const prosses_incentive = content.prosses_incentive;
     const prosses_norms = content.prosses_norms;
+    const process_score = content.process_score;
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
@@ -1677,20 +1678,43 @@ export class ReportPagesService {
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+          <th colspan="4" scope="col">TECHNOLOGY</th>
+          
+        </tr>
             <tr>
-              <th scope="col">Information</th>
-              <th scope="col">Description</th>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              <th scope="col">research and development</th>
+              <th scope="col">adoption</th>
+              <th scope="col">scale up</th>
+              <th scope="col">category score</th>
               
             </tr>
           </thead>
           <tbody class="table-active ">
           ${prosses_tech
             .map(
-              (a: { information: string; description: string }) =>
+              (a: { id:number,name:string,type:string,status:string,randd:string,adoptation:string,scaleup:string,score:string}) =>
                 '<tr><td>' +
-                a.information +
+                a.id +
                 '</td><td>' +
-                a.description +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                '</td><td>' +
+                a.randd +
+                '</td><td>' +
+                a.adoptation +
+                '</td><td>' +
+                a.scaleup +
+                '</td><td>' +
+                a.score +
                 '</td></tr>',
             )
             .join('')}
@@ -1700,24 +1724,363 @@ export class ReportPagesService {
 
       <div class="report-table-sm">
        
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+        <tr>
+        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="4" scope="col">AGENTS</th>
+        
+      </tr>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            <th scope="col">entrepreneurs</th>
+            <th scope="col">coalition of advocates</th>
+            <th scope="col">beneficiaries</th>
+            <th scope="col">category score</th>
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${prosses_agent
+          .map(
+            (a: { id:number,name:string,type:string,status:string,entrepreneurs:string,coalition :string,beneficiaries:string,score:string}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.entrepreneurs +
+              '</td><td>' +
+              a.coalition +
+              '</td><td>' +
+              a.beneficiaries +
+              '</td><td>' +
+              a.score +
+              '</td></tr>',
+          )
+          .join('')}
+        </tbody>
+      </table>
+    </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+    const page_2 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+           <tr>
+           <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+           <th colspan="4" scope="col">INCENTIVES</th>
+           
+         </tr>
+             <tr>
+               <th scope="col">id	</th>
+               <th scope="col">intervention name	</th>
+               <th scope="col">intervention type	</th>
+               <th scope="col">status</th>
+               <th scope="col">economic and non-economic</th>
+               <th scope="col">disincentives</th>
+               <th scope="col">institutional and regulatory	</th>
+               <th scope="col">category score</th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${prosses_incentive
+             .map(
+               (a: { id:number,name:string,type:string,status:string,economic :string,disincentives:string,institutional :string,score:string}) =>
+                 '<tr><td>' +
+                 a.id +
+                 '</td><td>' +
+                 a.name +
+                 '</td><td>' +
+                 a.type +
+                 '</td><td>' +
+                 a.status +
+                 '</td><td>' +
+                 a.economic +
+                 '</td><td>' +
+                 a.disincentives +
+                 '</td><td>' +
+                 a.institutional +
+                 '</td><td>' +
+                 a.score +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+ 
+       <div class="report-table-sm">
+        
+       <table class="table  table-bordered border-dark">
+         <thead class="table-primary  border-dark">
+         <tr>
+         <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+         <th colspan="4" scope="col">CATEGORY - NORMS AND BEHAVIORAL CHANGE</th>
+         
+       </tr>
+           <tr>
+             <th scope="col">id	</th>
+             <th scope="col">intervention name	</th>
+             <th scope="col">intervention type	</th>
+             <th scope="col">status</th>
+             <th scope="col">awareness</th>
+             <th scope="col">behavior</th>
+             <th scope="col">social norms</th>
+             <th scope="col">category score</th>
+             
+           </tr>
+         </thead>
+         <tbody class="table-active ">
+         ${prosses_norms
+           .map(
+             (a: { id:number,name:string,type:string,status:string,awareness:string,behavior:string,norms:string,score:string}) =>
+               '<tr><td>' +
+               a.id +
+               '</td><td>' +
+               a.name +
+               '</td><td>' +
+               a.type +
+               '</td><td>' +
+               a.status +
+               '</td><td>' +
+               a.awareness +
+               '</td><td>' +
+               a.behavior +
+               '</td><td>' +
+               a.norms +
+               '</td><td>' +
+               a.score +
+               '</td></tr>',
+           )
+           .join('')}
+         </tbody>
+       </table>
+     </div>
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+
+     const page_3 = `  <div id="page_9" class="page text-center" >
+     ${header}
+     <div class="content">
+     
+          <div class="report-table-sm">
+         
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+            <tr>
+            <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+            <th colspan="4" scope="col">AGGREGATED CATERGORY SCORE</th>
+            <th  scope="col">PROCESSES SCORE</th>
+            
+          </tr>
+              <tr>
+                <th scope="col">id	</th>
+                <th scope="col">intervention name	</th>
+                <th scope="col">intervention type	</th>
+                <th scope="col">status</th>
+                <th  scope="col">technology score</th>
+                <th  scope="col">agents </th>
+                <th  scope="col">incentives</th>
+                <th  scope="col">norms and behavioral change</th>
+                <th scope="col">all</th>
+                
+              </tr>
+            </thead>
+            <tbody class="table-active ">
+            ${process_score
+              .map(
+                (a: { id:number,name:string,type:string,status:string,tech:string,agent:string,incentive:string,norms:string,prosess:string}) =>
+                  '<tr><td>' +
+                  a.id +
+                  '</td><td>' +
+                  a.name +
+                  '</td><td>' +
+                  a.type +
+                  '</td><td>' +
+                  a.status +
+                  '</td><td>' +
+                  a.tech +
+                  '</td><td>' +
+                  a.agent +
+                  '</td><td>' +
+                  a.incentive +
+                  '</td><td>' +
+                  a.norms +
+                  '</td><td>' +
+                  a.prosess +
+                  '</td></tr>',
+              )
+              .join('')}
+            </tbody>
+          </table>
+        </div>
+  
+   
+     
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+
+
+
+      const ghg_scale = content.ghg_scale;
+      const ghg_sustaind = content.ghg_sustaind;
+      const ghg_scale_sustaind_comparison = content.ghg_scale_sustaind_comparison;
+      
+      const allsdg = content.allsdg;
+      const sdg_scale = content.sdg_scale;
+      const sdg_sustaind = content.sdg_sustaind;
+      const sdg_scale_sustaind_comparison = content.sdg_scale_sustaind_comparison;
+
+      const adaptation_scale = content.adaptation_scale;
+      const adaptation_sustaind = content.adaptation_sustaind;
+      const adaptation_scale_sustaind_comparison = content.adaptation_scale_sustaind_comparison;
+
+      const sacle_comparison = content.sacle_comparison;
+      const sustaind_comparison = content.sustaind_comparison;
+      const outcome_level = content.outcome_level;
+
+
+
+      const page_4 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   
+ 
+ <div  class="main_header_sub text-start">2.2	Outcomes impacts comparison</div> 
+        <div class="report-table-sm">
+       
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="4" scope="col">SCALE COMPARISON	</th>
+          <th colspan="4" scope="col">OUTCOMES</th>
+          
+        </tr>
+        <tr>
+        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="4" scope="col">GHG</th>
+        
+      </tr>
             <tr>
-              <th scope="col">Intervention ID</th>
-              <th scope="col">Intervention name</th>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              <th scope="col">international</th>
+              <th scope="col">national/ sectorial	</th>
+              <th scope="col">subnational/ subsectorial	 up</th>
+              <th scope="col">category score</th>
               
             </tr>
           </thead>
           <tbody class="table-active ">
-          ${prosses_agent
+          ${ghg_scale
             .map(
-              (a: { id: string; name: string }) =>
-                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
+              (a: { id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                '</td><td>' +
+                a.international +
+                '</td><td>' +
+                a.national +
+                '</td><td>' +
+                a.subnational +
+                '</td><td>' +
+                a.score +
+                '</td></tr>',
             )
             .join('')}
           </tbody>
         </table>
       </div>
+
+      <div class="report-table-sm">
+       
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+
+        <tr>
+        <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
+        <th colspan="4" scope="col">OUTCOMES</th>
+        
+      </tr>
+        <tr>
+        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="4" scope="col">GHG</th>
+        
+      </tr>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            <th scope="col">long term</th>
+            <th scope="col">medium term</th>
+            <th scope="col">short term</th>
+            <th scope="col">category score</th>
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${ghg_sustaind
+          .map(
+            (a: { id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.long +
+              '</td><td>' +
+              a.medium +
+              '</td><td>' +
+              a.short +
+              '</td><td>' +
+              a.score +
+              '</td></tr>',
+          )
+          .join('')}
+        </tbody>
+      </table>
+    </div>
  
    
    </div>
@@ -1726,22 +2089,830 @@ export class ReportPagesService {
    
     </div>`;
 
-    return page_1;
+    
+    const page_5 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   
+ 
+ 
+    
 
-    return '';
+      <div class="report-table-sm">
+       
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+        <tr>
+        <th colspan="4" scope="col">SCALE COMPARISON	</th>
+        <th colspan="4" scope="col">OUTCOMES</th>
+        
+      </tr>
+      <tr>
+      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+      <th colspan="4" scope="col">ADAPTATION</th>
+      
+    </tr>
+          <tr>
+            <th scope="col">id	</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            <th scope="col">international</th>
+            <th scope="col">national/ sectorial	</th>
+            <th scope="col">subnational/ subsectorial	 up</th>
+            <th scope="col">category score</th>
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${adaptation_scale
+          .map(
+            (a: { id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.international +
+              '</td><td>' +
+              a.national +
+              '</td><td>' +
+              a.subnational +
+              '</td><td>' +
+              a.score +
+              '</td></tr>',
+          )
+          .join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="report-table-sm">
+       
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+
+      <tr>
+      <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
+      <th colspan="4" scope="col">OUTCOMES</th>
+      
+    </tr>
+      <tr>
+      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+      <th colspan="4" scope="col">ADAPTATION</th>
+      
+    </tr>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">intervention name	</th>
+          <th scope="col">intervention type	</th>
+          <th scope="col">status</th>
+          <th scope="col">long term</th>
+          <th scope="col">medium term</th>
+          <th scope="col">short term</th>
+          <th scope="col">category score</th>
+          
+        </tr>
+      </thead>
+      <tbody class="table-active ">
+      ${adaptation_sustaind
+        .map(
+          (a: { id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}) =>
+            '<tr><td>' +
+            a.id +
+            '</td><td>' +
+            a.name +
+            '</td><td>' +
+            a.type +
+            '</td><td>' +
+            a.status +
+            '</td><td>' +
+            a.long +
+            '</td><td>' +
+            a.medium +
+            '</td><td>' +
+            a.short +
+            '</td><td>' +
+            a.score +
+            '</td></tr>',
+        )
+        .join('')}
+      </tbody>
+    </table>
+  </div>
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+
+    const sdg_pages=allsdg.map(
+      (a:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[],sdg_scale_sustaind_comparison:object[]})=>`  <div id="page_9" class="page text-center" >
+      ${header}
+      <div class="content">
+      <div class="report-table-sm">
+         
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+        <tr>
+        <th colspan="4" scope="col">SCALE COMPARISON	</th>
+        <th colspan="4" scope="col">OUTCOMES</th>
+        
+      </tr>
+      <tr>
+      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+      <th colspan="4" scope="col">SDG- ${a.sdg_name} </th>
+      
+    </tr>
+          <tr>
+            <th scope="col">id	</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            <th scope="col">international</th>
+            <th scope="col">national/ sectorial	</th>
+            <th scope="col">subnational/ subsectorial	 up</th>
+            <th scope="col">category score</th>
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${a.sdg_scale
+          .map(
+            (a: { id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.international +
+              '</td><td>' +
+              a.national +
+              '</td><td>' +
+              a.subnational +
+              '</td><td>' +
+              a.score +
+              '</td></tr>',
+          )
+          .join('')}
+        </tbody>
+      </table>
+    </div>
+    
+  
+    <div class="report-table-sm">
+         
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+  
+      <tr>
+      <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
+      <th colspan="4" scope="col">OUTCOMES</th>
+      
+    </tr>
+      <tr>
+      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+      <th colspan="4" scope="col">SDG- ${a.sdg_name} </th>
+      
+    </tr>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">intervention name	</th>
+          <th scope="col">intervention type	</th>
+          <th scope="col">status</th>
+          <th scope="col">long term</th>
+          <th scope="col">medium term</th>
+          <th scope="col">short term</th>
+          <th scope="col">category score</th>
+          
+        </tr>
+      </thead>
+      <tbody class="table-active ">
+      ${a.sdg_sustaind
+        .map(
+          (a: { id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}) =>
+            '<tr><td>' +
+            a.id +
+            '</td><td>' +
+            a.name +
+            '</td><td>' +
+            a.type +
+            '</td><td>' +
+            a.status +
+            '</td><td>' +
+            a.long +
+            '</td><td>' +
+            a.medium +
+            '</td><td>' +
+            a.short +
+            '</td><td>' +
+            a.score +
+            '</td></tr>',
+        )
+        .join('')}
+      </tbody>
+    </table>
+  </div>
+   
+  
+    
+      
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`
+    ).join('');
+ 
+
+
+
+    const page_7 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   
+   <div class="report-table-sm">
+       
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+     <tr>
+     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
+     <th colspan="3" scope="col">GHG OUTCOMES</th>
+     
+   </tr>
+   <tr>
+   <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+   
+   
+ </tr>
+       <tr>
+         <th scope="col">id	</th>
+         <th scope="col">intervention name	</th>
+         <th scope="col">intervention type	</th>
+         <th scope="col">status</th>
+         <th scope="col">scale category score</th>
+         <th scope="col">sustained category score		</th>
+         <th scope="col">category score</th>
+         
+       </tr>
+     </thead>
+     <tbody class="table-active ">
+     ${ghg_scale_sustaind_comparison
+       .map(
+         (a: { id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}) =>
+           '<tr><td>' +
+           a.id +
+           '</td><td>' +
+           a.name +
+           '</td><td>' +
+           a.type +
+           '</td><td>' +
+           a.status +
+           '</td><td>' +
+           a.scale +
+           '</td><td>' +
+           a.sustained +
+           '</td><td>' +
+           a.score +
+           '</td></tr>',
+       )
+       .join('')}
+     </tbody>
+   </table>
+ </div>
+
+ <div class="report-table-sm">
+       
+ <table class="table  table-bordered border-dark">
+   <thead class="table-primary  border-dark">
+   <tr>
+   <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
+   <th colspan="3" scope="col">ADAPTATION OUTCOMES</th>
+   
+ </tr>
+ <tr>
+ <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+ 
+ 
+</tr>
+     <tr>
+       <th scope="col">id	</th>
+       <th scope="col">intervention name	</th>
+       <th scope="col">intervention type	</th>
+       <th scope="col">status</th>
+       <th scope="col">scale category score</th>
+       <th scope="col">sustained category score		</th>
+       <th scope="col">category score</th>
+       
+     </tr>
+   </thead>
+   <tbody class="table-active ">
+   ${adaptation_scale_sustaind_comparison
+     .map(
+       (a: { id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}) =>
+         '<tr><td>' +
+         a.id +
+         '</td><td>' +
+         a.name +
+         '</td><td>' +
+         a.type +
+         '</td><td>' +
+         a.status +
+         '</td><td>' +
+         a.scale +
+         '</td><td>' +
+         a.sustained +
+         '</td><td>' +
+         a.score +
+         '</td></tr>',
+     )
+     .join('')}
+   </tbody>
+ </table>
+</div>    
+
+    
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    const page_8 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    
+  
+ 
+  <div class="report-table-sm">
+       
+  <table class="table  table-bordered border-dark">
+    <thead class="table-primary  border-dark">
+    <tr>
+    <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
+    <th colspan="3" scope="col">SDG OUTCOMES</th>
+    
+  </tr>
+  <tr>
+  <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+  
+  
+  </tr>
+      <tr>
+        <th scope="col">id	</th>
+        <th scope="col">intervention name	</th>
+        <th scope="col">intervention type	</th>
+        <th scope="col">status</th>
+        <th scope="col">scale category score</th>
+        <th scope="col">sustained category score		</th>
+        <th scope="col">category score</th>
+        
+      </tr>
+    </thead>
+    <tbody class="table-active ">
+    ${sdg_scale_sustaind_comparison
+      .map(
+        (a: { id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}) =>
+          '<tr><td>' +
+          a.id +
+          '</td><td>' +
+          a.name +
+          '</td><td>' +
+          a.type +
+          '</td><td>' +
+          a.status +
+          '</td><td>' +
+          a.scale +
+          '</td><td>' +
+          a.sustained +
+          '</td><td>' +
+          a.score +
+          '</td></tr>',
+      )
+      .join('')}
+    </tbody>
+  </table>
+  </div>
+ 
+    
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+
+
+
+    const page_9 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   
+ 
+
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="4" scope="col">SCALE COMPARISON	</th>
+          <th colspan="4" scope="col"> OUTCOMES</th>
+          
+        </tr>
+        <tr>
+        <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+        
+        
+      </tr>
+            <tr>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              <th scope="col">ghg</th>
+              <th scope="col">sdg </th>
+              <th scope="col">adaptation </th>
+              <th scope="col">category score</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${sacle_comparison
+            .map(
+              (a: { id:number,name:string,type:string,status:string,ghg:string,sdg :string,adaptation :string,score:string}) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                '</td><td>' +
+                a.ghg +
+                '</td><td>' +
+                a.sdg +
+                '</td><td>' +
+                a.adaptation +
+                '</td><td>' +
+                a.score +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-table-sm">
+       
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+        <tr>
+        <th colspan="4" scope="col">SUSTAINED  COMPARISON	</th>
+        <th colspan="4" scope="col">OUTCOMES</th>
+        
+      </tr>
+      <tr>
+      <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+      
+      
+    </tr>
+          <tr>
+            <th scope="col">id	</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            <th scope="col">ghg</th>
+            <th scope="col">sdg </th>
+            <th scope="col">adaptation </th>
+            <th scope="col">category score</th>
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${sustaind_comparison
+          .map(
+            (a: { id:number,name:string,type:string,status:string,ghg:string,sdg :string,adaptation :string,score:string}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.ghg +
+              '</td><td>' +
+              a.sdg +
+              '</td><td>' +
+              a.adaptation +
+              '</td><td>' +
+              a.score +
+              '</td></tr>',
+          )
+          .join('')}
+        </tbody>
+      </table>
+    </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    const page_10 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   
+ 
+
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="4" scope="col">OUTCOME LEVEL COMPARISON	</th>
+          <th colspan="4" scope="col"> OUTCOMES</th>
+          
+        </tr>
+        <tr>
+        <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+        
+        
+      </tr>
+            <tr>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              <th scope="col">scale </th>
+              <th scope="col">sustained  </th>
+             
+              <th scope="col">category score</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${outcome_level
+            .map(
+              (a: { id:number,name:string,type:string,status:string,scale:string,sustained :string,score:string}) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                '</td><td>' +
+                a.scale +
+                '</td><td>' +
+                a.sustained +
+                '</td><td>' +
+                a.score +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+
+     
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+
+    return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_8+page_9+page_10;
+
+    
   }
   comparisonContentThree(
     header: string,
     footer: string,
-    contentOne: ComparisonReportReportContentThree,
+    content: ComparisonReportReportContentThree,
   ): string {
-    return '';
+   const aggregation= content.aggregation
+    let pageNumber = 2;
+
+
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">3.	AGGREGATION </div>
+ 
+ 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="5" scope="col">AGGREGATION</th>
+          
+          
+        </tr>
+        <tr>
+        <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
+        
+        
+      </tr>
+            <tr>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              
+              <th scope="col">ghg mitigation (MT CO2-EG)</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${aggregation.data
+            .map(
+              (a: { id:number,name:string,type:string,status:string,mitigation :string}) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                '</td><td>' +
+                a.mitigation +
+                '</td></tr>',
+            )
+            .join('')}
+            <tr><td colspan="4" > Total
+            </td><td> ${aggregation.total}
+                </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+
+    return page_1;
   }
   comparisonContentFour(
     header: string,
     footer: string,
-    contentOne: ComparisonReportReportContentFour,
+    content: ComparisonReportReportContentFour,
   ): string {
-    return '';
+
+
+    const alignment_table= content.alignment_table
+    const alignment_heat_map= content.alignment_heat_map
+    let pageNumber = 2;
+
+
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">3.	AGGREGATION </div>
+ 
+ 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+          <tr>
+          <th colspan="4" scope="col">ALIGNMENT</th>
+          
+          
+        </tr>
+        <tr>
+        <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
+        
+        
+      </tr>
+            <tr>
+              <th scope="col">id	</th>
+              <th scope="col">intervention name	</th>
+              <th scope="col">intervention type	</th>
+              <th scope="col">status</th>
+              
+              ${alignment_table.sdg_names
+                .map(
+                  (a) =>
+                    '<th scope="col">'+a+'</th>'
+                )
+                .join('')}
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${alignment_table.data
+            .map(
+              (a: { id:number,name:string,type:string,status:string,data :string[]}) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td><td>' +
+                a.type +
+                '</td><td>' +
+                a.status +
+                `</td> ${a.data
+                  .map(
+                    (a) =>
+                      '<th scope="col">'+a+'</th>'
+                  )
+                  .join('')}</tr>`,
+            )
+            .join('')}
+          
+          </tbody>
+        </table>
+      </div>
+      <div class="report-table-sm">
+        
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+        <tr>
+        <th colspan="4" scope="col">ALIGNMENT</th>
+        
+        
+      </tr>
+      <tr>
+      <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
+      
+      
+    </tr>
+          <tr>
+            <th scope="col">id	</th>
+            <th scope="col">intervention name	</th>
+            <th scope="col">intervention type	</th>
+            <th scope="col">status</th>
+            
+            ${alignment_heat_map.sdg_names
+              .map(
+                (a) =>
+                  '<th scope="col">'+a+'</th>'
+              )
+              .join('')}
+            
+          </tr>
+        </thead>
+        <tbody class="table-active ">
+        ${alignment_heat_map.data
+          .map(
+            (a: { id:number,name:string,type:string,status:string,data :string[]}) =>
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              `</td> ${a.data
+                .map(
+                  (a) =>
+                    '<th scope="col">'+a+'</th>'
+                )
+                .join('')}</tr>`,
+          )
+          .join('')}
+        
+        </tbody>
+      </table>
+    </div>
+      
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+   
+    return page_1;
   }
 }
