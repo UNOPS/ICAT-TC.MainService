@@ -123,7 +123,10 @@ export class ComparisonReportDto {
 }
 
 export class ComparisonReportReportTableOfContent {}
-export class ComparisonReportReportContentOne {}
+export class ComparisonReportReportContentOne {
+    information  :string ="";
+    description  :string ="";
+}
 export class ComparisonReportReportContentTwo {}
 export class ComparisonReportReportContentThree {}
 export class ComparisonReportReportContentFour {}
