@@ -30,6 +30,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   cmScores: any
   piScores: any
   sdgs_score: any = {}
+  sdgPriorities: import("/Users/sanduni/Documents/ClimateSI/TC_Tools/main-service-new/src/investor-tool/entities/sdg-priority.entity").SdgPriority[];
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -187,7 +188,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       data.where('assessment.id IN (:...ids)', { ids: assessmentIdArray })
 
     }else{
-      let filter = 'assessment.tool="Portfolio Tool" '
+      let filter = 'assessment.tool="PORTFOLIO" '
 
 
       let user = this.userService.currentUser();
@@ -290,11 +291,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let categories
       let res
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           res = await this.getProcessDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -370,11 +371,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -748,17 +749,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
+        case 'PORTFOLIO':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention);
           break
-        case 'Investment & Private Sector Tool':
+        case 'INVESTOR':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           // _intervention.mitigation = await this.getAggregationDataCarbonMarket(pAssessment.assessment);
           // total+= _intervention.mitigation;
           // response.interventions.push(_intervention)
@@ -773,6 +774,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs = []
     let response: ComparisonDto = new ComparisonDto()
     let intervention_data = []
+
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userCountryId = currentUser.country?.id;
+    this.sdgPriorities = await this.investorToolService.getSdgPrioritiesByCountryId(userCountryId)
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -783,11 +789,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -1019,21 +1025,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
       let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
       let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg.number + ' - ' + sd.sdg.name] / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code})//TODO need to update after clarification
+      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
+      response[code] = {name: ans.name, value: ans.value + priority.value}
+      col2.push({label: priority_name.toUpperCase(), code: code})//TODO need to update after clarification
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
-    console.log(response)
     return {
       response: response,
       col2: col2,
@@ -1238,16 +1240,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .where('assessment.id = :id', { id: assessment.id })
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
       let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score.sdgs_score[sd.sdg.id]), result.outcome_score.sdgs_score[sd.sdg.id]))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code}) //TODO need to update after clarification
+      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
+      response[code] = {name: ans.name, value: ans.value + priority.value}
+      col2.push({label: priority_name.toUpperCase(), code: code}) //TODO need to update after clarification
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
@@ -1266,7 +1265,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   // }
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
-    let tool = 'Portfolio Tool';
+    let tool = 'PORTFOLIO';
     let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;

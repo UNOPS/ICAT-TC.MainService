@@ -4,7 +4,7 @@ import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
-import { FinalInvestorAssessmentDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
+import { FinalInvestorAssessmentDto, SdgPriorityDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -212,6 +212,16 @@ export class InvestorToolController {
       limit: limit,
       page: page,
     },);
+  }
+
+  @Post('save-sdg-priorities')
+  async saveSdgPriorities(@Body() req: SdgPriorityDto){
+    return await this.investorToolService.saveSdgPriorities(req.priorities)
+  }
+
+  @Get('get-priorities-by-country/:id')
+  async getSdgPrioritiesByCountryId(@Param('id') id: number){
+    return await this.investorToolService.getSdgPrioritiesByCountryId(id)
   }
 
 
