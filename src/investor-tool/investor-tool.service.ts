@@ -12,7 +12,7 @@ import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { MethodologyAssessmentParameters } from 'src/methodology-assessment/entities/methodology-assessment-parameters.entity';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
-import { FinalInvestorAssessmentDto } from './dto/final-investor-assessment.dto';
+import { FinalInvestorAssessmentDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { IndicatorDetails } from './entities/indicator-details.entity';
@@ -32,6 +32,7 @@ import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 
 const schema = {
   'id': {
@@ -64,7 +65,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(SdgAssessment) private readonly sdgsRepo: Repository<SdgAssessment>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
-
+    @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService
 
@@ -82,7 +83,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // console.log("investor......", createInvestorToolDto.investortool.level_of_implemetation)
       let investor = new InvestorTool();
       investor.assessment = assessment;
-      investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
+      // investor.geographical_areas_covered = createInvestorToolDto.investortool.geographical_areas_covered;
       investor.level_of_implemetation = createInvestorToolDto.investortool.level_of_implemetation;
       investor.national_country = createInvestorToolDto.investortool?.national_country;
       investor.subnational_region = createInvestorToolDto.investortool?.subnational_region;
@@ -103,6 +104,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         investorImpacts.assessment = assessment;
         investorImpacts.name = impacts.name;
         let a = await this.investorImpactRepo.save(investorImpacts)
+      }
+      for await (let area of createInvestorToolDto.geographicalAreas) {
+        let _area = new GeographicalAreasCovered()
+        _area.assessment = assessment
+        _area.investorTool = result
+        _area.name = area.name
+        _area.code = area.code
+        let areas = await this.geographicalAreaRepo.save(_area)
       }
       // console.log("created investor tool,", createInvestorToolDto)
       return result;
@@ -130,6 +139,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async findAllSectorData(assessmentId: number) {
     return this.investorSectorRepo.find({
       relations: ['assessment', 'sector'],
+      where: { assessment: { id: assessmentId } },
+    });
+  }
+
+  async findAllGeographicalAreaData(assessmentId: number) {
+    return this.geographicalAreaRepo.find({
+      relations: ['assessment'],
       where: { assessment: { id: assessmentId } },
     });
   }
@@ -1335,12 +1351,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number,
-      aggregatedScore:any,
+      aggregatedScore:{
+        name: string
+        value: number|null
+      },
     } = {
       processData: [],
       processScore: 0,
       outcomeScore: 0,
-      aggregatedScore:null,
+      aggregatedScore:{
+        name: '',
+        value: null
+      },
       outcomeData: []
     }
 
@@ -1386,6 +1408,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     //Assigning values 
     let total_cat_weight = 0;
     let process_score = 0;
+    let sdgArray =new Array()
     for (let category of categoryDataArray) {
       let total_char_weight = 0
       let cat_score = 0
@@ -1521,7 +1544,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (sdg_count != 0) {
           // console.log(isSutained,category.code)
           category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; //round down
-          total_outcome_cat_weight += category.category_weight * category.category_score.value;
+          sdgArray.push(category)
+          // total_outcome_cat_weight += category.category_weight * category.category_score.value;
           // console.log(category.category, category.category_weight * category.category_score.value)
         }
 
@@ -1544,27 +1568,33 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         else {
           category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
+          
           // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
     }
+    
     let aggre_Score =0;
     let sdg_count_aggre =0
-    for (let category of outcomeArray){
-      if (category.isSDG && category.category_score.value!=undefined){
-        aggre_Score +=category.category_score.value
+    let final_aggre_score =0
+    for (let category of sdgArray){
+        aggre_Score += category.category_score.value
         sdg_count_aggre++
-      }
     }
     if(sdg_count_aggre!=0){
-      finalProcessDataArray.aggregatedScore =aggre_Score/sdg_count_aggre;
+      finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/sdg_count_aggre);
+      finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre))
+      total_outcome_cat_weight += 50*final_aggre_score;
+      console.log("22")
     }
     else{
-      aggre_Score = null;
+      finalProcessDataArray.aggregatedScore.value = null;
+      finalProcessDataArray.aggregatedScore.name = '-'
+      console.log("11")
     }
-    finalProcessDataArray.aggregatedScore = aggre_Score;
     finalProcessDataArray.outcomeData = outcomeArray;
     finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+    
     await this.assessmentRepo
     .createQueryBuilder()
     .update(Assessment)
@@ -1797,7 +1827,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async getDashboardAllData(options: IPaginationOptions): Promise<Pagination<any>> {
     // let tool = 'Investment & Private Sector Tool';
-    let filter = '(asses.process_score is not null and asses.outcome_score is not null) '
+    let filter = 'asses.process_score is not null and asses.outcome_score is not null'
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1812,7 +1842,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
       .leftJoinAndMapOne(
         'asses.climateAction',
         ClimateAction,
@@ -1915,9 +1945,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
   }
 
-  async saveSectorsCovered(sectors: InvestorSector[]){
-    let res = await this.investorSectorRepo.save(sectors)
-    if (res) {
+  async saveToolsMultiSelect(selects: ToolsMultiselectDto){
+    let res_s
+    let res_g
+    if (selects.sectors){
+      res_s = await this.investorSectorRepo.save(selects.sectors)
+    }
+    if (selects.geographicalAreas){
+      res_g = await this.geographicalAreaRepo.save(selects.geographicalAreas)
+    }
+    if (res_s) {
       return true
     } else {
       return false

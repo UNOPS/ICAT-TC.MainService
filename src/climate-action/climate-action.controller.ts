@@ -380,7 +380,7 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     }
   }
 
-  @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN]))
   @Post("policybar")
   async policyBar(@Body() req:AllBarriersSelected){
     // console.log("policyBar",req)

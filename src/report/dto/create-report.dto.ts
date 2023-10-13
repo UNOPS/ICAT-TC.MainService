@@ -7,3 +7,11 @@ export class CreateReportDto {
     climateAction: ClimateAction
     reportTitle:string="Report Title"
 }
+
+
+export class CreateComparisonReportDto {
+    portfolioId: number;
+    climateAction: ClimateAction;
+    reportName: string = 'reportPDF.pdf';
+    reportTitle:string="Report Title";
+}

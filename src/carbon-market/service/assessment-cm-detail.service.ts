@@ -11,6 +11,8 @@ import { User } from "src/users/entity/user.entity";
 import { Country } from "src/country/entity/country.entity";
 import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
+import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
+import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 
 
 @Injectable()
@@ -36,6 +38,23 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
       'detail.cmassessment',
       'assessment',
       'assessment.id = detail.cmassessmentId'
+    )
+    .leftJoinAndMapMany(
+      'detail.geographicalAreasCovered',
+      GeographicalAreasCovered,
+      'geographicalAreas',
+      'geographicalAreas.assessmentCMDetailId = detail.id'
+    )
+    .leftJoinAndMapMany(
+      'detail.sectorsCovered',
+      InvestorSector,
+      'iSector',
+      'iSector.assessmentCMDetailId = detail.id'
+    )
+    .leftJoinAndSelect(
+      'iSector.sector',
+      'sector',
+      'sector.id = iSector.sector_id'
     )
     .where('assessment.id = :id', {id: assessmentId})
 
