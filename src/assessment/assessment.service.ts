@@ -27,6 +27,17 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 import { Repository } from 'typeorm';
 import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
+import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
+import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
+import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entity';
+import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
+import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
+import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
+import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -154,7 +165,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     userName: string,
   ): Promise<any> {
     let userItem = await this.userService.findByUserName(userName);
-    console.log('userItem', userItem);
+    // console.log('userItem', userItem);
 
     var data = this.repo
       .createQueryBuilder('as')
@@ -178,7 +189,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id }});
-      console.log('dataRequestItem', dataRequestItem);
+      // console.log('dataRequestItem', dataRequestItem);
       let originalStatus = dataRequestItem.qaStatus;
       dataRequestItem.qaStatus = updateDataRequestDto.status;
 
@@ -189,7 +200,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       // console.log("insSec", insSec)
 
       this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
+        // console.log('res', res);
       });
     }
   //   let user:User[];
@@ -258,12 +269,72 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     let data = await this.repo
       .createQueryBuilder('asse')
-
+      .leftJoinAndMapMany(
+        'asse.policy_barrier',
+        PolicyBarriers,
+        'policy_barrier',
+        `policy_barrier.assessmentId = asse.id`,
+      )
+      .leftJoinAndMapMany(
+        'policy_barrier.barrierCategory',
+        BarrierCategory,
+        'barrierCategory',
+        `barrierCategory.barriersId = policy_barrier.id`,
+      )
+      .leftJoinAndMapOne(
+        'barrierCategory.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = barrierCategory.characteristicsId`,
+      )
+      .leftJoinAndMapMany(
+        'asse.investor_sector',
+        InvestorSector,
+        'investor_sector',
+        `investor_sector.assessment_id = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'investor_sector.sector',
+        Sector,
+        'sectorinvest',
+        `sectorinvest.id = investor_sector.sector_id`,
+      )
+      // .leftJoinAndMapMany(
+      //   'asse.assessment_barriers',
+      //   AssessmentBarriers,
+      //   'assessment_barriers',
+      //   `asse.id = assessment_barriers.assessment_id`,
+      // )
+      // .leftJoinAndMapOne(
+      //   'assessment_barriers.barriers',
+      //   Barriers,
+      //   'barriers',
+      //   `assessment_barriers.barriers_id = barriers.id`,
+      // )
+      
+      .leftJoinAndMapMany(
+        'asse.geographical_areas_covered',
+        GeographicalAreasCovered,
+        'geographical_areas_covered',
+        `geographical_areas_covered.assessmentId = asse.id`,
+      )
       .leftJoinAndMapOne(
         'asse.climateAction',
         ClimateAction,
         'proj',
         `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapMany(
+        'proj.policy_sectorv',
+        PolicySector,
+        'policy_sector',
+        `proj.id = policy_sector.intervention_id`,
+      )
+      .leftJoinAndMapOne(
+        'policy_sector.sector',
+        Sector,
+        'sector',
+        `sector.id = policy_sector.sector_id`,
       )
       .leftJoinAndMapOne(
         'asse.methodology',
@@ -290,14 +361,21 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
 
-  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,assessmentType:string) {
-    let filter: string = 'asse.id=:assessmentId and   parameters.characteristics_id is not null';
+  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,catagoryName:string,assessmentType:string) {
+    let filter: string = 'asse.id=:assessmentId ';
 
     if(catagoryType){
       if(filter){
         filter=`${filter} and category.type= :catagoryType `
       }else{
         filter='category.type= :catagoryType '
+      }
+    }
+    if(catagoryName){
+      if(filter){
+        filter=`${filter} and category.name= :catagoryName `
+      }else{
+        filter='category.name= :catagoryName '
       }
     }
     if(assessmentType){
@@ -309,33 +387,45 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
     let data = await this.repo
       .createQueryBuilder('asse') 
-
     
       .leftJoinAndMapMany(
-        'asse.parameters',
-        MethodologyAssessmentParameters,
-        'parameters',
-        `parameters.assessment_id = asse.id`,
+        'asse.investor_assessment',
+        InvestorAssessment,
+        'investor_assessment',
+        `investor_assessment.assessment_id = asse.id`,
       )
       .leftJoinAndMapOne(
-        'parameters.category',
+        'investor_assessment.category',
         Category,
         'category',
-        `category.id = parameters.category_id`,
+        `category.id = investor_assessment.category_id`,
       )
       .leftJoinAndMapOne(
-        'parameters.characteristics',
+        'investor_assessment.characteristics',
         Characteristics,
         'characteristics',
-        `characteristics.id = parameters.characteristics_id`,
+        `characteristics.id = investor_assessment.characteristic_id`,
       )
       .leftJoinAndMapOne(
-        'parameters.indicator',
-        Indicators,
-        'indicator',
-        `indicator.id = parameters.indicator_id`,
+        'investor_assessment.portfolioSdg',
+        PortfolioSdg,
+        'portfolioSdg',
+        `portfolioSdg.id = investor_assessment.portfolioSdg_id`,
       )
-      .where(filter,{ assessmentId,catagoryType,assessmentType });
+      .leftJoinAndMapOne(
+        'portfolioSdg.sdg_assessment',
+        SdgAssessment,
+        'sdg_assessment',
+        `sdg_assessment.sdgId = portfolioSdg.id and sdg_assessment.assessmentId=asse.id`,
+      )
+    
+      // .leftJoinAndMapOne(
+      //   'parameters.indicator',
+      //   Indicators,
+      //   'indicator',
+      //   `indicator.id = parameters.indicator_id`,
+      // )
+      .where(filter,{ assessmentId,catagoryType,assessmentType,catagoryName });
     // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }

@@ -5,6 +5,8 @@ import { Sector } from "src/master-data/sector/entity/sector.entity";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ImpactCovered } from "./impact-covered.entity";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { GeographicalAreasCovered } from "./geographical-areas-covered.entity";
 
 @Entity()
 export class InvestorTool extends BaseTrackingEntity {
@@ -15,8 +17,8 @@ export class InvestorTool extends BaseTrackingEntity {
     @Column({ nullable: true })
     level_of_implemetation: string;
 
-    @Column({ nullable: true })
-    geographical_areas_covered: string;
+    // @Column({ nullable: true })
+    // geographical_areas_covered: string;
 
     @Column({ nullable: true })
     national_country: string;
