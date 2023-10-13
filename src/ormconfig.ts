@@ -110,7 +110,7 @@ PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,Barri
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
   logger: 'file',
 
