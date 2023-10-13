@@ -60,6 +60,8 @@ export class PortfolioController {
       page: page,
     },);
   }
+
+  @UseGuards(JwtAuthGuard)
   @Get('get-comparison-data/:portfolioId')
   async getPortfolioComparisonData(@Param('portfolioId') portfolioId: number){
     return this.portfolioService.getPortfolioComparisonData(portfolioId)

@@ -30,6 +30,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   cmScores: any
   piScores: any
   sdgs_score: any = {}
+  sdgPriorities: import("/Users/sanduni/Documents/ClimateSI/TC_Tools/main-service-new/src/investor-tool/entities/sdg-priority.entity").SdgPriority[];
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -773,6 +774,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs = []
     let response: ComparisonDto = new ComparisonDto()
     let intervention_data = []
+
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userCountryId = currentUser.country?.id;
+    this.sdgPriorities = await this.investorToolService.getSdgPrioritiesByCountryId(userCountryId)
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -1019,21 +1025,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
       let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
       let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg.number + ' - ' + sd.sdg.name] / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code})//TODO need to update after clarification
+      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
+      response[code] = {name: ans.name, value: ans.value + priority.value}
+      col2.push({label: priority_name.toUpperCase(), code: code})//TODO need to update after clarification
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
-    console.log(response)
     return {
       response: response,
       col2: col2,
@@ -1238,16 +1240,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .where('assessment.id = :id', { id: assessment.id })
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
       let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score.sdgs_score[sd.sdg.id]), result.outcome_score.sdgs_score[sd.sdg.id]))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code}) //TODO need to update after clarification
+      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
+      response[code] = {name: ans.name, value: ans.value + priority.value}
+      col2.push({label: priority_name.toUpperCase(), code: code}) //TODO need to update after clarification
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })

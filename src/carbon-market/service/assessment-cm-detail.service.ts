@@ -17,46 +17,46 @@ import { InvestorSector } from "src/investor-tool/entities/investor-sector.entit
 
 @Injectable()
 export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDetail> {
- 
-  
+
+
   constructor(
     @InjectRepository(AssessmentCMDetail) repo,
     @InjectRepository(CMAssessmentAnswer) private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
-    @InjectRepository(CMAssessmentQuestion)  private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
-    @InjectRepository(AssessmentCMDetail)  private assessmentCMDetailsRepo: Repository<AssessmentCMDetail>,
+    @InjectRepository(CMAssessmentQuestion) private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    @InjectRepository(AssessmentCMDetail) private assessmentCMDetailsRepo: Repository<AssessmentCMDetail>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
-   
-    
+
+
   ) {
     super(repo);
   }
 
-  getAssessmentCMDetailByAssessmentId(assessmentId: number){
+  getAssessmentCMDetailByAssessmentId(assessmentId: number) {
     let data = this.repo.createQueryBuilder('detail')
-    .innerJoin(
-      'detail.cmassessment',
-      'assessment',
-      'assessment.id = detail.cmassessmentId'
-    )
-    .leftJoinAndMapMany(
-      'detail.geographicalAreasCovered',
-      GeographicalAreasCovered,
-      'geographicalAreas',
-      'geographicalAreas.assessmentCMDetailId = detail.id'
-    )
-    .leftJoinAndMapMany(
-      'detail.sectorsCovered',
-      InvestorSector,
-      'iSector',
-      'iSector.assessmentCMDetailId = detail.id'
-    )
-    .leftJoinAndSelect(
-      'iSector.sector',
-      'sector',
-      'sector.id = iSector.sector_id'
-    )
-    .where('assessment.id = :id', {id: assessmentId})
+      .innerJoin(
+        'detail.cmassessment',
+        'assessment',
+        'assessment.id = detail.cmassessmentId'
+      )
+      .leftJoinAndMapMany(
+        'detail.geographicalAreasCovered',
+        GeographicalAreasCovered,
+        'geographicalAreas',
+        'geographicalAreas.assessmentCMDetailId = detail.id'
+      )
+      .leftJoinAndMapMany(
+        'detail.sectorsCovered',
+        InvestorSector,
+        'iSector',
+        'iSector.assessmentCMDetailId = detail.id'
+      )
+      .leftJoinAndSelect(
+        'iSector.sector',
+        'sector',
+        'sector.id = iSector.sector_id'
+      )
+      .where('assessment.id = :id', { id: assessmentId })
 
     return data.getOne()
   }
@@ -64,19 +64,17 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
   async getPrerequisite(): Promise<any> {
     let tool = 'CARBON_MARKET';
-    // let qustionCode ='S-2-C-3-Q-2';
-    let answerCode1 ='S-2-C-3-Q-2-A-2'; //no
-    let answerCode2 ='S-2-C-3-Q-2-A-3'; // not sure
+    let answerCode1 = 'S-2-C-3-Q-2-A-2';
+    let answerCode2 = 'S-2-C-3-Q-2-A-3';
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-    
-    console.log("........",currentUser?.userType?.name)
+
     let totolAssess = await this.assessmentRepo
       .createQueryBuilder('assessment')
       .leftJoinAndMapOne(
         'assessment.user',
-         User,
+        User,
         'user',
         'user.id = assessment.user_id',
       )
@@ -88,76 +86,61 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
       )
       .leftJoinAndMapOne(
         'ca.country',
-         Country,
+        Country,
         'cntry',
         'cntry.id = ca.countryId',
       )
       .where('assessment.tool = :value', { value: tool })
-      // .andWhere('assessment.tc_value IS NOT NULL')
-      
-      if(isUserExternal){
-        totolAssess.andWhere('user.id = :userId', { userId: currentUser.id })
-        
-      }
-      else {
-        totolAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
-      
-      }
-      let totolCount= await totolAssess.getCount();
-      // console.log("totolCount", totolCount)
+    // .andWhere('assessment.tc_value IS NOT NULL')
 
-   
-      let passedAssess = await this.assessmentAnswerRepo
-        .createQueryBuilder('assessmentAnswer')
-        .innerJoinAndSelect('assessmentAnswer.answer', 'answer')
-        .innerJoinAndSelect('assessmentAnswer.assessment_question', 'question')
-        .innerJoinAndSelect('question.assessment', 'assessment')
-        .innerJoinAndSelect('assessment.user', 'user')
-        .innerJoinAndSelect('assessment.climateAction', 'ca')
-        .innerJoinAndSelect('ca.country', 'cntry')
-        .where('(answer.code = :value1 OR answer.code = :value2) ', { value1: answerCode1, value2: answerCode2 })
-        // .getMany();
+    if (isUserExternal) {
+      totolAssess.andWhere('user.id = :userId', { userId: currentUser.id })
 
-      if(isUserExternal){
-        // console.log("]]]]]]")
-        passedAssess.andWhere('user.id = :userId', { userId: currentUser.id })
-        
-      }
-      else {
-        passedAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
-      
-      }
-      let passedCount=await passedAssess.getCount();
-      // console.log("passedCount",passedCount)
-      
-    let failedCount= totolCount-passedCount
-    // return passedAssess.getMany()
-      
-    return[ {sector:'passed',count:passedCount},
-            {sector:'failed',count:failedCount}]
-          
-    
-      
+    }
+    else {
+      totolAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
 
-   
+    }
+    let totolCount = await totolAssess.getCount();
+
+
+    let passedAssess = await this.assessmentAnswerRepo
+      .createQueryBuilder('assessmentAnswer')
+      .innerJoinAndSelect('assessmentAnswer.answer', 'answer')
+      .innerJoinAndSelect('assessmentAnswer.assessment_question', 'question')
+      .innerJoinAndSelect('question.assessment', 'assessment')
+      .innerJoinAndSelect('assessment.user', 'user')
+      .innerJoinAndSelect('assessment.climateAction', 'ca')
+      .innerJoinAndSelect('ca.country', 'cntry')
+      .where('(answer.code = :value1 OR answer.code = :value2) ', { value1: answerCode1, value2: answerCode2 })
+
+    if (isUserExternal) {
+      passedAssess.andWhere('user.id = :userId', { userId: currentUser.id })
+
+    }
+    else {
+      passedAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
+
+    }
+    let passedCount = await passedAssess.getCount();
+
+    let failedCount = totolCount - passedCount
+
+    return [{ sector: 'passed', count: passedCount },
+    { sector: 'failed', count: failedCount }]
+
+
   }
 
   async getSectorCount(): Promise<any> {
     const result = await this.assessmentCMDetailsRepo
-    // .createQueryBuilder('assessment_cm_detail')
-    // .select('assessment_cm_detail.sectoral_boundary', 'sectoral_boundary')
-    // .addSelect('ROUND(AVG(assessment_cm_detail.tc_value), 2)', 'average_tc_value')
-    // .groupBy('assessment_cm_detail.sectoral_boundary')
-    // .getRawMany();
-    .createQueryBuilder('assessment_cm_detail')
-    .leftJoin('assessment_cm_detail.cmassessment', 'assessment')
-    .select('assessment_cm_detail.sectoral_boundary', 'sectoral_boundary')
-    .addSelect('ROUND(AVG(assessment.tc_value),2)', 'average_tc_value')
-    .groupBy('assessment_cm_detail.sectoral_boundary')
-    .having('average_tc_value IS NOT NULL')
-    .getRawMany();
-
-    // console.log(result);
+      .createQueryBuilder('assessment_cm_detail')
+      .leftJoin('assessment_cm_detail.cmassessment', 'assessment')
+      .select('assessment_cm_detail.sectoral_boundary', 'sectoral_boundary')
+      .addSelect('ROUND(AVG(assessment.tc_value),2)', 'average_tc_value')
+      .groupBy('assessment_cm_detail.sectoral_boundary')
+      .having('average_tc_value IS NOT NULL')
+      .getRawMany();
     return result
   }
 }

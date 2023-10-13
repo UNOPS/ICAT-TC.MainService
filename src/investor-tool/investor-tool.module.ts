@@ -47,6 +47,7 @@ import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './entities/portfolio_question-details.entity';
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { SdgPriority } from './entities/sdg-priority.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -87,6 +88,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
     PortfolioQuestions,
     PortfolioQuestionDetails,
     GeographicalAreasCovered,
+    SdgPriority
     
   ])],
   controllers: [InvestorToolController],

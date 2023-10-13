@@ -3,8 +3,9 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class MasterDataService {
 
-    private _SDGs: {id: number, name: string, code: string}[] = []
-    private _tools: {id: number, name: string, code: string}[] = []
+    private _SDGs: { id: number, name: string, code: string }[] = []
+    private _tools: { id: number, name: string, code: string }[] = []
+    private _sdg_priorities: { id: number, name: string, code: string, value: number }[] = []
 
     constructor() {
         this.SDGs = [
@@ -28,10 +29,17 @@ export class MasterDataService {
         ]
 
         this.tools = [
-            {id: 1, name: 'Other Interventions', code: 'PORTFOLIO'},
-            {id: 2, name: 'Carbon Market Tool', code: 'CARBON_MARKET'},
-            {id: 3, name: 'Investor & Private Sector Tool', code: 'INVESTOR'},
-          ]
+            { id: 1, name: 'Other Interventions', code: 'PORTFOLIO' },
+            { id: 2, name: 'Carbon Market Tool', code: 'CARBON_MARKET' },
+            { id: 3, name: 'Investor & Private Sector Tool', code: 'INVESTOR' },
+        ]
+
+        this.sdg_priorities = [
+            { id: 1, name: 'High Priority', code: 'HIGH', value: 3 },
+            { id: 2, name: 'Medium Priority', code: 'MEDIUM', value: 2 },
+            { id: 3, name: 'Low Priority', code: 'LOW', value: 1 },
+            { id: 3, name: 'No Priority', code: 'NO', value: 0 },
+        ]
     }
 
     set SDGs(value: { id: number, name: string, code: string }[]) {
@@ -49,6 +57,14 @@ export class MasterDataService {
     get tools(): { id: number; name: string; code: string }[] {
         return this._tools;
     }
+
+    set sdg_priorities(value: {id: number; name: string; code: string; value: number}[]) {
+        this._sdg_priorities = value;
+      }
+    
+      get sdg_priorities (): {id: number; name: string; code: string; value: number}[] {
+        return this._sdg_priorities;
+      }
 
     getToolName(code: string) {
         let tool = this.tools.find(o => o.code === code)
