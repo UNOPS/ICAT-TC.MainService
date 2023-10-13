@@ -1576,18 +1576,17 @@ export class ReportPagesService {
   <div class="content">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ..................................................................................................................................................</div><div ><bdi>.............11</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the portfolio ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
   
-
     <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
-  </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Processes impacts comparison  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes impacts comparison ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >3. Aggregation .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >4. SDG Alignment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+
+   
+    </div>
 
   
   </div>
@@ -1604,13 +1603,156 @@ export class ReportPagesService {
     footer: string,
     contentOne: ComparisonReportReportContentOne,
   ): string {
-return ''
+    let pageNumber = 2;
+    const portfolio_details = contentOne.portfolio_details;
+    const intervation_details = contentOne.intervation_details;
+
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">1.	PORTFOLIO OF INTERVENTIONS INFORMATION </div>
+ 
+ <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${portfolio_details
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Intervention ID</th>
+              <th scope="col">Intervention name</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${intervation_details
+            .map(
+              (a: { id: string; name: string }) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+
+
+return page_1
   }
   comparisonContentTwo(
     header: string,
     footer: string,
-    contentOne: ComparisonReportReportContentTwo,
+    content: ComparisonReportReportContentTwo,
   ): string {
+    let pageNumber = 2;
+    const prosses_tech = content.prosses_tech;
+    const prosses_agent = content.prosses_agent;
+    const prosses_incentive = content.prosses_incentive;
+    const prosses_norms = content.prosses_norms;
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
+ 
+ <div  class="main_header_sub text-start">2.1	Processes impacts comparison</div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${prosses_tech
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Intervention ID</th>
+              <th scope="col">Intervention name</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${prosses_agent
+            .map(
+              (a: { id: string; name: string }) =>
+                '<tr><td>' +
+                a.id +
+                '</td><td>' +
+                a.name +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+
+
+return page_1
+
     return ''
   }
   comparisonContentThree(
