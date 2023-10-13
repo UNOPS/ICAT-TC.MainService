@@ -19,12 +19,14 @@ import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { UsersService } from 'src/users/users.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { PortfolioService } from 'src/portfolio/portfolio.service';
+import { Portfolio } from 'src/portfolio/entities/portfolio.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
     @InjectRepository(Report) repo,
     @InjectRepository(Country) private countryRepo: Repository<Country>,
+    @InjectRepository(Portfolio) private portFolioRepo: Repository<Portfolio>,
     private usersService: UsersService,
     public assessmentService: AssessmentService,
     private readonly investorToolService: InvestorToolService,
@@ -146,22 +148,22 @@ export class ReportService extends TypeOrmCrudService<Report> {
   ): Promise<ReportContentOne> {
     const reportContentOne = new ReportContentOne();
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
-    console.log("assessmentId",assessmentId)
-   
+    console.log("assessmentId", assessmentId)
+
     // console.log(asse)
     // reportContentOne.policyName = asse.climateAction.policyName;
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
     // reportContentOne.assessmentYear = asse.year;
     // reportContentOne.intendedAudience = asse.audience;
-    reportContentOne.opportunities = asse.opportunities?asse.opportunities:'N/A';
+    reportContentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
     // reportContentOne.objectives = await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
-    reportContentOne.assessmetType = asse.assessmentType?asse.assessmentType:'N/A';
-    reportContentOne.principles = asse.principles? asse.principles:'N/A';
+    reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
+    reportContentOne.principles = asse.principles ? asse.principles : 'N/A';
     // reportContentOne.assessmentBoundary = asse.assessBoundry;
     // reportContentOne.impactCoverd = asse.impactsCovered;
-    reportContentOne.sectorCoverd = asse.investor_sector&&asse.investor_sector.length?asse.investor_sector
+    reportContentOne.sectorCoverd = asse.investor_sector && asse.investor_sector.length ? asse.investor_sector
       ?.map((a) => a.sector.name)
-      .join(','): 'N/A';
+      .join(',') : 'N/A';
     // reportContentOne.geograpycalCover = asse.investor_tool
     //   ?.geographical_areas_covered
     //   ? asse.investor_tool.geographical_areas_covered
@@ -169,15 +171,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentOne.policyOrActionsDetails = [
       {
         information: 'Name',
-        description: asse.climateAction.policyName?asse.climateAction.policyName: 'N/A',
+        description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
       {
         information: 'Type',
-        description: asse.climateAction.typeofAction?asse.climateAction.typeofAction: 'N/A',
+        description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
       },
       {
         information: 'Description',
-        description: asse.climateAction.description?asse.climateAction.description: 'N/A',
+        description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
       },
       {
         information: 'Status',
@@ -189,8 +191,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Date of implementation',
         description: asse.climateAction.dateOfImplementation
           ? new Date(
-              asse.climateAction.dateOfImplementation,
-            ).toLocaleDateString()
+            asse.climateAction.dateOfImplementation,
+          ).toLocaleDateString()
           : 'N/A',
       },
       {
@@ -201,20 +203,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Implementing entity or entities',
-        description: asse.climateAction.implementingEntity? asse.climateAction.implementingEntity:'N/A',
+        description: asse.climateAction.implementingEntity ? asse.climateAction.implementingEntity : 'N/A',
       },
       {
         information: 'Objectives and benefits ',
-        description: asse.climateAction.objective?asse.climateAction.objective:'N/A',
+        description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
         information: 'Level of the policy ',
-        description: asse.climateAction.levelofImplemenation?asse.climateAction.levelofImplemenation:'N/A',
+        description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
         information: 'Geographic coverage',
         description: asse.geographical_areas_covered
-          ? asse.geographical_areas_covered.map(a=>a.name).join(',')
+          ? asse.geographical_areas_covered.map(a => a.name).join(',')
           : 'N/A',
       },
       {
@@ -237,31 +239,31 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
     ];
 
-    reportContentOne.understanPolicyOrActions = [ 
-      
+    reportContentOne.understanPolicyOrActions = [
+
       {
         Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
-        description: asse.envisioned_change?asse.envisioned_change :'N/A',
+        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
       },
       {
         Time_periods: 'Long-term (≥15 years)',
-        description: asse.vision_long?asse.vision_long :'N/A',
+        description: asse.vision_long ? asse.vision_long : 'N/A',
       },
       {
         Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
-        description: asse.vision_medium?asse.vision_medium :'N/A',
+        description: asse.vision_medium ? asse.vision_medium : 'N/A',
       },
       {
         Time_periods: 'Short-term (&lt; 5 years)',
-        description: asse.vision_short?asse.vision_short :'N/A',
+        description: asse.vision_short ? asse.vision_short : 'N/A',
       },
       {
         Time_periods: 'Phase of transformation',
-        description: asse.phase_of_transformation?asse.phase_of_transformation :'N/A',
+        description: asse.phase_of_transformation ? asse.phase_of_transformation : 'N/A',
       },
     ];
 
-         
+
     // reportContentOne.barriers = [
     //   {
     //     barrier: 'test barrier',
@@ -282,12 +284,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
     //     barrier_directly_targeted: 'test barrier_directly_targeted',
     //   },
     // ];
-    reportContentOne.barriers=[]
-    asse.policy_barrier.map(a=>{
-      reportContentOne.barriers.push({  barrier: a.barrier?a.barrier:'N/A',
-      explanation: a.explanation?a.explanation:'N/A',
-      characteristics_affected: a.barrierCategory?a.barrierCategory.map(b=>b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(','):'N/A',
-      barrier_directly_targeted: a.is_affected?'YES':'NO',})
+    reportContentOne.barriers = []
+    asse.policy_barrier.map(a => {
+      reportContentOne.barriers.push({
+        barrier: a.barrier ? a.barrier : 'N/A',
+        explanation: a.explanation ? a.explanation : 'N/A',
+        characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
+        barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
+      })
     })
     reportContentOne.contextOfPolicy = [];
 
@@ -469,7 +473,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let scale_ghg = [];
     if (asssCharacteristicasscaleghg) {
       for (let invesass of asssCharacteristicasscaleghg.investor_assessment) {
-       
+
         let cat = scale_ghg.find((a) => a.name == invesass.category.name);
         if (cat) {
           cat.characteristics.push({
@@ -516,93 +520,18 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
 
     let asssCharacteristicassustained_ghg =
-    await this.assessmentService.getCharacteristicasforReport(
-      assessmentId,
-      'outcome',
-      'Sustained nature-GHGs',
-      '',
-    );
-  let sustained_ghg = [];
-  if (asssCharacteristicassustained_ghg) {
-    for (let invesass of asssCharacteristicassustained_ghg.investor_assessment) {
-      let cat = sustained_ghg.find((a) => a.name == invesass.category.name);
-      if (cat) {
-        cat.characteristics.push({
-          name: invesass.characteristics
-            ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-            : '-',
-
-          withinboundaries:
-            invesass.score == null || invesass.score == undefined
-              ? 'NO'
-              : 'YES',
-          score: invesass.score != null && invesass.score != undefined
-            ? this.getScore(invesass.score)
-            : 'Outside Assessment Boundaries',
-          ustifying: invesass.justification ? invesass.justification : '-',
-        });
-        cat.rows = cat.characteristics.length;
-      } else {
-        sustained_ghg.push({
-          rows: 1,
-          name: invesass.category.name,
-          characteristics: [
-            {
-              name: invesass.characteristics
-                ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-                : '-',
-
-              withinboundaries:
-                invesass.score == null || invesass.score == undefined
-                  ? 'NO'
-                  : 'YES',
-              score: invesass.score != null && invesass.score != undefined
-                ? this.getScore(invesass.score)
-                : 'Outside Assessment Boundaries',
-              ustifying: invesass.justification
-                ? invesass.justification
-                : '-',
-            },
-          ],
-        });
-      }
-    }
-    reportContentTwo.sustained_ghg = sustained_ghg;
-  }
-
-  let asssCharacteristicasscale_adaptation =
-  await this.assessmentService.getCharacteristicasforReport(
-    assessmentId,
-    'outcome',
-    'Scale Adaptation',
-    '',
-  );
-let scale_adaptation = [];
-if (asssCharacteristicasscale_adaptation) {
-  for (let invesass of asssCharacteristicasscale_adaptation.investor_assessment) {
-    let cat = scale_adaptation.find((a) => a.name == invesass.category.name);
-    if (cat) {
-      cat.characteristics.push({
-        name: invesass.characteristics
-          ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-          : '-',
-
-        withinboundaries:
-          invesass.score == null || invesass.score == undefined
-            ? 'NO'
-            : 'YES',
-        score: invesass.score != null && invesass.score != undefined
-          ? this.getScore(invesass.score)
-          : 'Outside Assessment Boundaries',
-        ustifying: invesass.justification ? invesass.justification : '-',
-      });
-      cat.rows = cat.characteristics.length;
-    } else {
-      scale_adaptation.push({
-        rows: 1,
-        name: invesass.category.name,
-        characteristics: [
-          {
+      await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+        'Sustained nature-GHGs',
+        '',
+      );
+    let sustained_ghg = [];
+    if (asssCharacteristicassustained_ghg) {
+      for (let invesass of asssCharacteristicassustained_ghg.investor_assessment) {
+        let cat = sustained_ghg.find((a) => a.name == invesass.category.name);
+        if (cat) {
+          cat.characteristics.push({
             name: invesass.characteristics
               ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
               : '-',
@@ -614,96 +543,171 @@ if (asssCharacteristicasscale_adaptation) {
             score: invesass.score != null && invesass.score != undefined
               ? this.getScore(invesass.score)
               : 'Outside Assessment Boundaries',
-            ustifying: invesass.justification
-              ? invesass.justification
-              : '-',
-          },
-        ],
-      });
+            ustifying: invesass.justification ? invesass.justification : '-',
+          });
+          cat.rows = cat.characteristics.length;
+        } else {
+          sustained_ghg.push({
+            rows: 1,
+            name: invesass.category.name,
+            characteristics: [
+              {
+                name: invesass.characteristics
+                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  : '-',
+
+                withinboundaries:
+                  invesass.score == null || invesass.score == undefined
+                    ? 'NO'
+                    : 'YES',
+                score: invesass.score != null && invesass.score != undefined
+                  ? this.getScore(invesass.score)
+                  : 'Outside Assessment Boundaries',
+                ustifying: invesass.justification
+                  ? invesass.justification
+                  : '-',
+              },
+            ],
+          });
+        }
+      }
+      reportContentTwo.sustained_ghg = sustained_ghg;
     }
-  }
-  reportContentTwo.scale_adaptation = scale_adaptation;
-}
+
+    let asssCharacteristicasscale_adaptation =
+      await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+        'Scale Adaptation',
+        '',
+      );
+    let scale_adaptation = [];
+    if (asssCharacteristicasscale_adaptation) {
+      for (let invesass of asssCharacteristicasscale_adaptation.investor_assessment) {
+        let cat = scale_adaptation.find((a) => a.name == invesass.category.name);
+        if (cat) {
+          cat.characteristics.push({
+            name: invesass.characteristics
+              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              : '-',
+
+            withinboundaries:
+              invesass.score == null || invesass.score == undefined
+                ? 'NO'
+                : 'YES',
+            score: invesass.score != null && invesass.score != undefined
+              ? this.getScore(invesass.score)
+              : 'Outside Assessment Boundaries',
+            ustifying: invesass.justification ? invesass.justification : '-',
+          });
+          cat.rows = cat.characteristics.length;
+        } else {
+          scale_adaptation.push({
+            rows: 1,
+            name: invesass.category.name,
+            characteristics: [
+              {
+                name: invesass.characteristics
+                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  : '-',
+
+                withinboundaries:
+                  invesass.score == null || invesass.score == undefined
+                    ? 'NO'
+                    : 'YES',
+                score: invesass.score != null && invesass.score != undefined
+                  ? this.getScore(invesass.score)
+                  : 'Outside Assessment Boundaries',
+                ustifying: invesass.justification
+                  ? invesass.justification
+                  : '-',
+              },
+            ],
+          });
+        }
+      }
+      reportContentTwo.scale_adaptation = scale_adaptation;
+    }
 
 
 
-let asssCharacteristicassustained_adaptation =
-await this.assessmentService.getCharacteristicasforReport(
-  assessmentId,
-  'outcome',
-  'Sustained Adaptation',
-  '',
-);
-let sustained_adaptation = [];
-if (asssCharacteristicassustained_adaptation) {
-for (let invesass of asssCharacteristicassustained_adaptation.investor_assessment) {
-  let cat = sustained_adaptation.find((a) => a.name == invesass.category.name);
-  if (cat) {
-    cat.characteristics.push({
-      name: invesass.characteristics
-        ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-        : '-',
+    let asssCharacteristicassustained_adaptation =
+      await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+        'Sustained Adaptation',
+        '',
+      );
+    let sustained_adaptation = [];
+    if (asssCharacteristicassustained_adaptation) {
+      for (let invesass of asssCharacteristicassustained_adaptation.investor_assessment) {
+        let cat = sustained_adaptation.find((a) => a.name == invesass.category.name);
+        if (cat) {
+          cat.characteristics.push({
+            name: invesass.characteristics
+              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              : '-',
 
-      withinboundaries:
-        invesass.score == null || invesass.score == undefined
-          ? 'NO'
-          : 'YES',
-      score: invesass.score != null && invesass.score != undefined
-        ? this.getScore(invesass.score)
-        : 'Outside Assessment Boundaries',
-      ustifying: invesass.justification ? invesass.justification : '-',
-    });
-    cat.rows = cat.characteristics.length;
-  } else {
-    sustained_adaptation.push({
-      rows: 1,
-      name: invesass.category.name,
-      characteristics: [
-        {
-          name: invesass.characteristics
-            ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-            : '-',
+            withinboundaries:
+              invesass.score == null || invesass.score == undefined
+                ? 'NO'
+                : 'YES',
+            score: invesass.score != null && invesass.score != undefined
+              ? this.getScore(invesass.score)
+              : 'Outside Assessment Boundaries',
+            ustifying: invesass.justification ? invesass.justification : '-',
+          });
+          cat.rows = cat.characteristics.length;
+        } else {
+          sustained_adaptation.push({
+            rows: 1,
+            name: invesass.category.name,
+            characteristics: [
+              {
+                name: invesass.characteristics
+                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  : '-',
 
-          withinboundaries:
-            invesass.score == null || invesass.score == undefined
-              ? 'NO'
-              : 'YES',
-          score: invesass.score != null && invesass.score != undefined
-            ? this.getScore(invesass.score)
-            : 'Outside Assessment Boundaries',
-          ustifying: invesass.justification
-            ? invesass.justification
-            : '-',
-        },
-      ],
-    });
-  }
-}
-reportContentTwo.sustained_adaptation = sustained_adaptation;
-}
+                withinboundaries:
+                  invesass.score == null || invesass.score == undefined
+                    ? 'NO'
+                    : 'YES',
+                score: invesass.score != null && invesass.score != undefined
+                  ? this.getScore(invesass.score)
+                  : 'Outside Assessment Boundaries',
+                ustifying: invesass.justification
+                  ? invesass.justification
+                  : '-',
+              },
+            ],
+          });
+        }
+      }
+      reportContentTwo.sustained_adaptation = sustained_adaptation;
+    }
 
 
 
 
 
     let asssCharacteristicasscalesd =
-    await this.assessmentService.getCharacteristicasforReport(
-      assessmentId,
-      'outcome',
-      'Scale SD',
-      '',
-    );
-    
-  let scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
-  
-  
-  if (asssCharacteristicasscaleghg) {
-    scale_sd.name='SDG Scale of the Outcome';
-    const filterinsass=asssCharacteristicasscalesd.investor_assessment.filter(a=>a.portfolioSdg);
-    scale_sd.rows=filterinsass.length
-    
-    for (let invesass of filterinsass) {
-     
+      await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+        'Scale SD',
+        '',
+      );
+
+    let scale_sd: { rows: number, name: string, sdg: { rows: number, name: string, impact: string, characteristics: any[] }[] } = { rows: 0, name: '', sdg: [] };
+
+
+    if (asssCharacteristicasscaleghg) {
+      scale_sd.name = 'SDG Scale of the Outcome';
+      const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
+      scale_sd.rows = filterinsass.length
+
+      for (let invesass of filterinsass) {
+
 
         let cat = scale_sd.sdg.find((a) => a.name == invesass.portfolioSdg.name);
         if (cat) {
@@ -711,7 +715,7 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
             name: invesass.characteristics
               ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
               : '-',
-  
+
             withinboundaries:
               invesass.score == null || invesass.score == undefined
                 ? 'NO'
@@ -724,83 +728,15 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
           cat.rows = cat.characteristics.length;
         } else {
           scale_sd.sdg.push({
-              rows: 1,
-              name:invesass.portfolioSdg.name,
-              impact:invesass.portfolioSdg?.sdg_assessment.answer?invesass.portfolioSdg.sdg_assessment.answer:'N/A',
-              characteristics: [
-                {
-                  name: invesass.characteristics
-                    ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-                    : '-',
-                  
-                  withinboundaries:
-                    invesass.score == null || invesass.score == undefined
-                      ? 'NO'
-                      : 'YES',
-                  score: invesass.score != null && invesass.score != undefined
-                    ? this.getScore(invesass.score)
-                    : 'Outside Assessment Boundaries',
-                  ustifying: invesass.justification
-                    ? invesass.justification
-                    : '-',
-                },
-              ],}
-  
-          ) 
-        }
-
-      
-    
-    }
-   
-  }
-  reportContentTwo.scale_sd = scale_sd;
-  let asssCharacteristicassustainedsd=
-  await this.assessmentService.getCharacteristicasforReport(
-    assessmentId,
-    'outcome',
-    'Sustained nature-SD',
-    '',
-  );
- 
-let sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={rows:0,name:'',sdg:[]};
-
-if (asssCharacteristicassustainedsd) {
-  sustained_sd.name='SDG Time frame over which the outcome is sustained';
- 
-  const filterinsasssustained_sd=asssCharacteristicassustainedsd.investor_assessment.filter(a=>a.portfolioSdg);
-  sustained_sd.rows=filterinsasssustained_sd.length
-  for (let invesass of filterinsasssustained_sd) {
-   
-
-      let cat = sustained_sd.sdg.find((a) => a.name == invesass.portfolioSdg.name);
-      if (cat) {
-        cat.characteristics.push({
-          name: invesass.characteristics
-            ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
-            : '-',
-
-          withinboundaries:
-            invesass.score == null || invesass.score == undefined
-              ? 'NO'
-              : 'YES',
-          score: invesass.score != null && invesass.score != undefined
-            ? this.getScore(invesass.score)
-            : 'Outside Assessment Boundaries',
-          ustifying: invesass.justification ? invesass.justification : '-',
-        });
-        cat.rows = cat.characteristics.length;
-      } else {
-        sustained_sd.sdg.push({
             rows: 1,
-            name:invesass.portfolioSdg.name,
-            impact:invesass.portfolioSdg?.sdg_assessment.answer?invesass.portfolioSdg.sdg_assessment.answer:'N/A',
+            name: invesass.portfolioSdg.name,
+            impact: invesass.portfolioSdg?.sdg_assessment.answer ? invesass.portfolioSdg.sdg_assessment.answer : 'N/A',
             characteristics: [
               {
                 name: invesass.characteristics
                   ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
                   : '-',
-                
+
                 withinboundaries:
                   invesass.score == null || invesass.score == undefined
                     ? 'NO'
@@ -812,22 +748,92 @@ if (asssCharacteristicassustainedsd) {
                   ? invesass.justification
                   : '-',
               },
-            ],}
+            ],
+          }
 
-        ) 
+          )
+        }
+
+
+
       }
 
-    
-  
-  }
-  
-}
-reportContentTwo.sustained_sd = sustained_sd;
+    }
+    reportContentTwo.scale_sd = scale_sd;
+    let asssCharacteristicassustainedsd =
+      await this.assessmentService.getCharacteristicasforReport(
+        assessmentId,
+        'outcome',
+        'Sustained nature-SD',
+        '',
+      );
+
+    let sustained_sd: { rows: number, name: string, sdg: { rows: number, name: string, impact: string, characteristics: any[] }[] } = { rows: 0, name: '', sdg: [] };
+
+    if (asssCharacteristicassustainedsd) {
+      sustained_sd.name = 'SDG Time frame over which the outcome is sustained';
+
+      const filterinsasssustained_sd = asssCharacteristicassustainedsd.investor_assessment.filter(a => a.portfolioSdg);
+      sustained_sd.rows = filterinsasssustained_sd.length
+      for (let invesass of filterinsasssustained_sd) {
 
 
-let res =  await this.investorToolService.calculateNewAssessmentResults(assessmentId);
-reportContentTwo.process_categories_assessment=res.processData;
-reportContentTwo.outcomes_categories_assessment=res.outcomeData;
+        let cat = sustained_sd.sdg.find((a) => a.name == invesass.portfolioSdg.name);
+        if (cat) {
+          cat.characteristics.push({
+            name: invesass.characteristics
+              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              : '-',
+
+            withinboundaries:
+              invesass.score == null || invesass.score == undefined
+                ? 'NO'
+                : 'YES',
+            score: invesass.score != null && invesass.score != undefined
+              ? this.getScore(invesass.score)
+              : 'Outside Assessment Boundaries',
+            ustifying: invesass.justification ? invesass.justification : '-',
+          });
+          cat.rows = cat.characteristics.length;
+        } else {
+          sustained_sd.sdg.push({
+            rows: 1,
+            name: invesass.portfolioSdg.name,
+            impact: invesass.portfolioSdg?.sdg_assessment.answer ? invesass.portfolioSdg.sdg_assessment.answer : 'N/A',
+            characteristics: [
+              {
+                name: invesass.characteristics
+                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  : '-',
+
+                withinboundaries:
+                  invesass.score == null || invesass.score == undefined
+                    ? 'NO'
+                    : 'YES',
+                score: invesass.score != null && invesass.score != undefined
+                  ? this.getScore(invesass.score)
+                  : 'Outside Assessment Boundaries',
+                ustifying: invesass.justification
+                  ? invesass.justification
+                  : '-',
+              },
+            ],
+          }
+
+          )
+        }
+
+
+
+      }
+
+    }
+    reportContentTwo.sustained_sd = sustained_sd;
+
+
+    let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
+    reportContentTwo.process_categories_assessment = res.processData;
+    reportContentTwo.outcomes_categories_assessment = res.outcomeData;
 
     // let asssIndicatorOutcome =
     //   await this.assessmentService.getCharacteristicasforReport(
@@ -969,10 +975,12 @@ reportContentTwo.outcomes_categories_assessment=res.outcomeData;
     createReportDto: CreateComparisonReportDto,
   ): Promise<ComparisonReportDto> {
     const comparisonReportDto = new ComparisonReportDto();
+    let portfolio = new Portfolio();
+    portfolio = await this.portFolioRepo.findOne({where:{id : createReportDto.portfolioId}});
+   
+    comparisonReportDto.contentOne =[]
 
-    await this.portfolioService.getPortfolioById(createReportDto.portfolioId);
-    
-  return comparisonReportDto;
+    return comparisonReportDto;
   }
 }
 
