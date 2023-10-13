@@ -16,6 +16,7 @@ import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -30,7 +31,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   cmScores: any
   piScores: any
   sdgs_score: any = {}
-  sdgPriorities: import("/Users/sanduni/Documents/ClimateSI/TC_Tools/main-service-new/src/investor-tool/entities/sdg-priority.entity").SdgPriority[];
+  sdgPriorities: SdgPriority[];
 
   constructor(
     @InjectRepository(Portfolio) repo,
