@@ -1,4 +1,4 @@
-import { ApiProperty, ApiBody } from '@nestjs/swagger';
+import { ApiProperty, ApiBody, ApiHideProperty } from '@nestjs/swagger';
 import { type } from 'os';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
@@ -307,6 +307,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn({ name: 'user_id' })
   user?: User; 
 
-  
+  @ApiHideProperty()
   policy_sector:PolicySector[];
 }

@@ -325,7 +325,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `proj.id = asse.climateAction_id`,
       )
       .leftJoinAndMapMany(
-        'proj.policy_sectorv',
+        'proj.policy_sector',
         PolicySector,
         'policy_sector',
         `proj.id = policy_sector.intervention_id`,
@@ -373,9 +373,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
     if(catagoryCode){
       if(filter){
-        filter=`${filter} and category.code= :catagoryName `
+        filter=`${filter} and category.code= :catagoryCode `
       }else{
-        filter='category.code= :catagoryName '
+        filter='category.code= :catagoryCode '
       }
     }
     if(assessmentType){
