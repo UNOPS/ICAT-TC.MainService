@@ -1470,7 +1470,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Short Term (<5 years)',
+        name: 'Short term (<5 years)',
         code: 'SHORT_TERM',
         category_id: 7,
         description: '',
@@ -1494,7 +1494,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Short Term (<5 years)',
+        name: 'Short term (<5 years)',
         code: 'SHORT_TERM',
         category_id: 8,
         description: '',
@@ -1542,7 +1542,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Short Term (<5 years)',
+        name: 'Short term (<5 years)',
         code: 'SUBNATIONAL',
         category_id: 10,
         description: '',
