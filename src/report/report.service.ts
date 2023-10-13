@@ -18,6 +18,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { UsersService } from 'src/users/users.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioService } from 'src/portfolio/portfolio.service';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -26,7 +27,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     @InjectRepository(Country) private countryRepo: Repository<Country>,
     private usersService: UsersService,
     public assessmentService: AssessmentService,
-    private readonly investorToolService: InvestorToolService
+    private readonly investorToolService: InvestorToolService,
+    private readonly portfolioService: PortfolioService
   ) {
     super(repo);
   }
@@ -968,7 +970,8 @@ reportContentTwo.outcomes_categories_assessment=res.outcomeData;
   ): Promise<ComparisonReportDto> {
     const comparisonReportDto = new ComparisonReportDto();
 
-
+    await this.portfolioService.getPortfolioById(createReportDto.portfolioId);
+    
   return comparisonReportDto;
   }
 }
