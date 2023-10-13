@@ -214,6 +214,14 @@ export class InvestorToolController {
     },);
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-processData')
+  async getProcessData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getProcessData(assessID);
+    return res;
+
+  }
+
 
 
 }

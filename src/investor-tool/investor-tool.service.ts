@@ -33,6 +33,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
+import { ProcessData, ProcessDataDto } from './dto/processData.dto';
 
 const schema = {
   'id': {
@@ -1959,5 +1960,31 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     } else {
       return false
     }
+  }
+
+
+  async getProcessData(assesId:number): Promise<any>{
+    let finalData:ProcessData[]=[]
+    let assessment = await this.findAllAssessData(assesId);
+    let categories = await this.findAllCategories();
+    for (let category of categories.meth1Process) {
+
+      let categoryData=new ProcessData()
+      let assess :InvestorAssessment[]=[]
+      for (let x of assessment) {
+        
+        if (category.name === x.category.name) {
+          categoryData.CategoryName = category.name;
+          categoryData.categoryID =category.id
+          // console.log(category.ip_weight)
+          assess.push(x)
+        }
+      }
+      categoryData.data=assess
+      finalData.push(categoryData)
+// console.log("categoryData",categoryData)
+    }
+    return finalData
+
   }
 }
