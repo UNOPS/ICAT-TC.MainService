@@ -8,6 +8,11 @@ import {
   ReportContentOne,
   ReportContentTwo,
   ComparisonReportDto,
+  ComparisonReportReportCoverPage,
+  ComparisonReportReportContentOne,
+  ComparisonReportReportContentTwo,
+  ComparisonReportReportContentThree,
+  ComparisonReportReportContentFour,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -87,12 +92,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    // report.savedLocation = './public/' + fileName;
-    report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
+    report.savedLocation = './public/' + fileName;
+    // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail =
       'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg';
     report.country = country;
-    report.climateAction = climateAction;
+    if(climateAction.id){
+      report.climateAction = climateAction;
+    }
+   
     return await this.repo.save(report);
   }
 
@@ -461,7 +469,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       await this.assessmentService.getCharacteristicasforReport(
         assessmentId,
         'outcome',
-        'Scale GHGs',
+        'SCALE_GHG',
         '',
       );
     let scale_ghg = [];
@@ -517,7 +525,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'Sustained nature-GHGs',
+      'SUSTAINED_GHG',
       '',
     );
   let sustained_ghg = [];
@@ -572,7 +580,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'Scale Adaptation',
+    'SCALE_ADAPTATION',
     '',
   );
 let scale_adaptation = [];
@@ -629,7 +637,7 @@ let asssCharacteristicassustained_adaptation =
 await this.assessmentService.getCharacteristicasforReport(
   assessmentId,
   'outcome',
-  'Sustained Adaptation',
+  'SUSTAINED_ADAPTATION',
   '',
 );
 let sustained_adaptation = [];
@@ -688,7 +696,7 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'Scale SD',
+      'SCALE_SD',
       '',
     );
     
@@ -757,7 +765,7 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'Sustained nature-SD',
+    'SUSTAINED_SD',
     '',
   );
  
@@ -967,9 +975,52 @@ reportContentTwo.outcomes_categories_assessment=res.outcomeData;
     createReportDto: CreateComparisonReportDto,
   ): Promise<ComparisonReportDto> {
     const comparisonReportDto = new ComparisonReportDto();
-
+    comparisonReportDto.reportName = createReportDto.reportName;
+    comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(
+      createReportDto.reportTitle,
+    );
+    comparisonReportDto.contentOne = await this.genarateComparisonReportDtoContentOne(
+      
+    );
+    comparisonReportDto.contentTwo = await this.genarateComparisonReportDtoContentTwo(
+    );
+    comparisonReportDto.contentThree = await this.genarateComparisonReportDtoContentThree(
+    );
+    comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour(
+    );
 
   return comparisonReportDto;
+  }
+
+
+  genarateComparisonReportDtoCoverPage(title: string): ReportCoverPage {
+    const coverPage = new ComparisonReportReportCoverPage();
+    coverPage.generateReportName = title;
+    coverPage.reportDate = new Date().toDateString();
+    coverPage.document_prepared_by = 'user';
+    coverPage.companyLogoLink =
+      'http://localhost:7080/report/cover/icatlogo.jpg';
+    return coverPage;
+  }
+  genarateComparisonReportDtoContentOne(): ComparisonReportReportContentOne {
+    const contentOne = new ComparisonReportReportContentOne();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentTwo(): ComparisonReportReportContentTwo {
+    const contentOne = new ComparisonReportReportContentTwo();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentThree(): ComparisonReportReportContentThree {
+    const contentOne = new ComparisonReportReportContentThree();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentFour(): ComparisonReportReportContentFour {
+    const contentOne = new ComparisonReportReportContentFour();
+    
+    return contentOne;
   }
 }
 

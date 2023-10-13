@@ -361,7 +361,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   }
 
 
-  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,catagoryName:string,assessmentType:string) {
+  async getCharacteristicasforReport(assessmentId: number,catagoryType:string,catagoryCode:string,assessmentType:string) {
     let filter: string = 'asse.id=:assessmentId ';
 
     if(catagoryType){
@@ -371,11 +371,11 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         filter='category.type= :catagoryType '
       }
     }
-    if(catagoryName){
+    if(catagoryCode){
       if(filter){
-        filter=`${filter} and category.name= :catagoryName `
+        filter=`${filter} and category.code= :catagoryName `
       }else{
-        filter='category.name= :catagoryName '
+        filter='category.code= :catagoryName '
       }
     }
     if(assessmentType){
@@ -425,7 +425,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       //   'indicator',
       //   `indicator.id = parameters.indicator_id`,
       // )
-      .where(filter,{ assessmentId,catagoryType,assessmentType,catagoryName });
+      .where(filter,{ assessmentId,catagoryType,assessmentType,catagoryCode });
     // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }
