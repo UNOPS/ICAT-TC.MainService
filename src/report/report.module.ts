@@ -58,6 +58,7 @@ import { UserType } from 'src/users/entity/user.type.entity';
 import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodology-assessment.module';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Module({
   imports: [
@@ -101,7 +102,8 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
       CalculationResults,
       PortfolioQuestions,
       PortfolioQuestionDetails,
-      GeographicalAreasCovered
+      GeographicalAreasCovered,
+      SdgPriority
     ]), 
     UsersModule,
     CountryModule,

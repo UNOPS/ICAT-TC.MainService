@@ -34,6 +34,7 @@ import { PortfolioQuestions } from './entities/portfolio-questions.entity';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { SdgPriority } from './entities/sdg-priority.entity';
 
 const schema = {
   'id': {
@@ -67,6 +68,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
+    @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -1963,5 +1965,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     } else {
       return false
     }
+  }
+
+  async saveSdgPriorities(priorities: SdgPriority[]){
+    return await this.sdgPriorityRepo.save(priorities)
+  }
+
+  async getSdgPrioritiesByCountryId(countryId: number) {
+    return await this.sdgPriorityRepo.find({where: {country: {id: countryId}}, relations: ['sdg']})
   }
 }

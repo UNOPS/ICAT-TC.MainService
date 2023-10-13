@@ -39,7 +39,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     private parameterRequestRepo: Repository<ParameterRequest>,
     @InjectRepository(Characteristics)
     private characteristicRepo: Repository<Characteristics>,
-    private userService:UsersService,
+    private userService: UsersService,
     private masterDataService: MasterDataService,
     @InjectRepository(SdgAssessment)
     private sdgAssessmentRepo: Repository<SdgAssessment>
@@ -63,11 +63,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let _answers = []
     let selectedSdgs = []
     result.forEach(res => {
-      if(res.selectedSdg.id !== undefined) {
+      if (res.selectedSdg.id !== undefined) {
         let obj = new SdgAssessment()
         obj.assessment = assessment
         obj.sdg = res.selectedSdg
-        selectedSdgs.push(obj) 
+        selectedSdgs.push(obj)
       }
     })
     for await (let res of result) {
@@ -193,7 +193,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   //   }
   // }
 
-  async calculateResult(assessmentId: number) :Promise<CMScoreDto>{
+  async calculateResult(assessmentId: number): Promise<CMScoreDto> {
     let response: CMScoreDto = new CMScoreDto()
     let cmAssessmentQuestions_process = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -322,13 +322,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let cat of categories) {
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
-      // console.log("319", qs)
       let score: number
       if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        // selected_sdg_count = [... new Set(qs.map(q => q.selectedSdg))].length
         selected_sdg_count = sdgs.length
         score = qs.reduce((accumulator, object) => {
-          console.log("331", +object.assessmentAnswers[0]?.selectedScore)
           if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
           else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
           return accumulator + +object.assessmentAnswers[0]?.selectedScore;
@@ -345,32 +342,32 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         weight: qs[0].characteristic.category.cm_weight
       }
     }
-    
-    for (let key of Object.keys(sdgs_score)){
-      sdgs_score[key] = Math.floor(sdgs_score[key]/6)
+
+    for (let key of Object.keys(sdgs_score)) {
+      sdgs_score[key] = Math.floor(sdgs_score[key] / 6)
     }
 
     let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
-    let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0; 
+    let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0;
     let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
     let outcome_score = 0
-    if (obj['SCALE_GHG']) { 
+    if (obj['SCALE_GHG']) {
       scale_ghg_score = obj['SCALE_GHG'].score
       sustained_ghg_score = obj['SUSTAINED_GHG'].score
-      ghg_score += (scale_ghg_score + sustained_ghg_score) / 2; 
-      outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) 
+      ghg_score += (scale_ghg_score + sustained_ghg_score) / 2;
+      outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100)
     }
-    if (obj['SCALE_SD']) { 
+    if (obj['SCALE_SD']) {
       scale_sdg_score = obj['SCALE_SD'].score
       sustained_sdg_score = obj['SUSTAINED_SD']?.score
-      sdg_score = (scale_sdg_score + sustained_sdg_score) / 2; 
-      outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) 
+      sdg_score = (scale_sdg_score + sustained_sdg_score) / 2;
+      outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100)
     }
-    if (obj['SCALE_ADAPTATION']) { 
+    if (obj['SCALE_ADAPTATION']) {
       scale_adaptation_score = obj['SCALE_ADAPTATION'].score
       sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score
-      adaptation_score = (scale_adaptation_score + sustained_adaptation_score) / 2; 
-      outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) 
+      adaptation_score = (scale_adaptation_score + sustained_adaptation_score) / 2;
+      outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100)
     }
 
     return {
@@ -391,7 +388,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   async getResults(assessmentId: number) {
     let result = []
     let processData: { technology: any[], incentives: any[], norms: any[], } = { technology: [], incentives: [], norms: [] };
-    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[], scale_adaptation: any[], sustained_adaptation: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [], scale_adaptation:[], sustained_adaptation: [] };
+    let outcomeData: { scale_GHGs: any[], sustained_GHGs: any[], scale_SDs: any[], sustained_SDs: any[], scale_adaptation: any[], sustained_adaptation: any[] } = { scale_GHGs: [], sustained_GHGs: [], scale_SDs: [], sustained_SDs: [], scale_adaptation: [], sustained_adaptation: [] };
 
     let questions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -594,7 +591,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let categories = cmAssessmentQuestions.map(q => q.characteristic.category)
     let uniqueCats = [
       ...new Map(categories.map((item) => [item["code"], item])).values(),
-  ];
+    ];
     let data = []
     let maxLength = 0;
 
@@ -640,15 +637,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     data = data.map(_data => {
-      let chs =  _data.characteristic.map(ch => {
-        if (ch.questions.length < maxLength){
-          while (ch.questions.length < maxLength){
+      let chs = _data.characteristic.map(ch => {
+        if (ch.questions.length < maxLength) {
+          while (ch.questions.length < maxLength) {
             ch.questions.push(new QuestionData())
           }
         }
         return ch
       })
-      return {name: _data.name, characteristic: chs, cat_score: _data.cat_score, weight: _data.weight}
+      return { name: _data.name, characteristic: chs, cat_score: _data.cat_score, weight: _data.weight }
     })
 
     let guiding_questions = []
@@ -673,7 +670,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
   }
 
- 
+
 
   group(list: any[], prop: string | number, prop2?: string | number) {
     if (prop2) {
@@ -719,7 +716,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       // let score = tc_score * 100
       let score = (result.process_score + result.outcome_score?.outcome_score) / 2
       let update_score = {}
-      if (result.process_score){
+      if (result.process_score) {
         update_score = { tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score }
       }
 
@@ -751,36 +748,37 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData( options:IPaginationOptions):Promise<Pagination<any>>
-  {
+  async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
     let tool = 'CARBON_MARKET';
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
-    
+
     const results = await this.assessmentRepo.find({
       relations: ['climateAction'],
-      order:{
-        id: 'DESC' 
+      order: {
+        id: 'DESC'
       }
     });
     // let filteredResults =results
-     let filteredResults = results.filter(result => result.tool === tool );
-     if(isUserExternal){
-      filteredResults= filteredResults.filter(result => 
-        {if (result?.user?.id===currentUser?.id){
+    let filteredResults = results.filter(result => result.tool === tool);
+    if (isUserExternal) {
+      filteredResults = filteredResults.filter(result => {
+        if (result?.user?.id === currentUser?.id) {
           return result
-        }})
-        
-     }
-     else {
-      filteredResults= filteredResults.filter(result => {
-        if(result?.climateAction?.country?.id===currentUser?.country?.id){
+        }
+      })
+
+    }
+    else {
+      filteredResults = filteredResults.filter(result => {
+        if (result?.climateAction?.country?.id === currentUser?.country?.id) {
           return result;
-        }})
-     }
-     
+        }
+      })
+    }
+
     const formattedResults = await Promise.all(filteredResults.map(async (result) => {
       const data = await this.calculateResult(result.id);
       return {
@@ -791,8 +789,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         intervention_id: result.climateAction?.intervention_id
       };
     }));
-    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) &&  !isNaN(item.process_score));
-    return this.paginateArray(filteredData,options)
+    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
+    return this.paginateArray(filteredData, options)
   }
   async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
     const { page, limit } = options;
@@ -823,7 +821,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-  
+
     let data = this.repo.createQueryBuilder('assessmentQuestion')
       .innerJoin('assessment', 'assessment', 'assessment.id = assessmentQuestion.assessmentId')
       .innerJoin('assessment.user', 'user')
@@ -832,21 +830,21 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       .select('assessmentQuestion.selectedSdg as sdg')
       .addSelect('COUNT(DISTINCT assessment.id) as count')
       .addGroupBy('assessmentQuestion.selectedSdg');
-  
+
     if (isUserExternal) {
       data.andWhere('user.id = :userId', { userId: currentUser.id });
     } else {
       data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id });
     }
-  
+
     let res = await data.execute();
     let sdgs = this.masterDataService.SDGs;
-  
+
     res.map(o => {
       o.sdg = sdgs.find(s => s.code === o.sdg).name;
       return o;
     });
-  
+
     return res;
   }
 
@@ -857,11 +855,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessment',
         'sdg.assessmentId = assessment.id'
       )
-      .where('assessment.id = :id', {id: assessmnetId})
+      .where('assessment.id = :id', { id: assessmnetId })
       .getMany()
   }
-  
-  
+
+
 }
 
 export class CharacteristicData {
@@ -889,20 +887,20 @@ export class CharacteristicProcessData {
 }
 
 export class OutcomeResult {
-    characteristic: string
-    ch_code: string
-    question: string
-    score: string
-    justification: string
-    document: string
-    category: Category
-    SDG: string
-    outcome_score: string
-    weight: number
-    starting_situation: string
-    expected_impact: string
-    SDG_indicator: string
-    adaptation: string
+  characteristic: string
+  ch_code: string
+  question: string
+  score: string
+  justification: string
+  document: string
+  category: Category
+  SDG: string
+  outcome_score: string
+  weight: number
+  starting_situation: string
+  expected_impact: string
+  SDG_indicator: string
+  adaptation: string
 
 }
 

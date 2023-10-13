@@ -49,7 +49,6 @@ export class CMAssessmentAnswerController implements CrudController<CMAssessment
         }),
     )
     async uploadFileExcel(@UploadedFile() file) {
-        console.log("====file++++",file);
         const newSavedfile = file.filename;
         await this.service.uplaodFileUpload(newSavedfile);
     }
