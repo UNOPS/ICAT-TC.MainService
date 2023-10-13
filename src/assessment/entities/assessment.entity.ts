@@ -139,7 +139,8 @@ export class Assessment extends BaseTrackingEntity{
   investor_sector:InvestorSector[];
   @ApiHideProperty()
   assessment_barriers:AssessmentBarriers[];
-  
+  @ApiHideProperty()
+  geographical_areas_covered:GeographicalAreasCovered[];
 
 }
 
