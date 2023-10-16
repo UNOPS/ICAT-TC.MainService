@@ -59,6 +59,8 @@ import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodol
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
+import { PortfolioService } from 'src/portfolio/portfolio.service';
+import { PortfolioModule } from 'src/portfolio/portfolio.module';
 
 @Module({
   imports: [
@@ -108,7 +110,8 @@ import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
     UsersModule,
     CountryModule,
     InvestorToolModule,
-    MethodologyAssessmentModule
+    MethodologyAssessmentModule,
+    PortfolioModule
   ],
   controllers: [ReportController],
   providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService, MasterDataService],
