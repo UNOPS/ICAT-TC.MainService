@@ -425,6 +425,11 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     console.log("policyID",policyID)
     return await this.service.findPolicyBarrierData(policyID);
   }
+  // @UseGuards(JwtAuthGuard)
+  @Get('getLastID')
+  async getLastID() {
+    return await this.service.getLastID();
+  }
   
 }
 
