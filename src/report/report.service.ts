@@ -8,6 +8,11 @@ import {
   ReportContentOne,
   ReportContentTwo,
   ComparisonReportDto,
+  ComparisonReportReportCoverPage,
+  ComparisonReportReportContentOne,
+  ComparisonReportReportContentTwo,
+  ComparisonReportReportContentThree,
+  ComparisonReportReportContentFour,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -87,12 +92,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    // report.savedLocation = './public/' + fileName;
-    report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
+    report.savedLocation = './public/' + fileName;
+    // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail =
       'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg';
     report.country = country;
-    report.climateAction = climateAction;
+    if(climateAction.id){
+      report.climateAction = climateAction;
+    }
+   
     return await this.repo.save(report);
   }
 
@@ -146,7 +154,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
     console.log("assessmentId",assessmentId)
    
-    // console.log(asse)
+
     // reportContentOne.policyName = asse.climateAction.policyName;
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
     // reportContentOne.assessmentYear = asse.year;
@@ -160,10 +168,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentOne.sectorCoverd = asse.investor_sector&&asse.investor_sector.length?asse.investor_sector
       ?.map((a) => a.sector.name)
       .join(','): 'N/A';
-    // reportContentOne.geograpycalCover = asse.investor_tool
-    //   ?.geographical_areas_covered
-    //   ? asse.investor_tool.geographical_areas_covered
-    //   : 'N/A';
+    reportContentOne.geograpycalCover =asse.geographical_areas_covered&&asse.geographical_areas_covered.length?asse.geographical_areas_covered
+    ?.map((a) => a.name)
+    .join(','): 'N/A';;
     reportContentOne.policyOrActionsDetails = [
       {
         information: 'Name',
@@ -211,8 +218,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Geographic coverage',
-        description: asse.geographical_areas_covered
-          ? asse.geographical_areas_covered.map(a=>a.name).join(',')
+        description: asse.climateAction.geographicCoverage
+          ? asse.climateAction.geographicCoverage
           : 'N/A',
       },
       {
@@ -461,7 +468,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       await this.assessmentService.getCharacteristicasforReport(
         assessmentId,
         'outcome',
-        'Scale GHGs',
+        'SCALE_GHG',
         '',
       );
     let scale_ghg = [];
@@ -517,7 +524,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'Sustained nature-GHGs',
+      'SUSTAINED_GHG',
       '',
     );
   let sustained_ghg = [];
@@ -572,7 +579,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'Scale Adaptation',
+    'SCALE_ADAPTATION',
     '',
   );
 let scale_adaptation = [];
@@ -629,7 +636,7 @@ let asssCharacteristicassustained_adaptation =
 await this.assessmentService.getCharacteristicasforReport(
   assessmentId,
   'outcome',
-  'Sustained Adaptation',
+  'SUSTAINED_ADAPTATION',
   '',
 );
 let sustained_adaptation = [];
@@ -688,7 +695,7 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
     await this.assessmentService.getCharacteristicasforReport(
       assessmentId,
       'outcome',
-      'Scale SD',
+      'SCALE_SD',
       '',
     );
     
@@ -757,7 +764,7 @@ reportContentTwo.sustained_adaptation = sustained_adaptation;
   await this.assessmentService.getCharacteristicasforReport(
     assessmentId,
     'outcome',
-    'Sustained nature-SD',
+    'SUSTAINED_SD',
     '',
   );
  
@@ -967,9 +974,52 @@ reportContentTwo.outcomes_categories_assessment=res.outcomeData;
     createReportDto: CreateComparisonReportDto,
   ): Promise<ComparisonReportDto> {
     const comparisonReportDto = new ComparisonReportDto();
-
+    comparisonReportDto.reportName = createReportDto.reportName;
+    comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(
+      createReportDto.reportTitle,
+    );
+    comparisonReportDto.contentOne = await this.genarateComparisonReportDtoContentOne(
+      
+    );
+    comparisonReportDto.contentTwo = await this.genarateComparisonReportDtoContentTwo(
+    );
+    comparisonReportDto.contentThree = await this.genarateComparisonReportDtoContentThree(
+    );
+    comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour(
+    );
 
   return comparisonReportDto;
+  }
+
+
+  genarateComparisonReportDtoCoverPage(title: string): ReportCoverPage {
+    const coverPage = new ComparisonReportReportCoverPage();
+    coverPage.generateReportName = title;
+    coverPage.reportDate = new Date().toDateString();
+    coverPage.document_prepared_by = 'user';
+    coverPage.companyLogoLink =
+      'http://localhost:7080/report/cover/icatlogo.jpg';
+    return coverPage;
+  }
+  genarateComparisonReportDtoContentOne(): ComparisonReportReportContentOne {
+    const contentOne = new ComparisonReportReportContentOne();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentTwo(): ComparisonReportReportContentTwo {
+    const contentOne = new ComparisonReportReportContentTwo();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentThree(): ComparisonReportReportContentThree {
+    const contentOne = new ComparisonReportReportContentThree();
+    
+    return contentOne;
+  }
+  genarateComparisonReportDtoContentFour(): ComparisonReportReportContentFour {
+    const contentOne = new ComparisonReportReportContentFour();
+    
+    return contentOne;
   }
 }
 
