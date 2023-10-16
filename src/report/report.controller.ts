@@ -132,7 +132,7 @@ export class ReportController {
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
-    const report = await this.reportGenarateService.reportGenarate(
+    const report = await this.reportGenarateService.comparisonReportGenarate(
       reprtDto.reportName,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
