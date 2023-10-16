@@ -164,7 +164,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       where: { assessment: { id: assessmentId } },
     });
   }
-
+  async getIndicatorDetials(investorAssessmentId: number) {
+    return this.indicatorDetailsRepo.find({
+      relations: ['question'],
+      where: { investorAssessment: { id: investorAssessmentId } },
+    });
+  }
 
 
   // async createFinalAssessment(request: FinalInvestorAssessmentDto[]): Promise<any> {
@@ -1975,7 +1980,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
-          categoryData.categoryID =category.id
+          categoryData.categoryID = category.id
+          let indicatordetails = await this.getIndicatorDetials(x.id) 
+          console.log(indicatordetails.length,x.id)
+          x.indicator_details =indicatordetails;
           // console.log(category.ip_weight)
           assess.push(x)
         }
