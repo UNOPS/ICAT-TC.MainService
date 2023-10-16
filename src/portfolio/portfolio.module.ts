@@ -51,6 +51,7 @@ import { AssessmentObjectives } from 'src/methodology-assessment/entities/assess
 import { MethodologyParameters } from 'src/methodology-assessment/entities/methodologyParameters.entity';
 import { CalculationResults } from 'src/methodology-assessment/entities/calculationResults.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
+import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Module({
   controllers: [PortfolioController],
@@ -73,7 +74,7 @@ import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographica
     PortfolioQuestions, MethodologyAssessmentParameters, Methodology, Barriers, AssessmentBarriers,
     BarriersCategory, Indicators, AssessmentCharacteristics, MethodologyIndicators,PolicyBarriers,
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
-    CalculationResults, GeographicalAreasCovered
+    CalculationResults, GeographicalAreasCovered, SdgPriority
 
   ])],
   exports: [

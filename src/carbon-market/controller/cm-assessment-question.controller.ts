@@ -10,6 +10,8 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { editFileName } from "src/utills/file-upload.utils";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 
 
 @Crud({
@@ -26,7 +28,10 @@ import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 @Controller('cm-assessment-question')
 export class CMAssessmentQuestionController implements CrudController<CMAssessmentQuestion>
 {
-  constructor(public service: CMAssessmentQuestionService,
+  constructor(
+    public service: CMAssessmentQuestionService,
+    @InjectRepository(CMAssessmentQuestion)
+    public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>
   ) { }
 
   get base(): CrudController<CMAssessmentQuestion> {

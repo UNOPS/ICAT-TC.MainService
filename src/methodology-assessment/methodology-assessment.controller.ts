@@ -30,6 +30,7 @@ import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { OutcomeCategory } from './dto/outcome-category.dto';
 import { GetAssessmentDetailsDto } from './dto/get-assessment-detail.dto';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 
 @ApiTags('methodology-assessment')
@@ -44,8 +45,8 @@ export class MethodologyAssessmentController {
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     // private readonly climateService: ProjectService,
     private readonly tokenDetails: TokenDetails,
-    private readonly userService : UsersService
-
+    private readonly userService : UsersService,
+    private masterDataService: MasterDataService
   ) {
   }
 
@@ -90,7 +91,7 @@ export class MethodologyAssessmentController {
       let user =  this.userService.userDetailsForAudit()
       console.log("ppppuserr :",(await user).userType )
       let audit2 = {
-        description: (await user).userName + " Create Assessment in Portfolio Tool",
+        description: (await user).userName + " Create Assessment in " + this.masterDataService.getToolName('PORTFOLIO'),
         userName: (await user).userName,
         actionStatus: "Create Assessment",
         userType: (await user).userType,
@@ -141,7 +142,7 @@ export class MethodologyAssessmentController {
       let user =  this.userService.userDetailsForAudit()
       console.log("ppppuserr :",(await user).userType )
       let audit2 = {
-        description: (await user).userName + " Create Assessment in Portfolio Tool track 2",
+        description: (await user).userName + " Create Assessment in "+ this.masterDataService.getToolName('PORTFOLIO') + " track 2",
         userName: (await user).userName,
         actionStatus: "Create Assessment",
         userType: (await user).userType,
