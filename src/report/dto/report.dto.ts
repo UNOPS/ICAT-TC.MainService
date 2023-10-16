@@ -123,7 +123,45 @@ export class ComparisonReportDto {
 }
 
 export class ComparisonReportReportTableOfContent {}
-export class ComparisonReportReportContentOne {}
-export class ComparisonReportReportContentTwo {}
-export class ComparisonReportReportContentThree {}
-export class ComparisonReportReportContentFour {}
+export class ComparisonReportReportContentOne {
+ portfolio_details:object[]=[];   //ex=[{information:'',description:''}]
+ intervation_details:object[]=[];//ex=[{id:'',name:''}]
+
+
+}
+export class ComparisonReportReportContentTwo {
+    prosses_tech:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,randd:string,adoptation:string,scaleup:string,score:string}]
+    prosses_agent:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,entrepreneurs:string,coalition :string,beneficiaries:string,score:string}]
+    prosses_incentive:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,economic :string,disincentives:string,institutional :string,score:string}]
+    prosses_norms:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,awareness:string,behavior:string,norms:string,score:string}]
+    process_score:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,tech:string,agent:string,incentive:string,norms:string,prosess:string}]
+
+
+    ghg_scale:object[]=[]    //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
+    ghg_sustaind:object[]=[] //ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
+    ghg_scale_sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
+
+
+    allsdg:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[],sdg_scale_sustaind_comparison:object[]}[]=[];
+    sdg_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
+    sdg_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
+    sdg_scale_sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
+
+    adaptation_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
+    adaptation_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
+    adaptation_scale_sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
+
+    sacle_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,ghg:string,sdg :string,adaptation :string,score:string}]
+    sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,ghg:string,sdg :string,adaptation :string,score:string}]
+    outcome_level:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained :string,score:string}]
+    
+
+
+}
+export class ComparisonReportReportContentThree {
+    aggregation:{total:number,data:object[]}={total:0,data:[]}  //data=[{ id:number,name:string,type:string,status:string,mitigation :string}]
+}
+export class ComparisonReportReportContentFour {
+ alignment_table:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]} //ex={sdg_names:string[],data[{ id:number,name:string,type:string,status:string,sgc:[]}]}
+ alignment_heat_map:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]}
+}
