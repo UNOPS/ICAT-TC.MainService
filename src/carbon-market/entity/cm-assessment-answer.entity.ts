@@ -21,7 +21,7 @@ export class CMAssessmentAnswer extends BaseTrackingEntity {
   @Column({nullable: true})
   selectedScore: string
 
-  @ManyToOne((type) => CMAssessmentQuestion)
+  @ManyToOne((type) => CMAssessmentQuestion, {eager: true})
   @JoinColumn()
   assessment_question: CMAssessmentQuestion
   

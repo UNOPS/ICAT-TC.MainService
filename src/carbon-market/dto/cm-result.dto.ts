@@ -25,6 +25,7 @@ export class CMResultDto {
     isAdaptation: boolean
     relevance: string
     adaptationCoBenifit: string
+    assessmentQuestionId: number
 }
 
 export class SaveCMResultDto {
