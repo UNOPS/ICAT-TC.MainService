@@ -1951,9 +1951,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
   }
 
-  async saveToolsMultiSelect(selects: ToolsMultiselectDto){
+  async saveToolsMultiSelect(selects: ToolsMultiselectDto):Promise<any>{
     let res_s
     let res_g
+    let response = {}
     if (selects.sectors){
       res_s = await this.investorSectorRepo.save(selects.sectors)
     }
@@ -1961,10 +1962,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       res_g = await this.geographicalAreaRepo.save(selects.geographicalAreas)
     }
     if (res_s) {
-      return true
+      response['sector'] = true
     } else {
-      return false
+      response['sector'] = false
     }
+    if (res_g) {
+      response['area'] = true
+    } else {
+      response['area'] = false
+    }
+    return response
   }
 
   async saveSdgPriorities(priorities: SdgPriority[]){
