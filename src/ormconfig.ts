@@ -85,13 +85,13 @@ export const config: ConnectionOptions = {
  database: 'tc-main',   */
 
      
-      // username: 'sqluser',
-      //   password: 'password',
-      //    database: 'tc-main-new3',
+       username: 'sqluser',
+         password: 'password',
+          database: 'tc-main-new3',
 
-   username: 'root',
-   database: 'tc_new', 
-   password: '1997',  
+  /*  username: 'root',
+   database: 'tc-main', 
+   password: '7860150',  */ 
    // database: 'tc-main-new3', 
   //  password: '7860150',  
 
@@ -110,7 +110,7 @@ PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,Barri
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
   logger: 'file',
 
