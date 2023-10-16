@@ -142,10 +142,10 @@ export class ComparisonReportReportContentTwo {
     ghg_scale_sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
 
 
-    allsdg:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[],sdg_scale_sustaind_comparison:object[]}[]=[];
+    allsdg:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[]}[]=[];
     sdg_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
     sdg_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
-    sdg_scale_sustaind_comparison:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
+    sdg_scale_sustaind_comparison:object[][]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
 
     adaptation_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
     adaptation_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
