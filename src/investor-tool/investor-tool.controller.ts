@@ -224,6 +224,14 @@ export class InvestorToolController {
     return await this.investorToolService.getSdgPrioritiesByCountryId(id)
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Get('get-processData')
+  async getProcessData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getProcessData(assessID);
+    return res;
+
+  }
+
 
 
 }
