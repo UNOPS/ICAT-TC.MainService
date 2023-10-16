@@ -35,6 +35,7 @@ import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginat
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
+import { ProcessData, ProcessDataDto } from './dto/processData.dto';
 
 const schema = {
   'id': {
@@ -167,7 +168,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       where: { assessment: { id: assessmentId } },
     });
   }
-
+  async getIndicatorDetials(investorAssessmentId: number) {
+    return this.indicatorDetailsRepo.find({
+      relations: ['question'],
+      where: { investorAssessment: { id: investorAssessmentId } },
+    });
+  }
 
 
   // async createFinalAssessment(request: FinalInvestorAssessmentDto[]): Promise<any> {
@@ -1951,9 +1957,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
   }
 
-  async saveToolsMultiSelect(selects: ToolsMultiselectDto){
+  async saveToolsMultiSelect(selects: ToolsMultiselectDto):Promise<any>{
     let res_s
     let res_g
+    let response = {}
     if (selects.sectors){
       res_s = await this.investorSectorRepo.save(selects.sectors)
     }
@@ -1961,10 +1968,45 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       res_g = await this.geographicalAreaRepo.save(selects.geographicalAreas)
     }
     if (res_s) {
-      return true
+      response['sector'] = true
     } else {
-      return false
+      response['sector'] = false
     }
+    if (res_g) {
+      response['area'] = true
+    } else {
+      response['area'] = false
+    }
+    return response
+  }
+
+
+  async getProcessData(assesId:number): Promise<any>{
+    let finalData:ProcessData[]=[]
+    let assessment = await this.findAllAssessData(assesId);
+    let categories = await this.findAllCategories();
+    for (let category of categories.meth1Process) {
+
+      let categoryData=new ProcessData()
+      let assess :InvestorAssessment[]=[]
+      for (let x of assessment) {
+        
+        if (category.name === x.category.name) {
+          categoryData.CategoryName = category.name;
+          categoryData.categoryID = category.id
+          let indicatordetails = await this.getIndicatorDetials(x.id) 
+          console.log(indicatordetails.length,x.id)
+          x.indicator_details =indicatordetails;
+          // console.log(category.ip_weight)
+          assess.push(x)
+        }
+      }
+      categoryData.data=assess
+      finalData.push(categoryData)
+// console.log("categoryData",categoryData)
+    }
+    return finalData
+
   }
 
   async saveSdgPriorities(priorities: SdgPriority[]){
