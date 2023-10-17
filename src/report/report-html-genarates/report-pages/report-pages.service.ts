@@ -2963,7 +2963,7 @@ export class ReportPagesService {
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
-                <th attr.colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
+                <th colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
               </tr>
               <tr>
                 ${alignment_table.col_set_1
@@ -3008,13 +3008,7 @@ export class ReportPagesService {
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
-    console.log(alignment_table.col_set_1
-      .map((a) => '<th scope="col" colspan="' + a.colspan+ '">' + a.label + '</th>')
-      .join(''))
-    console.log(alignment_table.col_set_2
-      .map((a) => '<th scope="col">' + a.label + '</th>')
-      .join(''))
-
+      console.log("page", page_1)
     return page_1;
   }
 
@@ -3040,7 +3034,6 @@ export class ReportPagesService {
       }
       body = body + '</tr>'
     }
-    console.log(body)
     return body
   }
 
