@@ -1038,6 +1038,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         priority_value =  4 - Math.abs(ans.value - priority.value)
         col2.push({label: priority_name?.toUpperCase(), code: code}) //TODO need to update after clarification
       }
+      response[code] = {name: ans?.name, value: priority_value}
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
