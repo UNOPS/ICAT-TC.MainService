@@ -123,10 +123,18 @@ export class ComparisonReportDto {
 }
 
 export class ComparisonReportReportTableOfContent {}
-export class ComparisonReportReportContentOne {
-    information  :string ="";
-    description  :string ="";
+export class ComparisonReportReportContentOne  {
+ portfolio_details:object[]=[];   //ex=[{information:'',description:''}]
+ intervation_details:object[]=[];//ex=[{id:'',name:''}]
+
+
 }
-export class ComparisonReportReportContentTwo {}
+export class ComparisonReportReportContentTwo {
+    prosses_tech:object[]=[] //ex=[{id:'',name:'',type:'',status:'',randd:'',adoptation:'',scaleup:'',score:''}]
+    prosses_agent:object[]=[] //ex=[{id:'',name:'',type:'',status:'',entrepreneurs:'',coalition :'',scaleup:'',score:''}]
+    prosses_incentive:object[]=[] //ex=[{id:'',name:'',type:'',status:'',economic :'',disincentives:'',institutional :'',score:''}]
+    prosses_norms:object[]=[] //ex=[{id:'',name:'',type:'',status:'',awareness:'',behavior:'',norms:'',score:''}]
+    process_score:object[]=[]
+}
 export class ComparisonReportReportContentThree {}
 export class ComparisonReportReportContentFour {}
