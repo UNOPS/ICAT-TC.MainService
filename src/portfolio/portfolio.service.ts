@@ -17,6 +17,7 @@ import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assess
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { ReportService } from 'src/report/report.service';
+import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -31,6 +32,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   cmScores: any
   piScores: any
   sdgs_score: any = {}
+  sdgPriorities: SdgPriority[];
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -188,7 +190,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       data.where('assessment.id IN (:...ids)', { ids: assessmentIdArray })
 
     }else{
-      let filter = 'assessment.tool="Portfolio Tool" '
+      let filter = 'assessment.tool="PORTFOLIO" '
 
 
       let user = this.userService.currentUser();
@@ -291,11 +293,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let categories
       let res
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           res = await this.getProcessDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -371,11 +373,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -749,17 +751,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
+        case 'PORTFOLIO':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention);
           break
-        case 'Investment & Private Sector Tool':
+        case 'INVESTOR':
           _intervention.mitigation = await this.getAggregationDataPortfolioTool(pAssessment.assessment);
           total+= _intervention.mitigation;
           response.interventions.push(_intervention)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           // _intervention.mitigation = await this.getAggregationDataCarbonMarket(pAssessment.assessment);
           // total+= _intervention.mitigation;
           // response.interventions.push(_intervention)
@@ -774,6 +776,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs = []
     let response: ComparisonDto = new ComparisonDto()
     let intervention_data = []
+
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userCountryId = currentUser.country?.id;
+    this.sdgPriorities = await this.investorToolService.getSdgPrioritiesByCountryId(userCountryId)
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -784,11 +791,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       let data
       switch (pAssessment.assessment.tool) {
-        case 'Portfolio Tool':
-        case 'Investment & Private Sector Tool':
+        case 'PORTFOLIO':
+        case 'INVESTOR':
           data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
           break;
-        case 'Carbon Market Tool':
+        case 'CARBON_MARKET':
           data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment)
           break;
       }
@@ -851,16 +858,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let ch_data = {}
       for await (let ch of cat.characteristicData) {
         characteristics.push({ label: ch.characteristic.toUpperCase(), code: ch.ch_code })
-        ch_data[ch.ch_code] = ch.likelihood.name
+        ch_data[ch.ch_code] = ch.likelihood?.name
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
-      ch_data['category_score'] = cat.category_score.value
+      ch_data['category_score'] = cat.category_score?.value
       obj['characteristics'] = characteristics
       obj['ch_data'] = ch_data
-      obj['characteristic_count'] = characteristics.length
-      obj['col_set_1'] = { label: cat.category, colspan: characteristics.length + 1 }
-      cat_obj[cat.category] = cat.category_score.value
-      cat_total += cat.category_score.value
+      obj['characteristic_count'] = characteristics?.length
+      obj['col_set_1'] = { label: cat.category, colspan: characteristics?.length + 1 }
+      cat_obj[cat.category] = cat.category_score?.value
+      cat_total += cat.category_score?.value
       cat_names.push(cat.category)
       categories.push(obj)
     }
@@ -886,10 +893,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        international: this.mapNameAndValue(int.name, int.value),
-        national: this.mapNameAndValue(nat.name, nat.value),
-        subnational: this.mapNameAndValue(sub.name, sub.value),
-        category_score: this.mapNameAndValue(scGHG.category_score.name, scGHG.category_score.value)
+        international: this.mapNameAndValue(int?.name, int?.value),
+        national: this.mapNameAndValue(nat?.name, nat?.value),
+        subnational: this.mapNameAndValue(sub?.name, sub?.value),
+        category_score: this.mapNameAndValue(scGHG.category_score?.name, scGHG.category_score?.value)
       }
     }
 
@@ -907,9 +914,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       scale_SDs[sd_code] = {
         col_set_1: { label: 'SCALE - ' + sd.name.toUpperCase(), colspan: 4 },
         data: {
-          international: this.mapNameAndValue(international.name, international.value),
-          national: this.mapNameAndValue(national.name, national.value),
-          subnational: this.mapNameAndValue(subnational.name, subnational.value),
+          international: this.mapNameAndValue(international?.name, international?.value),
+          national: this.mapNameAndValue(national?.name, national?.value),
+          subnational: this.mapNameAndValue(subnational?.name, subnational?.value),
           category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(sd.sdg_score), sd.sdg_score) 
         }
       }
@@ -926,10 +933,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        international: this.mapNameAndValue(int.name, int.value),
-        national: this.mapNameAndValue(nat.name, nat.value),
-        subnational: this.mapNameAndValue(sub.name, sub.value),
-        category_score: this.mapNameAndValue(scAD.category_score.name, scAD.category_score.value)
+        international: this.mapNameAndValue(int?.name, int?.value),
+        national: this.mapNameAndValue(nat?.name, nat?.value),
+        subnational: this.mapNameAndValue(sub?.name, sub?.value),
+        category_score: this.mapNameAndValue(scAD.category_score?.name, scAD.category_score?.value)
       }
     }
 
@@ -942,10 +949,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
       data: {
-        long_term: this.mapNameAndValue(_long.name, _long.value),
-        medium_term: this.mapNameAndValue(medium.name, medium.value),
-        short_term: this.mapNameAndValue(short.name, short.value),
-        category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susGHG.category_score.value), susGHG.category_score.value)
+        long_term: this.mapNameAndValue(_long?.name, _long?.value),
+        medium_term: this.mapNameAndValue(medium?.name, medium?.value),
+        short_term: this.mapNameAndValue(short?.name, short?.value),
+        category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susGHG.category_score?.value), susGHG.category_score?.value)
       }
     }
 
@@ -981,10 +988,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
       data: {
-        long_term: this.mapNameAndValue(_long.name, _long.value),
-        medium_term: this.mapNameAndValue(medium.name, medium.value),
-        short_term: this.mapNameAndValue(short.name, short.value),
-        category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susAD.category_score.value), susAD.category_score.value)
+        long_term: this.mapNameAndValue(_long?.name, _long?.value),
+        medium_term: this.mapNameAndValue(medium?.name, medium?.value),
+        short_term: this.mapNameAndValue(short?.name, short?.value),
+        category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susAD.category_score?.value), susAD.category_score?.value)
       }
     }
 
@@ -1020,21 +1027,18 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
-      let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
-      let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg.number + ' - ' + sd.sdg.name] / 2)
+      let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
+      let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name] / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code})//TODO need to update after clarification
+      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
+      let priority_value = 4 - Math.abs(ans.value - priority.value)
+      response[code] = {name: ans.name, value: priority_value}
+      col2.push({label: priority_name.toUpperCase(), code: code})//TODO need to update after clarification
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
-    console.log(response)
     return {
       response: response,
       col2: col2,
@@ -1239,18 +1243,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .where('assessment.id = :id', { id: assessment.id })
     let sdgs = await data.getMany()
 
-    let priorities = [
-      {sdg: 'Zero hunger', priority: 'High priority', value: 1}
-    ]
-
     sdgs.map(sd => {
-      let code = (sd.sdg.name.replace(' ', '_')).toUpperCase()
-      let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score.sdgs_score[sd.sdg.id]), result.outcome_score.sdgs_score[sd.sdg.id]))
-      // let priority = priorities.find(o => o.sdg === sd.sdg.name) //TODO bind this to col2
-      response[code] = {name: ans.name, value: ans.value}
-      col2.push({label: 'High priority', code: code}) //TODO need to update after clarification
-      col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
-      sdgsArr.push(sd.sdg.name)
+      let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
+      let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score?.sdgs_score[sd.sdg.id]), result.outcome_score?.sdgs_score[sd.sdg.id]))
+      let priority_value = ans?.value
+      if (this.sdgPriorities.length !== 0){
+        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+        let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
+        priority_value =  4 - Math.abs(ans.value - priority.value)
+        col2.push({label: priority_name?.toUpperCase(), code: code}) //TODO need to update after clarification
+      }
+      response[code] = {name: ans?.name, value: priority_value}
+      col1.push({label: 'SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name.toUpperCase(), colspan: 1})
+      sdgsArr.push(sd.sdg?.name)
     })
 
     return {
@@ -1267,7 +1272,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   // }
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
-    let tool = 'Portfolio Tool';
+    let tool = 'PORTFOLIO';
     let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
     let user = this.userService.currentUser();
     const currentUser = await user;

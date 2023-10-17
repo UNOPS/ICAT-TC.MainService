@@ -1406,7 +1406,7 @@ export const characteristic = [
         weight: 27
     },
     {
-        name: 'Macro Level',
+        name: 'International/global levell',
         code: 'MACRO_LEVEL',
         category_id: 5,
         description: '',
@@ -1414,7 +1414,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Medium Level',
+        name: 'National/Sectorial level',
         code: 'MEDIUM_LEVEL',
         category_id: 5,
         description: '',
@@ -1422,7 +1422,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Micro Level',
+        name: 'Subnational/regional/municipal or sub sectorial level',
         code: 'MICRO_LEVEL',
         category_id: 5,
         description: '',
@@ -1430,7 +1430,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Macro Level',
+        name: 'International/global level',
         code: 'MACRO_LEVEL',
         category_id: 6,
         description: '',
@@ -1438,7 +1438,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Medium Level',
+        name: 'National/Sectorial level',
         code: 'MEDIUM_LEVEL',
         category_id: 6,
         description: '',
@@ -1446,7 +1446,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Micro Level',
+        name: 'Subnational/regional/municipal or sub sectorial level',
         code: 'MICRO_LEVEL',
         category_id: 6,
         description: '',
@@ -1470,7 +1470,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Short Term (<5 years)',
+        name: 'Short term (<5 years)',
         code: 'SHORT_TERM',
         category_id: 7,
         description: '',
@@ -1494,7 +1494,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Short Term (<5 years)',
+        name: 'Short term (<5 years)',
         code: 'SHORT_TERM',
         category_id: 8,
         description: '',
@@ -1502,7 +1502,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'International',
+        name: 'International/global level',
         code: 'INTERNATIONAL',
         category_id: 9,
         description: '',
@@ -1510,7 +1510,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'National',
+        name: 'National/Sectorial level',
         code: 'NATIONAL',
         category_id: 9,
         description: '',
@@ -1518,7 +1518,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Subnational',
+        name: 'Subnational/regional/municipal or sub sectorial level',
         code: 'SUBNATIONAL',
         category_id: 9,
         description: '',
@@ -1526,7 +1526,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'International',
+        name: 'Long term (>15 years)',
         code: 'INTERNATIONAL',
         category_id: 10,
         description: '',
@@ -1534,7 +1534,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'National',
+        name: 'Medium term (5-15 years)',
         code: 'NATIONAL',
         category_id: 10,
         description: '',
@@ -1542,7 +1542,7 @@ export const characteristic = [
         weight: 0
     },
     {
-        name: 'Subnational',
+        name: 'Short term (<5 years)',
         code: 'SUBNATIONAL',
         category_id: 10,
         description: '',
@@ -1571,43 +1571,43 @@ export const categories = [
         weight: 50
     },
     {
-        name: 'Norms and behavioural change',
+        name: 'Norms and behavioral change',
         code: 'NORMS',
         description: 'Include processes that influence awareness and behavior of people to drive a long-lasting change in societal norms and practices.',
         weight: 10
     },
     {
-        name: 'Scale GHGs',
+        name: 'GHG Scale of the Outcome',
         code: 'SCALE_GHG',
         description: '',
         weight: 35
     },
     {
-        name: 'Scale SD',
+        name: 'SDG Scale of the Outcome',
         code: 'SCALE_SD',
         description: '',
         weight: 35
     },
     {
-        name: 'Sustained nature-GHGs',
+        name: 'GHG Time frame over which the outcome is sustained',
         code: 'SUSTAINED_GHG',
         description: '',
         weight: 35
     },
     {
-        name: 'Sustained nature-SD',
+        name: 'SDG Time frame over which the outcome is sustained',
         code: 'SUSTAINED_SD',
         description: '',
         weight: 35
     },
     {
-        name: 'Scale Adaptation',
+        name: 'Adaptation Scale of the Outcome',
         code: 'SCALE_ADAPTATION',
         description: '',
         weight: 30
     },
     {
-        name: 'Sustained Adaptation',
+        name: 'Adaptation Time frame over which the outcome is sustained',
         code: 'SUSTAINED_ADAPTATION',
         description: '',
         weight: 30

@@ -67,4 +67,9 @@ export class CMSeedController {
     async deletNotUsingAnswers(){
         return await this.service.deleteNotUsingAnswers()
     }
+
+    @Post('update-tool-name-in-assessment')
+    async updateToolNameInAssessment(){
+        return await this.service.updateToolNameInAssessment()
+    }
 }
