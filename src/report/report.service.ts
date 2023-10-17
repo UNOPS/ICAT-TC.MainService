@@ -156,13 +156,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
     console.log("assessmentId", assessmentId)
     // reportContentOne.policyName = asse.climateAction.policyName;
-
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
-
     // reportContentOne.assessmentYear = asse.year;
-
     // reportContentOne.intendedAudience = asse.audience;
-
     reportContentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
     // reportContentOne.objectives = await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
     reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
@@ -199,107 +195,57 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Date of implementation',
         description: asse.climateAction.dateOfImplementation
           ? new Date(
-
             asse.climateAction.dateOfImplementation,
-
           ).toLocaleDateString()
-
           : 'N/A',
-
       },
-
       {
-
         information: 'Date of completion (if relevant)',
-
         description: asse.climateAction.dateOfCompletion
-
           ? new Date(asse.climateAction.dateOfCompletion).toLocaleDateString()
-
           : 'N/A',
-
       },
-
       {
-
         information: 'Implementing entity or entities',
-
         description: asse.climateAction.implementingEntity ? asse.climateAction.implementingEntity : 'N/A',
-
       },
-
       {
-
         information: 'Objectives and benefits ',
-
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
-
       },
-
       {
-
         information: 'Level of the policy ',
-
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
-
       },
-
       {
-
         information: 'Geographic coverage',
-
         description: asse.climateAction.geographicCoverage
-
           ? asse.climateAction.geographicCoverage
-
           : 'N/A',
-
       },
-
       {
-
         information: 'Sectors covered ',
-
         description: asse.climateAction.policy_sector
-
           ? asse.climateAction.policy_sector.map((a) => a.sector.name).join(',')
-
           : 'N/A',
-
       },
-
       {
-
         information: 'Other related policies ',
-
         description: asse.climateAction.related_policies
-
           ? asse.climateAction.related_policies
-
           : 'N/A',
-
       },
-
       {
-
         information: 'Reference',
-
         description: asse.climateAction.reference
-
           ? asse.climateAction.reference
-
           : 'N/A',
-
       },
-
     ];
 
 
 
     reportContentOne.understanPolicyOrActions = [
-
-
-
       {
 
         Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
