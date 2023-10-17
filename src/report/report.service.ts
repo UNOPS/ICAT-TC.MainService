@@ -434,7 +434,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
             relavance: invesass.relavance
               ? this.getrelavance(invesass.relavance)
               : '-',
-            likelihoodscore: invesass.likelihood ? invesass.likelihood : '-',
+            likelihoodscore: invesass.likelihood ? this.investorToolService.mapSustainedScores(invesass.likelihood) : '-',
             rationalejustifying: invesass.likelihood_justification
               ? invesass.likelihood_justification
               : '-',
@@ -452,7 +452,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
                   ? this.getrelavance(invesass.relavance)
                   : '-',
                 likelihoodscore: invesass.likelihood
-                  ? invesass.likelihood
+                  ? this.investorToolService.mapSustainedScores(invesass.likelihood)
                   : '-',
                 rationalejustifying: invesass.likelihood_justification
                   ? invesass.likelihood_justification
