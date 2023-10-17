@@ -16,6 +16,7 @@ import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { ReportService } from 'src/report/report.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Injectable()

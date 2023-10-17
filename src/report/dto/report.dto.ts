@@ -123,7 +123,7 @@ export class ComparisonReportDto {
 }
 
 export class ComparisonReportReportTableOfContent {}
-export class ComparisonReportReportContentOne {
+export class ComparisonReportReportContentOne  {
  portfolio_details:object[]=[];   //ex=[{information:'',description:''}]
  intervation_details:object[]=[];//ex=[{id:'',name:''}]
 
