@@ -2701,7 +2701,6 @@ export class ReportPagesService {
                 '</td><td>' +
                 a.ghg_score.name +
                 '</td><td>' +
-                a['SDG undefined - undefined_score'].name +
                 '</td><td>' +
                 a.adaptation_score.name +
                 '</td><td>' +
@@ -2762,7 +2761,6 @@ export class ReportPagesService {
               '</td><td>' +
               a.ghg_score.name +
               '</td><td>' +
-              a['SDG undefined - undefined_score'].name +
               '</td><td>' +
               a.adaptation_score.name +
               '</td><td>' +
