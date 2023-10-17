@@ -371,19 +371,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 0: {
 
-        return 'relevant';
+        return 'Relevant';
 
       }
 
       case 1: {
 
-        return 'possible_relevant';
+        return 'Possible relevant';
 
       }
 
       case 2: {
 
-        return 'not_relevant';
+        return 'Not relevant';
 
       }
 
@@ -492,9 +492,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
               ? this.getrelavance(invesass.relavance)
 
               : '-',
-
-            likelihoodscore: invesass.likelihood ? invesass.likelihood : '-',
-
+            likelihoodscore: invesass.likelihood ? this.investorToolService.mapSustainedScores(invesass.likelihood) : '-',
             rationalejustifying: invesass.likelihood_justification
 
               ? invesass.likelihood_justification
@@ -528,9 +526,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
                   : '-',
 
                 likelihoodscore: invesass.likelihood
-
-                  ? invesass.likelihood
-
+                  ? this.investorToolService.mapSustainedScores(invesass.likelihood)
                   : '-',
 
                 rationalejustifying: invesass.likelihood_justification
