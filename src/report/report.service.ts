@@ -371,19 +371,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 0: {
 
-        return 'relevant';
+        return 'Relevant';
 
       }
 
       case 1: {
 
-        return 'possible_relevant';
+        return 'Possible relevant';
 
       }
 
       case 2: {
 
-        return 'not_relevant';
+        return 'Not relevant';
 
       }
 
