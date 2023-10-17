@@ -2289,6 +2289,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
+    
 
     const sdg_pages = allsdg
       .map(
@@ -2297,7 +2298,7 @@ export class ReportPagesService {
           sdg_scale: object[];
           sdg_sustaind: object[];
           sdg_scale_sustaind_comparison: object[];
-        }) => `  <div id="page_9" class="page text-center" >
+        }) => `<div id="page_9" class="page text-center" >
       ${header}
       <div class="content">
       <div class="report-table-sm">
@@ -2436,7 +2437,7 @@ export class ReportPagesService {
       
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-       </div>`,
+       </div>`
       )
       .join('');
 
@@ -2469,7 +2470,7 @@ export class ReportPagesService {
          
        </tr>
      </thead>
-     <tbody class="table-active ">
+     <tbody  class="table-active ">
      ${ghg_scale_sustaind_comparison
        .map(
          (a: {
@@ -2571,7 +2572,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_8 = sdg_scale_sustaind_comparison
+    const sdg_scale_sustaind_comparison_all = sdg_scale_sustaind_comparison
       .map(
         (b) => `  <div id="page_9" class="page text-center" >
     ${header}
@@ -2585,7 +2586,7 @@ export class ReportPagesService {
     <thead class="table-primary  border-dark">
     <tr>
     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
-    <th colspan="3" scope="col">SDG OUTCOMES</th>
+    <th colspan="3" scope="col">${b.sdg_name}</th>
     
   </tr>
   <tr>
@@ -2605,7 +2606,7 @@ export class ReportPagesService {
       </tr>
     </thead>
     <tbody class="table-active ">
-    ${b
+    ${b.data
       .map(
         (a: {
           scale_score: any;
@@ -2863,11 +2864,12 @@ export class ReportPagesService {
       page_3 +
       page_4 +
       page_5 +
-      sdg_pages +
+      sdg_pages + 
+      page_10+
       page_7 +
-      page_8 +
+      sdg_scale_sustaind_comparison_all 
       // page_9 +
-      page_10
+     
     );
     // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
