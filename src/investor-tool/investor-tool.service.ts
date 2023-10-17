@@ -1895,11 +1895,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 0:
         return 'Very unlikely (0-10%)';
       case 1:
-        return 'Unlikely (10-33%)';
+        return 'Unlikely (10-30%)';
       case 2:
-        return 'Possible (33-66%)';
+        return 'Possible (30-60%)';
       case 3:
-        return 'Likely (66-90%)';
+        return 'Likely (60-90%)';
       case 4:
         return 'Very likely (90-100%)';
     }
@@ -1941,11 +1941,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case -1:
         return 'Unlikely (0-10%)';
       case 0:
-        return 'Less likely (10-33%)';
+        return 'Less likely (10-30%)';
       case 1:
-        return 'Possible (33-66%)';
+        return 'Possible (30-60%)';
       case 2:
-        return 'Likely (66-90%)';
+        return 'Likely (60-90%)';
       case 3:
         return 'Very likely (90-100%)';
       case 4:
