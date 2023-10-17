@@ -17,90 +17,90 @@ import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 
 @Entity()
-export class Assessment extends BaseTrackingEntity{
+export class Assessment extends BaseTrackingEntity {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable: true })
-    year: string;
+  @Column({ nullable: true })
+  year: string;
 
-    @ManyToOne((type) => ClimateAction, { cascade: false, eager: true, })
-    @JoinColumn({ name: 'climateAction_id' })
-    climateAction?: ClimateAction;
+  @ManyToOne((type) => ClimateAction, { cascade: false, eager: true, })
+  @JoinColumn({ name: 'climateAction_id' })
+  climateAction?: ClimateAction;
 
-    @ManyToOne((type) => Methodology, { cascade: false })
-    @JoinColumn({ name: 'methodology_id' })
-    methodology?: Methodology;
+  @ManyToOne((type) => Methodology, { cascade: false })
+  @JoinColumn({ name: 'methodology_id' })
+  methodology?: Methodology;
 
-    @Column({ nullable: true })
-    assessmentType: string; // assessmentType :- Ex-Post, Ex-Ante
+  @Column({ nullable: true })
+  assessmentType: string; // assessmentType :- Ex-Post, Ex-Ante
 
-    @Column({ nullable: true })
-    tool: string;
+  @Column({ nullable: true })
+  tool: string;
 
-    @Column({ nullable: true })
-    from: Date;
+  @Column({ nullable: true })
+  from: Date;
 
-    @Column({ nullable: true })
-    to: Date;
+  @Column({ nullable: true })
+  to: Date;
 
-    @Column({ nullable: true })
-    assessment_method: string; //track , track 2
+  @Column({ nullable: true })
+  assessment_method: string; //track , track 2
 
-    @Column({ nullable: true })
-    assessment_approach: string; //direct, indirect
+  @Column({ nullable: true })
+  assessment_approach: string; //direct, indirect
 
-    @Column({ nullable: true })
-    qaStatus?: QuAlityCheckStatus;
+  @Column({ nullable: true })
+  qaStatus?: QuAlityCheckStatus;
 
-    @Column({ nullable: true })
-    person: string;
+  @Column({ nullable: true })
+  person: string;
 
-    @Column({type: 'longtext', nullable: true })
-    opportunities: string;
+  @Column({ type: 'longtext', nullable: true })
+  opportunities: string;
 
-    @Column({type: 'longtext', nullable: true })
-    principles: string;
-    
-    @Column({ type:"mediumtext" ,nullable: true })
-    audience?: string;
+  @Column({ type: 'longtext', nullable: true })
+  principles: string;
 
-    @Column({ type:"mediumtext" ,nullable: true })
-    assessBoundry?: string;
+  @Column({ type: "mediumtext", nullable: true })
+  audience?: string;
 
-    @Column({ type:"mediumtext" ,nullable: true })
-    impactsCovered?: string;
+  @Column({ type: "mediumtext", nullable: true })
+  assessBoundry?: string;
 
-    @Column({ nullable: true })
-    verificationStatus?: VerificationStatus;
+  @Column({ type: "mediumtext", nullable: true })
+  impactsCovered?: string;
 
-    @Column({nullable: true})
-    verificationUser?: number
-    
-    @Column({ nullable: true })
-    qaAssighnDate?: string;
+  @Column({ nullable: true })
+  verificationStatus?: VerificationStatus;
 
-   @Column({ nullable: true })
-    qaDeadline?: Date;
+  @Column({ nullable: true })
+  verificationUser?: number
 
-    @Column({ nullable: true })
-    verificationDeadline?: Date;
+  @Column({ nullable: true })
+  qaAssighnDate?: string;
 
-    @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
-        cascade: false,
-        nullable: true,
-        eager: true,
-      })
-      @JoinColumn()
-      parameters: MethodologyAssessmentParameters[];
+  @Column({ nullable: true })
+  qaDeadline?: Date;
 
-      @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-      tc_value?: number;
+  @Column({ nullable: true })
+  verificationDeadline?: Date;
+
+  @OneToMany(() => MethodologyAssessmentParameters, (as) => as.assessment, {
+    cascade: false,
+    nullable: true,
+    eager: true,
+  })
+  @JoinColumn()
+  parameters: MethodologyAssessmentParameters[];
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
+  tc_value?: number;
 
   @ManyToOne((type) => User, { cascade: false, eager: false, })
   @JoinColumn({ name: 'user_id' })
-  user?: User; 
+  user?: User;
 
   @Column({ type: 'int', nullable: true })
   process_score: number;
@@ -108,7 +108,7 @@ export class Assessment extends BaseTrackingEntity{
   @Column({ type: 'int', nullable: true })
   outcome_score: number;
 
-  
+
   @Column({ type: 'longtext', default: null, nullable: true })
   envisioned_change: string;
 
@@ -123,24 +123,26 @@ export class Assessment extends BaseTrackingEntity{
 
   @Column({ type: 'longtext', default: null, nullable: true })
   phase_of_transformation: string;
-  
+
   @Column({ type: 'longtext', default: null, nullable: true })
   change_in_system: string;
 
+  @Column({ default: false })
+  isDraft: boolean
 
 
   @ApiHideProperty()
-  investor_assessment:InvestorAssessment[]=[]
+  investor_assessment: InvestorAssessment[] = []
   @ApiHideProperty()
-  policy_barrier:PolicyBarriers[];
+  policy_barrier: PolicyBarriers[];
   @ApiHideProperty()
-  investor_tool:InvestorTool;
+  investor_tool: InvestorTool;
   @ApiHideProperty()
-  investor_sector:InvestorSector[];
+  investor_sector: InvestorSector[];
   @ApiHideProperty()
-  assessment_barriers:AssessmentBarriers[];
+  assessment_barriers: AssessmentBarriers[];
   @ApiHideProperty()
-  geographical_areas_covered:GeographicalAreasCovered[];
+  geographical_areas_covered: GeographicalAreasCovered[];
 
 }
 
