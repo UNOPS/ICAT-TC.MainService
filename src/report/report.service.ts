@@ -25,7 +25,7 @@ import { UsersService } from 'src/users/users.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { PortfolioService } from 'src/portfolio/portfolio.service';
 import { ComparisonDto, ComparisonTableDataDto } from 'src/portfolio/dto/comparison.dto';
-import { Portfolio,  } from 'src/portfolio/entities/portfolio.entity';
+import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     @InjectRepository(Report) repo,
     @InjectRepository(Country) private countryRepo: Repository<Country>,
     @InjectRepository(Portfolio) private portfolioRepo: Repository<Portfolio>,
-    @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,    
+    @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,
     private usersService: UsersService,
     public assessmentService: AssessmentService,
     private readonly investorToolService: InvestorToolService,
@@ -46,7 +46,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     return 'This action adds a new report';
   }
 
- findAll() {
+  findAll() {
     return `This action returns all report`;
   }
 
@@ -1578,21 +1578,21 @@ export class ReportService extends TypeOrmCrudService<Report> {
     comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(
       createReportDto.reportTitle,
     );
-    comparisonReportDto.contentOne = await this.genarateComparisonReportDtoContentOne( createReportDto.portfolioId );
+    comparisonReportDto.contentOne = await this.genarateComparisonReportDtoContentOne(createReportDto.portfolioId);
 
 
-   let result:ComparisonTableDataDto= await this.portfolioService.getPortfolioComparisonData(createReportDto.portfolioId);
-    
-  
+    let result: ComparisonTableDataDto = await this.portfolioService.getPortfolioComparisonData(createReportDto.portfolioId);
 
-    comparisonReportDto.contentTwo = await this.genarateComparisonReportDtoContentTwo(result.process_data,result.outcome_data
+
+
+    comparisonReportDto.contentTwo = await this.genarateComparisonReportDtoContentTwo(result.process_data, result.outcome_data
     );
     comparisonReportDto.contentThree = await this.genarateComparisonReportDtoContentThree(result.aggregation_data
     );
-    comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour( result.alignment_data
+    comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour(result.alignment_data
     );
-    comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage( createReportDto.reportTitle,);
-  
+    comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(createReportDto.reportTitle,);
+
     return comparisonReportDto;
 
   }
@@ -1619,209 +1619,223 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   }
 
-  async genarateComparisonReportDtoContentOne(portfolioId:number): Promise<ComparisonReportReportContentOne> {
+  async genarateComparisonReportDtoContentOne(portfolioId: number): Promise<ComparisonReportReportContentOne> {
     let portfolio = new Portfolio();
-    let  assesment :PortfolioAssessment[]=[]
-     portfolio = await this.portfolioRepo.findOne({where:{id:portfolioId}});
-     assesment =  await this.portfolioAssessRepo.find({ relations: ['assessment'], where: { portfolio: { id: portfolioId } },
+    let assesment: PortfolioAssessment[] = []
+    portfolio = await this.portfolioRepo.findOne({ where: { id: portfolioId } });
+    assesment = await this.portfolioAssessRepo.find({
+      relations: ['assessment'], where: { portfolio: { id: portfolioId } },
     });
     const contentOne = new ComparisonReportReportContentOne();
-    contentOne.portfolio_details =[
+
+    for (let ass of assesment) {
+     contentOne.intervation_details.push(
       {
-        Information: 'Portfolio ID',
-        Description : portfolio.portfolioId? portfolio.portfolioId : 'N/A',
-      },
-      {
-        Information: 'Name',
-        Description : portfolio.portfolioName? portfolio.portfolioName : 'N/A',
-      },
-      {
-        Information: 'Description of the Portfolio',
-        Description : portfolio.description? portfolio.description : 'N/A',
-      },
-      {
-        Information: 'Date',
-        Description : portfolio.date? portfolio.date : 'N/A',
-      },
-      {
-        Information: 'Objectives of the assessment',
-        Description : portfolio.objectives? portfolio.objectives : 'N/A',
-      },
-      {
-        Information: 'ntended audience(s) of the assessment',
-        Description : portfolio.audience? portfolio.audience : 'N/A',
-      },
-      {
-        Information: 'Previous assessments the present assessment is an update of',
-        Description : portfolio.IsPreviousAssessment=='Yes'? portfolio.link : 'N/A',
-      },
-    ]
-
-
-    return contentOne;
-  }
-  genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[],outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
-    const contentTwo = new ComparisonReportReportContentTwo();
-
-
-    const tech =process_data.find(a=>a.col_set_1.some(b=>b.label=='CATEGORY - TECHNOLOGY'));
-
-    if(tech){
-      contentTwo.prosses_tech= tech.interventions;
-    // tech.interventions.forEach(a=>{
-    //   contentTwo.prosses_tech.push({ id:a.id,name:a.name,type:a.type,status:a.status,randd:a['R_&_D'],adoptation:a.ADOPTION,scaleup:a.SCALE_UP,score:a.category_score})
-    // })
-
-    }
-   
-    const agent =process_data.find(a=>a.col_set_1.some(b=>b.label=='CATEGORY - AGENTS'));
-
-    if(agent){
-      contentTwo.prosses_agent=agent.interventions; 
-    //   agent.interventions.forEach(a=>{
-    //   contentTwo.prosses_agent.push({ id:a.id,name:a.name,type:a.type,status:a.status,entrepreneurs:a.ENTREPRENEURS,coalition :a.COALITION_OF_ADVOCATES,beneficiaries:a.BENIFICIARIES,score:a.category_score})
-    // })
-
-    }
-    const incen =process_data.find(a=>a.col_set_1.some(b=>b.label=='CATEGORY - INCENTIVES'));
-
-    if(incen){
-      contentTwo.prosses_incentive=agent.interventions; 
-    //   incen.interventions.forEach(a=>{
-    //   contentTwo.prosses_incentive.push({ id:a.id,name:a.name,type:a.type,status:a.status,economic :a.ECONOMIC_NON_ECONOMIC,disincentives:a.DISINCENTIVES,institutional :a.INSTITUTIONAL_AND_REGULATORY,score:a.category_score})
-    // })
-
-    }
-    const norm =process_data.find(a=>a.col_set_1.some(b=>b.label=='CATEGORY - NORMS AND BEHAVIORAL CHANGE'));
-
-    if(norm){
-      contentTwo.prosses_norms=norm.interventions; 
-    //   norm.interventions.forEach(a=>{
-    //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
-    // })
-
-    }
-  
-    const process_score =process_data.find(a=>a.col_set_1.length>2);
-
-    if(process_score){
-      contentTwo.process_score= process_score.interventions
-    //   norm.interventions.forEach(a=>{
-    //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
-    // })
-
-    }
-
-
-    // outcome_data.forEach(a=>console.log(a.interventions))
-    const ghg_scale =outcome_data.find(a=>a.col_set_1.some(b=>b.label=='GHG')&&a.comparison_type=='SCALE COMPARISON');
-    if(ghg_scale){
-      contentTwo.ghg_scale=ghg_scale.interventions;
-    }
-
-    const ghg_sustaind =outcome_data.find(a=>a.col_set_1.some(b=>b.label=='GHG'&&a.comparison_type=='SUSTAINED IN TIME COMPARISON'));
-    if(ghg_sustaind){
-      contentTwo.ghg_sustaind=ghg_sustaind.interventions;
-    }
-
-    const ghg_scale_sustaind_comparison =outcome_data.find(a=>a.comparison_type_2=='GHG OUTCOMES'&&a.comparison_type=='SCALE & SUSTAINED IN TIME COMPARISON');
-    if(ghg_scale_sustaind_comparison){
-     
-      contentTwo.ghg_scale_sustaind_comparison=ghg_scale_sustaind_comparison.interventions;
-      // console.log(contentTwo.ghg_scale_sustaind_comparison)
-    }
-
-    const adaptation_scale =outcome_data.find(a=>a.col_set_1.some(b=>b.label=='ADAPTATION')&&a.comparison_type=='SCALE COMPARISON');
-    if(adaptation_scale){
-      contentTwo.adaptation_scale=adaptation_scale.interventions;
-    }
-
-    const adaptation_sustaind =outcome_data.find(a=>a.col_set_1.some(b=>b.label=='ADAPTATION')&&a.comparison_type=='SUSTAINED IN TIME COMPARISON');
-    if(adaptation_sustaind){
-      contentTwo.adaptation_sustaind=adaptation_sustaind.interventions;
-    }
-
-    const adaptation_scale_sustaind_comparison =outcome_data.find(a=>a.comparison_type_2=='ADAPTATION OUTCOMES'&&a.comparison_type=='SCALE & SUSTAINED IN TIME COMPARISON');
-    if(adaptation_scale_sustaind_comparison){
-      contentTwo.adaptation_scale_sustaind_comparison=adaptation_scale_sustaind_comparison.interventions;
-    }
-
-    outcome_data.filter(a=>a.col_set_1.some(b=>b.label.includes('SDG'))&&a.col_set_1.length<3).forEach(c=>{
-   
-    // console.log('outcome_data',c)
-    let sdg= contentTwo.allsdg.find(d=>d.sdg_name==c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim());
-    
-    if(sdg){
-      if(c.comparison_type=='SCALE COMPARISON'){
-        sdg.sdg_scale=c.interventions;
+        interventionId: ass.assessment.climateAction.intervention_id,
+        intervention: ass.assessment.climateAction.policyName,
+        assesmentType: ass.assessment.assessmentType,
+        assesmentPeriodfrom: ass.assessment.from,
+        assesmentPeriodto: ass.assessment.to,
       }
-      if(c.comparison_type=='SUSTAINED IN TIME COMPARISON'){
-        sdg.sdg_sustaind=c.interventions;
+     ) 
+    }
+
+      contentOne.portfolio_details = [
+        {
+          Information: 'Portfolio ID',
+          Description: portfolio.portfolioId ? portfolio.portfolioId : 'N/A',
+        },
+        {
+          Information: 'Name',
+          Description: portfolio.portfolioName ? portfolio.portfolioName : 'N/A',
+        },
+        {
+          Information: 'Description of the Portfolio',
+          Description: portfolio.description ? portfolio.description : 'N/A',
+        },
+        {
+          Information: 'Date',
+          Description: portfolio.date ? portfolio.date : 'N/A',
+        },
+        {
+          Information: 'Objectives of the assessment',
+          Description: portfolio.objectives ? portfolio.objectives : 'N/A',
+        },
+        {
+          Information: 'ntended audience(s) of the assessment',
+          Description: portfolio.audience ? portfolio.audience : 'N/A',
+        },
+        {
+          Information: 'Previous assessments the present assessment is an update of',
+          Description: portfolio.IsPreviousAssessment == 'Yes' ? portfolio.link : 'N/A',
+        },
+      ]
+
+
+      return contentOne;
+    }
+    genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[], outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
+      const contentTwo = new ComparisonReportReportContentTwo();
+
+
+      const tech = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - TECHNOLOGY'));
+
+      if (tech) {
+        contentTwo.prosses_tech = tech.interventions;
+        // tech.interventions.forEach(a=>{
+        //   contentTwo.prosses_tech.push({ id:a.id,name:a.name,type:a.type,status:a.status,randd:a['R_&_D'],adoptation:a.ADOPTION,scaleup:a.SCALE_UP,score:a.category_score})
+        // })
+
       }
-    }else{
 
-      if(c.comparison_type=='SCALE COMPARISON'){
-       
-        contentTwo.allsdg.push({
-          sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
-          sdg_scale: c.interventions,
-          sdg_sustaind: []
-        })
+      const agent = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - AGENTS'));
+
+      if (agent) {
+        contentTwo.prosses_agent = agent.interventions;
+        //   agent.interventions.forEach(a=>{
+        //   contentTwo.prosses_agent.push({ id:a.id,name:a.name,type:a.type,status:a.status,entrepreneurs:a.ENTREPRENEURS,coalition :a.COALITION_OF_ADVOCATES,beneficiaries:a.BENIFICIARIES,score:a.category_score})
+        // })
+
       }
-      if(c.comparison_type=='SUSTAINED IN TIME COMPARISON'){
-        
-        contentTwo.allsdg.push({
-          sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
-          sdg_scale: [],
-          sdg_sustaind: c.interventions
-        })
+      const incen = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - INCENTIVES'));
+
+      if (incen) {
+        contentTwo.prosses_incentive = agent.interventions;
+        //   incen.interventions.forEach(a=>{
+        //   contentTwo.prosses_incentive.push({ id:a.id,name:a.name,type:a.type,status:a.status,economic :a.ECONOMIC_NON_ECONOMIC,disincentives:a.DISINCENTIVES,institutional :a.INSTITUTIONAL_AND_REGULATORY,score:a.category_score})
+        // })
+
       }
-    
+      const norm = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - NORMS AND BEHAVIORAL CHANGE'));
+
+      if (norm) {
+        contentTwo.prosses_norms = norm.interventions;
+        //   norm.interventions.forEach(a=>{
+        //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
+        // })
+
+      }
+
+      const process_score = process_data.find(a => a.col_set_1.length > 2);
+
+      if (process_score) {
+        contentTwo.process_score = process_score.interventions
+        //   norm.interventions.forEach(a=>{
+        //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
+        // })
+
+      }
+
+
+      // outcome_data.forEach(a=>console.log(a.interventions))
+      const ghg_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG') && a.comparison_type == 'SCALE COMPARISON');
+      if (ghg_scale) {
+        contentTwo.ghg_scale = ghg_scale.interventions;
+      }
+
+      const ghg_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG' && a.comparison_type == 'SUSTAINED IN TIME COMPARISON'));
+      if (ghg_sustaind) {
+        contentTwo.ghg_sustaind = ghg_sustaind.interventions;
+      }
+
+      const ghg_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'GHG OUTCOMES' && a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON');
+      if (ghg_scale_sustaind_comparison) {
+
+        contentTwo.ghg_scale_sustaind_comparison = ghg_scale_sustaind_comparison.interventions;
+        // console.log(contentTwo.ghg_scale_sustaind_comparison)
+      }
+
+      const adaptation_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'ADAPTATION') && a.comparison_type == 'SCALE COMPARISON');
+      if (adaptation_scale) {
+        contentTwo.adaptation_scale = adaptation_scale.interventions;
+      }
+
+      const adaptation_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'ADAPTATION') && a.comparison_type == 'SUSTAINED IN TIME COMPARISON');
+      if (adaptation_sustaind) {
+        contentTwo.adaptation_sustaind = adaptation_sustaind.interventions;
+      }
+
+      const adaptation_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'ADAPTATION OUTCOMES' && a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON');
+      if (adaptation_scale_sustaind_comparison) {
+        contentTwo.adaptation_scale_sustaind_comparison = adaptation_scale_sustaind_comparison.interventions;
+      }
+
+      outcome_data.filter(a => a.col_set_1.some(b => b.label.includes('SDG')) && a.col_set_1.length < 3).forEach(c => {
+
+        // console.log('outcome_data',c)
+        let sdg = contentTwo.allsdg.find(d => d.sdg_name == c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim());
+
+        if (sdg) {
+          if (c.comparison_type == 'SCALE COMPARISON') {
+            sdg.sdg_scale = c.interventions;
+          }
+          if (c.comparison_type == 'SUSTAINED IN TIME COMPARISON') {
+            sdg.sdg_sustaind = c.interventions;
+          }
+        } else {
+
+          if (c.comparison_type == 'SCALE COMPARISON') {
+
+            contentTwo.allsdg.push({
+              sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
+              sdg_scale: c.interventions,
+              sdg_sustaind: []
+            })
+          }
+          if (c.comparison_type == 'SUSTAINED IN TIME COMPARISON') {
+
+            contentTwo.allsdg.push({
+              sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
+              sdg_scale: [],
+              sdg_sustaind: c.interventions
+            })
+          }
+
+
+        }
+
+      });
+      outcome_data.filter(a => a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON' && a.comparison_type_2.includes('SDG')).forEach(c => {
+
+        contentTwo.sdg_scale_sustaind_comparison.push(c.interventions)
+
+      })
+
+      const sacle_comparison = outcome_data.find(a => a.col_set_1.length > 2 && a.comparison_type == 'SCALE COMPARISON');
+      if (sacle_comparison) {
+        // console.log(sacle_comparison)
+        contentTwo.sacle_comparison = sacle_comparison.interventions;
+      }
+      const sustaind_comparison = outcome_data.find(a => a.comparison_type == 'SUSTAINED COMPARISON' && a.col_set_1.length > 2);
+      if (sustaind_comparison) {
+        // console.log(sustaind_comparison)
+        contentTwo.sustaind_comparison = sustaind_comparison.interventions;
+      }
+      const outcome_level = outcome_data.find(a => a.comparison_type == 'OUTCOME LEVEL COMPARISON');
+      if (outcome_level) {
+        // console.log(outcome_level)
+        contentTwo.outcome_level = outcome_level.interventions;
+      }
+
+      //  console.log(contentTwo)
+
+
+      return contentTwo;
+    }
+
+
+    genarateComparisonReportDtoContentThree(aggregation_data: ComparisonDto): ComparisonReportReportContentThree {
+      const content = new ComparisonReportReportContentThree();
+
+      content.aggregation = { total: aggregation_data.total, data: aggregation_data.interventions }
+      return content;
+    }
+    genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
+      const contentOne = new ComparisonReportReportContentFour();
+      contentOne.alignment_table = { sdg_names: [], data: alignment_data.interventions }
+      console.log(alignment_data)
+      return contentOne;
 
     }
-   
-   });
-   outcome_data.filter(a=>a.comparison_type=='SCALE & SUSTAINED IN TIME COMPARISON'&&a.comparison_type_2.includes('SDG')).forEach(c=>{
-  
-   contentTwo.sdg_scale_sustaind_comparison.push(c.interventions)
 
-   })
-
-   const sacle_comparison =outcome_data.find(a=>a.col_set_1.length>2&&a.comparison_type=='SCALE COMPARISON');
-    if(sacle_comparison){
-      // console.log(sacle_comparison)
-      contentTwo.sacle_comparison=sacle_comparison.interventions;
-    }
-    const sustaind_comparison =outcome_data.find(a=>a.comparison_type=='SUSTAINED COMPARISON'&&a.col_set_1.length>2);
-    if(sustaind_comparison){
-      // console.log(sustaind_comparison)
-      contentTwo.sustaind_comparison=sustaind_comparison.interventions;
-    }
-    const outcome_level =outcome_data.find(a=>a.comparison_type=='OUTCOME LEVEL COMPARISON');
-    if(outcome_level){
-      // console.log(outcome_level)
-      contentTwo.outcome_level=outcome_level.interventions;
-    }
-  
-  //  console.log(contentTwo)
-
-
-    return contentTwo;
   }
-
- 
-  genarateComparisonReportDtoContentThree( aggregation_data: ComparisonDto): ComparisonReportReportContentThree {
-    const content= new ComparisonReportReportContentThree();
-   
-    content.aggregation={total:aggregation_data.total,data:aggregation_data.interventions}
-    return content;
-  }
-  genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
-    const contentOne = new ComparisonReportReportContentFour();
-    contentOne.alignment_table={sdg_names:[],data:alignment_data.interventions}
-    console.log(alignment_data)
-    return contentOne;
-
-  }
-
-}
