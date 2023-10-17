@@ -1628,34 +1628,36 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const contentOne = new ComparisonReportReportContentOne();
     contentOne.portfolio_details =[
       {
-        Time_periods: 'Portfolio ID',
-        description: portfolio.portfolioId? portfolio.portfolioId : 'N/A',
+        Information: 'Portfolio ID',
+        Description : portfolio.portfolioId? portfolio.portfolioId : 'N/A',
       },
       {
-        Time_periods: 'Name',
-        description: portfolio.portfolioName? portfolio.portfolioName : 'N/A',
+        Information: 'Name',
+        Description : portfolio.portfolioName? portfolio.portfolioName : 'N/A',
       },
       {
-        Time_periods: 'Description of the Portfolio',
-        description: portfolio.description? portfolio.description : 'N/A',
+        Information: 'Description of the Portfolio',
+        Description : portfolio.description? portfolio.description : 'N/A',
       },
       {
-        Time_periods: 'Date',
-        description: portfolio.date? portfolio.date : 'N/A',
+        Information: 'Date',
+        Description : portfolio.date? portfolio.date : 'N/A',
       },
       {
-        Time_periods: 'Objectives of the assessment',
-        description: portfolio.objectives? portfolio.objectives : 'N/A',
+        Information: 'Objectives of the assessment',
+        Description : portfolio.objectives? portfolio.objectives : 'N/A',
       },
       {
-        Time_periods: 'ntended audience(s) of the assessment',
-        description: portfolio.audience? portfolio.audience : 'N/A',
+        Information: 'ntended audience(s) of the assessment',
+        Description : portfolio.audience? portfolio.audience : 'N/A',
       },
       {
-        Time_periods: 'Previous assessments the present assessment is an update of',
-        description: portfolio.IsPreviousAssessment=='Yes'? portfolio.link : 'N/A',
+        Information: 'Previous assessments the present assessment is an update of',
+        Description : portfolio.IsPreviousAssessment=='Yes'? portfolio.link : 'N/A',
       },
     ]
+
+
     return contentOne;
   }
   genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[],outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
