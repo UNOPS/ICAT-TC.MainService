@@ -16,6 +16,7 @@ import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { ReportService } from 'src/report/report.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   cmScores: any
   piScores: any
   sdgs_score: any = {}
-  sdgPriorities: SdgPriority[];
+  sdgPriorities: SdgPriority[] = [];
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -566,7 +567,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_sdgs[sd] = new ComparisonDto()
       sc_sus_sdgs[sd].comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
       let label = (scaleSdgData[sd].col_set_1[1].label).split('-')
-      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1] + ' - ' + label[2]
+      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1].trim() + ' - ' + label[2].trim()
       sc_sus_sdgs[sd].col_set_1 = [
         ...col_set_1,
         { label: '', colspan: 3 }
@@ -1030,11 +1031,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
       let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name] / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
-      let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
-      let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority).name
-      let priority_value = 4 - Math.abs(ans.value - priority.value)
-      response[code] = {name: ans.name, value: priority_value}
-      col2.push({label: priority_name.toUpperCase(), code: code})//TODO need to update after clarification
+      let priority_value = ans?.value
+      if (this.sdgPriorities.length !== 0){
+        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+        let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
+        priority_value =  4 - Math.abs(ans.value - priority.value)
+        col2.push({label: priority_name?.toUpperCase(), code: code}) //TODO need to update after clarification
+      }
+      response[code] = {name: ans?.name, value: priority_value}
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })

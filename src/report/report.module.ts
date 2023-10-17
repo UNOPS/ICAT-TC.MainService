@@ -57,8 +57,16 @@ import { User } from 'src/users/entity/user.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { MethodologyAssessmentModule } from 'src/methodology-assessment/methodology-assessment.module';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
+import { PortfolioService } from 'src/portfolio/portfolio.service';
+import { PortfolioModule } from 'src/portfolio/portfolio.module';
+import { Portfolio } from 'src/portfolio/entities/portfolio.entity';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-question.entity';
+import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
+
 
 @Module({
   imports: [
@@ -103,15 +111,20 @@ import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
       PortfolioQuestions,
       PortfolioQuestionDetails,
       GeographicalAreasCovered,
+      Portfolio,
+      PortfolioAssessment,
+      CMAssessmentQuestion,
+      CMAssessmentAnswer,
       SdgPriority
     ]), 
     UsersModule,
     CountryModule,
     InvestorToolModule,
-    MethodologyAssessmentModule
+    MethodologyAssessmentModule,
+    PortfolioModule
   ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService, MasterDataService],
-  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,],
+  exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}

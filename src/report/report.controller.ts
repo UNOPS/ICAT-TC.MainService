@@ -9,6 +9,7 @@ import {
   Response,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
@@ -120,7 +121,8 @@ export class ReportController {
   @UseGuards(JwtAuthGuard)
   @Post('generate-comparisonreport')
   async generateComparisonReport(
-    @Body() req: CreateComparisonReportDto
+    @Body() req: CreateComparisonReportDto,
+    @Res({ passthrough: true }) res, 
   ): Promise<any> {
     let countryIdFromTocken: number
     [countryIdFromTocken] =
@@ -136,8 +138,18 @@ export class ReportController {
       reprtDto.reportName,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-     const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
-    return response
+      await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+
+    //  res.set({
+    //   'Content-Type': `${doc.mimeType}`,
+    //   'Content-Disposition': `${state}; filename=${doc.fileName}`
+    // })
+
+    //   const file = createReadStream(`./static-files/${doc.relativePath}`);
+      
+    //     return new StreamableFile(file);
+    // return response
+    return ''
   }
 
   @UseGuards(JwtAuthGuard)
