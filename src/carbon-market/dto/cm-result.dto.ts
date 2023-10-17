@@ -32,6 +32,7 @@ export class CMResultDto {
 export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
+    isDraft: boolean
 
 }
 
