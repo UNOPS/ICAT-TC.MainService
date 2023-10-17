@@ -138,6 +138,7 @@ export class ReportController {
     )
      const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
     return response
+    return ''
   }
 
   @UseGuards(JwtAuthGuard)
