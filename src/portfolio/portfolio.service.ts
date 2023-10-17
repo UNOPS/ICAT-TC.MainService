@@ -16,6 +16,7 @@ import { ComparisonDto, ComparisonTableDataDto } from './dto/comparison.dto';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { ReportService } from 'src/report/report.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Injectable()
@@ -566,7 +567,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_sdgs[sd] = new ComparisonDto()
       sc_sus_sdgs[sd].comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
       let label = (scaleSdgData[sd].col_set_1[1].label).split('-')
-      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1] + ' - ' + label[2]
+      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1].trim() + ' - ' + label[2].trim()
       sc_sus_sdgs[sd].col_set_1 = [
         ...col_set_1,
         { label: '', colspan: 3 }
