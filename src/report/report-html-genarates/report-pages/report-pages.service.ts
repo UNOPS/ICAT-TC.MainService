@@ -140,31 +140,31 @@ export class ReportPagesService {
    ${header}
    <div class="content">
    
-   <div  class="main_header_sub text-start">1.2	Understanding the transformational vision of the intervention and its context </div> 
+   <div  class="main_header_sub text-start">1.2	Understanding the transformational vision of the intervention and its context  </div> 
       
-   <div class="report-table-sm">
-   <table class="table  table-bordered border-dark">
-     <thead class="table-primary  border-dark">
-       <tr>
-         <th scope="col">Time periods</th>
-         <th scope="col">Description of the vision for desired societal, environmental and technical changes</th>
-         
-       </tr>
-     </thead>
-     <tbody class="table-active">
-     ${understanPolicyOrActions
-       .map(
-         (a: { Time_periods: string; description: string }) =>
-           '<tr><td>' +
-           a.Time_periods +
-           '</td><td>' +
-           a.description +
-           '</td></tr>',
-       )
-       .join('')}
-     </tbody>
-   </table>
- </div> 
+      <div class="report-table-sm">
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Time periods</th>
+              <th scope="col">Description of the vision for desired societal, environmental and technical changes</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active">
+          ${understanPolicyOrActions
+            .map(
+              (a: { Time_periods: string; description: string }) =>
+                '<tr><td>' +
+                a.Time_periods +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
         <div class="report-table-sm">
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -198,8 +198,6 @@ export class ReportPagesService {
           </tbody>
         </table>
       </div>
-     
-
 
   
    </div>
