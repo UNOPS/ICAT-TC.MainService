@@ -94,6 +94,7 @@ import { SdgAssessment } from './investor-tool/entities/sdg-assessment.entity';
 import { BarrierCategory } from './climate-action/entity/barrier-category.entity';
 import { PortfolioQuestions } from './investor-tool/entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_question-details.entity';
+import { MasterDataService } from './shared/entities/master-data.service';
 
 @Module({
   imports: [
@@ -192,7 +193,7 @@ import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_que
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
-    // MulterModule.register({dest: './public'}),
+    MulterModule.register({dest: './public'}),
     ParameterRequestModule,
     QualityCheckModule,
     ParameterHistoryModule,
@@ -219,6 +220,6 @@ import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_que
     // UserController,
   ],
   providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
-     ParameterHistoryService, DefaultValueService],
+     ParameterHistoryService, DefaultValueService, MasterDataService],
 })
 export class AppModule { }

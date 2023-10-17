@@ -65,6 +65,7 @@ import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assess
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-question.entity';
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
+import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 
 @Module({
   imports: [
@@ -112,7 +113,8 @@ import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answe
       Portfolio,
       PortfolioAssessment,
       CMAssessmentQuestion,
-      CMAssessmentAnswer
+      CMAssessmentAnswer,
+      SdgPriority
     ]), 
     UsersModule,
     CountryModule,

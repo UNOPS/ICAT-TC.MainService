@@ -9,6 +9,7 @@ import { CMQuestionService } from "./cm-question.service";
 import { Repository } from "typeorm";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";
+import { Assessment } from "src/assessment/entities/assessment.entity";
 
 @Injectable()
 export class CMSeedService {
@@ -20,6 +21,7 @@ export class CMSeedService {
         @InjectRepository(CMAnswer) private answerRepo: Repository<CMAnswer>,
         @InjectRepository(Characteristics) private characRepo: Repository<Characteristics>,
         @InjectRepository(Category) private catRepo: Repository<Category>,
+        @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
         private questionService: CMQuestionService
     ){}
 
@@ -349,6 +351,40 @@ export class CMSeedService {
 
         if (ans.length > 0){
             let res = this.answerRepo.save(ans)
+            if (res) {
+                return { status: "saved"}
+            } else { 
+                return { status: "failed to save"}
+            }
+        }  else {
+            return { status: "Nothing to save"}
+        }
+    }
+
+    async updateToolNameInAssessment(){
+        let allAssessments = await this.assessmentRepo.createQueryBuilder('a').getMany()
+        allAssessments = allAssessments.map(ass => {
+            switch(ass.tool){
+                case 'Investor & Private Sector Tool':
+                    ass.tool = 'INVESTOR'
+                    break;
+                case 'Investment & Private Sector Tool':
+                    ass.tool = 'INVESTOR'
+                    break;
+                case 'Carbon Market Tool':
+                    ass.tool = 'CARBON_MARKET'
+                    break;
+                case 'Other Interventions':
+                    ass.tool = 'PORTFOLIO'
+                    break;
+                case 'Portfolio Tool':
+                    ass.tool = 'PORTFOLIO'
+                    break;
+            }
+            return ass
+        })
+        if (allAssessments.length > 0){
+            let res = this.assessmentRepo.save(allAssessments)
             if (res) {
                 return { status: "saved"}
             } else { 

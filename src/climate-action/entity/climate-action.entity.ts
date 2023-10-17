@@ -54,7 +54,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ length: 30, default: null, nullable: true })
   contactPersonDesignation: string; // designation
 
-  @Column()
+  @Column({ default: null })
   telephoneNumber: string;  // telephone number 
 
   @Column({ default: null })
