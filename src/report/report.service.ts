@@ -1631,8 +1631,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     for (let ass of assesment) {
      contentOne.intervation_details.push(
       {
-        interventionId: ass.assessment.climateAction.intervention_id,
-        intervention: ass.assessment.climateAction.policyName,
+        id: ass.assessment.climateAction.intervention_id,
+        name: ass.assessment.climateAction.policyName,
         assesmentType: ass.assessment.assessmentType,
         assesmentPeriodfrom: ass.assessment.from,
         assesmentPeriodto: ass.assessment.to,
@@ -1642,32 +1642,32 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       contentOne.portfolio_details = [
         {
-          Information: 'Portfolio ID',
-          Description: portfolio.portfolioId ? portfolio.portfolioId : 'N/A',
+          information: 'Portfolio ID',
+          description: portfolio.portfolioId ? portfolio.portfolioId : 'N/A',
         },
         {
-          Information: 'Name',
-          Description: portfolio.portfolioName ? portfolio.portfolioName : 'N/A',
+          information: 'Name',
+          description: portfolio.portfolioName ? portfolio.portfolioName : 'N/A',
         },
         {
-          Information: 'Description of the Portfolio',
-          Description: portfolio.description ? portfolio.description : 'N/A',
+          information: 'Description of the Portfolio',
+          description: portfolio.description ? portfolio.description : 'N/A',
         },
         {
-          Information: 'Date',
-          Description: portfolio.date ? portfolio.date : 'N/A',
+          information: 'Date',
+          description: portfolio.date ? portfolio.date : 'N/A',
         },
         {
-          Information: 'Objectives of the assessment',
-          Description: portfolio.objectives ? portfolio.objectives : 'N/A',
+          information: 'Objectives of the assessment',
+          description: portfolio.objectives ? portfolio.objectives : 'N/A',
         },
         {
-          Information: 'ntended audience(s) of the assessment',
-          Description: portfolio.audience ? portfolio.audience : 'N/A',
+          information: 'ntended audience(s) of the assessment',
+          description: portfolio.audience ? portfolio.audience : 'N/A',
         },
         {
-          Information: 'Previous assessments the present assessment is an update of',
-          Description: portfolio.IsPreviousAssessment == 'Yes' ? portfolio.link : 'N/A',
+          information: 'Previous assessments the present assessment is an update of',
+          description: portfolio.IsPreviousAssessment == 'Yes' ? portfolio.link : 'N/A',
         },
       ]
 
