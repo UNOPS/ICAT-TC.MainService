@@ -58,7 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -70,6 +70,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         selectedSdgs.push(obj)
       }
     })
+    if (isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
+    }
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
