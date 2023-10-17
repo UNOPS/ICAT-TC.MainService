@@ -1520,20 +1520,17 @@ export class ReportPagesService {
          ${coverPage.generateReportName}
        </div>
    </div>
-   <!-- <div class="row ">
+   <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Logo
        </div>
-   </div> -->
-   <!--<div class="row ">
+   </div>
+   <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Document Prepared By ${coverPage.document_prepared_by}
        </div>
-   </div>-->
-   <!--<div class="row ">
+   </div>
+   <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Contact Information 
-     </div>-->
+     </div>
  </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
