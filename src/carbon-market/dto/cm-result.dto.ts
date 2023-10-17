@@ -26,6 +26,7 @@ export class CMResultDto {
     relevance: string
     adaptationCoBenifit: string
     assessmentQuestionId: number
+    assessmentAnswerId: number
 }
 
 export class SaveCMResultDto {
