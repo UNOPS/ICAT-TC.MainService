@@ -1699,8 +1699,12 @@ export class ReportPagesService {
               (a: {
                 category_score: string;
                 SCALE_UP: string;
-                ADOPTION: string; id:number,name:string,type:string,status:string
-}) =>
+                ADOPTION: string;
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -1752,8 +1756,12 @@ export class ReportPagesService {
               category_score: string;
               ENTREPRENEURS: string;
               COALITION_OF_ADVOCATES: string;
-              BENIFICIARIES: string; id:number,name:string,type:string,status:string
-}) =>
+              BENIFICIARIES: string;
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -1815,8 +1823,12 @@ export class ReportPagesService {
                  category_score: string;
                  ECONOMIC_NON_ECONOMIC: string;
                  DISINCENTIVES: string;
-                 INSTITUTIONAL_AND_REGULATORY: string; id:number,name:string,type:string,status:string,
-}) =>
+                 INSTITUTIONAL_AND_REGULATORY: string;
+                 id: number;
+                 name: string;
+                 type: string;
+                 status: string;
+               }) =>
                  '<tr><td>' +
                  a.id +
                  '</td><td>' +
@@ -1864,7 +1876,16 @@ export class ReportPagesService {
          <tbody class="table-active ">
          ${prosses_norms
            .map(
-             (a: { id:number,name:string,type:string,status:string,AWARENESS:string,BEHAVIOUR:string,SOCIAL_NORMS:string,category_score:string}) =>
+             (a: {
+               id: number;
+               name: string;
+               type: string;
+               status: string;
+               AWARENESS: string;
+               BEHAVIOUR: string;
+               SOCIAL_NORMS: string;
+               category_score: string;
+             }) =>
                '<tr><td>' +
                a.id +
                '</td><td>' +
@@ -1895,8 +1916,7 @@ export class ReportPagesService {
     
      </div>`;
 
-
-     const page_3 = `  <div id="page_9" class="page text-center" >
+    const page_3 = `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
      
@@ -1926,7 +1946,17 @@ export class ReportPagesService {
             <tbody class="table-active ">
             ${process_score
               .map(
-                (a: { id:number,name:string,type:string,status:string,Technology:string,Agents:string,Incentives:string,norms:string,category_score:string}) =>
+                (a: {
+                  id: number;
+                  name: string;
+                  type: string;
+                  status: string;
+                  Technology: string;
+                  Agents: string;
+                  Incentives: string;
+                  norms: string;
+                  category_score: string;
+                }) =>
                   '<tr><td>' +
                   a.id +
                   '</td><td>' +
@@ -1960,28 +1990,25 @@ export class ReportPagesService {
      
       </div>`;
 
+    const ghg_scale = content.ghg_scale;
+    const ghg_sustaind = content.ghg_sustaind;
+    const ghg_scale_sustaind_comparison = content.ghg_scale_sustaind_comparison;
 
+    const allsdg = content.allsdg;
+    // const sdg_scale = content.sdg_scale;
+    // const sdg_sustaind = content.sdg_sustaind;
+    const sdg_scale_sustaind_comparison = content.sdg_scale_sustaind_comparison;
 
-      const ghg_scale = content.ghg_scale;
-      const ghg_sustaind = content.ghg_sustaind;
-      const ghg_scale_sustaind_comparison = content.ghg_scale_sustaind_comparison;
-      
-      const allsdg = content.allsdg;
-      // const sdg_scale = content.sdg_scale;
-      // const sdg_sustaind = content.sdg_sustaind;
-      const sdg_scale_sustaind_comparison = content.sdg_scale_sustaind_comparison;
+    const adaptation_scale = content.adaptation_scale;
+    const adaptation_sustaind = content.adaptation_sustaind;
+    const adaptation_scale_sustaind_comparison =
+      content.adaptation_scale_sustaind_comparison;
 
-      const adaptation_scale = content.adaptation_scale;
-      const adaptation_sustaind = content.adaptation_sustaind;
-      const adaptation_scale_sustaind_comparison = content.adaptation_scale_sustaind_comparison;
+    const sacle_comparison = content.sacle_comparison;
+    const sustaind_comparison = content.sustaind_comparison;
+    const outcome_level = content.outcome_level;
 
-      const sacle_comparison = content.sacle_comparison;
-      const sustaind_comparison = content.sustaind_comparison;
-      const outcome_level = content.outcome_level;
-
-
-
-      const page_4 = `  <div id="page_9" class="page text-center" >
+    const page_4 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2020,8 +2047,12 @@ export class ReportPagesService {
                 international: any;
                 national: any;
                 subnational: any;
-                category_score: any; id:number,name:string,type:string,status:string,
-}) =>
+                category_score: any;
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -2079,8 +2110,12 @@ export class ReportPagesService {
               long_term: any;
               medium_term: any;
               short_term: any;
-              category_score: any; id:number,name:string,type:string,status:string
-}) =>
+              category_score: any;
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -2111,7 +2146,6 @@ export class ReportPagesService {
    
     </div>`;
 
-    
     const page_5 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
@@ -2153,8 +2187,12 @@ export class ReportPagesService {
               international: any;
               national: any;
               subnational: any;
-              category_score: any; id:number,name:string,type:string,status:string, 
-}) =>
+              category_score: any;
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -2211,8 +2249,16 @@ export class ReportPagesService {
             long_term: any;
             medium_term: any;
             short_term: any;
-            category_score: any; id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string
-}) =>
+            category_score: any;
+            id: number;
+            name: string;
+            type: string;
+            status: string;
+            long: string;
+            medium: string;
+            short: string;
+            score: string;
+          }) =>
             '<tr><td>' +
             a.id +
             '</td><td>' +
@@ -2242,9 +2288,14 @@ export class ReportPagesService {
    
     </div>`;
 
-
-    const sdg_pages=allsdg.map(
-      (a:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[],sdg_scale_sustaind_comparison:object[]})=>`  <div id="page_9" class="page text-center" >
+    const sdg_pages = allsdg
+      .map(
+        (a: {
+          sdg_name: string;
+          sdg_scale: object[];
+          sdg_sustaind: object[];
+          sdg_scale_sustaind_comparison: object[];
+        }) => `  <div id="page_9" class="page text-center" >
       ${header}
       <div class="content">
       <div class="report-table-sm">
@@ -2280,8 +2331,12 @@ export class ReportPagesService {
               international: any;
               national: any;
               subnational: any;
-              category_score: any; id:number,name:string,type:string,status:string, 
-}) =>
+              category_score: any;
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -2340,25 +2395,32 @@ export class ReportPagesService {
             long_term: any;
             medium_term: any;
             short_term: any;
-            category_score: any; id:number,name:string,type:string,status:string  
-}) =>
-            '<tr><td>' +
-            a.id +
-            '</td><td>' +
-            a.name +
-            '</td><td>' +
-            a.type +
-            '</td><td>' +
-            a.status +
-            '</td><td>' +
-            a.long_term.name +
-            '</td><td>' +
-            a.medium_term.name +
-            '</td><td>' +
-            a.short_term.name +
-            '</td><td>' +
-            a.category_score.name +
-            '</td></tr>',
+            category_score: any;
+            id: number;
+            name: string;
+            type: string;
+            status: string;
+          }) => 
+           
+              '<tr><td>' +
+              a.id +
+              '</td><td>' +
+              a.name +
+              '</td><td>' +
+              a.type +
+              '</td><td>' +
+              a.status +
+              '</td><td>' +
+              a.long_term.name +
+              '</td><td>' +
+              a.medium_term.name +
+              '</td><td>' +
+              a.short_term.name +
+              '</td><td>' +
+              a.category_score.name +
+              '</td></tr>'
+            
+          
         )
         .join('')}
       </tbody>
@@ -2372,11 +2434,9 @@ export class ReportPagesService {
       
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-       </div>`
-    ).join('');
- 
-
-
+       </div>`,
+      )
+      .join('');
 
     const page_7 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -2413,9 +2473,13 @@ export class ReportPagesService {
          (a: {
            scale_score: any;
            sustained_score: any;
-          
-           category_score: any; id:number,name:string,type:string,status:string, 
-}) =>
+
+           category_score: any;
+           id: number;
+           name: string;
+           type: string;
+           status: string;
+         }) =>
            '<tr><td>' +
            a.id +
            '</td><td>' +
@@ -2424,14 +2488,15 @@ export class ReportPagesService {
            a.type +
            '</td><td>' +
            a.status +
-         '</td><td>' +
-          'N/A' +
            '</td><td>' +
-           'N/A' +
+           a.scale_score.name +
            '</td><td>' +
-          'N/A' +
+           a.sustained_score.name +
+           '</td><td>' +
+           a.category_score.name +
            '</td></tr>',
-       ).join('')}
+       )
+       .join('')}
      </tbody>
    </table>
  </div>
@@ -2467,9 +2532,13 @@ export class ReportPagesService {
        (a: {
          scale_score: any;
          sustained_score: any;
-       
-         category_score: any; id:number,name:string,type:string,status:string, 
-}) =>
+
+         category_score: any;
+         id: number;
+         name: string;
+         type: string;
+         status: string;
+       }) =>
          '<tr><td>' +
          a.id +
          '</td><td>' +
@@ -2479,12 +2548,12 @@ export class ReportPagesService {
          '</td><td>' +
          a.status +
          '</td><td>' +
-         a.scale_score?a.scale_score.name:'N/A' +
-           '</td><td>' +
-           a.sustained_score?a.sustained_score.name:'N/A' +
-           '</td><td>' +
-           a.category_score?a.category_score.name:'N/A' +
-           '</td></tr>',
+         a.scale_score.name +
+         '</td><td>' +
+         a.sustained_score.name +
+         '</td><td>' +
+         a.category_score.name +
+         '</td></tr>',
      )
      .join('')}
    </tbody>
@@ -2496,11 +2565,13 @@ export class ReportPagesService {
    
    </div>
    
-   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}   
    
     </div>`;
 
-    const page_8 =sdg_scale_sustaind_comparison.map(b=> `  <div id="page_9" class="page text-center" >
+    const page_8 = sdg_scale_sustaind_comparison
+      .map(
+        (b) => `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
     
@@ -2537,8 +2608,12 @@ export class ReportPagesService {
         (a: {
           scale_score: any;
           sustained_score: any;
-          category_score: any; id:number,name:string,type:string,status:string 
-}) =>
+          category_score: any;
+          id: number;
+          name: string;
+          type: string;
+          status: string;
+        }) =>
           '<tr><td>' +
           a.id +
           '</td><td>' +
@@ -2548,12 +2623,12 @@ export class ReportPagesService {
           '</td><td>' +
           a.status +
           '</td><td>' +
-          a.scale_score?a.scale_score.name:'N/A' +
-            '</td><td>' +
-            a.sustained_score?a.sustained_score.name:'N/A' +
-            '</td><td>' +
-            a.category_score?a.category_score.name:'N/A' +
-            '</td></tr>',
+          a.scale_score.name +
+          '</td><td>' +
+          a.sustained_score.name +
+          '</td><td>' +
+          a.category_score.name +
+          '</td></tr>',
       )
       .join('')}
     </tbody>
@@ -2567,10 +2642,9 @@ export class ReportPagesService {
     
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
-     </div>`).join('')
-
-
-
+     </div>`,
+      )
+      .join('');
 
     const page_9 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -2610,8 +2684,12 @@ export class ReportPagesService {
               (a: {
                 ghg_score: any;
                 adaptation_score: any;
-                category_score: any; id:number,name:string,type:string,status:string
-}) =>
+                category_score: any;
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -2667,8 +2745,12 @@ export class ReportPagesService {
             (a: {
               ghg_score: any;
               adaptation_score: any;
-              category_score: any; id:number,name:string,type:string,status:string 
-}) =>
+              category_score: any;
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -2737,8 +2819,12 @@ export class ReportPagesService {
               (a: {
                 scale_cat_score: any;
                 sustained_cat_score: any;
-                category_score: any; id:number,name:string,type:string,status:string
-}) =>
+                category_score: any;
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -2748,12 +2834,12 @@ export class ReportPagesService {
                 '</td><td>' +
                 a.status +
                 '</td><td>' +
-                a.scale_cat_score?a.scale_cat_score.name:'N/A' +
-                  '</td><td>' +
-                  a.sustained_cat_score?a.sustained_cat_score.name:'N/A' +
-                  '</td><td>' +
-                  a.category_score?a.category_score.name:'N/A' +
-                  '</td></tr>',
+                a.scale_cat_score.name +
+                '</td><td>' +
+                a.sustained_cat_score.name +
+                '</td><td>' +
+                a.category_score.name +
+                '</td></tr>',
             )
             .join('')}
           </tbody>
@@ -2769,19 +2855,27 @@ export class ReportPagesService {
    
     </div>`;
 
-
-    return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_8+page_9+page_10;
-
-    
+    return (
+      page_1 +
+      page_2 +
+      page_3 +
+      page_4 +
+      page_5 +
+      sdg_pages +
+      page_7 +
+      page_8 +
+      // page_9 +
+      page_10
+    );
+    // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
   comparisonContentThree(
     header: string,
     footer: string,
     content: ComparisonReportReportContentThree,
   ): string {
-   const aggregation= content.aggregation
+    const aggregation = content.aggregation;
     let pageNumber = 2;
-
 
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -2816,7 +2910,13 @@ export class ReportPagesService {
           <tbody class="table-active ">
           ${aggregation.data
             .map(
-              (a: { id:number,name:string,type:string,status:string,mitigation :string}) =>
+              (a: {
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+                mitigation: string;
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -2845,7 +2945,6 @@ export class ReportPagesService {
    
     </div>`;
 
-
     return page_1;
   }
   comparisonContentFour(
@@ -2853,12 +2952,9 @@ export class ReportPagesService {
     footer: string,
     content: ComparisonReportReportContentFour,
   ): string {
-
-
-    const alignment_table= content.alignment_table
-    const alignment_heat_map= content.alignment_heat_map
+    const alignment_table = content.alignment_table;
+    const alignment_heat_map = content.alignment_heat_map;
     let pageNumber = 2;
-
 
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -2887,10 +2983,7 @@ export class ReportPagesService {
               <th scope="col">status</th>
               
               ${alignment_table.sdg_names
-                .map(
-                  (a) =>
-                    '<th scope="col">'+a+'</th>'
-                )
+                .map((a) => '<th scope="col">' + a + '</th>')
                 .join('')}
               
             </tr>
@@ -2898,7 +2991,13 @@ export class ReportPagesService {
           <tbody class="table-active ">
           ${alignment_table.data
             .map(
-              (a: { id:number,name:string,type:string,status:string,data :string[]}) =>
+              (a: {
+                id: number;
+                name: string;
+                type: string;
+                status: string;
+                data: string[];
+              }) =>
                 '<tr><td>' +
                 a.id +
                 '</td><td>' +
@@ -2907,7 +3006,9 @@ export class ReportPagesService {
                 a.type +
                 '</td><td>' +
                 a.status +
-                `</td></tr>`,
+                `</td>${a.data?a.data
+                  .map((b) => '<td >' + b + '</td>')
+                  .join(''):''}</tr>`,
             )
             .join('')}
           
@@ -2935,10 +3036,7 @@ export class ReportPagesService {
             <th scope="col">status</th>
             
             ${alignment_heat_map.sdg_names
-              .map(
-                (a) =>
-                  '<th scope="col">'+a+'</th>'
-              )
+              .map((a) => '<th scope="col">' + a + '</th>')
               .join('')}
             
           </tr>
@@ -2946,7 +3044,13 @@ export class ReportPagesService {
         <tbody class="table-active ">
         ${alignment_heat_map.data
           .map(
-            (a: { id:number,name:string,type:string,status:string,data :string[]}) =>
+            (a: {
+              id: number;
+              name: string;
+              type: string;
+              status: string;
+              data: string[];
+            }) =>
               '<tr><td>' +
               a.id +
               '</td><td>' +
@@ -2955,7 +3059,7 @@ export class ReportPagesService {
               a.type +
               '</td><td>' +
               a.status +
-              `</td></tr>`
+              `</td></tr>`,
           )
           .join('')}
         
@@ -2969,7 +3073,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-   
+
     return page_1;
   }
 }
