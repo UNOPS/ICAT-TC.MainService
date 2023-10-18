@@ -1793,7 +1793,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       });
       outcome_data.filter(a => a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON' && a.comparison_type_2.includes('SDG')).forEach(c => {
 
-        contentTwo.sdg_scale_sustaind_comparison.push(c.interventions)
+        contentTwo.sdg_scale_sustaind_comparison.push({sdg_name:c.comparison_type_2,data:c.interventions})
 
       })
 
@@ -1828,10 +1828,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
     genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
       const contentOne = new ComparisonReportReportContentFour();
-      contentOne.alignment_table={sdg_names:[],data:alignment_data.interventions}
-      console.log(alignment_data)
+      contentOne.alignment_table = alignment_data
+      // console.log(alignment_data)
       return contentOne;
-  
+
     }
 
   }
