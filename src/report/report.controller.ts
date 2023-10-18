@@ -129,11 +129,16 @@ export class ReportController {
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
       ]);
-    req.reportTitle = req.reportName
+    req.reportTitle = req.reportTitle
     req.reportName = req.reportName + '.pdf'
+    // console.log("...",req)
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
+  //   const fs = require('fs');
+  // fs.writeFileSync('./public/test.html', ( await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto)).content);
+
+
     const report = await this.reportGenarateService.comparisonReportGenarate(
       reprtDto.reportName,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),

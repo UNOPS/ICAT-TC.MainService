@@ -371,19 +371,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 0: {
 
-        return 'Relevant';
+        return 'relevant';
 
       }
 
       case 1: {
 
-        return 'Possible relevant';
+        return 'possible_relevant';
 
       }
 
       case 2: {
 
-        return 'Not relevant';
+        return 'not_relevant';
 
       }
 
@@ -492,7 +492,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
               ? this.getrelavance(invesass.relavance)
 
               : '-',
-            likelihoodscore: invesass.likelihood ? this.investorToolService.mapSustainedScores(invesass.likelihood) : '-',
+
+            likelihoodscore: invesass.likelihood ? invesass.likelihood : '-',
+
             rationalejustifying: invesass.likelihood_justification
 
               ? invesass.likelihood_justification
@@ -526,7 +528,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
                   : '-',
 
                 likelihoodscore: invesass.likelihood
-                  ? this.investorToolService.mapSustainedScores(invesass.likelihood)
+
+                  ? invesass.likelihood
+
                   : '-',
 
                 rationalejustifying: invesass.likelihood_justification
@@ -1658,7 +1662,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
           description: portfolio.objectives ? portfolio.objectives : 'N/A',
         },
         {
-          information: 'ntended audience(s) of the assessment',
+          information: 'Intended audience(s) of the assessment',
           description: portfolio.audience ? portfolio.audience : 'N/A',
         },
         {
@@ -1792,8 +1796,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       });
       outcome_data.filter(a => a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON' && a.comparison_type_2.includes('SDG')).forEach(c => {
-
-        contentTwo.sdg_scale_sustaind_comparison.push(c.interventions)
+        // console.log('c.interventions',c)
+        contentTwo.sdg_scale_sustaind_comparison.push({sdg_name:c.comparison_type_2,data:c.interventions})
 
       })
 
@@ -1828,8 +1832,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
     genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
       const contentOne = new ComparisonReportReportContentFour();
-      contentOne.alignment_table = { sdg_names: [], data: alignment_data.interventions }
-      console.log(alignment_data)
+      contentOne.alignment_table = alignment_data
+      // console.log(alignment_data)
       return contentOne;
 
     }
