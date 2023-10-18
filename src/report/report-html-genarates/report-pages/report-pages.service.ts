@@ -2284,6 +2284,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
+    
 
     const sdg_pages = allsdg
       .map(
@@ -2292,7 +2293,7 @@ export class ReportPagesService {
           sdg_scale: object[];
           sdg_sustaind: object[];
           sdg_scale_sustaind_comparison: object[];
-        }) => `  <div id="page_9" class="page text-center" >
+        }) => `<div id="page_9" class="page text-center" >
       ${header}
       <div class="content">
       <div class="report-table-sm">
@@ -2431,7 +2432,7 @@ export class ReportPagesService {
       
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-       </div>`,
+       </div>`
       )
       .join('');
 
@@ -2464,7 +2465,7 @@ export class ReportPagesService {
          
        </tr>
      </thead>
-     <tbody class="table-active ">
+     <tbody  class="table-active ">
      ${ghg_scale_sustaind_comparison
        .map(
          (a: {
@@ -2566,7 +2567,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_8 = sdg_scale_sustaind_comparison
+    const sdg_scale_sustaind_comparison_all = sdg_scale_sustaind_comparison
       .map(
         (b) => `  <div id="page_9" class="page text-center" >
     ${header}
@@ -2580,7 +2581,7 @@ export class ReportPagesService {
     <thead class="table-primary  border-dark">
     <tr>
     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
-    <th colspan="3" scope="col">SDG OUTCOMES</th>
+    <th colspan="3" scope="col">${b.sdg_name}</th>
     
   </tr>
   <tr>
@@ -2600,7 +2601,7 @@ export class ReportPagesService {
       </tr>
     </thead>
     <tbody class="table-active ">
-    ${b
+    ${b.data
       .map(
         (a: {
           scale_score: any;
@@ -2856,11 +2857,12 @@ export class ReportPagesService {
       page_3 +
       page_4 +
       page_5 +
-      sdg_pages +
+      sdg_pages + 
+      page_10+
       page_7 +
-      page_8 +
+      sdg_scale_sustaind_comparison_all 
       // page_9 +
-      page_10
+     
     );
     // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
@@ -2953,122 +2955,126 @@ export class ReportPagesService {
 
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
-   <div class="content">
-   <div  class="main_header text-start">3.	AGGREGATION </div>
- 
- 
+    <div class="content">
+      <div  class="main_header text-start">3.	ALIGNMENT </div>
         <div class="report-table-sm">
-       
-        <table class="table  table-bordered border-dark">
-          <thead class="table-primary  border-dark">
-          <tr>
-          <th colspan="4" scope="col">SDG ALIGNMENT</th>
-          
-          
-        </tr>
-        <tr>
-        <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
-        
-        
-      </tr>
-            <tr>
-              <th scope="col">Id	</th>
-              <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
-              <th scope="col">Status</th>
-              
-              ${alignment_table.sdg_names
-                .map((a) => '<th scope="col">' + a + '</th>')
-                .join('')}
-              
-            </tr>
-          </thead>
-          <tbody class="table-active ">
-          ${alignment_table.data
-            .map(
-              (a: {
-                id: number;
-                name: string;
-                type: string;
-                status: string;
-                data: string[];
-              }) =>
-                '<tr><td>' +
-                a.id +
-                '</td><td>' +
-                a.name +
-                '</td><td>' +
-                a.type +
-                '</td><td>' +
-                a.status +
-                `</td>${a.data?a.data
-                  .map((b) => '<td >' + b + '</td>')
-                  .join(''):''}</tr>`,
-            )
-            .join('')}
-          
-          </tbody>
-        </table>
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+                <th colspan="4" scope="col">ALIGNMENT</th>
+                <th colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
+              </tr>
+              <tr>
+                ${alignment_table.col_set_1
+                  .map((a) => '<th scope="col" colspan="' + a.colspan+ '">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+              <tr>
+                ${alignment_table.col_set_2
+                  .map((a) => '<th scope="col">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+            </thead>
+            <tbody class="table-active">
+                  ${this.generateAlignmentBody(alignment_table.interventions, alignment_table.col_set_2)}
+            </tbody>
+          </table>
+        </div>
+        <div class="report-table-sm">
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+                <th colspan="4" scope="col">ALIGNMENT</th>
+                <th colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
+              </tr>
+              <tr>
+                ${alignment_table.col_set_1
+                  .map((a) => '<th scope="col" colspan="' + a.colspan+ '">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+              <tr>
+                ${alignment_table.col_set_2
+                  .map((a) => '<th scope="col">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+            </thead>
+            <tbody class="table-active">
+                  ${this.generateHeatMapBody(alignment_table.interventions, alignment_table.col_set_2)}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="report-table-sm">
-        
-      <table class="table  table-bordered border-dark">
-        <thead class="table-primary  border-dark">
-        <tr>
-        <th colspan="4" scope="col">SDG ALIGNMENT</th>
-        
-        
-      </tr>
-      <tr>
-      <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
-      
-      
-    </tr>
-          <tr>
-            <th scope="col">Id	</th>
-            <th scope="col">Intervention name	</th>
-            <th scope="col">Intervention type	</th>
-            <th scope="col">Status</th>
-            
-            ${alignment_heat_map.sdg_names
-              .map((a) => '<th scope="col">' + a + '</th>')
-              .join('')}
-            
-          </tr>
-        </thead>
-        <tbody class="table-active ">
-        ${alignment_heat_map.data
-          .map(
-            (a: {
-              id: number;
-              name: string;
-              type: string;
-              status: string;
-              data: string[];
-            }) =>
-              '<tr><td>' +
-              a.id +
-              '</td><td>' +
-              a.name +
-              '</td><td>' +
-              a.type +
-              '</td><td>' +
-              a.status +
-              `</td></tr>`,
-          )
-          .join('')}
-        
-        </tbody>
-      </table>
-    </div>
-      
-   
-   </div>
-   
-   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-   
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
+      console.log("page", page_1)
     return page_1;
+  }
+
+  generateAlignmentBody(interventions: any[], cols: any[]) {
+    let body = ''
+    for (let int of interventions) {
+      body = body + '<tr>'
+      for (let col of cols) {
+        body = body + '<td>' + this.getValue(int[col.code]) + '</td>'
+      }
+      body = body + '</tr>'
+    }
+    return body
+  }
+  generateHeatMapBody(interventions: any[], cols: any[]) {
+    let body = ''
+    for (let int of interventions) {
+      body = body + '<tr>'
+      for (let col of cols) {
+        body = body + '<td style="background-color:' +
+          this.getBackgroundColor(int[col.code]) + ';">' +
+          (int[col.code]?.name ? '' : this.getValue(int[col.code])) + '</td>'
+      }
+      body = body + '</tr>'
+    }
+    return body
+  }
+
+  getValue(data: any){
+    if (data){
+      if (data.name){
+        return data.name
+      } else if (!data.name){
+        return data
+      } 
+    } else {
+      return '-'
+    }
+  }
+
+  getBackgroundColor(data: any): string {
+    if (data){
+      if (data.name){
+        switch (data.value) {
+          case -2:
+            return '#f8696b';
+          case -1:
+            return '#fa9473';
+          case 0:
+            return '#fdbf7b';
+          case 1:
+            return '#ffeb84';
+          case 2:
+            return '#ccde82';
+          case 3:
+            return '#98ce7f';
+          case 4:
+            return '#63be7b';
+          default:
+            return 'white';
+        }
+      } else if (!data.name){
+        return 'white'
+      } else return 'white'
+    } else {
+      return 'white'
+    }
+    
   }
 }
