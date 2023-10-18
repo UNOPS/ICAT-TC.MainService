@@ -143,7 +143,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.saveDataRequests(_answers)
     // }
 
-    if (assessment.assessment_approach === 'DIRECT') {
+    if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
       let resultObj = new Results()
       let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
