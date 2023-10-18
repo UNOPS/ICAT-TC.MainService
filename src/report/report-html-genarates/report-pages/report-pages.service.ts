@@ -1522,17 +1522,14 @@ export class ReportPagesService {
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Logo
        </div>
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Document Prepared By ${coverPage.document_prepared_by}
        </div>
    </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Contact Information 
      </div>
  </div>
    <div class="row ">
@@ -1564,7 +1561,7 @@ export class ReportPagesService {
   <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.1	Describe the portfolio ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
   
-    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >2. Impacts comparison .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.1	Processes impacts comparison  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes impacts comparison ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
     <div class="table-of-content-header-item"><div >3. Aggregation .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
@@ -1682,14 +1679,14 @@ export class ReportPagesService {
           
         </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">research and development</th>
-              <th scope="col">adoption</th>
-              <th scope="col">scale up</th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">Research and development</th>
+              <th scope="col">Adoption</th>
+              <th scope="col">Scale up</th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -1738,14 +1735,14 @@ export class ReportPagesService {
         
       </tr>
           <tr>
-            <th scope="col">id</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">entrepreneurs</th>
-            <th scope="col">coalition of advocates</th>
-            <th scope="col">beneficiaries</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">Entrepreneurs</th>
+            <th scope="col">Coalition of advocates</th>
+            <th scope="col">Beneficiaries</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -1805,14 +1802,14 @@ export class ReportPagesService {
            
          </tr>
              <tr>
-               <th scope="col">id	</th>
-               <th scope="col">intervention name	</th>
-               <th scope="col">intervention type	</th>
-               <th scope="col">status</th>
-               <th scope="col">economic and non-economic</th>
-               <th scope="col">disincentives</th>
-               <th scope="col">institutional and regulatory	</th>
-               <th scope="col">category score</th>
+               <th scope="col">Id	</th>
+               <th scope="col">Intervention name	</th>
+               <th scope="col">Intervention type	</th>
+               <th scope="col">Status</th>
+               <th scope="col">Economic and non-economic</th>
+               <th scope="col">Disincentives</th>
+               <th scope="col">Institutional and regulatory	</th>
+               <th scope="col">Category score</th>
                
              </tr>
            </thead>
@@ -1862,14 +1859,14 @@ export class ReportPagesService {
          
        </tr>
            <tr>
-             <th scope="col">id	</th>
-             <th scope="col">intervention name	</th>
-             <th scope="col">intervention type	</th>
-             <th scope="col">status</th>
-             <th scope="col">awareness</th>
-             <th scope="col">behavior</th>
-             <th scope="col">social norms</th>
-             <th scope="col">category score</th>
+             <th scope="col">Id	</th>
+             <th scope="col">Intervention name	</th>
+             <th scope="col">Intervention type	</th>
+             <th scope="col">Status</th>
+             <th scope="col">Awareness</th>
+             <th scope="col">Behavior</th>
+             <th scope="col">Social norms</th>
+             <th scope="col">Category score</th>
              
            </tr>
          </thead>
@@ -1927,19 +1924,19 @@ export class ReportPagesService {
             <tr>
             <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
             <th colspan="4" scope="col">AGGREGATED CATERGORY SCORE</th>
-            <th  scope="col">SCORE</th>
+            <th  scope="col">PROCESSES SCORE</th>
             
           </tr>
               <tr>
-                <th scope="col">id	</th>
-                <th scope="col">intervention name	</th>
-                <th scope="col">intervention type	</th>
-                <th scope="col">status</th>
-                <th  scope="col">technology score</th>
-                <th  scope="col">agents </th>
-                <th  scope="col">incentives</th>
-                <th  scope="col">norms and behavioral change</th>
-                <th scope="col">all</th>
+                <th scope="col">Id	</th>
+                <th scope="col">Intervention name	</th>
+                <th scope="col">Intervention type	</th>
+                <th scope="col">Status</th>
+                <th  scope="col">Technology score</th>
+                <th  scope="col">Agents </th>
+                <th  scope="col">Incentives</th>
+                <th  scope="col">Norms and behavioral change</th>
+                <th scope="col">All</th>
                 
               </tr>
             </thead>
@@ -2029,14 +2026,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">international</th>
-              <th scope="col">national/ sectorial	</th>
-              <th scope="col">subnational/ subsectorial	 up</th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">International</th>
+              <th scope="col">National/ sectorial	</th>
+              <th scope="col">Subnational/ subsectorial	 up</th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -2092,14 +2089,14 @@ export class ReportPagesService {
         
       </tr>
           <tr>
-            <th scope="col">id</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">long term</th>
-            <th scope="col">medium term</th>
-            <th scope="col">short term</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">Long term</th>
+            <th scope="col">Medium term</th>
+            <th scope="col">Short term</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2169,14 +2166,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
             <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
+            <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectorial	</th>
-            <th scope="col">subnational/ subsectorial	 up</th>
-            <th scope="col">category score</th>
+            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2231,14 +2228,14 @@ export class ReportPagesService {
       
     </tr>
         <tr>
-          <th scope="col">id</th>
-          <th scope="col">intervention name	</th>
-          <th scope="col">intervention type	</th>
-          <th scope="col">status</th>
-          <th scope="col">long term</th>
-          <th scope="col">medium term</th>
-          <th scope="col">short term</th>
-          <th scope="col">category score</th>
+          <th scope="col">Id</th>
+          <th scope="col">Intervention name	</th>
+          <th scope="col">Intervention type	</th>
+          <th scope="col">Status</th>
+          <th scope="col">Long term</th>
+          <th scope="col">Medium term</th>
+          <th scope="col">Short term</th>
+          <th scope="col">Category score</th>
           
         </tr>
       </thead>
@@ -2314,14 +2311,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">international</th>
-            <th scope="col">national/ sectorial	</th>
-            <th scope="col">subnational/ subsectorial	 up</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">International</th>
+            <th scope="col">National/ sectorial	</th>
+            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2378,14 +2375,14 @@ export class ReportPagesService {
       
     </tr>
         <tr>
-          <th scope="col">id</th>
-          <th scope="col">intervention name	</th>
-          <th scope="col">intervention type	</th>
-          <th scope="col">status</th>
-          <th scope="col">long term</th>
+          <th scope="col">Id</th>
+          <th scope="col">Intervention name	</th>
+          <th scope="col">Intervention type	</th>
+          <th scope="col">Status</th>
+          <th scope="col">Long term</th>
           <th scope="col">medium term</th>
-          <th scope="col">short term</th>
-          <th scope="col">category score</th>
+          <th scope="col">Short term</th>
+          <th scope="col">Category score</th>
           
         </tr>
       </thead>
@@ -2458,13 +2455,13 @@ export class ReportPagesService {
    
  </tr>
        <tr>
-         <th scope="col">id	</th>
-         <th scope="col">intervention name	</th>
-         <th scope="col">intervention type	</th>
-         <th scope="col">status</th>
-         <th scope="col">scale category score</th>
-         <th scope="col">sustained category score		</th>
-         <th scope="col">category score</th>
+         <th scope="col">Id	</th>
+         <th scope="col">Intervention name	</th>
+         <th scope="col">Intervention type	</th>
+         <th scope="col">Status</th>
+         <th scope="col">Scale category score</th>
+         <th scope="col">Sustained category score		</th>
+         <th scope="col">Category score</th>
          
        </tr>
      </thead>
@@ -2517,13 +2514,13 @@ export class ReportPagesService {
  
 </tr>
      <tr>
-       <th scope="col">id	</th>
-       <th scope="col">intervention name	</th>
-       <th scope="col">intervention type	</th>
-       <th scope="col">status</th>
-       <th scope="col">scale category score</th>
-       <th scope="col">sustained category score		</th>
-       <th scope="col">category score</th>
+       <th scope="col">Id	</th>
+       <th scope="col">Intervention name	</th>
+       <th scope="col">Intervention type	</th>
+       <th scope="col">Status</th>
+       <th scope="col">Scale category score</th>
+       <th scope="col">Sustained category score		</th>
+       <th scope="col">Category score</th>
        
      </tr>
    </thead>
@@ -2593,13 +2590,13 @@ export class ReportPagesService {
   
   </tr>
       <tr>
-        <th scope="col">id	</th>
-        <th scope="col">intervention name	</th>
-        <th scope="col">intervention type	</th>
-        <th scope="col">status</th>
-        <th scope="col">scale category score</th>
-        <th scope="col">sustained category score		</th>
-        <th scope="col">category score</th>
+        <th scope="col">Id	</th>
+        <th scope="col">Intervention name	</th>
+        <th scope="col">Intervention type	</th>
+        <th scope="col">Status</th>
+        <th scope="col">Scale category score</th>
+        <th scope="col">Sustained category score		</th>
+        <th scope="col">Category score</th>
         
       </tr>
     </thead>
@@ -2668,14 +2665,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">ghg</th>
-              <th scope="col">sdg </th>
-              <th scope="col">adaptation </th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">GHG</th>
+              <th scope="col">SDG </th>
+              <th scope="col">Adaptation </th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -2728,14 +2725,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">ghg</th>
-            <th scope="col">sdg </th>
-            <th scope="col">adaptation </th>
-            <th scope="col">category score</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">GHG</th>
+            <th scope="col">SDG </th>
+            <th scope="col">Adaptation </th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2801,14 +2798,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">scale </th>
-              <th scope="col">sustained  </th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">Scale </th>
+              <th scope="col">Sustained  </th>
              
-              <th scope="col">category score</th>
+              <th scope="col">Outcome score</th>
               
             </tr>
           </thead>
@@ -2898,12 +2895,12 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
               
-              <th scope="col">ghg mitigation (MT CO2-EG)</th>
+              <th scope="col">GHG mitigation (Mt CO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>

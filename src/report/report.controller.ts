@@ -129,8 +129,9 @@ export class ReportController {
       this.tokenDetails.getDetails([
         TokenReqestType.countryId,
       ]);
-    req.reportTitle = req.reportName
+    req.reportTitle = req.reportTitle
     req.reportName = req.reportName + '.pdf'
+    // console.log("...",req)
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
