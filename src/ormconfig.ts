@@ -71,15 +71,15 @@ export const config: ConnectionOptions = {
   port: 3306,
  
 
-  username: 'root',
- password: 'pradeep123#',
+ /*  username: 'root',
+ password: 'pradeep123#', */
 
-/* username: 'sqluser',
+username: 'sqluser',
 password: 'password',
- database: 'tc-main-new3', */   
+ database: 'tc-main-new3',   
 //  username: 'sqluser',
 //  password: '1997',
-  database: 'tc-main',
+ // database: 'tc-main',
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
@@ -91,7 +91,7 @@ ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters
 PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false, 
+  synchronize: true, 
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
