@@ -1522,17 +1522,14 @@ export class ReportPagesService {
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Logo
        </div>
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
-         Document Prepared By ${coverPage.document_prepared_by}
        </div>
    </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Contact Information 
      </div>
  </div>
    <div class="row ">
@@ -1564,7 +1561,7 @@ export class ReportPagesService {
   <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.............10</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.1	Describe the portfolio ................................................................................................................................</div><div ><bdi>.................11</bdi></div> </div>
   
-    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >2. Impacts comparison .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.1	Processes impacts comparison  ................................................................................................................................</div><div ><bdi>.................13</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes impacts comparison ....................................................................................................................................................</div><div ><bdi>.....14</bdi></div> </div>
     <div class="table-of-content-header-item"><div >3. Aggregation .................................................................................................................................................................</div><div ><bdi>.....13</bdi></div> </div>
@@ -1666,7 +1663,7 @@ export class ReportPagesService {
     const prosses_incentive = content.prosses_incentive;
     const prosses_norms = content.prosses_norms;
     const process_score = content.process_score;
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
@@ -1682,14 +1679,14 @@ export class ReportPagesService {
           
         </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">research and development</th>
-              <th scope="col">adoption</th>
-              <th scope="col">scale up</th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">Research and development</th>
+              <th scope="col">Adoption</th>
+              <th scope="col">Scale up</th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -1738,14 +1735,14 @@ export class ReportPagesService {
         
       </tr>
           <tr>
-            <th scope="col">id</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">entrepreneurs</th>
-            <th scope="col">coalition of advocates</th>
-            <th scope="col">beneficiaries</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">Entrepreneurs</th>
+            <th scope="col">Coalition of advocates</th>
+            <th scope="col">Beneficiaries</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -1791,7 +1788,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-    const page_2 = `  <div id="page_9" class="page text-center" >
+    const page_2 = `  <div  class="page text-center" >
     ${header}
     <div class="content">
     
@@ -1805,14 +1802,14 @@ export class ReportPagesService {
            
          </tr>
              <tr>
-               <th scope="col">id	</th>
-               <th scope="col">intervention name	</th>
-               <th scope="col">intervention type	</th>
-               <th scope="col">status</th>
-               <th scope="col">economic and non-economic</th>
-               <th scope="col">disincentives</th>
-               <th scope="col">institutional and regulatory	</th>
-               <th scope="col">category score</th>
+               <th scope="col">Id	</th>
+               <th scope="col">Intervention name	</th>
+               <th scope="col">Intervention type	</th>
+               <th scope="col">Status</th>
+               <th scope="col">Economic and non-economic</th>
+               <th scope="col">Disincentives</th>
+               <th scope="col">Institutional and regulatory	</th>
+               <th scope="col">Category score</th>
                
              </tr>
            </thead>
@@ -1862,14 +1859,14 @@ export class ReportPagesService {
          
        </tr>
            <tr>
-             <th scope="col">id	</th>
-             <th scope="col">intervention name	</th>
-             <th scope="col">intervention type	</th>
-             <th scope="col">status</th>
-             <th scope="col">awareness</th>
-             <th scope="col">behavior</th>
-             <th scope="col">social norms</th>
-             <th scope="col">category score</th>
+             <th scope="col">Id	</th>
+             <th scope="col">Intervention name	</th>
+             <th scope="col">Intervention type	</th>
+             <th scope="col">Status</th>
+             <th scope="col">Awareness</th>
+             <th scope="col">Behavior</th>
+             <th scope="col">Social norms</th>
+             <th scope="col">Category score</th>
              
            </tr>
          </thead>
@@ -1916,7 +1913,7 @@ export class ReportPagesService {
     
      </div>`;
 
-    const page_3 = `  <div id="page_9" class="page text-center" >
+    const page_3 = `  <div class="page text-center" >
      ${header}
      <div class="content">
      
@@ -1927,19 +1924,19 @@ export class ReportPagesService {
             <tr>
             <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
             <th colspan="4" scope="col">AGGREGATED CATERGORY SCORE</th>
-            <th  scope="col">SCORE</th>
+            <th  scope="col">PROCESSES SCORE</th>
             
           </tr>
               <tr>
-                <th scope="col">id	</th>
-                <th scope="col">intervention name	</th>
-                <th scope="col">intervention type	</th>
-                <th scope="col">status</th>
-                <th  scope="col">technology score</th>
-                <th  scope="col">agents </th>
-                <th  scope="col">incentives</th>
-                <th  scope="col">norms and behavioral change</th>
-                <th scope="col">all</th>
+                <th scope="col">Id	</th>
+                <th scope="col">Intervention name	</th>
+                <th scope="col">Intervention type	</th>
+                <th scope="col">Status</th>
+                <th  scope="col">Technology score</th>
+                <th  scope="col">Agents </th>
+                <th  scope="col">Incentives</th>
+                <th  scope="col">Norms and behavioral change</th>
+                <th scope="col">All</th>
                 
               </tr>
             </thead>
@@ -2008,7 +2005,7 @@ export class ReportPagesService {
     const sustaind_comparison = content.sustaind_comparison;
     const outcome_level = content.outcome_level;
 
-    const page_4 = `  <div id="page_9" class="page text-center" >
+    const page_4 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2029,14 +2026,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">international</th>
-              <th scope="col">national/ sectorial	</th>
-              <th scope="col">subnational/ subsectorial	 up</th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">International</th>
+              <th scope="col">National/ sectorial	</th>
+              <th scope="col">Subnational/ subsectorial	 up</th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -2092,14 +2089,14 @@ export class ReportPagesService {
         
       </tr>
           <tr>
-            <th scope="col">id</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">long term</th>
-            <th scope="col">medium term</th>
-            <th scope="col">short term</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">Long term</th>
+            <th scope="col">Medium term</th>
+            <th scope="col">Short term</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2146,7 +2143,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_5 = `  <div id="page_9" class="page text-center" >
+    const page_5 = `  <div class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2169,14 +2166,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
             <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
+            <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectorial	</th>
-            <th scope="col">subnational/ subsectorial	 up</th>
-            <th scope="col">category score</th>
+            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2231,14 +2228,14 @@ export class ReportPagesService {
       
     </tr>
         <tr>
-          <th scope="col">id</th>
-          <th scope="col">intervention name	</th>
-          <th scope="col">intervention type	</th>
-          <th scope="col">status</th>
-          <th scope="col">long term</th>
-          <th scope="col">medium term</th>
-          <th scope="col">short term</th>
-          <th scope="col">category score</th>
+          <th scope="col">Id</th>
+          <th scope="col">Intervention name	</th>
+          <th scope="col">Intervention type	</th>
+          <th scope="col">Status</th>
+          <th scope="col">Long term</th>
+          <th scope="col">Medium term</th>
+          <th scope="col">Short term</th>
+          <th scope="col">Category score</th>
           
         </tr>
       </thead>
@@ -2287,6 +2284,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
+    
 
     const sdg_pages = allsdg
       .map(
@@ -2295,7 +2293,7 @@ export class ReportPagesService {
           sdg_scale: object[];
           sdg_sustaind: object[];
           sdg_scale_sustaind_comparison: object[];
-        }) => `  <div id="page_9" class="page text-center" >
+        }) => `<div  class="page text-center" >
       ${header}
       <div class="content">
       <div class="report-table-sm">
@@ -2313,14 +2311,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">international</th>
-            <th scope="col">national/ sectorial	</th>
-            <th scope="col">subnational/ subsectorial	 up</th>
-            <th scope="col">category score</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">International</th>
+            <th scope="col">National/ sectorial	</th>
+            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2377,14 +2375,14 @@ export class ReportPagesService {
       
     </tr>
         <tr>
-          <th scope="col">id</th>
-          <th scope="col">intervention name	</th>
-          <th scope="col">intervention type	</th>
-          <th scope="col">status</th>
-          <th scope="col">long term</th>
+          <th scope="col">Id</th>
+          <th scope="col">Intervention name	</th>
+          <th scope="col">Intervention type	</th>
+          <th scope="col">Status</th>
+          <th scope="col">Long term</th>
           <th scope="col">medium term</th>
-          <th scope="col">short term</th>
-          <th scope="col">category score</th>
+          <th scope="col">Short term</th>
+          <th scope="col">Category score</th>
           
         </tr>
       </thead>
@@ -2434,11 +2432,11 @@ export class ReportPagesService {
       
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-       </div>`,
+       </div>`
       )
       .join('');
 
-    const page_7 = `  <div id="page_9" class="page text-center" >
+    const page_7 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2457,17 +2455,17 @@ export class ReportPagesService {
    
  </tr>
        <tr>
-         <th scope="col">id	</th>
-         <th scope="col">intervention name	</th>
-         <th scope="col">intervention type	</th>
-         <th scope="col">status</th>
-         <th scope="col">scale category score</th>
-         <th scope="col">sustained category score		</th>
-         <th scope="col">category score</th>
+         <th scope="col">Id	</th>
+         <th scope="col">Intervention name	</th>
+         <th scope="col">Intervention type	</th>
+         <th scope="col">Status</th>
+         <th scope="col">Scale category score</th>
+         <th scope="col">Sustained category score		</th>
+         <th scope="col">Category score</th>
          
        </tr>
      </thead>
-     <tbody class="table-active ">
+     <tbody  class="table-active ">
      ${ghg_scale_sustaind_comparison
        .map(
          (a: {
@@ -2516,13 +2514,13 @@ export class ReportPagesService {
  
 </tr>
      <tr>
-       <th scope="col">id	</th>
-       <th scope="col">intervention name	</th>
-       <th scope="col">intervention type	</th>
-       <th scope="col">status</th>
-       <th scope="col">scale category score</th>
-       <th scope="col">sustained category score		</th>
-       <th scope="col">category score</th>
+       <th scope="col">Id	</th>
+       <th scope="col">Intervention name	</th>
+       <th scope="col">Intervention type	</th>
+       <th scope="col">Status</th>
+       <th scope="col">Scale category score</th>
+       <th scope="col">Sustained category score		</th>
+       <th scope="col">Category score</th>
        
      </tr>
    </thead>
@@ -2569,7 +2567,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_8 = sdg_scale_sustaind_comparison
+    const sdg_scale_sustaind_comparison_all = sdg_scale_sustaind_comparison
       .map(
         (b) => `  <div id="page_9" class="page text-center" >
     ${header}
@@ -2583,7 +2581,7 @@ export class ReportPagesService {
     <thead class="table-primary  border-dark">
     <tr>
     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
-    <th colspan="3" scope="col">SDG OUTCOMES</th>
+    <th colspan="3" scope="col">${b.sdg_name}</th>
     
   </tr>
   <tr>
@@ -2592,18 +2590,18 @@ export class ReportPagesService {
   
   </tr>
       <tr>
-        <th scope="col">id	</th>
-        <th scope="col">intervention name	</th>
-        <th scope="col">intervention type	</th>
-        <th scope="col">status</th>
-        <th scope="col">scale category score</th>
-        <th scope="col">sustained category score		</th>
-        <th scope="col">category score</th>
+        <th scope="col">Id	</th>
+        <th scope="col">Intervention name	</th>
+        <th scope="col">Intervention type	</th>
+        <th scope="col">Status</th>
+        <th scope="col">Scale category score</th>
+        <th scope="col">Sustained category score		</th>
+        <th scope="col">Category score</th>
         
       </tr>
     </thead>
     <tbody class="table-active ">
-    ${b
+    ${b.data
       .map(
         (a: {
           scale_score: any;
@@ -2646,7 +2644,7 @@ export class ReportPagesService {
       )
       .join('');
 
-    const page_9 = `  <div id="page_9" class="page text-center" >
+    const page_9 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2667,14 +2665,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">ghg</th>
-              <th scope="col">sdg </th>
-              <th scope="col">adaptation </th>
-              <th scope="col">category score</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">GHG</th>
+              <th scope="col">SDG </th>
+              <th scope="col">Adaptation </th>
+              <th scope="col">Category score</th>
               
             </tr>
           </thead>
@@ -2701,7 +2699,6 @@ export class ReportPagesService {
                 '</td><td>' +
                 a.ghg_score.name +
                 '</td><td>' +
-                a['SDG undefined - undefined_score'].name +
                 '</td><td>' +
                 a.adaptation_score.name +
                 '</td><td>' +
@@ -2728,14 +2725,14 @@ export class ReportPagesService {
       
     </tr>
           <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            <th scope="col">ghg</th>
-            <th scope="col">sdg </th>
-            <th scope="col">adaptation </th>
-            <th scope="col">category score</th>
+            <th scope="col">Id	</th>
+            <th scope="col">Intervention name	</th>
+            <th scope="col">Intervention type	</th>
+            <th scope="col">Status</th>
+            <th scope="col">GHG</th>
+            <th scope="col">SDG </th>
+            <th scope="col">Adaptation </th>
+            <th scope="col">Category score</th>
             
           </tr>
         </thead>
@@ -2762,7 +2759,6 @@ export class ReportPagesService {
               '</td><td>' +
               a.ghg_score.name +
               '</td><td>' +
-              a['SDG undefined - undefined_score'].name +
               '</td><td>' +
               a.adaptation_score.name +
               '</td><td>' +
@@ -2781,7 +2777,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_10 = `  <div id="page_9" class="page text-center" >
+    const page_10 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2802,14 +2798,14 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              <th scope="col">scale </th>
-              <th scope="col">sustained  </th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
+              <th scope="col">Scale </th>
+              <th scope="col">Sustained  </th>
              
-              <th scope="col">category score</th>
+              <th scope="col">Outcome score</th>
               
             </tr>
           </thead>
@@ -2861,11 +2857,12 @@ export class ReportPagesService {
       page_3 +
       page_4 +
       page_5 +
-      sdg_pages +
+      sdg_pages + 
+      page_10+
       page_7 +
-      page_8 +
+      sdg_scale_sustaind_comparison_all 
       // page_9 +
-      page_10
+     
     );
     // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
@@ -2877,7 +2874,7 @@ export class ReportPagesService {
     const aggregation = content.aggregation;
     let pageNumber = 2;
 
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">3.	AGGREGATION </div>
@@ -2898,12 +2895,12 @@ export class ReportPagesService {
         
       </tr>
             <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
+              <th scope="col">Id	</th>
+              <th scope="col">Intervention name	</th>
+              <th scope="col">Intervention type	</th>
+              <th scope="col">Status</th>
               
-              <th scope="col">ghg mitigation (MT CO2-EG)</th>
+              <th scope="col">GHG mitigation (Mt CO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>
@@ -2956,124 +2953,128 @@ export class ReportPagesService {
     const alignment_heat_map = content.alignment_heat_map;
     let pageNumber = 2;
 
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
-   <div class="content">
-   <div  class="main_header text-start">3.	AGGREGATION </div>
- 
- 
+    <div class="content">
+      <div  class="main_header text-start">3.	ALIGNMENT </div>
         <div class="report-table-sm">
-       
-        <table class="table  table-bordered border-dark">
-          <thead class="table-primary  border-dark">
-          <tr>
-          <th colspan="4" scope="col">ALIGNMENT</th>
-          
-          
-        </tr>
-        <tr>
-        <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
-        
-        
-      </tr>
-            <tr>
-              <th scope="col">id	</th>
-              <th scope="col">intervention name	</th>
-              <th scope="col">intervention type	</th>
-              <th scope="col">status</th>
-              
-              ${alignment_table.sdg_names
-                .map((a) => '<th scope="col">' + a + '</th>')
-                .join('')}
-              
-            </tr>
-          </thead>
-          <tbody class="table-active ">
-          ${alignment_table.data
-            .map(
-              (a: {
-                id: number;
-                name: string;
-                type: string;
-                status: string;
-                data: string[];
-              }) =>
-                '<tr><td>' +
-                a.id +
-                '</td><td>' +
-                a.name +
-                '</td><td>' +
-                a.type +
-                '</td><td>' +
-                a.status +
-                `</td>${a.data?a.data
-                  .map((b) => '<td >' + b + '</td>')
-                  .join(''):''}</tr>`,
-            )
-            .join('')}
-          
-          </tbody>
-        </table>
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+                <th colspan="4" scope="col">ALIGNMENT</th>
+                <th colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
+              </tr>
+              <tr>
+                ${alignment_table.col_set_1
+                  .map((a) => '<th scope="col" colspan="' + a.colspan+ '">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+              <tr>
+                ${alignment_table.col_set_2
+                  .map((a) => '<th scope="col">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+            </thead>
+            <tbody class="table-active">
+                  ${this.generateAlignmentBody(alignment_table.interventions, alignment_table.col_set_2)}
+            </tbody>
+          </table>
+        </div>
+        <div class="report-table-sm">
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+                <th colspan="4" scope="col">ALIGNMENT</th>
+                <th colspan="${alignment_table.sdg_count}">SUSTAINABLE DEVELOPMENT</th>
+              </tr>
+              <tr>
+                ${alignment_table.col_set_1
+                  .map((a) => '<th scope="col" colspan="' + a.colspan+ '">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+              <tr>
+                ${alignment_table.col_set_2
+                  .map((a) => '<th scope="col">' + a.label + '</th>')
+                  .join('')}
+              </tr>
+            </thead>
+            <tbody class="table-active">
+                  ${this.generateHeatMapBody(alignment_table.interventions, alignment_table.col_set_2)}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="report-table-sm">
-        
-      <table class="table  table-bordered border-dark">
-        <thead class="table-primary  border-dark">
-        <tr>
-        <th colspan="4" scope="col">ALIGNMENT</th>
-        
-        
-      </tr>
-      <tr>
-      <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
-      
-      
-    </tr>
-          <tr>
-            <th scope="col">id	</th>
-            <th scope="col">intervention name	</th>
-            <th scope="col">intervention type	</th>
-            <th scope="col">status</th>
-            
-            ${alignment_heat_map.sdg_names
-              .map((a) => '<th scope="col">' + a + '</th>')
-              .join('')}
-            
-          </tr>
-        </thead>
-        <tbody class="table-active ">
-        ${alignment_heat_map.data
-          .map(
-            (a: {
-              id: number;
-              name: string;
-              type: string;
-              status: string;
-              data: string[];
-            }) =>
-              '<tr><td>' +
-              a.id +
-              '</td><td>' +
-              a.name +
-              '</td><td>' +
-              a.type +
-              '</td><td>' +
-              a.status +
-              `</td></tr>`,
-          )
-          .join('')}
-        
-        </tbody>
-      </table>
-    </div>
-      
-   
-   </div>
-   
-   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-   
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
+      console.log("page", page_1)
     return page_1;
+  }
+
+  generateAlignmentBody(interventions: any[], cols: any[]) {
+    let body = ''
+    for (let int of interventions) {
+      body = body + '<tr>'
+      for (let col of cols) {
+        body = body + '<td>' + this.getValue(int[col.code]) + '</td>'
+      }
+      body = body + '</tr>'
+    }
+    return body
+  }
+  generateHeatMapBody(interventions: any[], cols: any[]) {
+    let body = ''
+    for (let int of interventions) {
+      body = body + '<tr>'
+      for (let col of cols) {
+        body = body + '<td style="background-color:' +
+          this.getBackgroundColor(int[col.code]) + ';">' +
+          (int[col.code]?.name ? '' : this.getValue(int[col.code])) + '</td>'
+      }
+      body = body + '</tr>'
+    }
+    return body
+  }
+
+  getValue(data: any){
+    if (data){
+      if (data.name){
+        return data.name
+      } else if (!data.name){
+        return data
+      } 
+    } else {
+      return '-'
+    }
+  }
+
+  getBackgroundColor(data: any): string {
+    if (data){
+      if (data.name){
+        switch (data.value) {
+          case -2:
+            return '#f8696b';
+          case -1:
+            return '#fa9473';
+          case 0:
+            return '#fdbf7b';
+          case 1:
+            return '#ffeb84';
+          case 2:
+            return '#ccde82';
+          case 3:
+            return '#98ce7f';
+          case 4:
+            return '#63be7b';
+          default:
+            return 'white';
+        }
+      } else if (!data.name){
+        return 'white'
+      } else return 'white'
+    } else {
+      return 'white'
+    }
+    
   }
 }

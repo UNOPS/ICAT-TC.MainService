@@ -1,3 +1,5 @@
+import { ComparisonDto } from "src/portfolio/dto/comparison.dto";
+
 export class ReportDto {
    reportName:string='';
    coverPage:ReportCoverPage=new ReportCoverPage()
@@ -145,7 +147,7 @@ export class ComparisonReportReportContentTwo {
     allsdg:{sdg_name:string,sdg_scale:object[],sdg_sustaind:object[]}[]=[];
     sdg_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
     sdg_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
-    sdg_scale_sustaind_comparison:object[][]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
+    sdg_scale_sustaind_comparison:{sdg_name:string,data:object[]}[]=[]//ex=[{ id:number,name:string,type:string,status:string,scale:string,sustained:string,score:string}]
 
     adaptation_scale:object[]=[]  //ex=[{ id:number,name:string,type:string,status:string,international:string,national:string,subnational:string,score:string}]
     adaptation_sustaind:object[]=[]//ex=[{ id:number,name:string,type:string,status:string,long:string,medium :string,short:string,score:string}]
@@ -162,6 +164,8 @@ export class ComparisonReportReportContentThree {
     aggregation:{total:number,data:object[]}={total:0,data:[]}  //data=[{ id:number,name:string,type:string,status:string,mitigation :string}]
 }
 export class ComparisonReportReportContentFour {
- alignment_table:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]} //ex={sdg_names:string[],data[{ id:number,name:string,type:string,status:string,sgc:[]}]}
+//  alignment_table:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]} //ex={sdg_names:string[],data[{ id:number,name:string,type:string,status:string,sgc:[]}]}
  alignment_heat_map:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]}
+ alignment_table:ComparisonDto //ex={sdg_names:string[],data[{ id:number,name:string,type:string,status:string,sgc:[]}]}
+//  alignment_heat_map:ComparisonDto
 }
