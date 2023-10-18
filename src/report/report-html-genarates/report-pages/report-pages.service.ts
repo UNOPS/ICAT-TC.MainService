@@ -1666,7 +1666,7 @@ export class ReportPagesService {
     const prosses_incentive = content.prosses_incentive;
     const prosses_norms = content.prosses_norms;
     const process_score = content.process_score;
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
@@ -1791,7 +1791,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-    const page_2 = `  <div id="page_9" class="page text-center" >
+    const page_2 = `  <div  class="page text-center" >
     ${header}
     <div class="content">
     
@@ -1916,7 +1916,7 @@ export class ReportPagesService {
     
      </div>`;
 
-    const page_3 = `  <div id="page_9" class="page text-center" >
+    const page_3 = `  <div class="page text-center" >
      ${header}
      <div class="content">
      
@@ -2008,7 +2008,7 @@ export class ReportPagesService {
     const sustaind_comparison = content.sustaind_comparison;
     const outcome_level = content.outcome_level;
 
-    const page_4 = `  <div id="page_9" class="page text-center" >
+    const page_4 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2146,7 +2146,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_5 = `  <div id="page_9" class="page text-center" >
+    const page_5 = `  <div class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2296,7 +2296,7 @@ export class ReportPagesService {
           sdg_scale: object[];
           sdg_sustaind: object[];
           sdg_scale_sustaind_comparison: object[];
-        }) => `<div id="page_9" class="page text-center" >
+        }) => `<div  class="page text-center" >
       ${header}
       <div class="content">
       <div class="report-table-sm">
@@ -2439,7 +2439,7 @@ export class ReportPagesService {
       )
       .join('');
 
-    const page_7 = `  <div id="page_9" class="page text-center" >
+    const page_7 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2647,7 +2647,7 @@ export class ReportPagesService {
       )
       .join('');
 
-    const page_9 = `  <div id="page_9" class="page text-center" >
+    const page_9 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2780,7 +2780,7 @@ export class ReportPagesService {
    
     </div>`;
 
-    const page_10 = `  <div id="page_9" class="page text-center" >
+    const page_10 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    
@@ -2877,7 +2877,7 @@ export class ReportPagesService {
     const aggregation = content.aggregation;
     let pageNumber = 2;
 
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">3.	AGGREGATION </div>
@@ -2956,7 +2956,7 @@ export class ReportPagesService {
     const alignment_heat_map = content.alignment_heat_map;
     let pageNumber = 2;
 
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">3.	AGGREGATION </div>
