@@ -135,6 +135,10 @@ export class ReportController {
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
+  //   const fs = require('fs');
+  // fs.writeFileSync('./public/test.html', ( await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto)).content);
+
+
     const report = await this.reportGenarateService.comparisonReportGenarate(
       reprtDto.reportName,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),

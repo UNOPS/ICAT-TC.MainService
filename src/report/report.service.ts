@@ -1828,8 +1828,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
     genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
       const contentOne = new ComparisonReportReportContentFour();
-      contentOne.alignment_table = { sdg_names: [], data: alignment_data.interventions }
-      console.log(alignment_data)
+      contentOne.alignment_table = alignment_data
+      // console.log(alignment_data)
       return contentOne;
 
     }
