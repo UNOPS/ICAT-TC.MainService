@@ -1981,7 +1981,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
 
-  async getProcessData(assesId:number): Promise<any>{
+  async getProcessData(assesId:number): Promise<any[]>{
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
@@ -1994,7 +1994,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id
-          let indicatordetails = await this.getIndicatorDetials(x.id) 
+          categoryData.type = 'process'
+          let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) 
           console.log(indicatordetails.length,x.id)
           x.indicator_details =indicatordetails;
           // console.log(category.ip_weight)
