@@ -144,6 +144,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     // }
 
     if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
       let resultObj = new Results()
       let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
@@ -866,7 +868,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
   async getAssessmentQuestionsByAssessmentId(assessmentId: number) {
-    console.log(assessmentId)
     let data = this.repo.createQueryBuilder('assessmentQuestion')
     .leftJoinAndSelect(
       'assessmentQuestion.assessment',
