@@ -71,11 +71,11 @@ export const config: ConnectionOptions = {
   port: 3306,
  
 
-//   username: 'root',
-//  password: 'pradeep123#',
+  username: 'root',
+ password: 'pradeep123#',
 
-username: 'root',
-password: '7860150',
+// username: 'root',
+// password: '7860150',
  database: 'tc-main',   
 
   
