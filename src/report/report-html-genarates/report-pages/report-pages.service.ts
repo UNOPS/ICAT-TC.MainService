@@ -2956,7 +2956,7 @@ export class ReportPagesService {
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
     <div class="content">
-      <div  class="main_header text-start">3.	ALIGNMENT </div>
+      <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
         <div class="report-table-sm">
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
