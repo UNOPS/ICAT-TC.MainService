@@ -120,6 +120,27 @@ export class AssessmentController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/ass/assessmentInprogress')
+  async assessmentInprogress(
+    @Request() request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: string,
+  ): Promise<any> {
+    let countryIdFromTocken: number;
+    console.log('=====================================================================', );
+    [countryIdFromTocken, ] = this.tokenDetails.getDetails([TokenReqestType.countryId])
+   
+    return await this.assessmentService.assessmentInprogress(
+      {
+        limit: limit,
+        page: page,
+      },
+      filterText,
+      countryIdFromTocken,
 
+    );
+  }
 
 }
