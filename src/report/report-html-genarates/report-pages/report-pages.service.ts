@@ -3010,7 +3010,7 @@ export class ReportPagesService {
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
-      console.log("page", page_1)
+      // console.log("page", page_1)
     return page_1;
   }
 
