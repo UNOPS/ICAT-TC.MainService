@@ -75,6 +75,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'meth',
         `meth.id = asse.methodology_id`,
       )
+      .leftJoinAndMapMany(
+        'asse.policy_barrier',
+        PolicyBarriers,
+        'policy_barrier',
+        `policy_barrier.assessmentId = asse.id`,
+      )
       .where({ id: id })
       .getOne();
     return data;
@@ -159,6 +165,32 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
   }
 
+  async assessmentInprogress(
+    options: IPaginationOptions,
+    filterText: string,
+    countryIdFromTocken: number,
+  ): Promise<any> {
+    let filter: string = 'asse.isDraft = true ';
+    if (filterText != null && filterText != undefined && filterText != '') {
+      filter = `${filter} and (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
+    }
+    let data = this.repo
+      .createQueryBuilder('asse')
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+      })
+
+    let resualt = await paginate(data, options);
+    if (resualt) {
+      return resualt;
+    }
+  }
 
   async getAssessmentForApproveData(
     assessmentId: number,
