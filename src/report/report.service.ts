@@ -1796,7 +1796,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       });
       outcome_data.filter(a => a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON' && a.comparison_type_2.includes('SDG')).forEach(c => {
-        // console.log('c.interventions',c)
         contentTwo.sdg_scale_sustaind_comparison.push({sdg_name:c.comparison_type_2,data:c.interventions})
 
       })
