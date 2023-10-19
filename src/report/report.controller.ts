@@ -139,11 +139,11 @@ export class ReportController {
   // fs.writeFileSync('./public/test.html', ( await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto)).content);
 
 
-    const report = await this.reportGenarateService.comparisonReportGenarate(
-      reprtDto.reportName,
-      await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
-    )
-      await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+    // const report = await this.reportGenarateService.comparisonReportGenarate(
+    //   reprtDto.reportName,
+    //   await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
+    // )
+    //   await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
 
     //  res.set({
     //   'Content-Type': `${doc.mimeType}`,
@@ -154,6 +154,13 @@ export class ReportController {
       
     //     return new StreamableFile(file);
     // return response
+
+   const report = await this.reportGenarateService.comparisonReportGenarate(
+      reprtDto.reportName,
+      await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
+    )
+      await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+   
     return ''
   }
 
