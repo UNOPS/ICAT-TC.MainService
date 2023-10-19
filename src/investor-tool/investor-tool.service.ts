@@ -1981,7 +1981,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
 
-  async getProcessData(assesId:number): Promise<ProcessData[]>{
+  async getProcessData(assesId:number): Promise<any[]>{
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
