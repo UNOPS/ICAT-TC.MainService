@@ -1700,7 +1700,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
       const incen = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - INCENTIVES'));
 
       if (incen) {
-        contentTwo.prosses_incentive = agent.interventions;
+        contentTwo.prosses_incentive = incen.interventions;
+    
         //   incen.interventions.forEach(a=>{
         //   contentTwo.prosses_incentive.push({ id:a.id,name:a.name,type:a.type,status:a.status,economic :a.ECONOMIC_NON_ECONOMIC,disincentives:a.DISINCENTIVES,institutional :a.INSTITUTIONAL_AND_REGULATORY,score:a.category_score})
         // })
