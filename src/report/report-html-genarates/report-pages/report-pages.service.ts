@@ -1703,21 +1703,21 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                a.id +
+                (a.id?a.id:'-') +
                 '</td><td>' +
-                a.name +
+                (a.name?a.name:'-') +
                 '</td><td>' +
-                a.type +
+               ( a.type? a.type:'-') +
                 '</td><td>' +
-                a.status +
+                (a.status?a.status:'-') +
                 '</td><td>' +
-                a['R_&_D'] +
+                (a['R_&_D']?a['R_&_D']:'-') +
                 '</td><td>' +
-                a.ADOPTION +
+                (a.ADOPTION?a.ADOPTION:'-') +
                 '</td><td>' +
-                a.SCALE_UP +
+                (a.SCALE_UP?a.SCALE_UP:'-') +
                 '</td><td>' +
-                a.category_score +
+                (a.category_score?a.category_score:'-') +
                 '</td></tr>',
             )
             .join('')}
@@ -1760,21 +1760,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.ENTREPRENEURS +
+              (a.ENTREPRENEURS?a.ENTREPRENEURS :'-' )+
               '</td><td>' +
-              a.COALITION_OF_ADVOCATES +
+              (a.COALITION_OF_ADVOCATES?a.COALITION_OF_ADVOCATES:'-') +
               '</td><td>' +
-              a.BENIFICIARIES +
+              (a.BENIFICIARIES?a.BENIFICIARIES:'-') +
               '</td><td>' +
-              a.category_score +
+              (a.category_score?a.category_score:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -1827,21 +1827,21 @@ export class ReportPagesService {
                  status: string;
                }) =>
                  '<tr><td>' +
-                 a.id +
+                 (a.id?a.id:'-') +
                  '</td><td>' +
-                 a.name +
+                 (a.name?a.name:'-') +
                  '</td><td>' +
-                 a.type +
+                ( a.type? a.type:'-') +
                  '</td><td>' +
-                 a.status +
+                 (a.status?a.status:'-') +
                  '</td><td>' +
-                 a.ECONOMIC_NON_ECONOMIC +
+                 (a.ECONOMIC_NON_ECONOMIC?a.ECONOMIC_NON_ECONOMIC:'-') +
                  '</td><td>' +
-                 a.DISINCENTIVES +
+                 (a.DISINCENTIVES?a.DISINCENTIVES:'-') +
                  '</td><td>' +
-                 a.INSTITUTIONAL_AND_REGULATORY +
+                ( a.INSTITUTIONAL_AND_REGULATORY? a.INSTITUTIONAL_AND_REGULATORY:'-') +
                  '</td><td>' +
-                 a.category_score +
+                 (a.category_score?a.category_score:'-') +
                  '</td></tr>',
              )
              .join('')}
@@ -1884,21 +1884,21 @@ export class ReportPagesService {
                category_score: string;
              }) =>
                '<tr><td>' +
-               a.id +
+               (a.id?a.id:'-') +
                '</td><td>' +
-               a.name +
+               (a.name?a.name:'-') +
                '</td><td>' +
-               a.type +
+              ( a.type? a.type:'-') +
                '</td><td>' +
-               a.status +
+               (a.status?a.status:'-') +
                '</td><td>' +
-               a.AWARENESS +
+               (a.AWARENESS?a.AWARENESS:'-') +
                '</td><td>' +
-               a.BEHAVIOUR +
+               (a.BEHAVIOUR?a.BEHAVIOUR:'-') +
                '</td><td>' +
-               a.SOCIAL_NORMS +
+               (a.SOCIAL_NORMS?a.SOCIAL_NORMS:'-') +
                '</td><td>' +
-               a.category_score +
+               (a.category_score?a.category_score:'-') +
                '</td></tr>',
            )
            .join('')}
@@ -1955,23 +1955,23 @@ export class ReportPagesService {
                   category_score: string;
                 }) =>
                   '<tr><td>' +
-                  a.id +
+                  (a.id?a.id:'-') +
                   '</td><td>' +
-                  a.name +
+                  (a.name?a.name:'-') +
                   '</td><td>' +
-                  a.type +
+                 ( a.type? a.type:'-') +
                   '</td><td>' +
-                  a.status +
+                  (a.status?a.status:'-') +
                   '</td><td>' +
-                  a.Technology +
+                  (a.Technology?a.Technology:'-') +
                   '</td><td>' +
-                  a.Agents +
+                  (a.Agents?a.Agents:'-') +
                   '</td><td>' +
-                  a.Incentives +
+                  (a.Incentives?a.Incentives:'-') +
                   '</td><td>' +
-                  a['Norms and behavioral change'] +
+                  (a['Norms and behavioral change']?a['Norms and behavioral change']:'-') +
                   '</td><td>' +
-                  a.category_score +
+                  (a.category_score?a.category_score:'-') +
                   '</td></tr>',
               )
               .join('')}
@@ -2051,21 +2051,21 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                a.id +
+                (a.id?a.id:'-') +
                 '</td><td>' +
-                a.name +
+                (a.name?a.name:'-') +
                 '</td><td>' +
-                a.type +
+               ( a.type? a.type:'-') +
                 '</td><td>' +
-                a.status +
+                (a.status?a.status:'-') +
                 '</td><td>' +
-                a.international.name +
+                (a.international.name?a.international.name:'-') +
                 '</td><td>' +
-                a.national.name +
+                (a.national.name?a.national.name:'-') +
                 '</td><td>' +
-                a.subnational.name +
+                (a.subnational.name?a.subnational.name:'-') +
                 '</td><td>' +
-                a.category_score.name +
+                (a.category_score.name?a.category_score.name:'-') +
                 '</td></tr>',
             )
             .join('')}
@@ -2114,21 +2114,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.long_term.name +
+              (a.long_term.name?a.long_term.name:'-') +
               '</td><td>' +
-              a.medium_term.name +
+              (a.medium_term.name?a.medium_term.name:'-') +
               '</td><td>' +
-              a.short_term.name +
+              (a.short_term.name?a.short_term.name:'-') +
               '</td><td>' +
-              a.category_score.name +
+              (a.category_score.name?a.category_score.name:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -2191,21 +2191,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.international.name +
+              (a.international.name?a.international.name:'-') +
               '</td><td>' +
-              a.national.name +
+              (a.national.name?a.national.name:'-') +
               '</td><td>' +
-              a.subnational.name +
+              (a.subnational.name?a.subnational.name:'-') +
               '</td><td>' +
-              a.category_score.name +
+              (a.category_score.name?a.category_score.name:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -2257,21 +2257,21 @@ export class ReportPagesService {
             score: string;
           }) =>
             '<tr><td>' +
-            a.id +
+            (a.id?a.id:'-') +
             '</td><td>' +
-            a.name +
+            (a.name?a.name:'-') +
             '</td><td>' +
-            a.type +
+           ( a.type? a.type:'-') +
             '</td><td>' +
-            a.status +
+            (a.status?a.status:'-') +
             '</td><td>' +
-            a.long_term.name +
+            (a.long_term.name?a.long_term.name:'-') +
             '</td><td>' +
-            a.medium_term.name +
+            (a.medium_term.name?a.medium_term.name:'-') +
             '</td><td>' +
-            a.short_term.name +
+            (a.short_term.name?a.short_term.name:'-') +
             '</td><td>' +
-            a.category_score.name +
+            (a.category_score.name?a.category_score.name:'-') +
             '</td></tr>',
         )
         .join('')}
@@ -2336,21 +2336,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.international.name +
+              (a.international.name?a.international.name:'-') +
               '</td><td>' +
-              a.national.name +
+              (a.national.name?a.national.name:'-') +
               '</td><td>' +
-              a.subnational.name +
+              (a.subnational.name?a.subnational.name:'-') +
               '</td><td>' +
-              a.category_score.name +
+              (a.category_score.name?a.category_score.name:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -2401,21 +2401,21 @@ export class ReportPagesService {
           }) => 
            
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.long_term.name +
+              (a.long_term.name?a.long_term.name:'-') +
               '</td><td>' +
-              a.medium_term.name +
+              (a.medium_term.name?a.medium_term.name:'-') +
               '</td><td>' +
-              a.short_term.name +
+              (a.short_term.name?a.short_term.name:'-') +
               '</td><td>' +
-              a.category_score.name +
+              (a.category_score.name?a.category_score.name:'-') +
               '</td></tr>'
             
           
@@ -2479,19 +2479,19 @@ export class ReportPagesService {
            status: string;
          }) =>
            '<tr><td>' +
-           a.id +
+           (a.id?a.id:'-') +
            '</td><td>' +
-           a.name +
+           (a.name?a.name:'-') +
            '</td><td>' +
-           a.type +
+          ( a.type? a.type:'-') +
            '</td><td>' +
-           a.status +
+           (a.status?a.status:'-') +
            '</td><td>' +
-           a.scale_score.name +
+           (a.scale_score.name?a.scale_score.name:'-') +
            '</td><td>' +
-           a.sustained_score.name +
+           (a.sustained_score.name?a.sustained_score.name:'-') +
            '</td><td>' +
-           a.category_score.name +
+           (a.category_score.name?a.category_score.name:'-') +
            '</td></tr>'
        )
        .join('')}
@@ -2538,19 +2538,19 @@ export class ReportPagesService {
          status: string;
        }) =>
          '<tr><td>' +
-         a.id +
+         (a.id?a.id:'-') +
          '</td><td>' +
-         a.name +
+         (a.name?a.name:'-') +
          '</td><td>' +
-         a.type +
+        ( a.type? a.type:'-') +
          '</td><td>' +
-         a.status +
+         (a.status?a.status:'-') +
          '</td><td>' +
-         a.scale_score.name +
+         (a.scale_score.name?a.scale_score.name:'-') +
          '</td><td>' +
-         a.sustained_score.name +
+         (a.sustained_score.name?a.sustained_score.name:'-') +
          '</td><td>' +
-         a.category_score.name +
+         (a.category_score.name?a.category_score.name:'-') +
          '</td></tr>',
      )
      .join('')}
@@ -2613,19 +2613,19 @@ export class ReportPagesService {
           status: string;
         }) =>
           '<tr><td>' +
-          a.id +
+          (a.id?a.id:'-') +
           '</td><td>' +
-          a.name +
+          (a.name?a.name:'-') +
           '</td><td>' +
-          a.type +
+         ( a.type? a.type:'-') +
           '</td><td>' +
-          a.status +
+          (a.status?a.status:'-') +
           '</td><td>' +
-          a.scale_score.name +
+          (a.scale_score.name?a.scale_score.name:'-') +
           '</td><td>' +
-          a.sustained_score.name +
+          (a.sustained_score.name?a.sustained_score.name:'-') +
           '</td><td>' +
-          a.category_score.name +
+          (a.category_score.name?a.category_score.name:'-') +
           '</td></tr>',
       )
       .join('')}
@@ -2689,20 +2689,20 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                a.id +
+                (a.id?a.id:'-') +
                 '</td><td>' +
-                a.name +
+                (a.name?a.name:'-') +
                 '</td><td>' +
-                a.type +
+               ( a.type? a.type:'-') +
                 '</td><td>' +
-                a.status +
+                (a.status?a.status:'-') +
                 '</td><td>' +
-                a.ghg_score.name +
+                (a.ghg_score.name?a.ghg_score.name:'-') +
                 '</td><td>' +
                 '</td><td>' +
-                a.adaptation_score.name +
+                (a.adaptation_score.name?a.adaptation_score.name:'-') +
                 '</td><td>' +
-                a.category_score.name +
+                (a.category_score.name?a.category_score.name:'-') +
                 '</td></tr>',
             )
             .join('')}
@@ -2749,20 +2749,20 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              a.id +
+              (a.id?a.id:'-') +
               '</td><td>' +
-              a.name +
+              (a.name?a.name:'-') +
               '</td><td>' +
-              a.type +
+             ( a.type? a.type:'-') +
               '</td><td>' +
-              a.status +
+              (a.status?a.status:'-') +
               '</td><td>' +
-              a.ghg_score.name +
+              (a.ghg_score.name?a.ghg_score.name:'-') +
               '</td><td>' +
               '</td><td>' +
-              a.adaptation_score.name +
+              (a.adaptation_score.name?a.adaptation_score.name:'-') +
               '</td><td>' +
-              a.category_score.name +
+              (a.category_score.name?a.category_score.name:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -2822,19 +2822,19 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                a.id +
+                (a.id?a.id:'-') +
                 '</td><td>' +
-                a.name +
+                (a.name?a.name:'-') +
                 '</td><td>' +
-                a.type +
+               ( a.type? a.type:'-') +
                 '</td><td>' +
-                a.status +
+                (a.status?a.status:'-') +
                 '</td><td>' +
-                a.scale_cat_score.name +
+                (a.scale_cat_score.name?a.scale_cat_score.name:'-') +
                 '</td><td>' +
-                a.sustained_cat_score.name +
+               ( a.sustained_cat_score.name?a.sustained_cat_score.name:'-') +
                 '</td><td>' +
-                a.category_score.name +
+                (a.category_score.name?a.category_score.name:'-') +
                 '</td></tr>',
             )
             .join('')}
@@ -2914,13 +2914,13 @@ export class ReportPagesService {
                 mitigation: string;
               }) =>
                 '<tr><td>' +
-                a.id +
+                (a.id?a.id:'-') +
                 '</td><td>' +
-                a.name +
+                (a.name?a.name:'-') +
                 '</td><td>' +
-                a.type +
+               ( a.type? a.type:'-') +
                 '</td><td>' +
-                a.status +
+                (a.status?a.status:'-') +
                 '</td><td>' +
                 a.mitigation +
                 '</td></tr>'
@@ -2956,11 +2956,10 @@ export class ReportPagesService {
    ${header}
     <div class="content">
       <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
-<<<<<<< HEAD
-=======
+
       <div class="report-all-table-sm-rotate">
->>>>>>> e428c0f48ce238d1dc808de4b1e9f9e9d12056ac
-        <div class="report-table-sm">
+
+        <div class="report-table-sm-rotate">
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
               <tr>
@@ -2995,7 +2994,7 @@ export class ReportPagesService {
             </tbody>
           </table>
         </div>
-        <div class="report-table-sm">
+        <div class="report-table-sm-rotate">
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
               <tr>
