@@ -72,10 +72,8 @@ export const config: ConnectionOptions = {
  
 
   username: 'root',
- password: 'pradeep123#',
-
-// username: 'root',
-// password: '7860150',
+//  password: 'pradeep123#',
+password: '7860150',
  database: 'tc-main',   
 
   
