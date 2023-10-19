@@ -1662,7 +1662,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
           description: portfolio.objectives ? portfolio.objectives : 'N/A',
         },
         {
-          information: 'ntended audience(s) of the assessment',
+          information: 'Intended audience(s) of the assessment',
           description: portfolio.audience ? portfolio.audience : 'N/A',
         },
         {
