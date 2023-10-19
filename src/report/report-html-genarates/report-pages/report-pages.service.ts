@@ -2956,7 +2956,10 @@ export class ReportPagesService {
    ${header}
     <div class="content">
       <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
+<<<<<<< HEAD
+=======
       <div class="report-all-table-sm-rotate">
+>>>>>>> e428c0f48ce238d1dc808de4b1e9f9e9d12056ac
         <div class="report-table-sm">
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
