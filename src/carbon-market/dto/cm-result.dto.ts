@@ -25,11 +25,14 @@ export class CMResultDto {
     isAdaptation: boolean
     relevance: string
     adaptationCoBenifit: string
+    assessmentQuestionId: number
+    assessmentAnswerId: number
 }
 
 export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
+    isDraft: boolean
 
 }
 
