@@ -58,7 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -70,6 +70,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         selectedSdgs.push(obj)
       }
     })
+    if (isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
+    }
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -85,6 +89,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.uploadedDocumentPath = res.filePath;
       ass_question.relevance = res.relevance;
       ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
+      if (res.assessmentQuestionId) ass_question.id = res.assessmentQuestionId
       let q_res
       try {
         q_res = await this.repo.save(ass_question)
@@ -120,6 +125,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         ass_answer.assessment_question = q_res
         ass_answer.selectedScore = res.selectedScore?.code
         ass_answer.approach = Approach.DIRECT
+        if (res.assessmentAnswerId) ass_answer.id = res.assessmentAnswerId
 
         _answers.push(ass_answer)
       }
@@ -137,7 +143,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.saveDataRequests(_answers)
     // }
 
-    if (assessment.assessment_approach === 'DIRECT') {
+    if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
       let resultObj = new Results()
       let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
@@ -857,6 +865,44 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       )
       .where('assessment.id = :id', { id: assessmnetId })
       .getMany()
+  }
+
+  async getAssessmentQuestionsByAssessmentId(assessmentId: number) {
+    let data = this.repo.createQueryBuilder('assessmentQuestion')
+    .leftJoinAndSelect(
+      'assessmentQuestion.assessment',
+      'assessment',
+      'assessment.id = assessmentQuestion.assessmentId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.question',
+      'question',
+      'question.id = assessmentQuestion.questionId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.characteristic',
+      'characteristic',
+      'characteristic.id = assessmentQuestion.characteristicId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.selectedSdg',
+      'selectedSdg',
+      'selectedSdg.id = assessmentQuestion.selectedSdgId'
+    )
+    .leftJoinAndMapMany(
+      'assessmentQuestion.assessmentAnswers',
+      CMAssessmentAnswer,
+      'assessmnetAnswer',
+      'assessmnetAnswer.assessmentQuestionId = assessmentQuestion.id'
+    )
+    .leftJoinAndSelect(
+      'assessmnetAnswer.answer',
+      'answer',
+      'answer.id = assessmnetAnswer.answerId'
+    )
+    .where('assessment.id = :id', {id: assessmentId})
+
+    return await data.getMany()
   }
 
 
