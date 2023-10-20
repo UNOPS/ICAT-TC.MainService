@@ -2010,6 +2010,105 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   }
 
+
+  async getOutcomeData(assesId:number): Promise<any[]>{
+    let finalData:ProcessData[]=[]
+    let assessment = await this.findAllAssessData(assesId);
+    let categories = await this.findAllCategories();
+    for (let category of categories.meth1Outcomes) {
+
+      let categoryData=new ProcessData()
+      let assess :InvestorAssessment[]=[]
+      for (let x of assessment) {
+        
+        if (category.name === x.category.name) {
+          categoryData.CategoryName = category.name;
+          categoryData.categoryID = category.id
+          categoryData.type = 'outcome'
+          let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) 
+          console.log(indicatordetails.length,x.id)
+          x.indicator_details =indicatordetails;
+          assess.push(x)
+        }
+      }
+      categoryData.data=assess
+      finalData.push(categoryData)
+    }
+    return finalData
+
+  }
+
+  async getSelectedSDGs(assessmnetId: number) {
+    const res=  this.sdgsRepo.find({
+      relations: ['assessment', 'sdg'],
+      where: { assessment: { id: assessmnetId } },
+    });
+    let mappedResult = new Array();
+    for(let item of await res){
+      let obj : SelectedSDG ={
+        id: item.sdg.id,
+        number: item.sdg.number,
+        name: item.sdg.name,
+       // answer : item.answer
+      }
+      mappedResult.push(obj)
+    }
+    return mappedResult;
+  }
+
+  async getSelectedScaleSDGs(assessmnetId: number) {
+    const res=  this.sdgsRepo.find({
+      relations: ['assessment', 'sdg'],
+      where: { assessment: { id: assessmnetId } },
+    });
+    let mappedResult = new Array();
+    for(let item of await res){
+      let obj : SelectedScaleSDG ={
+        id: item.sdg.id,
+        number: item.sdg.number,
+        name: item.sdg.name,
+        answer : item.answer
+      }
+      mappedResult.push(obj)
+    }
+    return mappedResult;
+  }
+
+  async getScaleSDGData(assesId:number): Promise<any[]>{
+    let finalData:ProcessData[]=[]
+    let assessment = await this.findAllAssessData(assesId);
+    let categories = await this.findAllCategories();
+    for (let category of categories.meth1Outcomes) {
+
+      let categoryData=new ProcessData()
+      let assess :InvestorAssessment[]=[]
+      for (let x of assessment) {
+        
+        if ((category.name === x.category.name) && (category.name === "SDG Scale of the Outcome")) {
+          categoryData.CategoryName = category.name;
+          categoryData.categoryID = category.id
+          categoryData.type = 'outcome'
+          let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) 
+          console.log(indicatordetails.length,x.id)
+          x.indicator_details =indicatordetails;
+          let portfolioSdg  = await this.getSelectedScaleSDGs(assesId)
+          x.portfolioSdg = portfolioSdg[0]
+          assess.push(x)
+        }
+      }
+      if(category.name === "SDG Scale of the Outcome"){
+        categoryData.data=assess
+        finalData.push(categoryData)
+      }
+    }
+
+    console.log("pppp", finalData)
+    return finalData
+
+    
+
+  }
+
   async saveSdgPriorities(priorities: SdgPriority[]){
     return await this.sdgPriorityRepo.save(priorities)
   }
@@ -2018,3 +2117,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return await this.sdgPriorityRepo.find({where: {country: {id: countryId}}, relations: ['sdg']})
   }
 }
+
+interface SelectedSDG {
+  id: number;
+  name: string;
+  number: number;
+//  answer: string;
+}
+
+interface SelectedScaleSDG {
+  id: number;
+  name: string;
+  number: number;
+  answer: string;
+}
+
