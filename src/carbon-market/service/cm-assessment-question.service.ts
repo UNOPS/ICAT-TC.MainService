@@ -308,7 +308,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.relevance = chs[ch][0].relevance
         let weight = chs[ch][0].characteristic.cm_weight
         let score = chs[ch].reduce((accumulator, object) => {
-          return accumulator + object.assessmentAnswers[0].score;
+          return accumulator + (object.assessmentAnswers[0] ? object.assessmentAnswers[0].score : 0);
         }, 0);
         _obj.score = _obj.relevance === '0' ? 0 : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
         return _obj
@@ -634,9 +634,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let score = 0
         for (let q of chs[ch]) {
           let o = new QuestionData()
-          o.question = q.assessmentAnswers[0].answer?.question.label
-          o.weight = q.assessmentAnswers[0].answer?.weight
-          o.score = q.assessmentAnswers[0].answer?.score_portion
+          o.question = q.assessmentAnswers[0]?.answer?.question.label
+          o.weight = q.assessmentAnswers[0]?.answer?.weight
+          o.score = q.assessmentAnswers[0]?.answer?.score_portion
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
           raw_questions.push(o)
