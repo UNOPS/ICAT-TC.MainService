@@ -2078,34 +2078,42 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
+    let portfolioSdg  = await this.getSelectedScaleSDGs(assesId)
+    console.log("kkk", portfolioSdg)
     for (let category of categories.meth1Outcomes) {
 
-      let categoryData=new ProcessData()
-      let assess :InvestorAssessment[]=[]
+      for (let i=0; i<portfolioSdg.length; i++){
+        let assess :InvestorAssessment[]=[]
+        let categoryData=new ProcessData()
       for (let x of assessment) {
-        
+  
         if ((category.name === x.category.name) && (category.name === "SDG Scale of the Outcome")) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id
           categoryData.type = 'outcome'
           let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) 
-          console.log(indicatordetails.length,x.id)
+       //   console.log(indicatordetails.length,x.id)
           x.indicator_details =indicatordetails;
-          let portfolioSdg  = await this.getSelectedScaleSDGs(assesId)
-          x.portfolioSdg = portfolioSdg[0]
+        //  let portfolioSdg  = await this.getSelectedScaleSDGs(assesId)
+        //  x.portfolioSdg = portfolioSdg[0]
+        if(x.portfolioSdg.id == portfolioSdg[i].id){
+          x.portfolioSdg = portfolioSdg[i];
           assess.push(x)
+          console.log("yyyy", x.portfolioSdg)
+          console.log("mmmm", x.portfolioSdg.id, " and ", portfolioSdg[i].id)
+        }
         }
       }
+
       if(category.name === "SDG Scale of the Outcome"){
         categoryData.data=assess
         finalData.push(categoryData)
       }
     }
-
+    }
+    console.log("sdgDataSendArray :::", finalData)
     console.log("pppp", finalData)
     return finalData
-
-    
 
   }
 
