@@ -75,8 +75,8 @@ export const config: ConnectionOptions = {
  password: 'pradeep123#', */
 
 username: 'sqluser',
-password: 'abms12##',
- database: 'tc-main',   
+password: 'password',
+ database: 'main',   
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
