@@ -23,7 +23,7 @@ export class CMResultDto {
     isGHG: boolean
     isSDG: boolean
     isAdaptation: boolean
-    relevance: string
+    relevance: number
     adaptationCoBenifit: string
     assessmentQuestionId: number
     assessmentAnswerId: number
