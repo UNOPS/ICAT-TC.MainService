@@ -36,7 +36,7 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   uploadedDocumentPath: string
 
   @Column({nullable: true})
-  relevance: string
+  relevance: number
 
   @Column({nullable: true})
   adaptationCoBenifit: string
