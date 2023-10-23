@@ -1362,7 +1362,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       processData: typeof processCategoryData[],
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
-      outcomeScore: number,
+      outcomeScore: number|null,
       aggregatedScore:{
         name: string
         value: number|null
@@ -1370,7 +1370,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     } = {
       processData: [],
       processScore: 0,
-      outcomeScore: 0,
+      outcomeScore: null,
       aggregatedScore:{
         name: '',
         value: null
@@ -1597,15 +1597,24 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/sdg_count_aggre);
       finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre))
       total_outcome_cat_weight += 50*final_aggre_score;
-      console.log("22")
+      // console.log("22")
     }
     else{
       finalProcessDataArray.aggregatedScore.value = null;
       finalProcessDataArray.aggregatedScore.name = '-'
-      console.log("11")
+      // console.log("11")
     }
     finalProcessDataArray.outcomeData = outcomeArray;
-    finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+    
+    if(total_outcome_cat_weight==0){
+      finalProcessDataArray.outcomeScore =null
+      // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
+    }
+    else{
+      finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+      // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
+    }
+   
     
     await this.assessmentRepo
     .createQueryBuilder()
