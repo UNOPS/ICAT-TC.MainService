@@ -1,5 +1,5 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
 import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
@@ -20,9 +20,16 @@ import { InjectRepository } from "@nestjs/typeorm";
   },
   query: {
     join: {
-      assessment: {eager: true},
-      question: {eager: true}
+      assessment: {
+        eager: true,
+        exclude: ['id']
+      },
+      question: {
+        eager: true,
+        exclude: ['id']
+      }
     },
+    exclude: ['id']
   },
 })
 @Controller('cm-assessment-question')
@@ -47,7 +54,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @UseGuards(JwtAuthGuard)
   @Post('save-result')
   async saveResult(@Body() req: SaveCMResultDto){
-    return await this.service.saveResult(req.result, req.assessment)
+    return await this.service.saveResult(req.result, req.assessment, req.isDraft)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -92,6 +99,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @Get('get-sdg-frequency')
   async getSDGFrequency(): Promise<any>{
     return await this.service.getSDGFrequency()
+  }
+
+  @Get('get-assessment-questions-by-assessment-id/:id')
+  async getAssessmentQuestionsByAssessmentId(@Param('id') id: number) {
+    return await this.service.getAssessmentQuestionsByAssessmentId(id)
   }
   
 

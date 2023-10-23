@@ -363,22 +363,20 @@ body {
 }
 
 .report-table-sm-rotate {
-  position: absolute; 
-  transform:rotate(270deg);
-  padding-top: 20px;
+
+ 
   text-align: start;
-  margin-left: 75px;
-  margin-right: 75px;
-  bottom: 30%; 
-  font-size:8px
 }
 
 .report-table-sm-rotate td:last-child {
   word-break: break-word;
 }
 .report-all-table-sm-rotate {
+  /* height: 100%; */
+  
   position: absolute; 
   transform:rotate(270deg);
   bottom: 30%; 
-  font-size:8px
+  font-size:8px;
+  
 }

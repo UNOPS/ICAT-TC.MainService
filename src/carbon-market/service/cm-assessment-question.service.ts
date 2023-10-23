@@ -58,7 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -70,6 +70,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         selectedSdgs.push(obj)
       }
     })
+    if (isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
+    }
     for await (let res of result) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
@@ -85,6 +89,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ass_question.uploadedDocumentPath = res.filePath;
       ass_question.relevance = res.relevance;
       ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
+      if (res.assessmentQuestionId) ass_question.id = res.assessmentQuestionId
+      if (ass_question.relevance === 0 ) {
+        ass_question.question = undefined
+        ass_question.comment = undefined
+      }
       let q_res
       try {
         q_res = await this.repo.save(ass_question)
@@ -120,8 +129,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         ass_answer.assessment_question = q_res
         ass_answer.selectedScore = res.selectedScore?.code
         ass_answer.approach = Approach.DIRECT
+        if (res.assessmentAnswerId) {
+          ass_answer.id = res.assessmentAnswerId
+          if (ass_question.relevance === 0 ) {
+            this.assessmentAnswerRepo.delete(ass_answer.id)
+          }
+        }
 
-        _answers.push(ass_answer)
+        if (ass_question.relevance !== 0 ) {
+          _answers.push(ass_answer)
+        }
       }
     }
     try {
@@ -137,7 +154,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.saveDataRequests(_answers)
     // }
 
-    if (assessment.assessment_approach === 'DIRECT') {
+    if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
+      assessment.isDraft = isDraft
+      this.assessmentRepo.save(assessment)
       let resultObj = new Results()
       let res = await this.calculateResult(assessment.id)
       resultObj.assessment = assessment;
@@ -289,7 +308,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.relevance = chs[ch][0].relevance
         let weight = chs[ch][0].characteristic.cm_weight
         let score = chs[ch].reduce((accumulator, object) => {
-          return accumulator + object.assessmentAnswers[0].score;
+          return accumulator + (object.assessmentAnswers[0] ? object.assessmentAnswers[0].score : 0);
         }, 0);
         _obj.score = _obj.relevance === '0' ? 0 : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
         return _obj
@@ -317,6 +336,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   async calculateOutcomeResult(questions: CMAssessmentQuestion[], assessementId: number) {
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
     let sdgs = await this.getSelectedSDGs(assessementId)
+    const uniqueSdgNamesSet = [...new Set(sdgs.map(assessment => assessment.sdg.name))];
     let obj = {}
     let sdgs_score = {}
     for (let cat of categories) {
@@ -324,7 +344,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score: number
       if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        selected_sdg_count = sdgs.length
+        selected_sdg_count = uniqueSdgNamesSet.length
         score = qs.reduce((accumulator, object) => {
           if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
           else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
@@ -337,11 +357,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }, 0);
         score = score / 3
       }
+      console.log(cat, Math.round(score))
       obj[cat] = {
-        score: Math.round(score),
+        score: score,
         weight: qs[0].characteristic.category.cm_weight
       }
     }
+    console.log(obj)
 
     for (let key of Object.keys(sdgs_score)) {
       sdgs_score[key] = Math.floor(sdgs_score[key] / 6)
@@ -612,9 +634,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let score = 0
         for (let q of chs[ch]) {
           let o = new QuestionData()
-          o.question = q.assessmentAnswers[0].answer?.question.label
-          o.weight = q.assessmentAnswers[0].answer?.weight
-          o.score = q.assessmentAnswers[0].answer?.score_portion
+          o.question = q.assessmentAnswers[0]?.answer?.question.label
+          o.weight = q.assessmentAnswers[0]?.answer?.weight
+          o.score = q.assessmentAnswers[0]?.answer?.score_portion
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
           raw_questions.push(o)
@@ -855,8 +877,51 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessment',
         'sdg.assessmentId = assessment.id'
       )
+      .innerJoinAndSelect(
+        'sdg.sdg',
+        'portfolioSdg',
+        'portfolioSdg.id = sdg.sdgId'
+      )
       .where('assessment.id = :id', { id: assessmnetId })
       .getMany()
+  }
+
+  async getAssessmentQuestionsByAssessmentId(assessmentId: number) {
+    let data = this.repo.createQueryBuilder('assessmentQuestion')
+    .leftJoinAndSelect(
+      'assessmentQuestion.assessment',
+      'assessment',
+      'assessment.id = assessmentQuestion.assessmentId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.question',
+      'question',
+      'question.id = assessmentQuestion.questionId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.characteristic',
+      'characteristic',
+      'characteristic.id = assessmentQuestion.characteristicId'
+    )
+    .leftJoinAndSelect(
+      'assessmentQuestion.selectedSdg',
+      'selectedSdg',
+      'selectedSdg.id = assessmentQuestion.selectedSdgId'
+    )
+    .leftJoinAndMapMany(
+      'assessmentQuestion.assessmentAnswers',
+      CMAssessmentAnswer,
+      'assessmnetAnswer',
+      'assessmnetAnswer.assessmentQuestionId = assessmentQuestion.id'
+    )
+    .leftJoinAndSelect(
+      'assessmnetAnswer.answer',
+      'answer',
+      'answer.id = assessmnetAnswer.answerId'
+    )
+    .where('assessment.id = :id', {id: assessmentId})
+
+    return await data.getMany()
   }
 
 
