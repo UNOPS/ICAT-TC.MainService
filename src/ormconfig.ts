@@ -71,8 +71,10 @@ export const config: ConnectionOptions = {
   port: 3306,
  
 
- /*  username: 'root',
- password: 'pradeep123#', */
+  /* username: 'sqluser',
+//  password: 'pradeep123#',
+password: 'password',
+ database: 'main',    */
 
 /* username: 'sqluser',
 password: 'password',

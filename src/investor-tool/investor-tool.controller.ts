@@ -232,6 +232,33 @@ export class InvestorToolController {
 
   }
 
+  @Get('get-outcomeData')
+  async getOutcomeData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getOutcomeData(assessID);
+    return res;
+
+  }
+
+  @Get('get-sdgs')
+  async getSelectedSDGs(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSelectedSDGs(assessID);
+    return res;
+
+  }
+
+  @Get('getScaleSDGData')
+  async getScaleSDGData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getScaleSDGData(assessID);
+    return res;
+
+  }
+
+  @Get('getSustainedSDGData')
+  async getSustainedSDGData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSustainedSDGData(assessID);
+    return res;
+
+  }
 
 
 }

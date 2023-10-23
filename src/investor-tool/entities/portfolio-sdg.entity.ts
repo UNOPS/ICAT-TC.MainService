@@ -15,6 +15,9 @@ export class PortfolioSdg  {
     @Column({ nullable: true })
     name: string;
 
+    /* @Column({ nullable: true })
+    answer: string; */
+
     @ApiHideProperty()
     sdg_assessment:SdgAssessment;
    
