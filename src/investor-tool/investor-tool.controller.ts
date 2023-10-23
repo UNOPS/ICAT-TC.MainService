@@ -253,6 +253,12 @@ export class InvestorToolController {
 
   }
 
+  @Get('getSustainedSDGData')
+  async getSustainedSDGData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSustainedSDGData(assessID);
+    return res;
+
+  }
 
 
 }
