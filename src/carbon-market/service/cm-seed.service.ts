@@ -141,17 +141,19 @@ export class CMSeedService {
         let response = {}
         let _questions: CMQuestion[] = []
         for await (let question of questions){
-            let q = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: question.code}).getOne()
-            if (q){
-                q.message = question.message
-                q.label = question.label
-                q.answer_type = question.answer_type
-                q.order = question.order
-                let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
-                if (ch) q.characteristic = ch
-                _questions.push(q)
-            } else {
-                response[question.code] = 'Not found'
+            if (question.isUpdate) {
+                let q = await this.questionRepo.createQueryBuilder('qu').where('qu.code = :code', {code: question.code}).getOne()
+                if (q){
+                    q.message = question.message
+                    q.label = question.label
+                    q.answer_type = question.answer_type
+                    q.order = question.order
+                    let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
+                    if (ch) q.characteristic = ch
+                    _questions.push(q)
+                } else {
+                    response[question.code] = 'Not found'
+                }
             }
         }
 
@@ -172,15 +174,17 @@ export class CMSeedService {
         let response = {}
         let _answers: CMAnswer[] = []
         for await (let ans of answers){
-            let a = await this.answerRepo.createQueryBuilder('an').where('an.code = :code', {code: ans.code}).getOne()
-            if (a){
-                a.label = ans.label
-                a.score_portion = ans.score_portion
-                a.weight = ans.weight
-                a.isPassing = ans.isPassing
-                _answers.push(a)
-            } else {
-                response[ans.code] = 'Not found'
+            if (ans.isUpdate) {
+                let a = await this.answerRepo.createQueryBuilder('an').where('an.code = :code', {code: ans.code}).getOne()
+                if (a){
+                    a.label = ans.label
+                    a.score_portion = ans.score_portion
+                    a.weight = ans.weight
+                    a.isPassing = ans.isPassing
+                    _answers.push(a)
+                } else {
+                    response[ans.code] = 'Not found'
+                }
             }
         }
 
@@ -202,17 +206,19 @@ export class CMSeedService {
         let _characterisctics: Characteristics[] = []
 
         for await(let char of characteristic){
-            let c = await this.characRepo.createQueryBuilder('ch').where('ch.code = :name', {name: char.code}).getMany()
-            if (c){
-                for await (let _c of c){
-                    _c.name = char.name
-                    _c.description = char.description
-                    _c.main_question = char.main_question
-                    _c.cm_weight = char.weight
-                    _characterisctics.push(_c)
+            if (char.isUpdate) {
+                let c = await this.characRepo.createQueryBuilder('ch').where('ch.code = :name', {name: char.code}).getMany()
+                if (c){
+                    for await (let _c of c){
+                        _c.name = char.name
+                        _c.description = char.description
+                        _c.main_question = char.main_question
+                        _c.cm_weight = char.weight
+                        _characterisctics.push(_c)
+                    }
+                } else {
+                    response[char.name] = 'Not found'
                 }
-            } else {
-                response[char.name] = 'Not found'
             }
         }
 
@@ -232,14 +238,16 @@ export class CMSeedService {
         let response = {}
         let _sections: Section[] = []
         for await (let sec of sections){
-            let s = await this.sectionRepo.createQueryBuilder('sc').where('sc.code = :code', {code: sec.code}).getOne()
-            if (s){
-                s.name = sec.name
-                s.description = sec.description
-                s.order = sec.order
-                _sections.push(s)
-            } else {
-                response[sec.code] = 'Not found'
+            if (sec.isUpdate) {
+                let s = await this.sectionRepo.createQueryBuilder('sc').where('sc.code = :code', {code: sec.code}).getOne()
+                if (s){
+                    s.name = sec.name
+                    s.description = sec.description
+                    s.order = sec.order
+                    _sections.push(s)
+                } else {
+                    response[sec.code] = 'Not found'
+                }
             }
         }
 
@@ -260,13 +268,15 @@ export class CMSeedService {
         let response = {}
         let _criterias: Criteria[] = []
         for await (let criteria of criterias){
-            let s = await this.criteriaRepo.createQueryBuilder('cr').where('cr.code = :code', {code: criteria.code}).getOne()
-            if (s){
-                s.name = criteria.name
-                s.order = criteria.order
-                _criterias.push(s)
-            } else {
-                response[criteria.code] = 'Not found'
+            if (criteria.isUpdate) {
+                let s = await this.criteriaRepo.createQueryBuilder('cr').where('cr.code = :code', {code: criteria.code}).getOne()
+                if (s){
+                    s.name = criteria.name
+                    s.order = criteria.order
+                    _criterias.push(s)
+                } else {
+                    response[criteria.code] = 'Not found'
+                }
             }
         }
 
@@ -288,16 +298,18 @@ export class CMSeedService {
         let _categories: Category[] = []
 
         for await(let cat of categories){
-            let c = await this.catRepo.createQueryBuilder('ct').where('ct.code = :name', {name: cat.code}).getMany()
-            if (c){
-                for await (let _c of c){
-                    _c.name = cat.name
-                    _c.description = cat.description
-                    _c.cm_weight = cat.weight
-                    _categories.push(_c)
+            if (cat.isUpdate) {
+                let c = await this.catRepo.createQueryBuilder('ct').where('ct.code = :name', {name: cat.code}).getMany()
+                if (c){
+                    for await (let _c of c){
+                        _c.name = cat.name
+                        _c.description = cat.description
+                        _c.cm_weight = cat.weight
+                        _categories.push(_c)
+                    }
+                } else {
+                    response[cat.name] = 'Not found'
                 }
-            } else {
-                response[cat.name] = 'Not found'
             }
         }
 

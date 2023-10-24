@@ -33,6 +33,9 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
    @Column({nullable:true})
   sectoral_boundary: string; 
 
+  @Column({nullable: true})
+  scale: string
+
   @ManyToMany((type) => GeographicalAreasCovered, (area)=> area.assessmentCMDetail)
   geographicalAreasCovered: GeographicalAreasCovered[]
 
