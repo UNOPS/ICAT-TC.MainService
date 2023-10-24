@@ -210,10 +210,10 @@ export class CMSeedService {
                 let c = await this.characRepo.createQueryBuilder('ch').where('ch.code = :name', {name: char.code}).getMany()
                 if (c){
                     for await (let _c of c){
-                        _c.name = char.name
-                        _c.description = char.description
+                        // _c.name = char.name
+                        // _c.description = char.description
                         _c.main_question = char.main_question
-                        _c.cm_weight = char.weight
+                        // _c.cm_weight = char.weight
                         _characterisctics.push(_c)
                     }
                 } else {
