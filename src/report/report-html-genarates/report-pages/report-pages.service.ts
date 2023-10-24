@@ -1717,7 +1717,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.SCALE_UP?a.SCALE_UP:'-') +
                 '</td><td>' +
-                (a.category_score?a.category_score:'-') +
+                (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
                 '</td></tr>',
             )
             .join('')}
@@ -1774,7 +1774,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.BENIFICIARIES?a.BENIFICIARIES:'-') +
               '</td><td>' +
-              (a.category_score?a.category_score:'-') +
+              (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
               '</td></tr>',
           )
           .join('')}
@@ -1841,7 +1841,7 @@ export class ReportPagesService {
                  '</td><td>' +
                 ( a.INSTITUTIONAL_AND_REGULATORY? a.INSTITUTIONAL_AND_REGULATORY:'-') +
                  '</td><td>' +
-                 (a.category_score?a.category_score:'-') +
+                 (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
                  '</td></tr>',
              )
              .join('')}
@@ -1898,7 +1898,7 @@ export class ReportPagesService {
                '</td><td>' +
                (a.SOCIAL_NORMS?a.SOCIAL_NORMS:'-') +
                '</td><td>' +
-               (a.category_score?a.category_score:'-') +
+               (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
                '</td></tr>',
            )
            .join('')}
@@ -1971,7 +1971,7 @@ export class ReportPagesService {
                   '</td><td>' +
                   (a['Norms and behavioral change']?a['Norms and behavioral change']:'-') +
                   '</td><td>' +
-                  (a.category_score?a.category_score:'-') +
+                  (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
                   '</td></tr>',
               )
               .join('')}
