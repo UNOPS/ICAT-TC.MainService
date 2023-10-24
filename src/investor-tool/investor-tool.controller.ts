@@ -260,5 +260,12 @@ export class InvestorToolController {
 
   }
 
+  @Get('getSelectedSDGsWithAnswers')
+  async getSelectedSDGsWithAnswers(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSelectedSDGsWithAnswers(assessID);
+    return res;
+
+  }
+
 
 }

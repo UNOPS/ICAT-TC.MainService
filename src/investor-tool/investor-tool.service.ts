@@ -2058,7 +2058,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         id: item.sdg.id,
         number: item.sdg.number,
         name: item.sdg.name,
-       // answer : item.answer
+        //answer : item.answer
+      }
+      mappedResult.push(obj)
+    }
+    return mappedResult;
+  }
+
+  async getSelectedSDGsWithAnswers(assessmnetId: number) {
+    const res=  this.sdgsRepo.find({
+      relations: ['assessment', 'sdg'],
+      where: { assessment: { id: assessmnetId } },
+    });
+    let mappedResult = new Array();
+    for(let item of await res){
+      let obj : SelectedSDGAnswers ={
+        id: item.sdg.id,
+        number: item.sdg.number,
+        name: item.sdg.name,
+        answer : item.answer
       }
       mappedResult.push(obj)
     }
@@ -2176,6 +2194,13 @@ interface SelectedSDG {
   name: string;
   number: number;
  // answer: string;
+}
+
+interface SelectedSDGAnswers {
+  id: number;
+  name: string;
+  number: number;
+  answer: string;
 }
 
 interface SelectedScaleSDG {
