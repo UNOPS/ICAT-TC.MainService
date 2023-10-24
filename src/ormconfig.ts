@@ -76,12 +76,12 @@ export const config: ConnectionOptions = {
 password: 'password',
  database: 'main',    */
 
-/* username: 'sqluser',
+username: 'sqluser',
 password: 'password',
- database: 'main', */   
- username: 'root',
+ database: 'main',    
+/*  username: 'root',
  password: '1997',
-  database: 'tc_new',
+  database: 'tc_new', */
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
