@@ -231,8 +231,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      let request = data2.finalArray;
      let assessment = request[0].data[0].assessment
     //  console.log("request", request2);
-     console.log("abcdee",  request[0].data[0].assessment.id)
-    
+     console.log("abcdee",  assessment.id)
+     console.log("draft", data2.isEdit);
      for (let req of request) {
        let vvv : InvestorAssessment[] = req.data
        for (let assess of vvv) { 
@@ -285,30 +285,32 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
          iassess.indicator_details = assess.indicator_details;
          // Save the entity
  
-         if( category.id != 6 && category.id != 8 && !data2.isDraft){
+         if( category.id != 6 && category.id != 8 && data2.isEdit==false){
            let a = await this.investorAssessmentRepo.save(iassess).then(
              async (x) => {            
                  for(let item of x.indicator_details){
-                   if(item.value || item.justification){
+                  //  if(item.value || item.justification){
                      item.investorAssessment =x
                      await this.indicatorDetailsRepo.save(item)
                     //  console.log("saved",item.question.id, item.value,item.justification)
-                   }
+                  //  }
                  }
              })
  
  
            console.log("saved");
           }
-          if( category.id != 6 && category.id != 8 && data2.isDraft==true){
-            let a = await this.investorAssessmentRepo.save(assess).then(
+          //update
+          if( category.id != 6 && category.id != 8 && data2.isEdit==true){
+            let a = await this.investorAssessmentRepo.save(assess)
+            .then(
               async (x) => {            
                   for(let item of x.indicator_details){
-                    if(item.value || item.justification){
+                    // if(item.value || item.justification){
                       item.investorAssessment =x
                       await this.indicatorDetailsRepo.save(item)
                      //  console.log("saved",item.question.id, item.value,item.justification)
-                    }
+                    // }
                   }
               })
   
@@ -444,7 +446,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         await this.sdgsRepo.save(sdgs)
       }
      }
-     if (data2.isDraft) {
+     if (data2.isDraft && !data2.isEdit) {
       console.log("draft", data2.isDraft);
       assessment.isDraft = data2.isDraft
       this.assessmentRepo.save(assessment)
