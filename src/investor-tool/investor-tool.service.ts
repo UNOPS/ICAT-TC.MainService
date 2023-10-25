@@ -301,9 +301,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
            console.log("saved");
           }
           //update
-          if( category.id != 6 && category.id != 8 && data2.isEdit==true){
+          if( category.id != 6 && category.id != 8 && category.id != 5 && category.id != 7  && category.id != 9 && category.id != 10  && data2.isEdit==true ){
             let a = await this.investorAssessmentRepo.save(assess)
-            .then(
+             .then(
               async (x) => {            
                   for(let item of x.indicator_details){
                     // if(item.value || item.justification){
@@ -313,13 +313,30 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
                     // }
                   }
               })
-  
-  
-            console.log("updated");
+            console.log("updated1: categoryID",category.id);
            }
+
+           if( category.id != 6 && category.id != 8 && category.id != 1 && category.id != 2  && category.id != 3 && category.id != 4  && data2.isEdit==true ){
+            let a = await this.investorAssessmentRepo.save(assess)
+            console.log("updated2 : categoryID",category.id  );
+           }
+           
          
        }
      }
+
+    const assessmentIdToDelete = request[0].data[0].assessment.id;
+    const categoryIDsToDelete = [6, 8]; // Add the category IDs you want to delete
+
+    // Step 2: Delete rows that match the specified conditions
+    await this.investorAssessmentRepo
+      .createQueryBuilder()
+      .delete()
+      .from(InvestorAssessment)
+      .where("assessment_id = :assessmentIdToDelete", { assessmentIdToDelete })
+      .andWhere("category_id IN (:...categoryIDsToDelete)", { categoryIDsToDelete })
+      .execute();
+
      if(data2.scaleSDGs){
       for (let req of data2.scaleSDGs) {
         for (let assess of req.data) {
@@ -434,9 +451,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           console.log("saved");
         }
       }
-     }
+     } 
      
-   
+      console.log("assessID", assessmentIdToDelete);
+      await this.sdgsRepo
+      .createQueryBuilder()
+      .delete()
+      .from(SdgAssessment)
+      .where("assessmentId = :id", { id: assessmentIdToDelete })
+      .execute();
+
      if(data2.sdgs){
       for(let item of data2.sdgs){
         let sdgs = new SdgAssessment()
@@ -460,9 +484,240 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      
    } 
 
+   async createFinalAssessment2(request2: FinalInvestorAssessmentDto[]): Promise<any> {
+    let data2: any = request2;
+    let request = data2.finalArray;
+    let assessment = request[0].data[0].assessment
+   //  console.log("request", request2);
+    console.log("abcdee",  assessment.id)
+    console.log("draft", data2.isEdit);
+    for (let req of request) {
+      let vvv : InvestorAssessment[] = req.data
+      for (let assess of vvv) { 
+      //  console.log("assesss", assess);
+  
+        let iassess = new InvestorAssessment();
+  
+        
+        // Set the values for the entity
+
+       // let assess3 = new Assessment();
+       // assess3.id = assess.assessment.id
+       iassess.assessment = request[0].data[0].assessment
+
+        let category = new Category();
+        category.id =  req.categoryID
+        iassess.type = req.type;
+        iassess.category = category;
 
 
-  async createFinalAssessment2(request2: FinalInvestorAssessmentDto[]): Promise<any> {
+      //  iassess.assessment = assess3
+        iassess.characteristics = assess.characteristics;
+
+        let port = new PortfolioSdg()
+        port.id = assess.portfolioSdg?.id
+
+        iassess.description = assess?.description;
+        iassess.starting_situation = assess.starting_situation;
+        iassess.relavance = assess.relavance;
+        iassess.justification = assess.justification;
+        iassess.likelihood = assess.likelihood;
+        iassess.likelihood_justification = assess.likelihood_justification;
+        iassess.relevance_weight = assess.relevance_weight;
+        iassess.likelihood_weight = assess.likelihood_weight;
+        iassess.score = assess.score;
+        iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+
+
+        iassess.indicator = assess.indicator;
+        iassess.indicatorStartingVal = assess.indicatorStartingVal;
+        iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+        iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+
+        let institution = new Institution();
+        institution.id = 1
+        iassess.institution = assess.institution;
+        iassess.institutionDescription = assess.institutionDescription;
+        iassess.parameter_value = assess.parameter_value;
+        iassess.enterDataAssumption = assess.enterDataAssumption;
+        iassess.indicator_details = assess.indicator_details;
+        // Save the entity
+
+        if( category.id != 6 && category.id != 8 && data2.isEdit==false){
+          let a = await this.investorAssessmentRepo.save(iassess)
+          console.log("saved");
+         }
+
+         //update
+          if( category.id != 6 && category.id != 8 && data2.isEdit==true ){
+           let a = await this.investorAssessmentRepo.save(assess)
+           console.log("updated2 : categoryID",category.id  );
+          }
+          
+        
+      }
+    }
+
+   const assessmentIdToDelete = request[0].data[0].assessment.id;
+   const categoryIDsToDelete = [6, 8]; // Add the category IDs you want to delete
+
+   // Step 2: Delete rows that match the specified conditions
+   await this.investorAssessmentRepo
+     .createQueryBuilder()
+     .delete()
+     .from(InvestorAssessment)
+     .where("assessment_id = :assessmentIdToDelete", { assessmentIdToDelete })
+     .andWhere("category_id IN (:...categoryIDsToDelete)", { categoryIDsToDelete })
+     .execute();
+
+    if(data2.scaleSDGs){
+     for (let req of data2.scaleSDGs) {
+       for (let assess of req.data) {
+       //  console.log("assesss", assess);
+   
+         let iassess = new InvestorAssessment();
+   
+         // Set the values for the entity
+ 
+        // let assess3 = new Assessment();
+        // assess3.id = assess.assessment.id
+ 
+         let category = new Category();
+         category.id =  req.categoryID
+         iassess.type = req.type;
+         iassess.category = category;
+ 
+         iassess.assessment = request[0].data[0].assessment
+         //iassess.assessment = assess3
+         iassess.characteristics = assess.characteristics;
+ 
+       //  console.log("xxxx",assess.portfolioSdg)
+         if(assess.portfolioSdg.id){
+           let port = new PortfolioSdg()
+           port.id = assess.portfolioSdg.id
+ 
+           iassess.portfolioSdg = port
+         }
+        
+         iassess.description = assess?.description;
+         iassess.starting_situation = assess.starting_situation;
+         iassess.relavance = assess.relavance;
+         iassess.justification = assess.justification;
+         iassess.likelihood = assess.likelihood;
+         iassess.likelihood_justification = assess.likelihood_justification;
+         iassess.relevance_weight = assess.relevance_weight;
+         iassess.likelihood_weight = assess.likelihood_weight;
+         iassess.score = assess.score;
+         iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+ 
+         iassess.indicator = assess.indicator;
+         iassess.indicatorStartingVal = assess.indicatorStartingVal;
+         iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+         iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+ 
+         let institution = new Institution();
+         institution.id = 1
+         iassess.institution = assess.institution;
+         iassess.institutionDescription = assess.institutionDescription;
+         iassess.parameter_value = assess.parameter_value;
+         iassess.enterDataAssumption = assess.enterDataAssumption;
+   
+         // Save the entity
+         let a = await this.investorAssessmentRepo.save(iassess);
+         console.log("saved");
+       }
+     }
+    }
+    
+    if(data2.sustainedSDGs){
+     for (let req of data2.sustainedSDGs) {
+       for (let assess of req.data) {
+       //  console.log("assesss", assess);
+   
+         let iassess = new InvestorAssessment();
+   
+         // Set the values for the entity
+ 
+         //let assess3 = new Assessment();
+         //assess3.id = assess.assessment.id
+ 
+         let category = new Category();
+         category.id =  req.categoryID
+         iassess.type = req.type;
+         iassess.category = category;
+ 
+         iassess.assessment = request[0].data[0].assessment
+        // iassess.assessment = assess3
+         iassess.characteristics = assess.characteristics;
+     //    console.log("xxxx22",assess.portfolioSdg)
+         if(assess.portfolioSdg.id){
+           let port = new PortfolioSdg()
+           port.id = assess.portfolioSdg.id
+ 
+           iassess.portfolioSdg = port
+         }
+         iassess.description = assess?.description;
+         iassess.starting_situation = assess.starting_situation;
+         iassess.relavance = assess.relavance;
+         iassess.justification = assess.justification;
+         iassess.likelihood = assess.likelihood;
+         iassess.likelihood_justification = assess.likelihood_justification;
+         iassess.relevance_weight = assess.relevance_weight;
+         iassess.likelihood_weight = assess.likelihood_weight;
+         iassess.score = assess.score;
+         iassess.uploadedDocumentPath = assess.uploadedDocumentPath;
+ 
+         iassess.indicator = assess.indicator;
+         iassess.indicatorStartingVal = assess.indicatorStartingVal;
+         iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
+         iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+ 
+         let institution = new Institution();
+         institution.id = 1
+         iassess.institution = assess.institution;
+         iassess.institutionDescription = assess.institutionDescription;
+         iassess.parameter_value = assess.parameter_value;
+         iassess.enterDataAssumption = assess.enterDataAssumption;
+   
+         // Save the entity
+         let a = await this.investorAssessmentRepo.save(iassess);
+         console.log("saved");
+       }
+     }
+    } 
+    
+     console.log("assessID", assessmentIdToDelete);
+     await this.sdgsRepo
+     .createQueryBuilder()
+     .delete()
+     .from(SdgAssessment)
+     .where("assessmentId = :id", { id: assessmentIdToDelete })
+     .execute();
+
+    if(data2.sdgs){
+     for(let item of data2.sdgs){
+       let sdgs = new SdgAssessment()
+       sdgs.assessment = request[0].data[0].assessment
+       sdgs.sdg = item
+       sdgs.answer = item.answer;
+       await this.sdgsRepo.save(sdgs)
+     }
+    }
+    if (data2.isDraft && !data2.isEdit) {
+     console.log("draft", data2.isDraft);
+     assessment.isDraft = data2.isDraft
+     this.assessmentRepo.save(assessment)
+    }
+    if (!data2.isDraft) {
+     let data = new Results();
+     data.assessment = request[0].data[0].assessment;
+     await this.resultRepository.save(data);
+     return 0;
+    }
+    
+  } 
+
+ /*  async createFinalAssessment2(request2: FinalInvestorAssessmentDto[]): Promise<any> {
     let data2: any = request2;
     let request = data2.finalArray;
     console.log("request", request2);
@@ -651,7 +906,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     await this.resultRepository.save(data);
     return 0;
   }
-
+ */
 
 
 
