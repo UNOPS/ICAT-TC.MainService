@@ -35,5 +35,14 @@ export class Characteristics {
     @Column({default: 0})
     ip_weight: number
 
+    @Column({type: 'longtext', nullable: true })
+    portfolioDescription: string;
+
+
+    @Column({type: 'longtext', nullable: true })
+    portfolioHint: string;
+
+    @Column({type: 'longtext', nullable: true })
+    portfolioQuestion: string;
 
 }

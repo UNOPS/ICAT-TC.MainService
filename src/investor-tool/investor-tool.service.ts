@@ -35,7 +35,7 @@ import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginat
 import { GeographicalAreasCovered } from './entities/geographical-areas-covered.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
-import { ProcessData, ProcessDataDto } from './dto/processData.dto';
+import { ProcessData, ProcessData2, ProcessDataDto } from './dto/processData.dto';
 
 const schema = {
   'id': {
@@ -2140,7 +2140,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   async getScaleSDGData(assesId: number): Promise<any[]> {
-    let finalData: ProcessData[] = []
+    let finalData: ProcessData2[] = []
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
     let portfolioSdg = await this.getSelectedScaleSDGs(assesId)
@@ -2149,7 +2149,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       for (let i = 0; i < portfolioSdg.length; i++) {
         let assess: InvestorAssessment[] = []
-        let categoryData = new ProcessData()
+        let categoryData = new ProcessData2()
         for (let x of assessment) {
 
 
@@ -2167,6 +2167,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               x.portfolioSdg = portfolioSdg[i];
               assess.push(x)
               console.log("mmmm", x.portfolioSdg.id, " and ", portfolioSdg[i].id)
+              categoryData.index = portfolioSdg[i].id
             }
           }
         }
@@ -2184,7 +2185,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   async getSustainedSDGData(assesId: number): Promise<any[]> {
-    let finalData: ProcessData[] = []
+    let finalData: ProcessData2[] = []
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
     let portfolioSdg = await this.getSelectedScaleSDGs(assesId)
@@ -2192,7 +2193,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       for (let i = 0; i < portfolioSdg.length; i++) {
         let assess: InvestorAssessment[] = []
-        let categoryData = new ProcessData()
+        let categoryData = new ProcessData2()
         for (let x of assessment) {
 
           if ((category.name === x.category.name) && (category.id == 8)) {
@@ -2204,6 +2205,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             if (x.portfolioSdg.id == portfolioSdg[i].id) {
               x.portfolioSdg = portfolioSdg[i];
               assess.push(x)
+              categoryData.index = portfolioSdg[i].id
             }
           }
         }
