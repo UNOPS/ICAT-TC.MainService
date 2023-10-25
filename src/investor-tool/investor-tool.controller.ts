@@ -12,6 +12,7 @@ import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
