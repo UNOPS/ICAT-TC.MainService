@@ -130,6 +130,9 @@ export class Assessment extends BaseTrackingEntity {
   @Column({ default: false })
   isDraft: boolean
 
+  @Column({ type: 'longtext', default: null, nullable: true })
+  additioinalInfo: string;
+
 
   @ApiHideProperty()
   investor_assessment: InvestorAssessment[] = []
