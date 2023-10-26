@@ -232,7 +232,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      let assessment = request[0].data[0].assessment
     //  console.log("request", request2);
      console.log("abcdee",  assessment.id)
-     console.log("draft", data2.isEdit);
+     console.log("isEdit", data2.isEdit);
      for (let req of request) {
        let vvv : InvestorAssessment[] = req.data
        for (let assess of vvv) { 
@@ -472,7 +472,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
      if (data2.isDraft && !data2.isEdit) {
       console.log("draft", data2.isDraft);
-      assessment.isDraft = data2.isDraft
+      this.assessmentRepo.save(assessment)
+     }
+     if (data2.isEdit) {
+      assessment.editedOn = new Date();
+      // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
      }
      if (!data2.isDraft) {
@@ -708,6 +712,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      assessment.isDraft = data2.isDraft
      this.assessmentRepo.save(assessment)
     }
+    if (data2.isEdit) {
+      assessment.editedOn = new Date();
+      // console.log("editedOn", assessment.editedOn );
+      this.assessmentRepo.save(assessment)
+     }
     if (!data2.isDraft) {
      let data = new Results();
      data.assessment = request[0].data[0].assessment;
