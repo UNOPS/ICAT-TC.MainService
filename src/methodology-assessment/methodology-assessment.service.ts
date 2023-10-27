@@ -1259,6 +1259,24 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return formattedResults;
   }
 
+  async getCountByTool(): Promise<any[]> {
+    const filteredResults = await this.resultRepository.find({
+      relations: ['assessment'],
+    });
+  
+    // const filteredResults = results.filter(result => result.assessment?.tool === tool && result.averageProcess !== null && result.averageOutcome !== null);
+  
+    const formattedResults = filteredResults.map(result => {
+      return {
+        data: result.assessment.climateAction.policyName,
+        y: result.averageProcess,
+        x: result.averageOutcome
+      };
+    });
+  
+    return formattedResults;
+  }
+
 
 
   async getTCForTool(tool: string): Promise<any[]> {
