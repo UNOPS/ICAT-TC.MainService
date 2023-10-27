@@ -472,6 +472,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
      if (data2.isDraft && !data2.isEdit) {
       console.log("draft", data2.isDraft);
+      assessment.isDraft = data2.isDraft
       this.assessmentRepo.save(assessment)
      }
      if (data2.isEdit) {
