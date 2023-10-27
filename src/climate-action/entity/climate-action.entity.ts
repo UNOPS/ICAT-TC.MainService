@@ -245,6 +245,9 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ default: null , nullable: true})
   levelofImplemenation: string;
 
+  @Column({ default: null , nullable: true})
+  geographicalAreaCovered: string;
+
   @Column({ default: null })
   dateOfImplementation: Date;
 
