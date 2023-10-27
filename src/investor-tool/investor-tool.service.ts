@@ -2312,13 +2312,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let categories = await this.findAllCategories();
 
     const customOrder = [1, 2, 3, 4, 5, 7, 6, 8, 9, 10];
-
+    let categoryDataTemp=new ProcessData()
       categories.meth1Outcomes.sort((a : any, b: any) => {
         const indexA = customOrder.indexOf(a.id);
         const indexB = customOrder.indexOf(b.id);
         return indexA - indexB;
       });
-
+      
     for (let category of categories.meth1Outcomes) {
 
       let categoryData=new ProcessData()
@@ -2336,8 +2336,33 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       }
       categoryData.data=assess
+      categoryDataTemp = categoryData
       finalData.push(categoryData)
     }
+
+    if(!finalData[2].categoryID){
+      console.log("nulll")
+      let categoryDataNew=new ProcessData()
+      categoryDataNew.CategoryName = "SDG Scale of the Outcome";
+      categoryDataNew.categoryID = 6;
+      categoryDataNew.type = 'outcome';
+      categoryDataNew.data = categoryDataTemp.data;
+
+      finalData[2] = categoryDataNew
+    }
+
+    if(!finalData[3].categoryID){
+      console.log("nulll")
+      let categoryDataNew=new ProcessData()
+      categoryDataNew.CategoryName = "SDG Time frame over which the outcome is sustained";
+      categoryDataNew.categoryID = 8;
+      categoryDataNew.type = 'outcome';
+      categoryDataNew.data = categoryDataTemp.data;
+
+      finalData[3] = categoryDataNew
+    }
+
+  //  console.log("category dataaa",categoryDataNew)
     return finalData
 
   }
