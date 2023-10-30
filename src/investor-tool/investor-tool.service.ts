@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -36,6 +36,7 @@ import { GeographicalAreasCovered } from './entities/geographical-areas-covered.
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2, ProcessDataDto } from './dto/processData.dto';
+import { TotalInvestment } from './entities/total-investment.entity';
 
 const schema = {
   'id': {
@@ -70,6 +71,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
+    @InjectRepository(TotalInvestment) private readonly totalInvestmentRepo: Repository<TotalInvestment>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -2518,6 +2520,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async getSdgPrioritiesByCountryId(countryId: number) {
     return await this.sdgPriorityRepo.find({where: {country: {id: countryId}}, relations: ['sdg']})
+  }
+
+  async saveTotalInvestments(investments: TotalInvestment[]) {
+    return await this.totalInvestmentRepo.save(investments)
   }
 }
 
