@@ -96,6 +96,9 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ type: 'double', nullable: true })
     expected_ghg_mitigation: number;
 
+    @Column({ type: 'double', nullable: true })
+    expected_ghg_mitigation_year: number;
+
     @ManyToOne((type) => Institution, { cascade: false})
     @JoinColumn({ name: 'institution_id' })
     institution?: Institution;
