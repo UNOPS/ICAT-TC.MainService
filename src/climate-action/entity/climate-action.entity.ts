@@ -310,6 +310,14 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn({ name: 'user_id' })
   user?: User; 
 
-  @ApiHideProperty()
-  policy_sector:PolicySector[];
+  // @ApiHideProperty()
+  // policy_sector:PolicySector[];
+
+  @OneToMany(() => PolicySector, (as) => as.intervention, {
+    cascade: false,
+    nullable: true,
+    eager: true
+  })
+  @JoinColumn()
+  policy_sector: PolicySector[];
 }

@@ -505,6 +505,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('question.id In (:id)', { id: qIds })
         .getMany()
       let criteria = []
+      let sdgs = []
       for await (let ans of answers) {
         let obj = new OutcomeResult()
         obj.characteristic = ans.assessment_question?.characteristic?.name
@@ -530,6 +531,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         // else if (obj?.category?.code == 'NORMS') {
         //   processData.norms.push(obj)
         // }
+        if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg)
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
@@ -568,6 +570,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         criteria: criteria,
         processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
+        sdgs: [...new Map(sdgs.map((item) => [item["id"], item])).values()]
       }
     }
   }
