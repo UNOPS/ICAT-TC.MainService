@@ -139,7 +139,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async getResultByAssessment(assessmentId: number) {
     return await this.repo.findOne({
       where: { assessment: { id: assessmentId } },
-      relations: ['assessment']
+      relations: ['assessment', 'total_investements']
     })
   }
 
