@@ -7,6 +7,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { ImpactCovered } from "./impact-covered.entity";
 import { ApiHideProperty } from "@nestjs/swagger";
 import { GeographicalAreasCovered } from "./geographical-areas-covered.entity";
+import { TotalInvestment } from "./total-investment.entity";
 
 @Entity()
 export class InvestorTool extends BaseTrackingEntity {
@@ -36,6 +37,11 @@ export class InvestorTool extends BaseTrackingEntity {
     @JoinColumn({ name: 'assessment_id' })
     assessment: Assessment;
 
-
+    @OneToMany(() => TotalInvestment, (as) => as.investor_tool, {
+        cascade: false,
+        nullable: true,
+    })
+    @JoinColumn()
+    total_investements: TotalInvestment[];
 }
 
