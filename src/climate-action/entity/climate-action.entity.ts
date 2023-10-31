@@ -238,6 +238,9 @@ export class ClimateAction extends BaseTrackingEntity {
 
 
   // new fields (2023/05/17)
+  @OneToMany(() => PolicySector, policySector => policySector.intervention,{cascade: false, nullable: true,eager: true,})
+  @JoinColumn()
+    policySector: PolicySector[];
 
   @Column({ default: null , nullable: true})
   intervention_id: string;

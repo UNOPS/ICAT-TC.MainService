@@ -33,7 +33,8 @@ export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
     isDraft: boolean
-
+    type:string
+    name:string
 }
 
 export class CalculateDto {
