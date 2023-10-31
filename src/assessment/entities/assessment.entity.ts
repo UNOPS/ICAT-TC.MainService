@@ -130,6 +130,12 @@ export class Assessment extends BaseTrackingEntity {
   @Column({ default: false })
   isDraft: boolean
 
+  @Column({ nullable: true })
+  processDraftLocation?: string;
+
+  @Column({ nullable: true })
+  outcomeDraftLocation?: string;
+
   @Column({ type: 'longtext', default: null, nullable: true })
   additioinalInfo: string;
 

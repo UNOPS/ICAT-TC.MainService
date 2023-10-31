@@ -4,6 +4,7 @@ import { IndicatorDetails } from "../entities/indicator-details.entity";
 import { InvestorAssessment } from "../entities/investor-assessment.entity";
 import { InvestorSector } from "../entities/investor-sector.entity";
 import { SdgPriority } from "../entities/sdg-priority.entity";
+import { TotalInvestment } from "../entities/total-investment.entity";
 
 export class FinalInvestorAssessmentDto {
     type: string;
@@ -20,4 +21,8 @@ export class ToolsMultiselectDto{
 
 export class SdgPriorityDto {
     priorities: SdgPriority[]
+}
+
+export class TotalInvestmentDto {
+    totalInvestements: TotalInvestment[]
 }

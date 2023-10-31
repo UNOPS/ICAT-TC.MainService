@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -36,6 +36,7 @@ import { GeographicalAreasCovered } from './entities/geographical-areas-covered.
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2, ProcessDataDto } from './dto/processData.dto';
+import { TotalInvestment } from './entities/total-investment.entity';
 
 const schema = {
   'id': {
@@ -70,6 +71,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
+    @InjectRepository(TotalInvestment) private readonly totalInvestmentRepo: Repository<TotalInvestment>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -93,6 +95,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       investor.national_country = createInvestorToolDto.investortool?.national_country;
       investor.subnational_region = createInvestorToolDto.investortool?.subnational_region;
       investor.investment_type = createInvestorToolDto.investortool?.investment_type;
+      investor.total_investment = createInvestorToolDto.investortool?.total_investment
       let result = await this.repo.save(investor)
       // console.log("result", result)
       if (createInvestorToolDto)
@@ -137,7 +140,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async getResultByAssessment(assessmentId: number) {
     return await this.repo.findOne({
       where: { assessment: { id: assessmentId } },
-      relations: ['assessment']
+      relations: ['assessment', 'total_investements']
     })
   }
 
@@ -231,20 +234,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      let request = data2.finalArray;
      let assessment = request[0].data[0].assessment
     //  console.log("request", request2);
-     console.log("abcdee",  assessment.id)
-     console.log("isEdit", data2.isEdit);
+     console.log("assessID",  assessment.id)
+    console.log("isEdit", data2.isEdit,"isDraft",data2.isDraft);
      for (let req of request) {
        let vvv : InvestorAssessment[] = req.data
        for (let assess of vvv) { 
-       //  console.log("assesss", assess);
-   
          let iassess = new InvestorAssessment();
-   
-         
-         // Set the values for the entity
- 
-        // let assess3 = new Assessment();
-        // assess3.id = assess.assessment.id
         iassess.assessment = request[0].data[0].assessment
  
          let category = new Category();
@@ -471,19 +466,30 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
      }
      if (data2.isDraft && !data2.isEdit) {
-      console.log("draft", data2.isDraft);
-      assessment.isDraft = data2.isDraft
+      // console.log("draft", data2.isDraft);
+      assessment.isDraft = data2.isDraft;
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation; 
       this.assessmentRepo.save(assessment)
      }
      if (data2.isEdit) {
       assessment.editedOn = new Date();
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation;
       // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
      }
      if (!data2.isDraft) {
+      
       let data = new Results();
       data.assessment = request[0].data[0].assessment;
       await this.resultRepository.save(data);
+      console.log("saved in results");
+       if (data2.isDraft==false && data2.isEdit==true) {
+         assessment.isDraft = data2.isDraft
+         await this.assessmentRepo.save(assessment)
+         console.log("changed is draft", data2.isDraft);
+         }
       return 0;
      }
      
@@ -494,8 +500,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let request = data2.finalArray;
     let assessment = request[0].data[0].assessment
    //  console.log("request", request2);
-    console.log("abcdee",  assessment.id)
-    console.log("draft", data2.isEdit);
+    console.log("assessID",  assessment.id)
+    console.log("isEdit", data2.isEdit,"isDraft",data2.isDraft);
     for (let req of request) {
       let vvv : InvestorAssessment[] = req.data
       for (let assess of vvv) { 
@@ -709,9 +715,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
     }
     if (data2.isDraft && !data2.isEdit) {
-     console.log("draft", data2.isDraft);
      assessment.isDraft = data2.isDraft
      this.assessmentRepo.save(assessment)
+     console.log("changed is draft", data2.isDraft);
     }
     if (data2.isEdit) {
       assessment.editedOn = new Date();
@@ -719,11 +725,20 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       this.assessmentRepo.save(assessment)
      }
     if (!data2.isDraft) {
+      
      let data = new Results();
      data.assessment = request[0].data[0].assessment;
      await this.resultRepository.save(data);
+     console.log("saved in results");
+      if (data2.isDraft==false && data2.isEdit==true) {
+        assessment.isDraft = data2.isDraft
+        await this.assessmentRepo.save(assessment)
+        console.log("changed is draft", data2.isDraft);
+        }
      return 0;
     }
+   
+    
     
   } 
 
@@ -1659,6 +1674,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number|null,
+      sdgListwithScores:any[]
       aggregatedScore:{
         name: string
         value: number|null
@@ -1667,11 +1683,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       processData: [],
       processScore: 0,
       outcomeScore: null,
-      aggregatedScore:{
+      aggregatedScore: {
         name: '',
         value: null
       },
-      outcomeData: []
+      outcomeData: [],
+      sdgListwithScores: []
     }
 
     let assessment = await this.findAllAssessData(assesId);
@@ -1881,7 +1898,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       }
     }
-    
     let aggre_Score =0;
     let sdg_count_aggre =0
     let final_aggre_score =0
@@ -1910,7 +1926,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
       // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
     }
-   
+    let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD')
+    let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD')
+    console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
+    if(scale_sdg?.characteristicData.length>0 && sustained_sdg?.characteristicData.length>0){
+      finalProcessDataArray.sdgListwithScores = this.calculateSDGScores(scale_sdg?.characteristicData,sustained_sdg?.characteristicData);
+    }
+    
     
     await this.assessmentRepo
     .createQueryBuilder()
@@ -1920,6 +1942,37 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .execute()
     return finalProcessDataArray;
   }
+
+  calculateSDGScores(scale:any[],sustained:any[]){
+    const result = [];
+    
+    scale.forEach(scaleSDG => {
+        const matchingSustainedSDG = sustained.find(sustainedSDG => sustainedSDG.name === scaleSDG.name);
+        if (matchingSustainedSDG) {
+          let score :number|string='';
+          console.log("sdg",scaleSDG.name,"scale",scaleSDG.sdg_score,"sustained",matchingSustainedSDG.sdg_score)
+          let scoreArray =[scaleSDG.sdg_score,matchingSustainedSDG.sdg_score]
+          let notNullCount = 0;
+          for (const i of scoreArray) {
+            
+            if(i!==null){
+              notNullCount ++;
+            }
+          }
+          if(notNullCount==0){
+            score = 'Outside assessment boundaries';
+          }
+          else
+            score = this.roundDown((scaleSDG.sdg_score + matchingSustainedSDG.sdg_score)/notNullCount)
+            result.push({
+                name: scaleSDG.name,
+                score: score,
+            });
+        }
+    });
+    return result;
+  }
+
   async findAllCategories(): Promise<any> {
     let categories = await this.categotyRepository.createQueryBuilder('category')
       .leftJoinAndSelect('category.methodology', 'methodology')
@@ -2518,6 +2571,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async getSdgPrioritiesByCountryId(countryId: number) {
     return await this.sdgPriorityRepo.find({where: {country: {id: countryId}}, relations: ['sdg']})
+  }
+
+  async saveTotalInvestments(investments: TotalInvestment[]) {
+    return await this.totalInvestmentRepo.save(investments)
   }
 }
 
