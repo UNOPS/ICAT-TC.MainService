@@ -231,20 +231,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      let request = data2.finalArray;
      let assessment = request[0].data[0].assessment
     //  console.log("request", request2);
-     console.log("abcdee",  assessment.id)
-     console.log("isEdit", data2.isEdit);
+     console.log("assessID",  assessment.id)
+    console.log("isEdit", data2.isEdit,"isDraft",data2.isDraft);
      for (let req of request) {
        let vvv : InvestorAssessment[] = req.data
        for (let assess of vvv) { 
-       //  console.log("assesss", assess);
-   
          let iassess = new InvestorAssessment();
-   
-         
-         // Set the values for the entity
- 
-        // let assess3 = new Assessment();
-        // assess3.id = assess.assessment.id
         iassess.assessment = request[0].data[0].assessment
  
          let category = new Category();
@@ -471,7 +463,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
      }
      if (data2.isDraft && !data2.isEdit) {
-      console.log("draft", data2.isDraft);
+      // console.log("draft", data2.isDraft);
       assessment.isDraft = data2.isDraft
       this.assessmentRepo.save(assessment)
      }
@@ -481,9 +473,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       this.assessmentRepo.save(assessment)
      }
      if (!data2.isDraft) {
+      
       let data = new Results();
       data.assessment = request[0].data[0].assessment;
       await this.resultRepository.save(data);
+      console.log("saved in results");
+       if (data2.isDraft==false && data2.isEdit==true) {
+         assessment.isDraft = data2.isDraft
+         await this.assessmentRepo.save(assessment)
+         console.log("changed is draft", data2.isDraft);
+         }
       return 0;
      }
      
@@ -494,8 +493,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let request = data2.finalArray;
     let assessment = request[0].data[0].assessment
    //  console.log("request", request2);
-    console.log("abcdee",  assessment.id)
-    console.log("draft", data2.isEdit);
+    console.log("assessID",  assessment.id)
+    console.log("isEdit", data2.isEdit,"isDraft",data2.isDraft);
     for (let req of request) {
       let vvv : InvestorAssessment[] = req.data
       for (let assess of vvv) { 
@@ -709,9 +708,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
     }
     if (data2.isDraft && !data2.isEdit) {
-     console.log("draft", data2.isDraft);
      assessment.isDraft = data2.isDraft
      this.assessmentRepo.save(assessment)
+     console.log("changed is draft", data2.isDraft);
     }
     if (data2.isEdit) {
       assessment.editedOn = new Date();
@@ -719,11 +718,20 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       this.assessmentRepo.save(assessment)
      }
     if (!data2.isDraft) {
+      
      let data = new Results();
      data.assessment = request[0].data[0].assessment;
      await this.resultRepository.save(data);
+     console.log("saved in results");
+      if (data2.isDraft==false && data2.isEdit==true) {
+        assessment.isDraft = data2.isDraft
+        await this.assessmentRepo.save(assessment)
+        console.log("changed is draft", data2.isDraft);
+        }
      return 0;
     }
+   
+    
     
   } 
 
@@ -1659,6 +1667,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       outcomeData: typeof outcomeCategoryData[]
       processScore: number,
       outcomeScore: number|null,
+      sdgListwithScores:any[]
       aggregatedScore:{
         name: string
         value: number|null
@@ -1667,11 +1676,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       processData: [],
       processScore: 0,
       outcomeScore: null,
-      aggregatedScore:{
+      aggregatedScore: {
         name: '',
         value: null
       },
-      outcomeData: []
+      outcomeData: [],
+      sdgListwithScores: []
     }
 
     let assessment = await this.findAllAssessData(assesId);
@@ -1881,7 +1891,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       }
     }
-    
     let aggre_Score =0;
     let sdg_count_aggre =0
     let final_aggre_score =0
@@ -1910,7 +1919,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
       // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
     }
-   
+    let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD')
+    let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD')
+    console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
+    if(scale_sdg?.characteristicData.length>0 && sustained_sdg?.characteristicData.length>0){
+      finalProcessDataArray.sdgListwithScores = this.calculateSDGScores(scale_sdg?.characteristicData,sustained_sdg?.characteristicData);
+    }
+    
     
     await this.assessmentRepo
     .createQueryBuilder()
@@ -1920,6 +1935,37 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .execute()
     return finalProcessDataArray;
   }
+
+  calculateSDGScores(scale:any[],sustained:any[]){
+    const result = [];
+    
+    scale.forEach(scaleSDG => {
+        const matchingSustainedSDG = sustained.find(sustainedSDG => sustainedSDG.name === scaleSDG.name);
+        if (matchingSustainedSDG) {
+          let score :number|string='';
+          console.log("sdg",scaleSDG.name,"scale",scaleSDG.sdg_score,"sustained",matchingSustainedSDG.sdg_score)
+          let scoreArray =[scaleSDG.sdg_score,matchingSustainedSDG.sdg_score]
+          let notNullCount = 0;
+          for (const i of scoreArray) {
+            
+            if(i!==null){
+              notNullCount ++;
+            }
+          }
+          if(notNullCount==0){
+            score = 'Outside assessment boundaries';
+          }
+          else
+            score = this.roundDown((scaleSDG.sdg_score + matchingSustainedSDG.sdg_score)/notNullCount)
+            result.push({
+                name: scaleSDG.name,
+                score: score,
+            });
+        }
+    });
+    return result;
+  }
+
   async findAllCategories(): Promise<any> {
     let categories = await this.categotyRepository.createQueryBuilder('category')
       .leftJoinAndSelect('category.methodology', 'methodology')
