@@ -239,7 +239,7 @@ async allProject(
     return actions.map(({ name, count }) => ({ name, count }));
   } */
 
-  async findTypeofAction(): Promise<any[]> {
+  /* async findTypeofAction(): Promise<any[]> {
     const currentUser = await this.userService.currentUser();
   
     const res = await this.repo.find({
@@ -272,10 +272,10 @@ async allProject(
     }, []);
   
     return actions;
-  } 
+  }  */
   
 
- /*  async findTypeofAction(): Promise<any[]> {
+   async findTypeofAction(): Promise<any[]> {
     const currentUser = await this.userService.currentUser();
   
     console.log("userrrr", currentUser);
@@ -321,7 +321,7 @@ async allProject(
     }, []);
   
     return actions;
-  } */
+  } 
   
   
 
