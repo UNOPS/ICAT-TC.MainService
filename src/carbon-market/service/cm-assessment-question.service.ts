@@ -58,7 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean,name:string,type:string, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -71,7 +71,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     })
     if (isDraft) {
-      assessment.isDraft = isDraft
+      assessment.isDraft = isDraft;
+      if(type =="prose"){
+        assessment.processDraftLocation=name;
+      }else if (type=="out"){
+        assessment.outcomeDraftLocation=name;
+      }
       this.assessmentRepo.save(assessment)
     }
     for await (let res of result) {
@@ -505,6 +510,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('question.id In (:id)', { id: qIds })
         .getMany()
       let criteria = []
+      let sdgs = []
       for await (let ans of answers) {
         let obj = new OutcomeResult()
         obj.characteristic = ans.assessment_question?.characteristic?.name
@@ -530,6 +536,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         // else if (obj?.category?.code == 'NORMS') {
         //   processData.norms.push(obj)
         // }
+        if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg)
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
@@ -568,6 +575,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         criteria: criteria,
         processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
+        sdgs: [...new Map(sdgs.map((item) => [item["id"], item])).values()]
       }
     }
   }

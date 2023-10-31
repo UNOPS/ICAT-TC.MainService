@@ -54,7 +54,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @UseGuards(JwtAuthGuard)
   @Post('save-result')
   async saveResult(@Body() req: SaveCMResultDto){
-    return await this.service.saveResult(req.result, req.assessment, req.isDraft)
+    return await this.service.saveResult(req.result, req.assessment, req.isDraft,req.name,req.type)
   }
 
   @UseGuards(JwtAuthGuard)

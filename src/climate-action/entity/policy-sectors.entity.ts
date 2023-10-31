@@ -15,7 +15,7 @@ export class PolicySector extends BaseTrackingEntity {
     @JoinColumn({ name: 'intervention_id' })
     intervention?: ClimateAction;
 
-    @ManyToOne((type) => Sector, { cascade: false })
+    @ManyToOne((type) => Sector, { cascade: false, eager: true })
     @JoinColumn({ name: 'sector_id' })
     sector?: Sector;
 

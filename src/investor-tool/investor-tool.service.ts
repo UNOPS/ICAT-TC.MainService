@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ImpactCovered } from './entities/impact-covered.entity';
@@ -36,6 +36,7 @@ import { GeographicalAreasCovered } from './entities/geographical-areas-covered.
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2, ProcessDataDto } from './dto/processData.dto';
+import { TotalInvestment } from './entities/total-investment.entity';
 
 const schema = {
   'id': {
@@ -70,6 +71,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(PortfolioQuestions) private readonly portfolioQuestionRepo: Repository<PortfolioQuestions>,
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
+    @InjectRepository(TotalInvestment) private readonly totalInvestmentRepo: Repository<TotalInvestment>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -93,6 +95,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       investor.national_country = createInvestorToolDto.investortool?.national_country;
       investor.subnational_region = createInvestorToolDto.investortool?.subnational_region;
       investor.investment_type = createInvestorToolDto.investortool?.investment_type;
+      investor.total_investment = createInvestorToolDto.investortool?.total_investment
       let result = await this.repo.save(investor)
       // console.log("result", result)
       if (createInvestorToolDto)
@@ -137,7 +140,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async getResultByAssessment(assessmentId: number) {
     return await this.repo.findOne({
       where: { assessment: { id: assessmentId } },
-      relations: ['assessment']
+      relations: ['assessment', 'total_investements']
     })
   }
 
@@ -464,11 +467,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
      if (data2.isDraft && !data2.isEdit) {
       // console.log("draft", data2.isDraft);
-      assessment.isDraft = data2.isDraft
+      assessment.isDraft = data2.isDraft;
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation; 
       this.assessmentRepo.save(assessment)
      }
      if (data2.isEdit) {
       assessment.editedOn = new Date();
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation;
       // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
      }
@@ -2564,6 +2571,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   async getSdgPrioritiesByCountryId(countryId: number) {
     return await this.sdgPriorityRepo.find({where: {country: {id: countryId}}, relations: ['sdg']})
+  }
+
+  async saveTotalInvestments(investments: TotalInvestment[]) {
+    return await this.totalInvestmentRepo.save(investments)
   }
 }
 
