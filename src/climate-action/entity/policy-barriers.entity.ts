@@ -5,34 +5,40 @@ import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { BarrierCategory } from "./barrier-category.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { ApiHideProperty } from "@nestjs/swagger";
 
 @Entity({ name: 'policy-barriers' })
 export class PolicyBarriers extends BaseTrackingEntity {
 
- /*    constructor() {
-        super();
-        this.createdBy = '';
-        this.editedBy = '';
-      } */
+  /*    constructor() {
+         super();
+         this.createdBy = '';
+         this.editedBy = '';
+       } */
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(() => ClimateAction, { cascade: false, eager: true, })
-    climateAction: ClimateAction;
+  @ManyToOne(() => ClimateAction, { cascade: false, eager: true, })
+  climateAction: ClimateAction;
 
-    @Column({ length: 500, default: null, nullable: true })
-    barrier: string;
-    @Column({ length: 500, default: null, nullable: true })
-    explanation: string;
+  @Column({ length: 500, default: null, nullable: true })
+  barrier: string;
+  @Column({ length: 500, default: null, nullable: true })
+  explanation: string;
 
-    @Column({ nullable: true})
-    is_affected : boolean;
+  @Column({ nullable: true })
+  is_affected: boolean;
 
-    @OneToMany(() => BarrierCategory,(barrierCategory) => barrierCategory.barriers)
-    barrierCategory: BarrierCategory[];
+  @OneToMany(() => BarrierCategory, (barrierCategory) => barrierCategory.barriers ,{cascade: false,
+    nullable: true,
+    eager: true,})
+  barrierCategory: BarrierCategory[];
 
-    @ManyToOne(() => Assessment, { cascade: false, eager: true, })
-    assessment: Assessment;
+  @ManyToOne(() => Assessment, { cascade: false, eager: true, })
+  assessment: Assessment;
+
+  @ApiHideProperty()
+  barrier_catogory: BarrierCategory[];
 
 }
