@@ -192,6 +192,21 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = `${filter} and (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
     }
+
+    let data3 = this.repo
+    .createQueryBuilder('asse')
+    .leftJoinAndMapOne(
+      'asse.climateAction',
+      ClimateAction,
+      'proj',
+      `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+    )
+    .where(filter, {
+      filterText: `%${filterText}%`,
+    })
+    .orderBy('asse.id', 'ASC')
+    .getMany();
+
     let data = this.repo
       .createQueryBuilder('asse')
       .leftJoinAndMapOne(
@@ -203,10 +218,46 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where(filter, {
         filterText: `%${filterText}%`,
       })
-
+      .orderBy('asse.id', 'ASC');
     let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+
+    let newarray = new Array();
+    for (let asse of resualt.items) {
+      newarray.push(asse.id)
+    }
+
+    let data1 = this.repo
+      .createQueryBuilder('asse')
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+      )
+      .leftJoinAndMapMany(
+        'proj.policySector',
+        PolicySector,
+        'policySector',
+        `proj.id = policySector.intervention_id`,
+      )
+      .leftJoinAndMapOne(
+        'policySector.sector',
+        Sector,
+        'sector',
+        `sector.id = policySector.sector_id`,
+      )
+      .where('asse.id in (:...newarray)', {newarray });
+
+      let item =new Array()
+      let re =new Array()
+      let total :number;
+
+    if (data1) {
+      total = (await data3).length;
+      item= await data1.getMany();
+      re.push(total);
+      re.push(item);
+      return re;
     }
   }
 
