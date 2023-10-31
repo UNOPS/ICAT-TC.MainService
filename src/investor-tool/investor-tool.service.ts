@@ -472,11 +472,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
      if (data2.isDraft && !data2.isEdit) {
       console.log("draft", data2.isDraft);
-      assessment.isDraft = data2.isDraft
+      assessment.isDraft = data2.isDraft;
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation; 
       this.assessmentRepo.save(assessment)
      }
      if (data2.isEdit) {
       assessment.editedOn = new Date();
+      assessment.processDraftLocation = data2.processDraftLocation;
+      assessment.outcomeDraftLocation = data2.outcomeDraftLocation;
       // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
      }
