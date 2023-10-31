@@ -82,6 +82,18 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `policy_barrier.assessmentId = asse.id`,
       )
       .leftJoinAndMapMany(
+        'policy_barrier.barrierCategory',
+        BarrierCategory,
+        'barrierCategory',
+        `barrierCategory.barriersId = policy_barrier.id`,
+      )
+      .leftJoinAndMapMany(
+          'policy_barrier.characteristics',
+          Characteristics,
+          'characteristics',
+          `characteristics.id = barrierCategory.characteristicsId`,
+      )
+      .leftJoinAndMapMany(
         'asse.investor_sector',
          InvestorSector,
         'investor_sector',
@@ -101,6 +113,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
+
+      console.log("tmmm", data)
+      
     return data;
   }
 
