@@ -202,10 +202,18 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     options: IPaginationOptions,
     filterText: string,
     countryIdFromTocken: number,
+    cuserRoleFromTocken,
+      userNameFromTocken
   ): Promise<any> {
-    let filter: string = 'asse.isDraft = true ';
+
+    let filter: string = `asse.isDraft = true AND proj.countryId = ${countryIdFromTocken}`;
+    if(cuserRoleFromTocken=="External"){
+      let userItem = await this.userService.findByUserName(userNameFromTocken);
+      `${filter} AND asse.user_id =${userItem.id}`
+    }
+    
     if (filterText != null && filterText != undefined && filterText != '') {
-      filter = `${filter} and (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
+      filter = `${filter} AND (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
     }
 
     let data3 = this.repo
@@ -214,7 +222,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       'asse.climateAction',
       ClimateAction,
       'proj',
-      `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+      `proj.id = asse.climateAction_id `,
     )
     .where(filter, {
       filterText: `%${filterText}%`,
@@ -228,7 +236,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+        `proj.id = asse.climateAction_id `,
       )
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -247,7 +255,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+        `proj.id = asse.climateAction_id`,
       )
       .leftJoinAndMapMany(
         'proj.policySector',
