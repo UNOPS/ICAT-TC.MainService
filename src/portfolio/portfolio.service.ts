@@ -518,16 +518,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     scaleGhgData.interventions.map(int => {
       scale_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, ghg_score: int.category_score
+        id: int.id, name: int.name, tool: int.tool, status: int.status, assessment_id: int.assessment_id, ghg_score: int.category_score
       })
       sc_sus_ghg_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
+        id: int.id, name: int.name, tool: int.tool, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
       })
 
-      scale_cat_total[int.assessment_id] = int.category_score.value
+      scale_cat_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value
       scale_cat_count[int.assessment_id] = 1
-      sc_cat_total[int.assessment_id] = int.category_score.value
-      sc_sus_total[int.assessment_id] = int.category_score.value
+      sc_cat_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value
+      sc_sus_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value
     })
 
     sustained_comparison.comparison_type = 'SUSTAINED COMPARISON'
@@ -545,7 +545,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     sustainedGhgData.interventions.map(int => {
       sustained_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, ghg_score: int.category_score
+        id: int.id, name: int.name, tool: int.tool, status: int.status, assessment_id: int.assessment_id, ghg_score: int.category_score
       })
       let res = sc_sus_ghg_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
       res['sustained_score'] = int.category_score
@@ -582,13 +582,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         if (res) {
           res[sd + '_score'] = int.category_score
           sc_sus_sdgs[sd].interventions.push({
-            id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
+            id: int.id, name: int.name, tool: int.tool, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
           })
           sc_sus_sdgs[sd].order = scaleSdgData[sd].order + 2
-          scale_cat_total[int.assessment_id] += int.category_score.value
+          scale_cat_total[int.assessment_id] === null ? 
+            (int.category_score.value === null ? scale_cat_total[int.assessment_id] = null : scale_cat_total[int.assessment_id] = int.category_score.value) :
+            scale_cat_total[int.assessment_id] += int.category_score.value
           scale_cat_count[int.assessment_id]++
-          sc_sus_sd_total[int.assessment_id] = int.category_score.value
-          sc_cat_total[int.assessment_id] += int.category_score.value
+          sc_sus_sd_total[int.assessment_id] = (int.category_score.value === null) ? null : int.category_score.value
+          sc_cat_total[int.assessment_id] === null ? 
+            (int.category_score.value === null ? sc_cat_total[int.assessment_id] = null : sc_cat_total[int.assessment_id] = int.category_score.value) :
+            sc_cat_total[int.assessment_id] += int.category_score.value
         }
       })
       sustainedSdgData[sd].interventions.map(int => {
@@ -600,14 +604,27 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         if (res2){
           res2['sustained_score'] = int.category_score
         }
-        sc_sus_sd_total[int.assessment_id] += int.category_score.value
-        sustain_cat_total[int.assessment_id] += int.category_score.value
+        sc_sus_sd_total[int.assessment_id] === null ? 
+            (int.category_score.value === null ? sc_sus_sd_total[int.assessment_id] = null : sc_sus_sd_total[int.assessment_id] = int.category_score.value) :
+            sc_sus_sd_total[int.assessment_id] += int.category_score.value
+        sustain_cat_total[int.assessment_id] === null ? 
+            (int.category_score.value === null ? sustain_cat_total[int.assessment_id] = null : sustain_cat_total[int.assessment_id] = int.category_score.value) :
+            sustain_cat_total[int.assessment_id] += int.category_score.value
         sustain_cat_count[int.assessment_id]++
-        ss_cat_total[int.assessment_id] += int.category_score.value
+        ss_cat_total[int.assessment_id] === null ? 
+            (int.category_score.value === null ? ss_cat_total[int.assessment_id] = null : ss_cat_total[int.assessment_id] = int.category_score.value) :
+            ss_cat_total[int.assessment_id] += int.category_score.value
       })
 
       sc_sus_sdgs[sd].interventions = sc_sus_sdgs[sd].interventions.map(int => {
-        let score = Math.floor(sc_sus_sd_total[int.assessment_id] / 2)
+        let score = null
+      if (int.scale_score.value !== null) {
+        score = int.scale_score.value
+      }
+      if (int.sustained_score.value !== null) {
+       ( score !== null) ? score += int.sustained_score.value : score = int.sustained_score.value
+      }
+      ( score !== null) ? score = Math.floor(score / 2) : score = score
         int['category_score'] = this.mapNameAndValue(this.investorToolService.mapScaleScores(score), score)
         return int
       })
@@ -647,49 +664,75 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let res = scale_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
       res['adaptation_score'] = int.category_score
       sc_sus_ad_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
+        id: int.id, name: int.name, tool: int.tool, status: int.status, assessment_id: int.assessment_id, scale_score: int.category_score
       })
+      
+      scale_cat_total[int.assessment_id] === null ? 
+      (int.category_score.value === null ? scale_cat_total[int.assessment_id] = null : scale_cat_total[int.assessment_id] = int.category_score.value) :
       scale_cat_total[int.assessment_id] += int.category_score.value
       scale_cat_count[int.assessment_id]++
+      sc_cat_total[int.assessment_id] === null ? 
+      (int.category_score.value === null ? sc_cat_total[int.assessment_id] = null : sc_cat_total[int.assessment_id] = int.category_score.value) :
       sc_cat_total[int.assessment_id] += int.category_score.value
-      sc_sus_ad_total[int.assessment_id] = int.category_score.value
+      sc_sus_ad_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value
     })
 
     sustainedAdaptationData.interventions.map(int => {
       let res = sustained_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
       if (res) {
         res['adaptation_score'] = int.category_score
-        sustain_cat_total[int.assessment_id] += int.category_score.value
+        sustain_cat_total[int.assessment_id] === null ?
+          (int.category_score.value === null ? sustain_cat_total[int.assessment_id] = null : sustain_cat_total[int.assessment_id] = int.category_score.value) :
+          sustain_cat_total[int.assessment_id] += int.category_score.value
         sustain_cat_count[int.assessment_id]++
-        ss_cat_total[int.assessment_id] += int.category_score.value
+        ss_cat_total[int.assessment_id] === null ?
+          (int.category_score.value === null ? ss_cat_total[int.assessment_id] = null : ss_cat_total[int.assessment_id] = int.category_score.value) :
+          ss_cat_total[int.assessment_id] += int.category_score.value
       }
       let res2 = sc_sus_ad_comparison.interventions.find(o => o.assessment_id === int.assessment_id)
       if (res2) {
         res2['sustained_score'] = int.category_score
-        sc_sus_ad_total[int.assessment_id] += int.category_score.value
+        sc_sus_ad_total[int.assessment_id] === null ?
+          (int.category_score.value === null ? sc_sus_ad_total[int.assessment_id] = null : sc_sus_ad_total[int.assessment_id] = int.category_score.value) :
+          sc_sus_ad_total[int.assessment_id] += int.category_score.value
       }
     })
 
     scale_comparison.interventions = scale_comparison.interventions.map(int => {
-      let score = Math.floor(sc_cat_total[int.assessment_id] / (scale_comparison.col_set_2.length - 4))
+
+      let score = sc_cat_total[int.assessment_id] !== null ? Math.floor(sc_cat_total[int.assessment_id] / (scale_comparison.col_set_2.length - 4)) : null
       int['category_score'] = this.mapNameAndValue(this.investorToolService.mapScaleScores(score), score)
       return int
     })
 
     sustained_comparison.interventions = sustained_comparison.interventions.map(int => {
-      let score = Math.floor(ss_cat_total[int.assessment_id] / (sustained_comparison.col_set_2.length - 4))
+      let score = ss_cat_total[int.assessment_id] !== null ? Math.floor(ss_cat_total[int.assessment_id] / (sustained_comparison.col_set_2.length - 4)) : null
       int['category_score'] = this.mapNameAndValue(this.investorToolService.mapSustainedScores(score), score)
       return int
     })
 
     sc_sus_ghg_comparison.interventions = sc_sus_ghg_comparison.interventions.map(int => {
-      let score = Math.floor(sc_sus_total[int.assessment_id] / 2)
+      let score = null
+      if (int.scale_score.value !== null) {
+        score = int.scale_score.value
+      }
+      if (int.sustained_score.value !== null) {
+       ( score !== null) ? score += int.sustained_score.value : score = int.sustained_score.value
+      }
+      ( score !== null) ? score = Math.floor(score / 2) : score = score
       int['category_score'] = this.mapNameAndValue(this.investorToolService.mapScaleScores(score), score)
       return int
     })
 
     sc_sus_ad_comparison.interventions = sc_sus_ad_comparison.interventions.map(int => {
-      let score = Math.floor(sc_sus_ad_total[int.assessment_id] / 2)
+      let score = null
+      if (int.scale_score.value !== null) {
+        score = int.scale_score.value
+      }
+      if (int.sustained_score.value !== null) {
+       ( score !== null) ? score += int.sustained_score.value : score = int.sustained_score.value
+      }
+      ( score !== null) ? score = Math.floor(score / 2) : score = score
       int['category_score'] = this.mapNameAndValue(this.investorToolService.mapScaleScores(score), score)
       return int
     })
@@ -707,14 +750,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       { label: 'OUTCOME SCORE', code: 'category_score' }
     ]
     scaleGhgData.interventions.map(int => {
-      let scale_score = Math.floor(scale_cat_total[int.assessment_id] / scale_cat_count[int.assessment_id])
-      let sustaine_score = Math.floor(sustain_cat_total[int.assessment_id] / sustain_cat_count[int.assessment_id])
+      let scale_score = scale_cat_total[int.assessment_id] !== null ? Math.floor(scale_cat_total[int.assessment_id] / scale_cat_count[int.assessment_id]) : null
+      let sustaine_score = sustain_cat_total[int.assessment_id] !== null ? Math.floor(sustain_cat_total[int.assessment_id] / sustain_cat_count[int.assessment_id]) : null
       let _cat_score = Math.floor((scale_score + sustaine_score) / 2)
       outcome_level_comparison.interventions.push({
-        id: int.id, name: int.name, type: int.type, status: int.status,
+        id: int.id, name: int.name, tool: int.tool, status: int.status,
         scale_cat_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(scale_score), scale_score),
         sustained_cat_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(sustaine_score), sustaine_score),
-        category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(outcome_score[int.assessment_id]), outcome_score[int.assessment_id])
+        category_score: outcome_score[int.assessment_id] === null ? 'N/A' : this.mapNameAndValue(this.investorToolService.mapScaleScores(outcome_score[int.assessment_id]), outcome_score[int.assessment_id])
       })
     })
 
@@ -873,7 +916,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
     // cat_obj['category_score'] = this.investorToolService.mapSustainedScores(Math.round(cat_total / cat_names.length))
     // cat_obj['category_score'] = Math.round(cat_total / cat_names.length)
-    cat_obj['category_score'] = res.processScore
+    cat_obj['category_score'] = res.processScore === null ? 'N/A' : res.processScore
 
     return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
