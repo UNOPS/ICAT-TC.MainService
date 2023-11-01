@@ -280,32 +280,42 @@ async allProject(
   
     console.log("userrrr", currentUser);
   
-    const res = await this.resultRepository.find({
-      relations: [],
-    });
+    // const res = await this.resultRepository.find({
+    //   relations: ['assessment'],
+    // });
+    const res = await this.resultRepository
+      .createQueryBuilder('result')
+      .leftJoinAndSelect('result.assessment', 'assessment') // Join with assessment entity
+      .leftJoinAndSelect('assessment.user', 'user') // Join with user entity within assessment
+      .getMany();
   
     const policyList: Results[] = [];
     const isUserExternal = currentUser?.userType?.name === 'External';
   
     for (const x of res) {
-      const isSameUser = x.assessment?.user?.id === currentUser?.id;
-      const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
-  
-      // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
-      const toolName =
-        x.assessment?.tool === "PORTFOLIO" ? "Other Interventions" :
-        x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market Tool" :
-        x.assessment?.tool === "INVESTOR" ? "Investor & Private Sector Tool" :
-        x.assessment?.tool;
-  
-        if(x?.assessment?.tool){
-          x.assessment.tool = toolName;
-        }
       
-      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
-        policyList.push(x);
+      if(x.assessment?.user?.id!==undefined){
+        console.log("user",  x.assessment?.user?.id)
+        const isSameUser = x.assessment?.user?.id === currentUser?.id;
+        const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
+        const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
+    
+        // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
+        const toolName =
+          x.assessment?.tool === "PORTFOLIO" ? "Other Interventions" :
+          x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market Tool" :
+          x.assessment?.tool === "INVESTOR" ? "Investor & Private Sector Tool" :
+          x.assessment?.tool;
+    
+          if(x?.assessment?.tool){
+            x.assessment.tool = toolName;
+          }
+        
+        if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+          policyList.push(x);
+        }
       }
+      
     }
   
     const actions = policyList.reduce((acc: any[], entity: Results) => {
