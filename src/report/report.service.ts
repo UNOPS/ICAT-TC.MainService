@@ -180,10 +180,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Name',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
-      {
-        information: 'Type',
-        description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
-      },
+      // {
+      //   information: 'Type',
+      //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
+      // },
       {
         information: 'Description',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
