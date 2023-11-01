@@ -76,9 +76,9 @@ export const config: ConnectionOptions = {
 password: 'password',
  database: 'main',    */
 
-  /* username: 'sqluser',
+ /*   username: 'sqluser',
 password: 'password',
- database: 'main',    */ 
+ database: 'main',    */  
  username: 'root',
  password: '1997',
   database: 'tc_new',
