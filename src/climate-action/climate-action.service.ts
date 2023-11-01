@@ -342,7 +342,7 @@ async allProject(
     const currentUser = await user;
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        '(dr.policyName LIKE :filterText  OR dr.typeofAction LIKE :filterText OR pst.name LIKE :filterText  OR pas.description LIKE :filterText )';
+        '(dr.policyName LIKE :filterText   OR pst.name LIKE :filterText  OR pas.description LIKE :filterText )';
     }
    // console.log("hello");
     if (projectStatusId != 0) {
