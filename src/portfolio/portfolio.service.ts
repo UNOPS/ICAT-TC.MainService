@@ -1321,16 +1321,26 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'PORTFOLIO';
     let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
+    // let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
 
     if (currentUser?.userType?.name === 'External') {
-      filter = filter + ' and asses.user_id=:userId '
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+      
     }
-    else {
+    else { if(filter){
       filter = filter + ' and country.id=:userCountryId '
+    }else{
+      filter = filter + ' country.id=:userCountryId '
+    }
+     
     }
 
     let data = this.assessmentRepo.createQueryBuilder('asses')
