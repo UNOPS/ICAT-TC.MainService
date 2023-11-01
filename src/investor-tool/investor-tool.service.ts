@@ -468,14 +468,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      if (data2.isDraft && !data2.isEdit) {
       // console.log("draft", data2.isDraft);
       assessment.isDraft = data2.isDraft;
-      assessment.processDraftLocation = data2.processDraftLocation;
-      assessment.outcomeDraftLocation = data2.outcomeDraftLocation; 
+      assessment.processDraftLocation = data2.proDraftLocation;
+      assessment.outcomeDraftLocation = data2.outDraftLocation; 
       this.assessmentRepo.save(assessment)
      }
      if (data2.isEdit) {
       assessment.editedOn = new Date();
-      assessment.processDraftLocation = data2.processDraftLocation;
-      assessment.outcomeDraftLocation = data2.outcomeDraftLocation;
+      assessment.processDraftLocation = data2.proDraftLocation;
+      assessment.outcomeDraftLocation = data2.outDraftLocation;
       // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
      }
@@ -715,11 +715,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
     }
     if (data2.isDraft && !data2.isEdit) {
+      assessment.processDraftLocation = data2.proDraftLocation;
+      assessment.outcomeDraftLocation = data2.outDraftLocation; 
      assessment.isDraft = data2.isDraft
      this.assessmentRepo.save(assessment)
      console.log("changed is draft", data2.isDraft);
     }
     if (data2.isEdit) {
+      assessment.processDraftLocation = data2.proDraftLocation;
+      assessment.outcomeDraftLocation = data2.outDraftLocation; 
       assessment.editedOn = new Date();
       // console.log("editedOn", assessment.editedOn );
       this.assessmentRepo.save(assessment)
@@ -731,6 +735,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      await this.resultRepository.save(data);
      console.log("saved in results");
       if (data2.isDraft==false && data2.isEdit==true) {
+        assessment.processDraftLocation = data2.proDraftLocation;
+      assessment.outcomeDraftLocation = data2.outDraftLocation; 
         assessment.isDraft = data2.isDraft
         await this.assessmentRepo.save(assessment)
         console.log("changed is draft", data2.isDraft);
