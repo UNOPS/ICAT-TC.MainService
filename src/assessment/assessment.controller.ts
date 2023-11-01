@@ -129,9 +129,11 @@ export class AssessmentController {
     @Query('filterText') filterText: string,
   ): Promise<any> {
     let countryIdFromTocken: number;
-    console.log('=====================================================================', );
-    [countryIdFromTocken, ] = this.tokenDetails.getDetails([TokenReqestType.countryId])
-   
+    let cuserRoleFromTocken: string;
+    let userNameFromTocken: string;
+    
+    [countryIdFromTocken,cuserRoleFromTocken, userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.role,TokenReqestType.username])
+    console.log('=====================================================================',userNameFromTocken ,cuserRoleFromTocken);
     return await this.assessmentService.assessmentInprogress(
       {
         limit: limit,
@@ -139,7 +141,8 @@ export class AssessmentController {
       },
       filterText,
       countryIdFromTocken,
-
+      cuserRoleFromTocken,
+      userNameFromTocken
     );
   }
 
