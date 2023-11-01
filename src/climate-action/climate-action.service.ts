@@ -286,7 +286,8 @@ async allProject(
     const res = await this.resultRepository
       .createQueryBuilder('result')
       .leftJoinAndSelect('result.assessment', 'assessment') // Join with assessment entity
-      .leftJoinAndSelect('assessment.user', 'user') // Join with user entity within assessment
+      .leftJoinAndSelect('assessment.user', 'user')
+      .leftJoinAndSelect('user.country', 'country') // Join with user entity within assessment
       .getMany();
   
     const policyList: Results[] = [];
@@ -294,11 +295,12 @@ async allProject(
   
     for (const x of res) {
       
-      if(x.assessment?.user?.id!==undefined){
-        console.log("user",  x.assessment?.user?.id)
+      // if(x.assessment?.user?.id!==undefined){
+        console.log("user",  x.assessment?.user?.country?.id,currentUser?.id)
         const isSameUser = x.assessment?.user?.id === currentUser?.id;
         const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
         const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
+        console.log("isSameUser", isSameUser,"isMatchingCountry",isMatchingCountry,"isUserInternal",isUserInternal)
     
         // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
         const toolName =
@@ -308,12 +310,13 @@ async allProject(
           x.assessment?.tool;
     
           if(x?.assessment?.tool){
+            
             x.assessment.tool = toolName;
           }
         
         if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
           policyList.push(x);
-        }
+        // }
       }
       
     }
