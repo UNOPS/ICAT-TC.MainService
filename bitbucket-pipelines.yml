@@ -13,6 +13,6 @@
           #   caches:
           #     - node
            #  script:
-           #  - curl -d "{\"branch\":\"$BITBUCKET_BRANCH\",\"repository_slug\":\"$BITBUCKET_REPO_SLUG\"}" -H "Content-Type:application/json" -X GET http://3.108.9.184/web-api/deploy
+           #  - curl -d "{\"branch\":\"$BITBUCKET_BRANCH\",\"repository_slug\":\"$BITBUCKET_REPO_SLUG\"}" -H "Content-Type:application/json" -X GET http://15.206.202.183/web-api/deploy
             
 
