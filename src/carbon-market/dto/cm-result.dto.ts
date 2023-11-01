@@ -33,7 +33,8 @@ export class SaveCMResultDto {
     result: CMResultDto[]
     assessment: Assessment
     isDraft: boolean
-
+    type:string
+    name:string
 }
 
 export class CalculateDto {
@@ -76,6 +77,7 @@ export class CMScoreDto {
 export class OutcomeScoreDto {
     ghg_score: number
     sdg_score: number
+    sdgs_score: any
     adaptation_score: number
     outcome_score: number
     scale_ghg_score: number

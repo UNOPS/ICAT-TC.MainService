@@ -612,6 +612,12 @@ async uploadFile2(
     return res;
    
   }
+  @Get('get-count-by-tool')
+  async getCountByTool(@Param('tool') tool: string): Promise<any[]> {
+  let res  = await this.methodologyAssessmentService.getCountByTool();
+    return res;
+   
+  }
 
 
 }

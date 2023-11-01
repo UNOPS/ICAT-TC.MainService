@@ -98,7 +98,7 @@ export class Assessment extends BaseTrackingEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
   tc_value?: number;
 
-  @ManyToOne((type) => User, { cascade: false, eager: false, })
+  @ManyToOne((type) => User, { cascade: false, eager: true, })
   @JoinColumn({ name: 'user_id' })
   user?: User;
 
@@ -129,6 +129,15 @@ export class Assessment extends BaseTrackingEntity {
 
   @Column({ default: false })
   isDraft: boolean
+
+  @Column({ nullable: true })
+  processDraftLocation?: string;
+
+  @Column({ nullable: true })
+  outcomeDraftLocation?: string;
+
+  @Column({ type: 'longtext', default: null, nullable: true })
+  additioinalInfo: string;
 
 
   @ApiHideProperty()

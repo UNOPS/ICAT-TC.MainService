@@ -58,7 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
    * For passing answers and answers with 0 score set weight in answer table as 0.
    */
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean,name:string,type:string, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -71,7 +71,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     })
     if (isDraft) {
-      assessment.isDraft = isDraft
+      assessment.isDraft = isDraft;
+      if(type =="prose"){
+        assessment.processDraftLocation=name;
+      }else if (type=="out"){
+        assessment.outcomeDraftLocation=name;
+      }
       this.assessmentRepo.save(assessment)
     }
     for await (let res of result) {
@@ -308,7 +313,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.relevance = chs[ch][0].relevance
         let weight = chs[ch][0].characteristic.cm_weight
         let score = chs[ch].reduce((accumulator, object) => {
-          return accumulator + object.assessmentAnswers[0].score;
+          return accumulator + (object.assessmentAnswers[0] ? object.assessmentAnswers[0].score : 0);
         }, 0);
         _obj.score = _obj.relevance === '0' ? 0 : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
         return _obj
@@ -505,6 +510,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('question.id In (:id)', { id: qIds })
         .getMany()
       let criteria = []
+      let sdgs = []
       for await (let ans of answers) {
         let obj = new OutcomeResult()
         obj.characteristic = ans.assessment_question?.characteristic?.name
@@ -530,6 +536,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         // else if (obj?.category?.code == 'NORMS') {
         //   processData.norms.push(obj)
         // }
+        if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg)
 
         if (obj?.category?.code == 'SCALE_GHG') {
           outcomeData.scale_GHGs.push(obj)
@@ -568,6 +575,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         criteria: criteria,
         processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
+        sdgs: [...new Map(sdgs.map((item) => [item["id"], item])).values()]
       }
     }
   }
@@ -634,9 +642,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let score = 0
         for (let q of chs[ch]) {
           let o = new QuestionData()
-          o.question = q.assessmentAnswers[0].answer?.question.label
-          o.weight = q.assessmentAnswers[0].answer?.weight
-          o.score = q.assessmentAnswers[0].answer?.score_portion
+          o.question = q.assessmentAnswers[0]?.answer?.question.label
+          o.weight = q.assessmentAnswers[0]?.answer?.weight
+          o.score = q.assessmentAnswers[0]?.answer?.score_portion
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
           raw_questions.push(o)
