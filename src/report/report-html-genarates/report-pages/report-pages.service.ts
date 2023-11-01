@@ -1681,7 +1681,7 @@ export class ReportPagesService {
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
+              <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">Research and development</th>
               <th scope="col">Adoption</th>
@@ -1699,7 +1699,7 @@ export class ReportPagesService {
                 ADOPTION: string;
                 id: number;
                 name: string;
-                type: string;
+                tool: string;
                 status: string;
               }) =>
                 '<tr><td>' +
@@ -1707,7 +1707,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.name?a.name:'-') +
                 '</td><td>' +
-               ( a.type? a.type:'-') +
+               ( a.tool? a.tool:'-') +
                 '</td><td>' +
                 (a.status?a.status:'-') +
                 '</td><td>' +
@@ -1737,7 +1737,7 @@ export class ReportPagesService {
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Intervention type	</th>
+            <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">Entrepreneurs</th>
             <th scope="col">Coalition of advocates</th>
@@ -1756,7 +1756,7 @@ export class ReportPagesService {
               BENIFICIARIES: string;
               id: number;
               name: string;
-              type: string;
+              tool: string;
               status: string;
             }) =>
               '<tr><td>' +
@@ -1764,7 +1764,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -1804,7 +1804,7 @@ export class ReportPagesService {
              <tr>
                <th scope="col">Id	</th>
                <th scope="col">Intervention name	</th>
-               <th scope="col">Intervention type	</th>
+               <th scope="col">Tool Applied	</th>
                <th scope="col">Status</th>
                <th scope="col">Economic and non-economic</th>
                <th scope="col">Disincentives</th>
@@ -1823,7 +1823,7 @@ export class ReportPagesService {
                  INSTITUTIONAL_AND_REGULATORY: string;
                  id: number;
                  name: string;
-                 type: string;
+                 tool: string;
                  status: string;
                }) =>
                  '<tr><td>' +
@@ -1831,7 +1831,7 @@ export class ReportPagesService {
                  '</td><td>' +
                  (a.name?a.name:'-') +
                  '</td><td>' +
-                ( a.type? a.type:'-') +
+                ( a.tool? a.tool:'-') +
                  '</td><td>' +
                  (a.status?a.status:'-') +
                  '</td><td>' +
@@ -1861,7 +1861,7 @@ export class ReportPagesService {
            <tr>
              <th scope="col">Id	</th>
              <th scope="col">Intervention name	</th>
-             <th scope="col">Intervention type	</th>
+             <th scope="col">Tool Applied	</th>
              <th scope="col">Status</th>
              <th scope="col">Awareness</th>
              <th scope="col">Behavior</th>
@@ -1876,7 +1876,7 @@ export class ReportPagesService {
              (a: {
                id: number;
                name: string;
-               type: string;
+               tool: string;
                status: string;
                AWARENESS: string;
                BEHAVIOUR: string;
@@ -1888,7 +1888,7 @@ export class ReportPagesService {
                '</td><td>' +
                (a.name?a.name:'-') +
                '</td><td>' +
-              ( a.type? a.type:'-') +
+              ( a.tool? a.tool:'-') +
                '</td><td>' +
                (a.status?a.status:'-') +
                '</td><td>' +
@@ -1930,7 +1930,7 @@ export class ReportPagesService {
               <tr>
                 <th scope="col">Id	</th>
                 <th scope="col">Intervention name	</th>
-                <th scope="col">Intervention type	</th>
+                <th scope="col">Tool Applied	</th>
                 <th scope="col">Status</th>
                 <th style=" font-size:12px" scope="col">Technology score</th>
                 <th style=" font-size:12px" scope="col">Agents </th>
@@ -1946,7 +1946,7 @@ export class ReportPagesService {
                 (a: {
                   id: number;
                   name: string;
-                  type: string;
+                  tool: string;
                   status: string;
                   Technology: string;
                   Agents: string;
@@ -1959,7 +1959,7 @@ export class ReportPagesService {
                   '</td><td>' +
                   (a.name?a.name:'-') +
                   '</td><td>' +
-                 ( a.type? a.type:'-') +
+                 ( a.tool? a.tool:'-') +
                   '</td><td>' +
                   (a.status?a.status:'-') +
                   '</td><td>' +
@@ -2028,7 +2028,7 @@ export class ReportPagesService {
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
+              <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">International</th>
               <th scope="col">National/ sectorial	</th>
@@ -2047,7 +2047,7 @@ export class ReportPagesService {
                 category_score: any;
                 id: number;
                 name: string;
-                type: string;
+                tool: string;
                 status: string;
               }) =>
                 '<tr><td>' +
@@ -2055,7 +2055,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.name?a.name:'-') +
                 '</td><td>' +
-               ( a.type? a.type:'-') +
+               ( a.tool? a.tool:'-') +
                 '</td><td>' +
                 (a.status?a.status:'-') +
                 '</td><td>' +
@@ -2091,7 +2091,7 @@ export class ReportPagesService {
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Intervention type	</th>
+            <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">Long term</th>
             <th scope="col">Medium term</th>
@@ -2110,7 +2110,7 @@ export class ReportPagesService {
               category_score: any;
               id: number;
               name: string;
-              type: string;
+              tool: string;
               status: string;
             }) =>
               '<tr><td>' +
@@ -2118,7 +2118,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -2168,7 +2168,7 @@ export class ReportPagesService {
           <tr>
             <th scope="col">Id	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">intervention type	</th>
+            <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectorial	</th>
@@ -2187,7 +2187,7 @@ export class ReportPagesService {
               category_score: any;
               id: number;
               name: string;
-              type: string;
+              tool: string;
               status: string;
             }) =>
               '<tr><td>' +
@@ -2195,7 +2195,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -2230,7 +2230,7 @@ export class ReportPagesService {
         <tr>
           <th scope="col">Id</th>
           <th scope="col">Intervention name	</th>
-          <th scope="col">Intervention type	</th>
+          <th scope="col">Tool Applied	</th>
           <th scope="col">Status</th>
           <th scope="col">Long term</th>
           <th scope="col">Medium term</th>
@@ -2249,7 +2249,7 @@ export class ReportPagesService {
             category_score: any;
             id: number;
             name: string;
-            type: string;
+            tool: string;
             status: string;
             long: string;
             medium: string;
@@ -2261,7 +2261,7 @@ export class ReportPagesService {
             '</td><td>' +
             (a.name?a.name:'-') +
             '</td><td>' +
-           ( a.type? a.type:'-') +
+           ( a.tool? a.tool:'-') +
             '</td><td>' +
             (a.status?a.status:'-') +
             '</td><td>' +
@@ -2313,7 +2313,7 @@ export class ReportPagesService {
           <tr>
             <th scope="col">Id	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Intervention type	</th>
+            <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">International</th>
             <th scope="col">National/ sectorial	</th>
@@ -2332,7 +2332,7 @@ export class ReportPagesService {
               category_score: any;
               id: number;
               name: string;
-              type: string;
+              tool: string;
               status: string;
             }) =>
               '<tr><td>' +
@@ -2340,7 +2340,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -2377,7 +2377,7 @@ export class ReportPagesService {
         <tr>
           <th scope="col">Id</th>
           <th scope="col">Intervention name	</th>
-          <th scope="col">Intervention type	</th>
+          <th scope="col">Tool Applied	</th>
           <th scope="col">Status</th>
           <th scope="col">Long term</th>
           <th scope="col">medium term</th>
@@ -2396,7 +2396,7 @@ export class ReportPagesService {
             category_score: any;
             id: number;
             name: string;
-            type: string;
+            tool: string;
             status: string;
           }) => 
            
@@ -2405,7 +2405,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -2457,7 +2457,7 @@ export class ReportPagesService {
        <tr>
          <th scope="col">Id	</th>
          <th scope="col">Intervention name	</th>
-         <th scope="col">Intervention type	</th>
+         <th scope="col">Tool Applied	</th>
          <th scope="col">Status</th>
          <th scope="col">Scale category score</th>
          <th scope="col">Sustained category score		</th>
@@ -2475,7 +2475,7 @@ export class ReportPagesService {
            category_score: any;
            id: number;
            name: string;
-           type: string;
+           tool: string;
            status: string;
          }) =>
            '<tr><td>' +
@@ -2483,7 +2483,7 @@ export class ReportPagesService {
            '</td><td>' +
            (a.name?a.name:'-') +
            '</td><td>' +
-          ( a.type? a.type:'-') +
+          ( a.tool? a.tool:'-') +
            '</td><td>' +
            (a.status?a.status:'-') +
            '</td><td>' +
@@ -2516,7 +2516,7 @@ export class ReportPagesService {
      <tr>
        <th scope="col">Id	</th>
        <th scope="col">Intervention name	</th>
-       <th scope="col">Intervention type	</th>
+       <th scope="col">Tool Applied	</th>
        <th scope="col">Status</th>
        <th scope="col">Scale category score</th>
        <th scope="col">Sustained category score		</th>
@@ -2534,7 +2534,7 @@ export class ReportPagesService {
          category_score: any;
          id: number;
          name: string;
-         type: string;
+         tool: string;
          status: string;
        }) =>
          '<tr><td>' +
@@ -2542,7 +2542,7 @@ export class ReportPagesService {
          '</td><td>' +
          (a.name?a.name:'-') +
          '</td><td>' +
-        ( a.type? a.type:'-') +
+        ( a.tool? a.tool:'-') +
          '</td><td>' +
          (a.status?a.status:'-') +
          '</td><td>' +
@@ -2592,7 +2592,7 @@ export class ReportPagesService {
       <tr>
         <th scope="col">Id	</th>
         <th scope="col">Intervention name	</th>
-        <th scope="col">Intervention type	</th>
+        <th scope="col">Tool Applied	</th>
         <th scope="col">Status</th>
         <th scope="col">Scale category score</th>
         <th scope="col">Sustained category score		</th>
@@ -2609,7 +2609,7 @@ export class ReportPagesService {
           category_score: any;
           id: number;
           name: string;
-          type: string;
+          tool: string;
           status: string;
         }) =>
           '<tr><td>' +
@@ -2617,7 +2617,7 @@ export class ReportPagesService {
           '</td><td>' +
           (a.name?a.name:'-') +
           '</td><td>' +
-         ( a.type? a.type:'-') +
+         ( a.tool? a.tool:'-') +
           '</td><td>' +
           (a.status?a.status:'-') +
           '</td><td>' +
@@ -2667,7 +2667,7 @@ export class ReportPagesService {
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
+              <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">GHG</th>
               <th scope="col">SDG </th>
@@ -2685,7 +2685,7 @@ export class ReportPagesService {
                 category_score: any;
                 id: number;
                 name: string;
-                type: string;
+                tool: string;
                 status: string;
               }) =>
                 '<tr><td>' +
@@ -2693,7 +2693,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.name?a.name:'-') +
                 '</td><td>' +
-               ( a.type? a.type:'-') +
+               ( a.tool? a.tool:'-') +
                 '</td><td>' +
                 (a.status?a.status:'-') +
                 '</td><td>' +
@@ -2727,7 +2727,7 @@ export class ReportPagesService {
           <tr>
             <th scope="col">Id	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Intervention type	</th>
+            <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">GHG</th>
             <th scope="col">SDG </th>
@@ -2745,7 +2745,7 @@ export class ReportPagesService {
               category_score: any;
               id: number;
               name: string;
-              type: string;
+              tool: string;
               status: string;
             }) =>
               '<tr><td>' +
@@ -2753,7 +2753,7 @@ export class ReportPagesService {
               '</td><td>' +
               (a.name?a.name:'-') +
               '</td><td>' +
-             ( a.type? a.type:'-') +
+             ( a.tool? a.tool:'-') +
               '</td><td>' +
               (a.status?a.status:'-') +
               '</td><td>' +
@@ -2800,7 +2800,7 @@ export class ReportPagesService {
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
+              <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">Scale </th>
               <th scope="col">Sustained  </th>
@@ -2818,7 +2818,7 @@ export class ReportPagesService {
                 category_score: any;
                 id: number;
                 name: string;
-                type: string;
+                tool: string;
                 status: string;
               }) =>
                 '<tr><td>' +
@@ -2826,7 +2826,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.name?a.name:'-') +
                 '</td><td>' +
-               ( a.type? a.type:'-') +
+               ( a.tool? a.tool:'-') +
                 '</td><td>' +
                 (a.status?a.status:'-') +
                 '</td><td>' +
@@ -2896,7 +2896,7 @@ export class ReportPagesService {
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Intervention type	</th>
+              <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               
               <th scope="col">Expected GHG reductions over intervention lifetime (Mt CO<sub>2</sub>-eq)</th>
@@ -2909,7 +2909,7 @@ export class ReportPagesService {
               (a: {
                 id: number;
                 name: string;
-                type: string;
+                tool: string;
                 status: string;
                 mitigation: string;
               }) =>
@@ -2918,7 +2918,7 @@ export class ReportPagesService {
                 '</td><td>' +
                 (a.name?a.name:'-') +
                 '</td><td>' +
-               ( a.type? a.type:'-') +
+               ( a.tool? a.tool:'-') +
                 '</td><td>' +
                 (a.status?a.status:'-') +
                 '</td><td>' +
