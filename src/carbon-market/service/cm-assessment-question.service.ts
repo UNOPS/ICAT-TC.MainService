@@ -312,10 +312,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.characteristic = chs[ch][0].characteristic.code
         _obj.relevance = chs[ch][0].relevance
         let weight = chs[ch][0].characteristic.cm_weight
-        let score = chs[ch].reduce((accumulator, object) => {
-          return accumulator + (object.assessmentAnswers[0] ? object.assessmentAnswers[0].score : 0);
-        }, 0);
-        _obj.score = _obj.relevance === '0' ? 0 : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
+        let score = null
+        chs[ch].forEach(_ch => {
+          if (_ch.assessmentAnswers[0]) {
+            score += _ch.assessmentAnswers[0].score
+          }
+        })
+        _obj.score = _obj.relevance === '0' ? null : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
         return _obj
       })
       let cat_data = { characteristics: ch_data, weight: qs[0].characteristic.category.cm_weight }
@@ -324,15 +327,24 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     let resObj = {}
     for (let key of Object.keys(obj)) {
-      let score = obj[key].characteristics.reduce((accumulator, object) => {
-        return accumulator + object.score;
-      }, 0);
+      let score = null
+      obj[key].characteristics.forEach(ch => {
+        score === null ? (ch.score === null ? score === null : score === ch.score) : score += ch.score
+      })
+      // let _score = obj[key].characteristics.reduce((accumulator, object) => {
+      //   accumulator = null
+      //   accumulator === null ? (object.score === null ? null : accumulator = object.score) :
+      //     accumulator + object.score;
+      //   return accumulator;
+      // }, 0);
       resObj[key] = { score: score, weight: obj[key].weight }
     }
 
-    let process_score = 0
+    console.log('resObj', resObj)
+    let process_score = null
     for (let key of Object.keys(resObj)) {
-      process_score += Math.round(resObj[key].score * resObj[key].weight / 100)
+      process_score === null ? (resObj[key].score === null ? process_score === null : process_score = Math.round(resObj[key].score * resObj[key].weight / 100)) :
+        process_score += Math.round(resObj[key].score * resObj[key].weight / 100)
     }
 
     return process_score
@@ -349,7 +361,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score: number
       if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        selected_sdg_count = uniqueSdgNamesSet.length
+        selected_sdg_count = uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length
+        console.log("selected_sdg_count", selected_sdg_count)
         score = qs.reduce((accumulator, object) => {
           if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
           else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
@@ -368,7 +381,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         weight: qs[0].characteristic.category.cm_weight
       }
     }
-    console.log(obj)
+    console.log("&*&*&*", obj)
 
     for (let key of Object.keys(sdgs_score)) {
       sdgs_score[key] = Math.floor(sdgs_score[key] / 6)
