@@ -1946,6 +1946,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcomeScore })
     .where("id = :id", { id: assesId })
     .execute()
+
+    await this.resultRepository
+    .createQueryBuilder()
+    .update(Results)
+    .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
+    .where("id = :id", { id: assesId })
+    .execute()
     return finalProcessDataArray;
   }
 
