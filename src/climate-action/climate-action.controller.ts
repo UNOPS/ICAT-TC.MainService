@@ -68,6 +68,9 @@ var multer = require('multer');
       projectApprovalStatus: {
         eager: true,
       },
+      policySector: {
+        eager: true,
+      },
       
     },
     exclude: ['id']

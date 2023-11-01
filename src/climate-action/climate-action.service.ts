@@ -19,6 +19,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { AllBarriersSelected } from './dto/selected-barriers.dto';
 import { BarrierCategory } from './entity/barrier-category.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -28,6 +29,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(PolicyBarriers) public PolicyBarriersRepo: Repository<PolicyBarriers>,
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
     @InjectRepository(BarrierCategory) private  barrierCategoryRepo: Repository<BarrierCategory>,
+    @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     private userService: UsersService,
     
 ) {
@@ -237,20 +239,8 @@ async allProject(
     return actions.map(({ name, count }) => ({ name, count }));
   } */
 
-  async findTypeofAction(): Promise<any[]> {
+  /* async findTypeofAction(): Promise<any[]> {
     const currentUser = await this.userService.currentUser();
-   /*  console.log(
-      "ussssser : ",
-      currentUser.fullname,
-      "and ",
-      currentUser.username,
-      "Id :",
-      currentUser.id,
-      "user Type",
-      currentUser?.userType?.name,
-      "country ID :",
-      currentUser?.country?.id
-    ); */
   
     const res = await this.repo.find({
       relations: [],
@@ -282,7 +272,57 @@ async allProject(
     }, []);
   
     return actions;
-  }
+  }  */
+  
+
+   async findTypeofAction(): Promise<any[]> {
+    const currentUser = await this.userService.currentUser();
+  
+    console.log("userrrr", currentUser);
+  
+    const res = await this.resultRepository.find({
+      relations: [],
+    });
+  
+    const policyList: Results[] = [];
+    const isUserExternal = currentUser?.userType?.name === 'External';
+  
+    for (const x of res) {
+      const isSameUser = x.assessment?.user?.id === currentUser?.id;
+      const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
+  
+      // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
+      const toolName =
+        x.assessment?.tool === "PORTFOLIO" ? "Other Interventions" :
+        x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market Tool" :
+        x.assessment?.tool === "INVESTOR" ? "Investor & Private Sector Tool" :
+        x.assessment?.tool;
+  
+        if(x?.assessment?.tool){
+          x.assessment.tool = toolName;
+        }
+      
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x);
+      }
+    }
+  
+    const actions = policyList.reduce((acc: any[], entity: Results) => {
+      const existingAction = acc.find((item) => item.name === entity.assessment.tool);
+  
+      if (existingAction) {
+        existingAction.count++;
+      } else {
+        acc.push({ name: entity.assessment.tool, count: 1 });
+      }
+  
+      return acc;
+    }, []);
+  
+    return actions;
+  } 
+  
   
 
   async getAllCAList(

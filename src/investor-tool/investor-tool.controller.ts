@@ -4,7 +4,7 @@ import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
-import { FinalInvestorAssessmentDto, SdgPriorityDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
+import { FinalInvestorAssessmentDto, SdgPriorityDto, ToolsMultiselectDto, TotalInvestmentDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
 import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -12,6 +12,7 @@ import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -232,6 +233,45 @@ export class InvestorToolController {
 
   }
 
+  @Get('get-outcomeData')
+  async getOutcomeData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getOutcomeData(assessID);
+    return res;
+
+  }
+
+  @Get('get-sdgs')
+  async getSelectedSDGs(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSelectedSDGs(assessID);
+    return res;
+
+  }
+
+  @Get('getScaleSDGData')
+  async getScaleSDGData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getScaleSDGData(assessID);
+    return res;
+
+  }
+
+  @Get('getSustainedSDGData')
+  async getSustainedSDGData(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSustainedSDGData(assessID);
+    return res;
+
+  }
+
+  @Get('getSelectedSDGsWithAnswers')
+  async getSelectedSDGsWithAnswers(@Query('assessID') assessID: number) {
+    let res =  await this.investorToolService.getSelectedSDGsWithAnswers(assessID);
+    return res;
+
+  }
+
+  @Post('save-total-invetments')
+  async saveTotalInvestments(@Body() req: TotalInvestmentDto){
+    return await this.investorToolService.saveTotalInvestments(req.totalInvestements)
+  }
 
 
 }

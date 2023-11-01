@@ -2899,7 +2899,7 @@ export class ReportPagesService {
               <th scope="col">Intervention type	</th>
               <th scope="col">Status</th>
               
-              <th scope="col">GHG mitigation (Mt CO<sub>2</sub>-eq)</th>
+              <th scope="col">Expected GHG reductions over intervention lifetime (Mt CO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>

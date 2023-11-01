@@ -238,12 +238,18 @@ export class ClimateAction extends BaseTrackingEntity {
 
 
   // new fields (2023/05/17)
+  @OneToMany(() => PolicySector, policySector => policySector.intervention,{cascade: false, nullable: true,eager: true,})
+  @JoinColumn()
+    policySector: PolicySector[];
 
   @Column({ default: null , nullable: true})
   intervention_id: string;
 
   @Column({ default: null , nullable: true})
   levelofImplemenation: string;
+
+  @Column({ default: null , nullable: true})
+  geographicalAreaCovered: string;
 
   @Column({ default: null })
   dateOfImplementation: Date;
@@ -307,6 +313,14 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn({ name: 'user_id' })
   user?: User; 
 
-  @ApiHideProperty()
-  policy_sector:PolicySector[];
+  // @ApiHideProperty()
+  // policy_sector:PolicySector[];
+
+  @OneToMany(() => PolicySector, (as) => as.intervention, {
+    cascade: false,
+    nullable: true,
+    eager: true
+  })
+  @JoinColumn()
+  policy_sector: PolicySector[];
 }

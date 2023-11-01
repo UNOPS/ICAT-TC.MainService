@@ -21,7 +21,7 @@ export class BarrierCategory extends BaseTrackingEntity {
     @ManyToOne(() => ClimateAction, { cascade: false, eager: true, })
     climateAction: ClimateAction;
 
-    @ManyToOne(() => PolicyBarriers, { cascade: false, eager: true, })
+    @ManyToOne(() => PolicyBarriers, { cascade: false })
     barriers: PolicyBarriers;
 
     @ManyToOne(() => Characteristics, { cascade: false, eager: true, })

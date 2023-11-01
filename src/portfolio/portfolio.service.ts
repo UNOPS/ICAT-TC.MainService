@@ -25,7 +25,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   col_set_2 = [
     { label: 'ID', code: 'id' },
     { label: 'INTERVENTION NAME', code: 'name' },
-    { label: 'INTERVENTION TYPE', code: 'type' },
+    { label: 'TOOL APPLIED', code: 'tool' },
     { label: 'STATUS', code: 'status' }
   ]
 
@@ -286,7 +286,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
-        type: pAssessment.assessment.climateAction.typeofAction,
+        tool: this.masterDataService.getToolName(pAssessment.assessment.tool),
         status: pAssessment.assessment.climateAction.projectStatus?.name
       }
 
@@ -366,7 +366,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
-        type: pAssessment.assessment.climateAction.typeofAction,
+        tool: this.masterDataService.getToolName(pAssessment.assessment.tool),
         status: pAssessment.assessment.climateAction.projectStatus?.name,
         assessment_id: pAssessment.assessment.id
       }
@@ -744,7 +744,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
-        type: pAssessment.assessment.climateAction.typeofAction,
+        tool: this.masterDataService.getToolName(pAssessment.assessment.tool),
         status: pAssessment.assessment.climateAction.projectStatus?.name,
         mitigation:0
       }
@@ -785,7 +785,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
         name: pAssessment.assessment.climateAction.policyName,
-        type: pAssessment.assessment.climateAction.typeofAction,
+        tool: this.masterDataService.getToolName(pAssessment.assessment.tool),
         status: pAssessment.assessment.climateAction.projectStatus?.name
       }
 
