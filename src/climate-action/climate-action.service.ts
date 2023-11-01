@@ -296,11 +296,11 @@ async allProject(
     for (const x of res) {
       
       // if(x.assessment?.user?.id!==undefined){
-        console.log("user",  x.assessment?.user?.country?.id,currentUser?.id)
+        // console.log("user",  x.assessment?.user?.country?.id,currentUser?.id)
         const isSameUser = x.assessment?.user?.id === currentUser?.id;
         const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
         const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
-        console.log("isSameUser", isSameUser,"isMatchingCountry",isMatchingCountry,"isUserInternal",isUserInternal)
+        // console.log("isSameUser", isSameUser,"isMatchingCountry",isMatchingCountry,"isUserInternal",isUserInternal)
     
         // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
         const toolName =
