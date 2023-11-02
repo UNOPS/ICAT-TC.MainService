@@ -48,14 +48,14 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     userTypeFromTocken: string
     // status: number,
   ): Promise<Pagination<Institution>> {
-    let arr =  sectorIdFromTocken.toString() ;
-    arr = '(' + arr+ ")";
+    let arr = sectorIdFromTocken.toString();
+    arr = '(' + arr + ")";
     let filter: string = '';
-    console.log('userTypeFromTocken',userTypeFromTocken)
+    console.log('userTypeFromTocken', userTypeFromTocken)
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
-     }
+    }
     if (filterText == 'Activate' || filterText == 'activate') {
       filter = `ins.status = 0`;
     }
@@ -74,7 +74,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
     if (userTypeFromTocken != "Master Admin" && userTypeFromTocken != "Country Admin" && sectorIdFromTocken) {
-      let ins= await this.repo.findOne({where:{id:institutionTypeId}})
+      let ins = await this.repo.findOne({ where: { id: institutionTypeId } })
       if (filter) {
         filter = `${filter}  and ins.sectorId =` + ins.sectorId;
       } else {
@@ -100,7 +100,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    else if (userTypeFromTocken === "Data Collection Team"){
+    else if (userTypeFromTocken === "Data Collection Team") {
       console.log("Data Collection Team")
       if (filter) {
         filter = `${filter} and user.userTypeId = 9 or user.userTypeId = 8`
@@ -109,24 +109,24 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    console.log("filter",filter)
+    console.log("filter", filter)
     let data = this.repo.createQueryBuilder('ins')
-      .innerJoinAndMapOne('ins.category',InstitutionCategory,'cate','cate.id = ins.categoryId',)
-      .innerJoinAndMapOne('ins.type',InstitutionType,'type','type.id = ins.typeId',)
-      .leftJoinAndMapMany('ins.user',User,'user','ins.id=user.institutionId',)
+      .innerJoinAndMapOne('ins.category', InstitutionCategory, 'cate', 'cate.id = ins.categoryId',)
+      .innerJoinAndMapOne('ins.type', InstitutionType, 'type', 'type.id = ins.typeId',)
+      .leftJoinAndMapMany('ins.user', User, 'user', 'ins.id=user.institutionId',)
       .where(filter, {
         filterText: `%${filterText}%`,
         countryIdFromTocken,
         sectorIdFromTocken,
-      },)      
+      },)
       .orderBy('ins.createdOn', 'DESC')
       .groupBy('ins.id');
 
-    console.log('query',data.getQuery());
+    console.log('query', data.getQuery());
 
     let resualt = await paginate(data, options);
     if (resualt) {
-      console.log('resula',resualt)
+      console.log('resula', resualt)
       return resualt;
     }
   }
@@ -141,8 +141,8 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       filter =
         '(ins.name LIKE :filterText )';
     }
-    let cou = await this.countryRepository.findOne({where:{ id: countryIdFromTocken} });
-    let num = await this.repo.find({ where:{name: filterText} })
+    let cou = await this.countryRepository.findOne({ where: { id: countryIdFromTocken } });
+    let num = await this.repo.find({ where: { name: filterText } })
     return num;
   }
 
@@ -150,14 +150,14 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
   async getInstituion(
     options: IPaginationOptions,
     filterText: number,
-    countryId:number){
-  
-      const policies = await this.repo.createQueryBuilder('institution')
-        .select(['institution.id', 'institution.name'])
-        .where('typeId=' + filterText+' AND countryId=' + countryId)
-        .getMany();
+    countryId: number) {
+
+    const policies = await this.repo.createQueryBuilder('institution')
+      .select(['institution.id', 'institution.name'])
+      .where('typeId=' + filterText + ' AND countryId=' + countryId)
+      .getMany();
     // console.log("22222222222222222",policies)
-     return policies
+    return policies
   }
 
   async getInstitutionForUsers(
@@ -232,8 +232,8 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     sectorIdFromTocken: number
   ): Promise<Institution[]> {
 
-    let arr =  sectorIdFromTocken.toString() ;
-    arr = '(' + arr+ ")";
+    let arr = sectorIdFromTocken.toString();
+    arr = '(' + arr + ")";
 
     let data = this.repo
       .createQueryBuilder('ins')
@@ -268,21 +268,35 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     sectorIdFromTocken: any,
     institutionIdFromTocken: number,
     role: string,
-    secId:number,
-    username:string,
-    id :number
+    secId: number,
+    username: string,
+    id: number
   ) {
     let filter: string = '';
-    let user1 = await this.userRepository.findOne({ where: { id: id } });
-    if(role == "Country Admin" && user1.userType.id !=1){
-      let user = await this.userRepository.findOne({ where: { username: username } });
-      if (filter) {
-        filter = `${filter}  and ins.id not in (${ user.institution.id})`;
-      } else {
-        filter = `ins.id not in (${ user.institution.id})`;
+  
+    if (id != 0) {
+      let user1 = await this.userRepository.findOne({ where: { id: id } });
+      if (role == "Country Admin" && user1.userType.id != 1) {
+        let user = await this.userRepository.findOne({ where: { username: username } });
+        if (filter) {
+          filter = `${filter}  and ins.id not in (${user.institution.id})`;
+        } else {
+          filter = `ins.id not in (${user.institution.id})`;
+        }
       }
     }
-   
+    if (id == 0) {
+      if (role == "Country Admin" ) {
+        let user = await this.userRepository.findOne({ where: { username: username } });
+        if (filter) {
+          filter = `${filter}  and ins.id not in (${user.institution.id})`;
+        } else {
+          filter = `ins.id not in (${user.institution.id})`;
+        }
+      }
+    }
+
+
     if (countryIdFromTocken != 0) {
       if (filter) {
         filter = `${filter}  and ins.countryId = :countryIdFromTocken`;
@@ -292,23 +306,23 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
     else if (role == "Sector Admin") {
       if (filter) {
-        filter = `${filter}  and ins.typeId not in (1) and ins.sectorId=`+secId;
+        filter = `${filter}  and ins.typeId not in (1) and ins.sectorId=` + secId;
       } else {
-        filter = `ins.typeId not in (1) and ins.sectorId=`+secId;
+        filter = `ins.typeId not in (1) and ins.sectorId=` + secId;
       }
     }
     else if (role == "MRV Admin") {
       if (filter) {
-        filter = `${filter}  and ins.typeId not in (1,2) and ins.sectorId=`+secId;
+        filter = `${filter}  and ins.typeId not in (1,2) and ins.sectorId=` + secId;
       } else {
-        filter = `ins.typeId not in (1,2) and ins.sectorId=`+secId;
+        filter = `ins.typeId not in (1,2) and ins.sectorId=` + secId;
       }
     }
     else if (role == "Technical Team" || role == "Data Collection Team" || role == "QC Team") {
       if (filter) {
-        filter = `${filter}  and ins.typeId = 3 and ins.sectorId=`+secId;
+        filter = `${filter}  and ins.typeId = 3 and ins.sectorId=` + secId;
       } else {
-        filter = `ins.typeId = 3 and ins.sectorId=`+secId;
+        filter = `ins.typeId = 3 and ins.sectorId=` + secId;
       }
     }
 
@@ -348,14 +362,14 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
   }
 
-  async getAllInstitutions():Promise<Institution[]>{
+  async getAllInstitutions(): Promise<Institution[]> {
     let result = await this.repo.find();
-    if (result){
+    if (result) {
       return result;
     }
-    
+
   }
-  async creteNew(ins:Institution):Promise<Institution> {
+  async creteNew(ins: Institution): Promise<Institution> {
     return this.repo.save(ins)
   }
 
