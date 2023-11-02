@@ -77,8 +77,8 @@ password: 'password',
  database: 'main',    */
 
 username: 'root',
-password: 'pradeep123#',
- database: 'tc-main',   
+password: '1997',
+ database: 'tc_new',   
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
@@ -90,7 +90,7 @@ ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters
 PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: true, 
+  synchronize: false, 
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
