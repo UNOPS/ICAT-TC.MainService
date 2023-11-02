@@ -335,17 +335,20 @@ export class InstitutionController implements CrudController<Institution> {
     @Request() request,
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Query('id') id: number,
   ): Promise<any> {
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     let InstitutionIdFromTocken: number;
     let role: string;
+    let username: string;
 
-    [countryIdFromTocken, sectorIdFromTocken, InstitutionIdFromTocken, role] = this.tokenDetails.getDetails([
+    [countryIdFromTocken, sectorIdFromTocken, InstitutionIdFromTocken, role,username] = this.tokenDetails.getDetails([
       TokenReqestType.countryId,
       TokenReqestType.sectorId,
       TokenReqestType.InstitutionId,
       TokenReqestType.role,
+      TokenReqestType.username,
     ]);
 
     let ins = await this.service.findOne({ where: { id: InstitutionIdFromTocken } });
@@ -358,7 +361,9 @@ export class InstitutionController implements CrudController<Institution> {
       countryIdFromTocken,
       sectorIdFromTocken,
       InstitutionIdFromTocken,
-      role, ins.sectorId
+      role, ins.sectorId,
+      username,
+      id
     );
 
     return resault;
