@@ -141,6 +141,14 @@ async findAllPolicies() {
   // console.log("aaaaa",policies)
   return policies;
 }
+
+@UseGuards(JwtAuthGuard)
+@Get('findAllPoliciesForReport')
+async findAllPoliciesForReport() {
+const policies = await this.service.findAllPoliciesForReport();
+// console.log("aaaaa",policies)
+return policies;
+}
 @Get('getIntervention')
 async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   let  intervention = await this.service.getIntervention(id);
