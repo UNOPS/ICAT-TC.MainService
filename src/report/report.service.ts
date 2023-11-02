@@ -565,7 +565,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
               : '-',
 
-            likelihoodscore: invesass.likelihood ? invesass.likelihood : '-',
+            likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ? invesass.likelihood : '-',
 
             rationalejustifying: invesass.likelihood_justification
 
@@ -599,7 +599,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                   : '-',
 
-                likelihoodscore: invesass.likelihood
+                likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined
 
                   ? invesass.likelihood
 
