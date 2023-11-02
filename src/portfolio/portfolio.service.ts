@@ -1154,9 +1154,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     // let result = await this.cMAssessmentQuestionService.calculateResult(assessment.id)
     let result = this.cmScores[assessment.id]
 
-    let scGHG_int = data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL').outcome_score
-    let scGHG_nat = data.scale_GHGs.find(o => o.ch_code === 'MEDIUM_LEVEL').outcome_score
-    let scGHG_sub = data.scale_GHGs.find(o => o.ch_code === 'MICRO_LEVEL').outcome_score
+    let scGHG_int = data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL')?.outcome_score
+    let scGHG_nat = data.scale_GHGs.find(o => o.ch_code === 'MEDIUM_LEVEL')?.outcome_score
+    let scGHG_sub = data.scale_GHGs.find(o => o.ch_code === 'MICRO_LEVEL')?.outcome_score
 
     let scale_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
@@ -1173,9 +1173,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_SDs = {}
     let sdg_count = Object.keys(sdg).length
     for (let sd of Object.keys(sdg)) {
-      let international = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd).outcome_score
-      let national = data.scale_SDs.find(o => o.ch_code === 'MEDIUM_LEVEL' && o.SDG === sd).outcome_score
-      let subnational = data.scale_SDs.find(o => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd).outcome_score
+      let international = data.scale_SDs.find(o => o.ch_code === 'MACRO_LEVEL' && o.SDG === sd)?.outcome_score
+      let national = data.scale_SDs.find(o => o.ch_code === 'MEDIUM_LEVEL' && o.SDG === sd)?.outcome_score
+      let subnational = data.scale_SDs.find(o => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd)?.outcome_score
       let cat_score = Math.floor((+international + +national + +subnational) / 3)
       scale_SDs[sd] = {
         col_set_1: { label: 'SCALE - ' + sd.toUpperCase(), colspan: 4 },
@@ -1189,9 +1189,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
 
 
-    let scAD_int = data.scale_adaptation.find(o => o.ch_code === 'INTERNATIONAL').outcome_score
-    let scAD_nat = data.scale_adaptation.find(o => o.ch_code === 'NATIONAL').outcome_score
-    let scAD_sub = data.scale_adaptation.find(o => o.ch_code === 'SUBNATIONAL').outcome_score
+    let scAD_int = data.scale_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
+    let scAD_nat = data.scale_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
+    let scAD_sub = data.scale_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
     let scAD_cat_score = result.outcome_score.scale_adaptation_score
 
     let scale_adaptation = {
@@ -1205,9 +1205,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
 
 
-    let ssGHG_int = data.sustained_GHGs.find(o => o.ch_code === 'LONG_TERM').outcome_score
-    let ssGHG_nat = data.sustained_GHGs.find(o => o.ch_code === 'MEDIUM_TERM').outcome_score
-    let ssGHG_sub = data.sustained_GHGs.find(o => o.ch_code === 'SHORT_TERM').outcome_score
+    let ssGHG_int = data.sustained_GHGs.find(o => o.ch_code === 'LONG_TERM')?.outcome_score
+    let ssGHG_nat = data.sustained_GHGs.find(o => o.ch_code === 'MEDIUM_TERM')?.outcome_score
+    let ssGHG_sub = data.sustained_GHGs.find(o => o.ch_code === 'SHORT_TERM')?.outcome_score
     let ssGHG_cat_score = result.outcome_score.sustained_ghg_score
 
     let sustained_GHGs = {
@@ -1222,9 +1222,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let sustained_SDs = {}
     for (let sd of Object.keys(sdg)) {
-      let long_term = data.sustained_SDs.find(o => o.ch_code === 'LONG_TERM' && o.SDG === sd).outcome_score
-      let medium_term = data.sustained_SDs.find(o => o.ch_code === 'MEDIUM_TERM' && o.SDG === sd).outcome_score
-      let short_term = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd).outcome_score
+      let long_term = data.sustained_SDs.find(o => o.ch_code === 'LONG_TERM' && o.SDG === sd)?.outcome_score
+      let medium_term = data.sustained_SDs.find(o => o.ch_code === 'MEDIUM_TERM' && o.SDG === sd)?.outcome_score
+      let short_term = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd)?.outcome_score
       let cat_score = Math.floor((+long_term + +medium_term + +short_term) / 3)
       sustained_SDs[sd] = {
         col_set_1: { label: 'SUSTAINED - ' + sd.toUpperCase(), colspan: 4 },
@@ -1237,9 +1237,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
     }
 
-    let susAD_int = data.sustained_adaptation.find(o => o.ch_code === 'INTERNATIONAL').outcome_score
-    let susAD_nat = data.sustained_adaptation.find(o => o.ch_code === 'NATIONAL').outcome_score
-    let susAD_sub = data.sustained_adaptation.find(o => o.ch_code === 'SUBNATIONAL').outcome_score
+    let susAD_int = data.sustained_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
+    let susAD_nat = data.sustained_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
+    let susAD_sub = data.sustained_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
     let susAD_cat_score = result.outcome_score.sustained_adaptation_score
 
     let sustained_adaptation = {
@@ -1251,6 +1251,17 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susAD_cat_score), susAD_cat_score)
       }
     }
+
+    console.log(JSON.stringify({
+      scale_comparisons: {
+        ghg: scale_GHGs, sdg: scale_SDs, adaptation: scale_adaptation
+      },
+      sustained_comparisons: {
+        ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
+      },
+      sdg: Object.keys(sdg),
+      outcome_score: result.outcome_score.outcome_score
+    }))
 
     return {
       scale_comparisons: {
