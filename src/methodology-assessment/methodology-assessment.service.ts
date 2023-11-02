@@ -603,41 +603,43 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async getResultPageData(skip, pageSize): Promise<any[]> {
+    skip = skip - 10
     let user = await this.userService.currentUser();
     let data = this.resultRepository.createQueryBuilder('result')
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'result.assessment',
         'assessment',
         'assessment.id = result.assessment_id'
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'assessment.climateAction',
         'climateAction',
         'climateAction.id = assessment.climateAction_id'
       )
-      .innerJoin(
+      .leftJoinAndSelect(
         'assessment.user',
         'user',
         'user.id = assessment.user_id'
       )
-      .innerJoin(
+      .leftJoinAndSelect(
         'user.country',
         'country',
         'country.id = user.countryId'
       )
-      .innerJoin(
+      .leftJoinAndSelect(
         'user.userType',
         'userType',
         'userType.id = user.userTypeId'
       )
       .where('(userType.name = :userType AND user.id = :userId)', {userType: 'External', userId: user.id})
       .orWhere('userType.name <> :userType AND country.id = :countryId', {userType: 'External', countryId: user.country.id})
+      .orderBy('assessment.id', 'DESC')
       .skip(skip)
       .take(pageSize)
 
-      console.log("count",await  data.getCount())
 
-    return await data.getManyAndCount()
+    let res=  await data.getManyAndCount()
+    return res
   }
 
   async results(): Promise<Results[]> {
