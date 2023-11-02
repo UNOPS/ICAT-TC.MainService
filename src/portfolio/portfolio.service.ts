@@ -455,6 +455,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
 
       outcome_score[int_data.intervention.assessment_id] = int_data.data.outcome_score
+      console.log("outcome score", outcome_score)
 
       scaleGhgData.interventions.push({ ...int_data.intervention, ...int_data.data.scale_comparisons.ghg.data })
       // scaleGhgData.order = 1
@@ -1143,7 +1144,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       categories.push(obj)
     }
     // cat_obj['category_score'] = Math.round(cat_total / cat_names.length)
-    cat_obj['category_score'] = result.process_score
+    cat_obj['category_score'] = result.process_score === null ? 'N/A' : result.process_score
 
     return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
