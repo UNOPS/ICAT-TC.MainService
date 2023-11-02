@@ -242,11 +242,7 @@ export class ReportPagesService {
     </td><td> 
     ${contentOne.opportunities ? contentOne.opportunities : 'N/A'}
     </td></tr>
-    <tr><td>
-    Principles on which the assessment is based
-    </td><td> 
-    ${contentOne.principles ? contentOne.principles : 'N/A'}
-    </td></tr>
+  
     
     </tbody>
   </table>
@@ -277,7 +273,7 @@ export class ReportPagesService {
            </blockquote>
 
            <div class="report-table-sm">
-<figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
@@ -335,7 +331,7 @@ export class ReportPagesService {
             </blockquote>
  
             <div class="report-table-sm">
- <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -399,7 +395,7 @@ export class ReportPagesService {
 
 
 <div class="report-table-sm">
-<figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
@@ -471,7 +467,7 @@ export class ReportPagesService {
  
  
  <div class="report-table-sm">
- <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -515,7 +511,7 @@ export class ReportPagesService {
  </table>
  </div>
  <div class="report-table-sm">
- <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -574,7 +570,7 @@ export class ReportPagesService {
     <div class="content">
  
   <div class="report-table-sm">
-  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
@@ -618,7 +614,7 @@ export class ReportPagesService {
   </table>
   </div>
   <div class="report-table-sm">
-  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
@@ -678,7 +674,7 @@ export class ReportPagesService {
   
   
   <div class="report-table-sm">
-  <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
@@ -780,7 +776,7 @@ export class ReportPagesService {
   
   
     <div class="report-table-sm">
-    <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -883,7 +879,7 @@ export class ReportPagesService {
    
    
    <div class="report-table-sm">
-   <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -917,7 +913,7 @@ export class ReportPagesService {
    <div  class="main_header_sub text-start">2.4	Outcomes categories assessment </div> 
 
    <div class="report-table-sm">
-   <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -969,7 +965,7 @@ export class ReportPagesService {
     
     
     <div class="report-table-sm">
-    <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+  
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
       <tr>
@@ -1025,7 +1021,7 @@ export class ReportPagesService {
      
      
      <div class="report-table-sm">
-     <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+   
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
          <tr>
@@ -1161,7 +1157,7 @@ export class ReportPagesService {
      
      
      <div class="report-table-sm">
-     <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
          <tr>
@@ -1296,7 +1292,7 @@ export class ReportPagesService {
       
       
       <div class="report-table-sm">
-      <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
           <tr>
@@ -1360,7 +1356,7 @@ export class ReportPagesService {
        
        
        <div class="report-table-sm">
-       <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+    
        <table class="table  table-bordered border-dark">
          <thead class="table-primary  border-dark">
          <tr>
@@ -1424,7 +1420,7 @@ export class ReportPagesService {
        
        
        <div class="report-table-sm">
-       <figcaption class="figure-caption-table figure-caption text-start">table 2</figcaption>
+     
        <table class="table  table-bordered border-dark">
          <thead class="table-primary  border-dark">
          <tr>

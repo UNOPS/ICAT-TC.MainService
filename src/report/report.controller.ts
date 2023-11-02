@@ -106,15 +106,22 @@ export class ReportController {
         TokenReqestType.countryId,
       ]);
     req.reportTitle = req.reportName
-    req.reportName = req.reportName + '.pdf'
+   
+    const randomName = Array(8)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 16).toString(16))
+    .join('');
+    const uniqname = req.reportName+randomName + '.pdf'
+    req.reportName = req.reportName+ '.pdf'
+   
     const reprtDto: ReportDto = await this.reportService.genarateReportDto(
       req,
     );
     const report = await this.reportGenarateService.reportGenarate(
-      reprtDto.reportName,
+      uniqname,
       await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
     )
-    const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+    const response = await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,0,req.tool,req.type)
     return response
   }
 
@@ -130,6 +137,12 @@ export class ReportController {
         TokenReqestType.countryId,
       ]);
     req.reportTitle = req.reportTitle
+
+    const randomName = Array(8)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 16).toString(16))
+    .join('');
+    const uniqname = req.reportName+randomName + '.pdf'
     req.reportName = req.reportName + '.pdf'
     // console.log("...",req)
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
@@ -155,25 +168,27 @@ export class ReportController {
     //     return new StreamableFile(file);
     // return response
 
-   const report = await this.reportGenarateService.comparisonReportGenarate(
-      reprtDto.reportName,
+   const reportpdf = await this.reportGenarateService.comparisonReportGenarate(
+    uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-      await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
+    let report=  await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,req.portfolioId,req.tool,req.type)
    
-    return ''
+    return report
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('get-reports')
   async getReportData(
     @Query('climateAction') climateAction: string,
-    @Query('reportName') reportName: string,) {
+    @Query('reportName') reportName: string,
+    @Query('type') type: string,
+    @Query('tool') tool: string,) {
 
     let countryIdFromTocken: number;
     [countryIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId])
 
-    return await this.reportService.getReports(climateAction, reportName, countryIdFromTocken)
+    return await this.reportService.getReports(climateAction, reportName, countryIdFromTocken,type,tool)
   }
 
   @Get('assessmentPDF')
