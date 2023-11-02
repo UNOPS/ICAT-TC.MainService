@@ -91,6 +91,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     fileName: string,
     countryId: number,
     climateAction: ClimateAction,
+    portfolioid:number,
+    tool:string,
+    type:string
   ) {
     let country = await this.countryRepo
       .createQueryBuilder('country')
@@ -100,6 +103,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
     report.reportName = name;
     report.generateReportName = fileName;
     report.savedLocation = './public/' + fileName;
+    report.tool = tool;
+    report.type = type;
+    if(portfolioid&&portfolioid!=0){
+      let portfolio=new Portfolio()
+      portfolio.id=portfolioid
+      report.portfolio = portfolio;
+    }
+    
     // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail =
       'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg';
@@ -114,24 +125,84 @@ export class ReportService extends TypeOrmCrudService<Report> {
     climateAction: string,
     reportName: string,
     countryIdFromTocken: number,
+    type: string,
+    tool: string
   ) {
     const currentUser = await this.usersService.currentUser();
     let res: Report[] = [];
-    if (!climateAction && !reportName) {
-      res = await this.repo.find({
-        where: {
-          country: { id: countryIdFromTocken },
-        },
-        relations: ['climateAction'],
-      });
-    } else {
-      res = await this.repo.find({
-        where: {
-          climateAction: { policyName: Like(`%${climateAction}%`) },
-          reportName: Like(`%${reportName}%`),
-          country: { id: countryIdFromTocken },
-        },
-      });
+    if(type){
+      if(type=='Result'){
+        
+        if (!climateAction && !reportName) {
+       
+          res = await this.repo.find({
+            where: {
+              type:type,
+              country: { id: countryIdFromTocken },
+            },
+            relations: ['climateAction'],
+          });
+        } else {
+          if(tool){
+            res = await this.repo.find({
+              where: {
+                tool:tool,
+                climateAction: { policyName: Like(`%${climateAction}%`) },
+                reportName: Like(`%${reportName}%`),
+                country: { id: countryIdFromTocken },
+              },
+            });
+          }else{
+            res = await this.repo.find({
+              where: {
+                climateAction: { policyName: Like(`%${climateAction}%`) },
+                reportName: Like(`%${reportName}%`),
+                country: { id: countryIdFromTocken },
+              },
+            });
+          }
+         
+        }
+    
+      }else{
+        if (!climateAction && !reportName) {
+          res = await this.repo.find({
+            where: {
+              type:type,
+              country: { id: countryIdFromTocken },
+            },
+            relations: ['portfolio'],
+          });
+        } else {
+          res = await this.repo.find({
+            where: {
+              portfolio: { portfolioName: Like(`%${reportName}%`) },
+              reportName: Like(`%${reportName}%`),
+              country: { id: countryIdFromTocken },
+            },
+          });
+        }
+
+      }
+    }
+    else{
+      if (!climateAction && !reportName) {
+        res = await this.repo.find({
+          where: {
+            country: { id: countryIdFromTocken },
+          },
+          relations: ['climateAction'],
+        });
+      } else {
+        res = await this.repo.find({
+          where: {
+            climateAction: { policyName: Like(`%${climateAction}%`) },
+            reportName: Like(`%${reportName}%`),
+            country: { id: countryIdFromTocken },
+          },
+        });
+      }
+  
     }
 
     let reportList: Report[] = [];
@@ -371,19 +442,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 0: {
 
-        return 'relevant';
+        return 'Not relevant';
+        
 
       }
 
       case 1: {
 
-        return 'possible_relevant';
+        return 'Possible relevant';
 
       }
 
       case 2: {
 
-        return 'not_relevant';
+        return ' Relevant';
 
       }
 
@@ -474,7 +546,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
       for (let invesass of asssIndicatorsProcess.investor_assessment) {
-
+      
         let cat = catagoryProcess.find((a) => a.name == invesass.category.name);
 
         if (cat) {
@@ -487,13 +559,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
               : '-',
 
-            relavance: invesass.relavance
+            relavance: invesass.relavance!=null&&invesass.relavance!=undefined
 
               ? this.getrelavance(invesass.relavance)
 
               : '-',
 
-            likelihoodscore: invesass.likelihood ? invesass.likelihood : '-',
+            likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ? invesass.likelihood : '-',
 
             rationalejustifying: invesass.likelihood_justification
 
@@ -521,13 +593,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics.name,
 
-                relavance: invesass.relavance
+                relavance: invesass.relavance!=null&&invesass.relavance!=undefined
 
                   ? this.getrelavance(invesass.relavance)
 
                   : '-',
 
-                likelihoodscore: invesass.likelihood
+                likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined
 
                   ? invesass.likelihood
 
@@ -1029,8 +1101,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
 
-    if (asssCharacteristicasscaleghg) {
-
+    if (asssCharacteristicasscalesd) {
+console.log(asssCharacteristicasscalesd)
       scale_sd.name = 'SDG Scale of the Outcome';
 
       const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
