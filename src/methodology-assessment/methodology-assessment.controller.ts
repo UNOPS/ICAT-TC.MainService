@@ -277,7 +277,12 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.findAllBarriersCharacter();
   }
 
-  
+  @UseGuards(JwtAuthGuard)
+  @Get('results/:skip/:pageSize')
+  async getResultPageData(@Param('skip') skip: number, @Param('pageSize') pageSize: number) {
+    return await this.methodologyAssessmentService.getResultPageData(skip, pageSize);
+  }
+
   @Get('results')
   async results() {
 
