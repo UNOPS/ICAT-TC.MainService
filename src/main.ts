@@ -63,8 +63,8 @@ async function bootstrap() {
   //   // reportOnly: true,
   // }));
   app.enableCors({
-    "origin": ["http://3.108.9.184/","http://localhost:4200","http://3.108.9.184:4200","http://3.108.9.184:7100","http://3.108.9.184:7000","http://3.108.9.184:7090","http://3.108.9.184:7080"],
-    // "origin": "http://3.108.9.184",
+    "origin": ["http://15.206.202.183/","http://localhost:4200","http://15.206.202.183:4200","http://15.206.202.183:7100","http://15.206.202.183:7000","http://15.206.202.183:7090","http://15.206.202.183:7080"],
+    // "origin": "http://15.206.202.183",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
     "optionsSuccessStatus": 204

@@ -120,11 +120,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     // get an environment variable
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      let url = "http://3.108.9.184/country/"
+      let url = "http://15.206.202.183/country/"
       systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
     }
     else {
-      let url = "http://3.108.9.184/country/"
+      let url = "http://15.206.202.183/country/"
       systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
     }
 
