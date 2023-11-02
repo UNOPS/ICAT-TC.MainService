@@ -1687,7 +1687,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       },
     } = {
       processData: [],
-      processScore: 0,
+      processScore: null,
       outcomeScore: null,
       aggregatedScore: {
         name: '',
@@ -1738,7 +1738,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     //Assigning values 
     let total_cat_weight = 0;
-    let process_score = 0;
+    let process_score = null;
     let sdgArray =new Array()
     for (let category of categoryDataArray) {
       let total_char_weight = 0
@@ -1783,11 +1783,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       else {
         item.recalculated_category_weight = Math.round(item.category_weight / total_cat_weight * 100);
         // console.log(item.recalculated_category_weight)
-        process_score += item.recalculated_category_weight * item.category_score.value;
+        // process_score += item.recalculated_category_weight * item.category_score.value;
+        process_score === null ? (item.category_score.value === null ? null : process_score = item.recalculated_category_weight * item.category_score.value) :
+        process_score += item.recalculated_category_weight * item.category_score.value
       }
     })
     finalProcessDataArray.processData = categoryDataArray;
-    finalProcessDataArray.processScore = this.roundDown(process_score / 100);
+    finalProcessDataArray.processScore = process_score === null ? null : this.roundDown(process_score / 100);
 
     // outcome..............
     let total_outcome_cat_weight = 0
@@ -1944,6 +1946,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .createQueryBuilder()
     .update(Assessment)
     .set({ process_score: finalProcessDataArray.processScore,outcome_score:finalProcessDataArray.outcomeScore })
+    .where("id = :id", { id: assesId })
+    .execute()
+
+    await this.resultRepository
+    .createQueryBuilder()
+    .update(Results)
+    .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
     .where("id = :id", { id: assesId })
     .execute()
     return finalProcessDataArray;
