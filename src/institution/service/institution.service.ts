@@ -268,9 +268,21 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     sectorIdFromTocken: any,
     institutionIdFromTocken: number,
     role: string,
-    secId:number
+    secId:number,
+    username:string,
+    id :number
   ) {
     let filter: string = '';
+    let user1 = await this.userRepository.findOne({ where: { id: id } });
+    if(role == "Country Admin" && user1.userType.id !=1){
+      let user = await this.userRepository.findOne({ where: { username: username } });
+      if (filter) {
+        filter = `${filter}  and ins.id not in (${ user.institution.id})`;
+      } else {
+        filter = `ins.id not in (${ user.institution.id})`;
+      }
+    }
+   
     if (countryIdFromTocken != 0) {
       if (filter) {
         filter = `${filter}  and ins.countryId = :countryIdFromTocken`;
