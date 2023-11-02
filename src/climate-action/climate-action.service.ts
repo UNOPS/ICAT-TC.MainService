@@ -20,6 +20,7 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { AllBarriersSelected } from './dto/selected-barriers.dto';
 import { BarrierCategory } from './entity/barrier-category.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { Report } from 'src/report/entities/report.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -30,6 +31,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(PolicySector) private readonly PolicySectorsRepo: Repository<PolicySector>,
     @InjectRepository(BarrierCategory) private  barrierCategoryRepo: Repository<BarrierCategory>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
+    @InjectRepository(Report) private readonly reportRepository: Repository<Report>,
     private userService: UsersService,
     
 ) {
@@ -218,7 +220,39 @@ async allProject(
 
       return policyList
   }
+  async findAllPoliciesForReport(): Promise<ClimateAction[]> {
 
+    let user = this.userService.currentUser();
+
+    //  let res =  this.repo.find({
+    //     relations: [],
+    //   });
+      
+
+      let reports = await this.reportRepository.find({
+        relations: ['climateAction'],
+      });
+      let policyList: ClimateAction[] = [];
+
+   
+
+    const currentUser = await user;
+    const isUserExternal = currentUser?.userType?.name === 'External';
+
+    // console.log("currreenntt", currentUser)
+    for (const x of await reports) {
+      const isSameUser = x.climateAction.user?.id === currentUser?.id;
+      const isMatchingCountry = x.climateAction.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.climateAction.user?.userType?.name !== 'External';
+
+      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+        policyList.push(x.climateAction);
+      }
+    }
+
+
+      return policyList
+  }
   async getIntervention(id:number):Promise<ClimateAction> {
     const policy = await this.repo
           .createQueryBuilder("intervetion")

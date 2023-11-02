@@ -602,12 +602,56 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return result;
   }
 
+  async getResultPageData(skip, pageSize): Promise<any[]> {
+    skip = skip - 10
+    let user = await this.userService.currentUser();
+    let data = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndSelect(
+        'result.assessment',
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .leftJoinAndSelect(
+        'assessment.climateAction',
+        'climateAction',
+        'climateAction.id = assessment.climateAction_id'
+      )
+      .leftJoinAndSelect(
+        'assessment.user',
+        'user',
+        'user.id = assessment.user_id'
+      )
+      .leftJoinAndSelect(
+        'user.country',
+        'country',
+        'country.id = user.countryId'
+      )
+      .leftJoinAndSelect(
+        'user.userType',
+        'userType',
+        'userType.id = user.userTypeId'
+      )
+      .where('(userType.name = :userType AND user.id = :userId)', {userType: 'External', userId: user.id})
+      .orWhere('userType.name <> :userType AND country.id = :countryId', {userType: 'External', countryId: user.country.id})
+      .orderBy('assessment.id', 'DESC')
+      .skip(skip)
+      .take(pageSize)
+
+
+    let res=  await data.getManyAndCount()
+    return res
+  }
+
   async results(): Promise<Results[]> {
     // return await this.assessRepository.find();
+    /**Previously implemented logic by TM */
      return await this.resultRepository.find({
        relations: ['assessment'],
      });
-   }
+    
+    /**END returns 102 records */
+   
+  }
 
    async getResultByAssessment(assessmentId: number){
     return await this.resultRepository.findOne({
@@ -681,23 +725,24 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       } 
 
   async findAllPolicyBarriers(): Promise<any[]> {
-    const policyBarriers = await this.policyBarrierRepository.find({
-      relations: ['climateAction', 'barriers'],
-      select: ['id'],
-      join: {
-        alias: 'policyBarriers',
-        leftJoinAndSelect: {
-          climateAction: 'policyBarriers.climateAction',
-        },
-      },
-    });
+    // const policyBarriers = await this.policyBarrierRepository.find({
+    //   relations: ['climateAction', 'barriers'],
+    //   select: ['id'],
+    //   join: {
+    //     alias: 'policyBarriers',
+    //     leftJoinAndSelect: {
+    //       climateAction: 'policyBarriers.climateAction',
+    //     },
+    //   },
+    // });
   
-    return policyBarriers.map((pb) => ({
-      id: pb.id,
-      policyName: pb.climateAction?.policyName,
-      // barriers: pb.barriers,
-      editedBy: pb.editedBy,
-    }));
+    // return policyBarriers.map((pb) => ({
+    //   id: pb.id,
+    //   policyName: pb.climateAction?.policyName,
+    //   // barriers: pb.barriers,
+    //   editedBy: pb.editedBy,
+    // }));
+    return []
   }
   
 
