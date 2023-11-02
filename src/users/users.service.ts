@@ -173,7 +173,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    let url = "http://15.206.202.183/country/"
+    let systemLoginUrl = url //this.configService.get<string>('LOGIN_URL');
     let user = await this.repo.findOne({ where: { id: userId } });
     user.resetToken = newToken;
     let newUUID = uuidv4();
@@ -205,7 +206,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async mailcreate(user: User) {
-    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    let url = "http://15.206.202.183/country/"
+    let systemLoginUrl = url //this.configService.get<string>('LOGIN_URL');
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
     user.password = await this.hashPassword(
