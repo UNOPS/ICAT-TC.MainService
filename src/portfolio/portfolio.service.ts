@@ -1334,8 +1334,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'PORTFOLIO';
-    let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
-    // let filter = ''
+    // let filter = '(asses.process_score is not null and asses.outcome_score is not null)'
+    let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
