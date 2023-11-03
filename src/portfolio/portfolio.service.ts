@@ -1073,14 +1073,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     sdgs.map(sd => {
       let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
-      let val = Math.floor(this.sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name] / 2)
+      let sdg_val = this.sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name]
+      let val = sdg_val === null ? null : Math.floor(sdg_val / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
       let priority_value = ans?.value
       if (this.sdgPriorities.length !== 0){
-        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
-        priority_value =  4 - Math.abs(ans.value - priority.value)
-        col2.push({label: priority_name?.toUpperCase(), code: code}) //TODO need to update after clarification
+        priority_value =  ans.value === null ? null : (4 - Math.abs(ans.value - priority.value))
+        col2.push({label: priority_name?.toUpperCase(), code: code}) 
       }
       response[code] = {name: ans?.name, value: priority_value}
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
@@ -1303,13 +1304,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     sdgs.map(sd => {
       let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
-      let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score?.sdgs_score[sd.sdg.id]), result.outcome_score?.sdgs_score[sd.sdg.id]))
+      let val = result.outcome_score?.sdgs_score[sd.sdg.id]
+      let sdg_val = val === null ? null : val
+      let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(sdg_val), sdg_val))
       let priority_value = ans?.value
       if (this.sdgPriorities.length !== 0){
-        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) //TODO bind this to col2
+        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
-        priority_value =  4 - Math.abs(ans.value - priority.value)
-        col2.push({label: priority_name?.toUpperCase(), code: code}) //TODO need to update after clarification
+        priority_value = ans.value === null ? null : 4 - Math.abs(ans.value - priority.value)
+        col2.push({label: priority_name?.toUpperCase(), code: code}) 
       }
       response[code] = {name: ans?.name, value: priority_value}
       col1.push({label: 'SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name.toUpperCase(), colspan: 1})
