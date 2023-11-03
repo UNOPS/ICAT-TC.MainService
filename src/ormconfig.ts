@@ -78,7 +78,7 @@ password: 'password',
 
 username: 'root',
 password: '1997',
- database: 'tc_new',   
+ database: 'tc-main',   
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
