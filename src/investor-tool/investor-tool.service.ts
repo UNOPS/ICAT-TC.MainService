@@ -1811,6 +1811,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.category = category.name;
           categoryData.code = category.code;
+          if(x.score==99){
+            x.score =null;
+          }
           // console.log(category.ip_weight)
           categoryData.category_weight = category.ip_weight;
           categoryData.isSDG = (category.code == 'SCALE_SD' || category.code == 'SUSTAINED_SD') ? (true) : (false)
@@ -1820,7 +1823,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               score: { name: (isSutained) ? (this.mapSustainedScores(x?.score)) : (this.mapScaleScores(x?.score)), value: x?.score },
               characteristic: x.characteristics.name,
               ch_code: x.characteristics.code,
-              isCalulate: (x.score == null) ? false : true,
+              isCalulate: (x.score == null||x.score == 99) ? false : true,
               sdg: (categoryData.isSDG) ? ('SDG ' + x?.portfolioSdg?.number + ' - ' + x?.portfolioSdg?.name) : ''
             }
           )
@@ -1855,6 +1858,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           let sdg_total_char = 0
           let sdg_cat_score = 0
           for (let sdg of char.data) {
+            // console.log("sdg.isCalulate",sdg.isCalulate)
             if (sdg.isCalulate) {
               sdg_cat_score += sdg.score.value;
               sdg_total_char++;
@@ -1901,7 +1905,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         else {
           category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          
+          console.log("total_outcome_cat_weight",total_outcome_cat_weight)
           // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
@@ -2298,6 +2302,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Moderate';
       case 3:
         return 'Major';
+      case 99:
+        return 'Outside assessment boundaries'
       case null:
         return 'Outside assessment boundaries'
       default:

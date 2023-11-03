@@ -44,6 +44,7 @@ import { CalculationResults } from './entities/calculationResults.entity';
 import { OutcomeCategory } from './dto/outcome-category.dto';
 import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
  
@@ -602,7 +603,16 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return result;
   }
 
-  async getResultPageData(skip, pageSize): Promise<any[]> {
+  async getResultPageData(skip, pageSize, filterText): Promise<any[]> {
+    // skip = skip - 10
+    let filter: string = '';
+    if (filterText != null && filterText != undefined && filterText != '') {
+      filter =
+        // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
+        // '(dr.userName LIKE :filterText OR dr.action LIKE :filterText OR dr.actionStatus LIKE :filterText OR dr.editedOn LIKE :filterText)';
+        '(climateAction.policyName LIKE :filterText OR assessment.assessment_approach LIKE :filterText OR assessment.assessmentType LIKE :filterText OR assessment.tool LIKE :filterText)'
+    }
+
     let user = await this.userService.currentUser();
     let data = this.resultRepository.createQueryBuilder('result')
       .innerJoinAndSelect(
@@ -615,29 +625,47 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         'climateAction',
         'climateAction.id = assessment.climateAction_id'
       )
-      .innerJoin(
+      .leftJoinAndMapMany(
+        'climateAction.policy_sector',
+        PolicySector,
+        'policy_sector',
+        `policy_sector.intervention_id = climateAction.id`,
+      )
+      .leftJoinAndSelect(
+        'policy_sector.sector',
+        'sector',
+        'sector.id = policy_sector.sector_id'
+      )
+      .innerJoinAndSelect(
         'assessment.user',
         'user',
         'user.id = assessment.user_id'
       )
-      .innerJoin(
+      .innerJoinAndSelect(
         'user.country',
         'country',
         'country.id = user.countryId'
       )
-      .innerJoin(
+      .innerJoinAndSelect(
         'user.userType',
         'userType',
         'userType.id = user.userTypeId'
       )
       .where('(userType.name = :userType AND user.id = :userId)', {userType: 'External', userId: user.id})
       .orWhere('userType.name <> :userType AND country.id = :countryId', {userType: 'External', countryId: user.country.id})
+      
+      .orderBy('assessment.id', 'DESC')
       .skip(skip)
       .take(pageSize)
 
-      console.log("count",await  data.getCount())
+      if (filterText != null && filterText != undefined && filterText != '') {
+        data.andWhere(filter, {filterText: `%${filterText}%`})
+      }
 
-    return await data.getManyAndCount()
+      console.log(data.getQuery())
+
+    let res=  await data.getManyAndCount()
+    return res
   }
 
   async results(): Promise<Results[]> {
