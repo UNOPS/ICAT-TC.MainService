@@ -93,6 +93,17 @@ export class ReportHtmlGenaratesService {
     </div>
   </div>`;
 
+let pageHeadersNumbers={}
+
+
+let comparisonCoverPage=this.reportPagesService.comparisonCoverPage(repportDto.coverPage)
+let comparisonTableOfContent=this.reportPagesService.comparisonTableOfContent(header,footer,repportDto.tableOfContent)
+let comparisonContentOne=this.reportPagesService.comparisonContentOne(header,footer,repportDto.contentOne)
+let comparisonContentTwo=this.reportPagesService.comparisonContentTwo(header,footer,repportDto.contentTwo)
+let comparisonContentThree=this.reportPagesService.comparisonContentThree(header,footer,repportDto.contentThree)
+let comparisonContentFour=this.reportPagesService.comparisonContentFour(header,footer,repportDto.contentFour)
+
+
     return {
       content: `<!DOCTYPE html>
         <html lang="en">
@@ -109,12 +120,12 @@ export class ReportHtmlGenaratesService {
   
   
             <body>
-             ${this.reportPagesService.comparisonCoverPage(repportDto.coverPage)}
-             ${this.reportPagesService.comparisonTableOfContent(header,footer,repportDto.tableOfContent)}
-             ${this.reportPagesService.comparisonContentOne(header,footer,repportDto.contentOne)}
-             ${this.reportPagesService.comparisonContentTwo(header,footer,repportDto.contentTwo)}
-             ${this.reportPagesService.comparisonContentThree(header,footer,repportDto.contentThree)}
-             ${this.reportPagesService.comparisonContentFour(header,footer,repportDto.contentFour)}
+             ${comparisonCoverPage}
+             ${comparisonTableOfContent}
+             ${comparisonContentOne}
+             ${comparisonContentTwo}
+             ${comparisonContentThree}
+             ${comparisonContentFour}
            
             </body></html>`,
     };

@@ -663,11 +663,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             withinboundaries:
 
-              invesass.score == null || invesass.score == undefined
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                ? 'NO'
+            : 'YES')
 
-                : 'YES',
+               ,
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -703,11 +703,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 withinboundaries:
 
-                  invesass.score == null || invesass.score == undefined
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                    ? 'NO'
-
-                    : 'YES',
+                : 'YES'),
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -771,13 +769,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
 
-            withinboundaries:
+            withinboundaries:invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-              invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                ? 'NO'
+              // invesass.score == null || invesass.score == undefined
 
-                : 'YES',
+              //   ? 'NO'
+
+              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -812,12 +812,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                  invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                    ? 'NO'
+                  // invesass.score == null || invesass.score == undefined
 
-                    : 'YES',
+                  //   ? 'NO'
+
+                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -882,12 +885,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-              invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                ? 'NO'
+              // invesass.score == null || invesass.score == undefined
 
-                : 'YES',
+              //   ? 'NO'
+
+              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -922,12 +928,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                  invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                    ? 'NO'
+                  // invesass.score == null || invesass.score == undefined
 
-                    : 'YES',
+                  //   ? 'NO'
+
+                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -996,12 +1005,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-              invesass.score == null || invesass.score == undefined
+            : 'YES'),
+              // invesass.score == null || invesass.score == undefined
 
-                ? 'NO'
+              //   ? 'NO'
 
-                : 'YES',
+              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1036,12 +1047,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                  invesass.score == null || invesass.score == undefined
+                : 'YES'),
 
-                    ? 'NO'
+                  // invesass.score == null || invesass.score == undefined
 
-                    : 'YES',
+                  //   ? 'NO'
+
+                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1132,12 +1146,15 @@ console.log(asssCharacteristicasscalesd)
 
 
             withinboundaries:
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-              invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                ? 'NO'
+              // invesass.score == null || invesass.score == undefined
 
-                : 'YES',
+              //   ? 'NO'
+
+              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1174,12 +1191,15 @@ console.log(asssCharacteristicasscalesd)
 
 
                 withinboundaries:
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                  invesass.score == null || invesass.score == undefined
+                : 'YES'),
 
-                    ? 'NO'
+                  // invesass.score == null || invesass.score == undefined
 
-                    : 'YES',
+                  //   ? 'NO'
+
+                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1269,12 +1289,15 @@ console.log(asssCharacteristicasscalesd)
 
 
             withinboundaries:
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-              invesass.score == null || invesass.score == undefined
+            : 'YES'),
 
-                ? 'NO'
+              // invesass.score == null || invesass.score == undefined
 
-                : 'YES',
+              //   ? 'NO'
+
+              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1311,12 +1334,15 @@ console.log(asssCharacteristicasscalesd)
 
 
                 withinboundaries:
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
-                  invesass.score == null || invesass.score == undefined
+                : 'YES'),
 
-                    ? 'NO'
+                  // invesass.score == null || invesass.score == undefined
 
-                    : 'YES',
+                  //   ? 'NO'
+
+                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1803,6 +1829,7 @@ console.log(asssCharacteristicasscalesd)
       // outcome_data.forEach(a=>console.log(a.interventions))
       const ghg_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG') && a.comparison_type == 'SCALE COMPARISON');
       if (ghg_scale) {
+        // console.log(ghg_scale)
         contentTwo.ghg_scale = ghg_scale.interventions;
       }
 
