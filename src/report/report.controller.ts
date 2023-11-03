@@ -231,4 +231,15 @@ export class ReportController {
       }
     }
   }
+
+  @Get('test/pageissue')
+  async testpageissue(): Promise<any> {
+
+  let {}= this.test() 
+
+  }
+
+  test():{name:string,value:string}{
+   return {name:"test",value:"234"}
+  }
 }
