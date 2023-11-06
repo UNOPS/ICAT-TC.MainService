@@ -120,11 +120,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     // get an environment variable
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      let url = "http://15.206.202.183/country/"
+      let url = "https://icat-tc-tool.climatesi.com/country/"
       systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
     }
     else {
-      let url = "http://15.206.202.183/country/"
+      let url = "https://icat-tc-tool.climatesi.com/country/"
       systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
     }
 
@@ -173,7 +173,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    let url = "http://15.206.202.183/country/"
+    let url = "https://icat-tc-tool.climatesi.com/country/"
     let systemLoginUrl = url //this.configService.get<string>('LOGIN_URL');
     let user = await this.repo.findOne({ where: { id: userId } });
     user.resetToken = newToken;
@@ -206,7 +206,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async mailcreate(user: User) {
-    let url = "http://15.206.202.183/country/"
+    let url = "https://icat-tc-tool.climatesi.com/country/"
     let systemLoginUrl = url //this.configService.get<string>('LOGIN_URL');
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
