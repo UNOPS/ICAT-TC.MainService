@@ -1792,7 +1792,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     finalProcessDataArray.processScore = process_score === null ? null : this.roundDown(process_score / 100);
 
     // outcome..............
-    let total_outcome_cat_weight = 0
+    let total_outcome_cat_weight = null
     let outcomeArray: typeof outcomeCategoryData[] = []
     for (let category of categories.meth1Outcomes) {
       // let sdg
@@ -1882,8 +1882,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // console.log(isSutained,category.code)
           category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; //round down
           sdgArray.push(category)
-          // total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          // console.log(category.category, category.category_weight * category.category_score.value)
         }
 
 
@@ -1905,8 +1903,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         else {
           category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          console.log("total_outcome_cat_weight",total_outcome_cat_weight)
-          // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
     }
@@ -1929,15 +1925,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // console.log("11")
     }
     finalProcessDataArray.outcomeData = outcomeArray;
-    
-    if(total_outcome_cat_weight==0){
-      finalProcessDataArray.outcomeScore =null
-      // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
-    }
-    else{
+    console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
+    if(total_outcome_cat_weight !=0 && total_outcome_cat_weight != null){
+      // console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
       // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
     }
+    // else{
+    //   finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+    //   // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
+    // }
     let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD')
     let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD')
     console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
