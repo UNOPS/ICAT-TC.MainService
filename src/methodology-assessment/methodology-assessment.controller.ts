@@ -282,8 +282,10 @@ export class MethodologyAssessmentController {
   async getResultPageData(
     @Param('skip') skip: number,
     @Param('pageSize') pageSize: number,
-    @Query('filterText') filterText: string) {
-    return await this.methodologyAssessmentService.getResultPageData(skip, pageSize, filterText);
+    @Query('filterText') filterText: string,
+    @Query('sectorList') sectorList: string,
+    @Query('assessmentType') assessmentType: string|undefined) {
+    return await this.methodologyAssessmentService.getResultPageData(skip, pageSize, filterText, sectorList, assessmentType);
   }
 
   @Get('results')
