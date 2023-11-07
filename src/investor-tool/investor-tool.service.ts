@@ -483,6 +483,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       
       let data = new Results();
       data.assessment = request[0].data[0].assessment;
+      let results = await this.calculateNewAssessmentResults(data?.assessment?.id)
+      data.averageOutcome = results?.outcomeScore;
+      data.averageProcess = results?.processScore
       await this.resultRepository.save(data);
       console.log("saved in results");
        if (data2.isDraft==false && data2.isEdit==true) {
@@ -730,10 +733,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
     if (!data2.isDraft) {
       
-     let data = new Results();
-     data.assessment = request[0].data[0].assessment;
-     await this.resultRepository.save(data);
-     console.log("saved in results");
+      let data = new Results();
+      data.assessment = request[0].data[0].assessment;
+      let results = await this.calculateNewAssessmentResults(data?.assessment?.id).then(
+        
+      )
+      data.averageOutcome = results?.outcomeScore;
+      data.averageProcess = results?.processScore;
+      await this.resultRepository.save(data);
+      console.log("saved in results");
       if (data2.isDraft==false && data2.isEdit==true) {
         assessment.processDraftLocation = data2.proDraftLocation;
       assessment.outcomeDraftLocation = data2.outDraftLocation; 
@@ -1950,12 +1958,41 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .where("id = :id", { id: assesId })
     .execute()
 
-    await this.resultRepository
-    .createQueryBuilder()
-    .update(Results)
-    .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
-    .where("id = :id", { id: assesId })
-    .execute()
+    console.log("assesId",assesId)
+    // let result = new Results()
+    // await this.resultRepository
+    // .createQueryBuilder('res')
+    // .update(Results)
+    // .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
+    // .where("res.assessment_id = :assessment_id", { assessment_id: assesId })
+    // .execute()
+    // const existingResult = await this.resultRepository.findOne({ where: { assessment:  } });
+
+    //   if (existingResult) {
+    //     // If the record exists, update its fields
+    //     existingResult.averageProcess = finalProcessDataArray.processScore;
+    //     existingResult.averageOutcome = finalProcessDataArray.outcomeScore;
+        
+    //     // Save the updated record
+    //     await this.resultRepository.save(existingResult);
+    //   } else {
+    //     // If the record doesn't exist, create a new one
+    //     const newResult = this.resultRepository.create({
+    //       assessment: assessment,
+    //       averageProcess: finalProcessDataArray.processScore,
+    //       averageOutcome: finalProcessDataArray.outcomeScore,
+    //     });
+
+    //     // Save the new record
+    //     await this.resultRepository.save(newResult);
+    //   }
+
+
+
+
+
+
+
     return finalProcessDataArray;
   }
 
