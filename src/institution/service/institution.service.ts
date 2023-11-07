@@ -272,7 +272,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     username: string,
     id: number
   ) {
-    let filter: string = '';
+    let filter: string = 'ins.status=0';
   
     if (id != 0) {
       let user1 = await this.userRepository.findOne({ where: { id: id } });
