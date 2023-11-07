@@ -2391,6 +2391,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
   async getOutcomeData(assesId:number): Promise<any[]>{
+    let len =(await this.getProcessData(assesId)).length
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
@@ -2446,8 +2447,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       finalData[3] = categoryDataNew
     }
 
-  //  console.log("category dataaa",categoryDataNew)
-    return finalData
+  let newarr =new Array();
+  finalData.forEach((a)=>{
+    if(a.categoryID=len+1){
+      newarr.push(a);
+      len =len+1;
+    }
+
+  })
+  
+    return newarr
 
   }
 
