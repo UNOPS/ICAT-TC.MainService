@@ -1958,41 +1958,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .where("id = :id", { id: assesId })
     .execute()
 
-    console.log("assesId",assesId)
-    // let result = new Results()
-    // await this.resultRepository
-    // .createQueryBuilder('res')
-    // .update(Results)
-    // .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
-    // .where("res.assessment_id = :assessment_id", { assessment_id: assesId })
-    // .execute()
-    // const existingResult = await this.resultRepository.findOne({ where: { assessment:  } });
-
-    //   if (existingResult) {
-    //     // If the record exists, update its fields
-    //     existingResult.averageProcess = finalProcessDataArray.processScore;
-    //     existingResult.averageOutcome = finalProcessDataArray.outcomeScore;
-        
-    //     // Save the updated record
-    //     await this.resultRepository.save(existingResult);
-    //   } else {
-    //     // If the record doesn't exist, create a new one
-    //     const newResult = this.resultRepository.create({
-    //       assessment: assessment,
-    //       averageProcess: finalProcessDataArray.processScore,
-    //       averageOutcome: finalProcessDataArray.outcomeScore,
-    //     });
-
-    //     // Save the new record
-    //     await this.resultRepository.save(newResult);
-    //   }
-
-
-
-
-
-
-
     return finalProcessDataArray;
   }
 
