@@ -2451,7 +2451,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       finalData[3] = categoryDataNew
     }
-
+console.log("final dtata",finalData)
   let newarr =new Array();
   finalData.forEach((a)=>{
     if(a.categoryID=len+1){
@@ -2460,7 +2460,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
   })
-  
+  console.log("final newarr",newarr)
     return newarr
 
   }
