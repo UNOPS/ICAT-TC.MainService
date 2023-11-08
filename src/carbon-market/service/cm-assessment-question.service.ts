@@ -62,11 +62,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
+    let savedSdgs = []
     result.forEach(res => {
-      if (res.selectedSdg.id !== undefined) {
+      if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
         let obj = new SdgAssessment()
         obj.assessment = assessment
         obj.sdg = res.selectedSdg
+        savedSdgs.push(res.selectedSdg.id)
         selectedSdgs.push(obj)
       }
     })
@@ -147,6 +149,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     }
     try {
+      console.log(selectedSdgs)
       let res = await this.sdgAssessmentRepo.save(selectedSdgs)
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
