@@ -15,6 +15,7 @@ import { ApiHideProperty } from "@nestjs/swagger";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
+import { Results } from "src/methodology-assessment/entities/results.entity";
 
 @Entity()
 export class Assessment extends BaseTrackingEntity {
@@ -139,7 +140,8 @@ export class Assessment extends BaseTrackingEntity {
   @Column({ type: 'longtext', default: null, nullable: true })
   additioinalInfo: string;
 
-
+  @ApiHideProperty()
+  result:Results
   @ApiHideProperty()
   investor_assessment: InvestorAssessment[] = []
   @ApiHideProperty()
