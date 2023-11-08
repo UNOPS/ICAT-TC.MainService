@@ -2075,8 +2075,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
 
-    const sectorSum = this.assessmentRepo
-    .createQueryBuilder('assesment')
+    const sectorSum = this.resultRepository
+    .createQueryBuilder('result')
+    .leftJoinAndMapOne(
+      'result.assessment',
+      Assessment,
+      'assesment',
+      `result.assessment_id = assesment.id`,
+    )
     .leftJoinAndMapMany(
       'assesment.sdgasses',
       SdgAssessment,
