@@ -61,6 +61,7 @@ export class PortfolioController {
     },);
   }
 
+  
   @UseGuards(JwtAuthGuard)
   @Get('get-comparison-data/:portfolioId')
   async getPortfolioComparisonData(@Param('portfolioId') portfolioId: number){

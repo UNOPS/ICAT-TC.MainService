@@ -603,24 +603,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return result;
   }
 
-  async getResultPageData(skip, pageSize, filterText): Promise<any[]> {
+  async getResultPageData(skip, pageSize, filterText, sectorList, assessmentType): Promise<any[]> {
     // skip = skip - 10
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
-      filter =
-        // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
-        // '(dr.userName LIKE :filterText OR dr.action LIKE :filterText OR dr.actionStatus LIKE :filterText OR dr.editedOn LIKE :filterText)';
-        '(climateAction.policyName LIKE :filterText OR assessment.assessment_approach LIKE :filterText OR assessment.assessmentType LIKE :filterText OR assessment.tool LIKE :filterText)'
+      filter = '(climateAction.policyName LIKE :filterText OR assessment.assessment_approach LIKE :filterText OR assessment.assessmentType LIKE :filterText OR assessment.tool LIKE :filterText OR climateAction.intervention_id LIKE :filterText)'
     }
 
     let user = await this.userService.currentUser();
     let data = this.resultRepository.createQueryBuilder('result')
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'result.assessment',
         'assessment',
         'assessment.id = result.assessment_id'
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'assessment.climateAction',
         'climateAction',
         'climateAction.id = assessment.climateAction_id'
@@ -636,25 +633,27 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         'sector',
         'sector.id = policy_sector.sector_id'
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'assessment.user',
         'user',
         'user.id = assessment.user_id'
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'user.country',
         'country',
         'country.id = user.countryId'
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'user.userType',
         'userType',
         'userType.id = user.userTypeId'
       )
-      .where('(userType.name = :userType AND user.id = :userId)', {userType: 'External', userId: user.id})
-      .orWhere('userType.name <> :userType AND country.id = :countryId', {userType: 'External', countryId: user.country.id})
-      
-      .orderBy('assessment.id', 'DESC')
+      if (user.userType?.name === 'External') {
+        if (user?.id) data.where('user.id = :userId', {userId: user.id})
+      } else {
+        if (user?.country?.id) data.where('country.id = :countryId', {countryId: user.country.id})
+      }
+      data.orderBy('assessment.id', 'DESC')
       .skip(skip)
       .take(pageSize)
 
@@ -662,10 +661,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.andWhere(filter, {filterText: `%${filterText}%`})
       }
 
-      console.log(data.getQuery())
+      if (sectorList !== '') {
+        let secIds = sectorList.split(',')
+        data.andWhere('sector.id IN (:sectorList)', {sectorList: secIds})
+      }
 
-    let res=  await data.getManyAndCount()
-    return res
+      if (assessmentType !== '') {
+        data.andWhere('assessment.assessmentType = :type', {type: assessmentType})
+      }
+
+      try {
+        let res=  await data.getManyAndCount()
+        return res
+      } catch (err) {
+        console.log(err)
+      }
   }
 
   async results(): Promise<Results[]> {
