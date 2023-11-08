@@ -48,6 +48,9 @@ import { Country } from 'src/country/entity/country.entity';
       country: {
         eager: true,
       },
+      Institution: {
+        eager: true,
+      },
       
     },
 
