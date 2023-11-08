@@ -18,6 +18,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { ReportService } from 'src/report/report.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -41,6 +42,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     @InjectRepository(SdgAssessment) private readonly sdgAssessRepo: Repository<SdgAssessment>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     @InjectRepository(SdgAssessment) private readonly sdgAssessmentRepo: Repository<SdgAssessment>,
+    @InjectRepository(Results) private readonly resultsRepo: Repository<Results>,
     private userService: UsersService,
     private cMAssessmentQuestionService: CMAssessmentQuestionService,
     private masterDataService: MasterDataService,
@@ -103,15 +105,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async assessmentsDataByAssessmentId(portfolioId: number): Promise<any[]> {
-    let GHGvalue = 0;
-    let response = this.portfolioAssessRepo.find({
+   
+    let response = await this.portfolioAssessRepo.find({
       relations: ['assessment'],
       where: { portfolio: { id: portfolioId } },
     });
-
+// console.log(response)
     let result = new Array();
     let assessmentIdArray: number[] = [];
     for (let data of await response) {
+      let GHGvalue:number|null =null;
       let assessmentId = data.assessment.id
       assessmentIdArray.push(assessmentId)
       let res = await this.investorAssessRepo.find({
@@ -120,6 +123,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       });
       for (let x of res) {
         if (x.characteristics.id == 16) {
+          console.log("GHGvalue",x.expected_ghg_mitigation,x.id)
           GHGvalue = x.expected_ghg_mitigation;
         }
       }
@@ -164,8 +168,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         category.scoreAverage = (category.totalScore / category.totalCharacteristics)?.toFixed(0);
       });
       const updatedRes = Array.from(categoriesMap.values());
-
-      result.push({ result: updatedRes, assessment: data.assessment, ghgValue: GHGvalue })
+      if(GHGvalue!==null){
+        result.push({ result: updatedRes, assessment: data.assessment, ghgValue: GHGvalue })
+      }
+      
     }
 
     return result;
@@ -321,13 +327,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()) {
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
-        data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
-        if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
-        if (index === 0) {
-          comparisonData.col_set_2.push(...data.characteristics)
-          comparisonData.characteristic_count = data.characteristic_count
+        if(data) {
+          data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
+          if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
+          if (index === 0) {
+            comparisonData.col_set_2.push(...data.characteristics)
+            comparisonData.characteristic_count = data.characteristic_count
+          }
+          comparisonData.interventions.push({ ...int_data.intervention, ...data.ch_data })
         }
-        comparisonData.interventions.push({ ...int_data.intervention, ...data.ch_data })
       }
       comparisonData.order = idx + 1
       response.push(comparisonData)
@@ -1165,7 +1173,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         international: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_int),scGHG_int ),
         national: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_nat), scGHG_nat),
         subnational: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_sub), scGHG_sub),
-        category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score.scale_ghg_score), result.outcome_score.scale_ghg_score)
+        category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score?.scale_ghg_score), result.outcome_score?.scale_ghg_score)
       }
     }
 
@@ -1193,7 +1201,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scAD_int = data.scale_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
     let scAD_nat = data.scale_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
     let scAD_sub = data.scale_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
-    let scAD_cat_score = result.outcome_score.scale_adaptation_score
+    let scAD_cat_score = result.outcome_score?.scale_adaptation_score
 
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
@@ -1209,7 +1217,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let ssGHG_int = data.sustained_GHGs.find(o => o.ch_code === 'LONG_TERM')?.outcome_score
     let ssGHG_nat = data.sustained_GHGs.find(o => o.ch_code === 'MEDIUM_TERM')?.outcome_score
     let ssGHG_sub = data.sustained_GHGs.find(o => o.ch_code === 'SHORT_TERM')?.outcome_score
-    let ssGHG_cat_score = result.outcome_score.sustained_ghg_score
+    let ssGHG_cat_score = result.outcome_score?.sustained_ghg_score
 
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
@@ -1241,7 +1249,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let susAD_int = data.sustained_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
     let susAD_nat = data.sustained_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
     let susAD_sub = data.sustained_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
-    let susAD_cat_score = result.outcome_score.sustained_adaptation_score
+    let susAD_cat_score = result.outcome_score?.sustained_adaptation_score
 
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
@@ -1261,7 +1269,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
       sdg: Object.keys(sdg),
-      outcome_score: result.outcome_score.outcome_score
+      outcome_score: result.outcome_score?.outcome_score
     }))
 
     return {
@@ -1272,7 +1280,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
       sdg: Object.keys(sdg),
-      outcome_score: result.outcome_score.outcome_score
+      outcome_score: result.outcome_score?.outcome_score
     }
 
   }
@@ -1357,7 +1365,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
      
     }
 
-    let data = this.assessmentRepo.createQueryBuilder('asses')
+    let data = this.assessmentRepo.createQueryBuilder('asses').innerJoinAndMapOne(
+      'asses.result',
+      Results,
+      'result',
+      'asses.id = result.assessment_id'
+    )
 
     if (Number(portfolioID)) {
 
@@ -1372,7 +1385,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
       filter = filter + ' and asses.tool=:tool '
     }
-    data.select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+    data.select(['asses.id','asses.tool', 'result.id', 'result.averageProcess','result.averageOutcome'])
       .leftJoinAndMapOne(
         'asses.climateAction',
         ClimateAction,
