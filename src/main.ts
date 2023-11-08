@@ -63,7 +63,7 @@ async function bootstrap() {
   //   // reportOnly: true,
   // }));
   app.enableCors({
-    "origin": ["http://15.206.202.183/","http://localhost:4200","http://15.206.202.183:4200","http://15.206.202.183:7100","http://15.206.202.183:7000","http://15.206.202.183:7090","http://15.206.202.183:7080"],
+    "origin": ["https://icat-tc-tool.climatesi.com/","http://localhost:4200","http://15.206.202.183:4200","http://15.206.202.183:7100","http://15.206.202.183:7000","http://15.206.202.183:7090","http://15.206.202.183:7080"],
     // "origin": "http://15.206.202.183",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,

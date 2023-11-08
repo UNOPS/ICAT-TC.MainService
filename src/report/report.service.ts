@@ -1912,7 +1912,7 @@ console.log(asssCharacteristicasscalesd)
       }
       const outcome_level = outcome_data.find(a => a.comparison_type == 'OUTCOME LEVEL COMPARISON');
       if (outcome_level) {
-        // console.log(outcome_level)
+        console.log(outcome_level)
         contentTwo.outcome_level = outcome_level.interventions;
       }
 
