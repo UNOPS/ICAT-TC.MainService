@@ -62,6 +62,7 @@ import { BarrierCategory } from './climate-action/entity/barrier-category.entity
 import { PortfolioQuestions } from './investor-tool/entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_question-details.entity';
 import { GeographicalAreasCovered } from './investor-tool/entities/geographical-areas-covered.entity';
+import { SystemStatus } from './system-status/entities/system-status.entity';
 
 
 export const config: ConnectionOptions = {
@@ -87,10 +88,10 @@ password: '1997',
 ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
 Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
 ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification,
-PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered],
+PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered,SystemStatus],
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false, 
+  synchronize: true, 
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
