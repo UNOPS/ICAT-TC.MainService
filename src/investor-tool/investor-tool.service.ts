@@ -2120,7 +2120,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     sectorSum.where(filter,{tool: tool, userId: userId, userCountryId: userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('sdg.number', 'number')
-      .addSelect('COUNT(sdgasses.id)', 'count')
+      .addSelect('count(DISTINCT concat(assesment.id, sdg.id))', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
       ;
