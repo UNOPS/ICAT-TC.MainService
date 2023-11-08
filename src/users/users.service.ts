@@ -263,6 +263,9 @@ export class UsersService extends TypeOrmCrudService<User> {
       newUser.institution = dto.ins;
       newUser.country = dto.country;
       newUser.uniqueIdentification = dto.uniqueIdentification;
+      let ut = new UserType()
+      ut.id = dto.userType.id
+      newUser.userType = ut
       await this.repo.save(newUser);
     }
   }
