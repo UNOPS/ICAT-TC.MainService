@@ -321,13 +321,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()) {
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
-        data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
-        if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
-        if (index === 0) {
-          comparisonData.col_set_2.push(...data.characteristics)
-          comparisonData.characteristic_count = data.characteristic_count
+        if(data) {
+          data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
+          if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
+          if (index === 0) {
+            comparisonData.col_set_2.push(...data.characteristics)
+            comparisonData.characteristic_count = data.characteristic_count
+          }
+          comparisonData.interventions.push({ ...int_data.intervention, ...data.ch_data })
         }
-        comparisonData.interventions.push({ ...int_data.intervention, ...data.ch_data })
       }
       comparisonData.order = idx + 1
       response.push(comparisonData)
@@ -1165,7 +1167,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         international: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_int),scGHG_int ),
         national: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_nat), scGHG_nat),
         subnational: this.mapNameAndValue(this.investorToolService.mapScaleScores(scGHG_sub), scGHG_sub),
-        category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score.scale_ghg_score), result.outcome_score.scale_ghg_score)
+        category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(result.outcome_score?.scale_ghg_score), result.outcome_score?.scale_ghg_score)
       }
     }
 
@@ -1193,7 +1195,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scAD_int = data.scale_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
     let scAD_nat = data.scale_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
     let scAD_sub = data.scale_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
-    let scAD_cat_score = result.outcome_score.scale_adaptation_score
+    let scAD_cat_score = result.outcome_score?.scale_adaptation_score
 
     let scale_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
@@ -1209,7 +1211,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let ssGHG_int = data.sustained_GHGs.find(o => o.ch_code === 'LONG_TERM')?.outcome_score
     let ssGHG_nat = data.sustained_GHGs.find(o => o.ch_code === 'MEDIUM_TERM')?.outcome_score
     let ssGHG_sub = data.sustained_GHGs.find(o => o.ch_code === 'SHORT_TERM')?.outcome_score
-    let ssGHG_cat_score = result.outcome_score.sustained_ghg_score
+    let ssGHG_cat_score = result.outcome_score?.sustained_ghg_score
 
     let sustained_GHGs = {
       col_set_1: { label: 'GHG', colspan: 4 },
@@ -1241,7 +1243,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let susAD_int = data.sustained_adaptation.find(o => o.ch_code === 'INTERNATIONAL')?.outcome_score
     let susAD_nat = data.sustained_adaptation.find(o => o.ch_code === 'NATIONAL')?.outcome_score
     let susAD_sub = data.sustained_adaptation.find(o => o.ch_code === 'SUBNATIONAL')?.outcome_score
-    let susAD_cat_score = result.outcome_score.sustained_adaptation_score
+    let susAD_cat_score = result.outcome_score?.sustained_adaptation_score
 
     let sustained_adaptation = {
       col_set_1: { label: 'ADAPTATION', colspan: 4 },
@@ -1261,7 +1263,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
       sdg: Object.keys(sdg),
-      outcome_score: result.outcome_score.outcome_score
+      outcome_score: result.outcome_score?.outcome_score
     }))
 
     return {
@@ -1272,7 +1274,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
       sdg: Object.keys(sdg),
-      outcome_score: result.outcome_score.outcome_score
+      outcome_score: result.outcome_score?.outcome_score
     }
 
   }
