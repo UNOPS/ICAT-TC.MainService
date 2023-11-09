@@ -2451,17 +2451,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       finalData[3] = categoryDataNew
     }
-console.log("final dtata",finalData)
-  let newarr =new Array();
-  finalData.forEach((a)=>{
-    if(a.categoryID=len+1){
-      newarr.push(a);
-      len =len+1;
-    }
-
-  })
-  console.log("final newarr",newarr)
-    return newarr
+  let n=0;
+    finalData.forEach((a)=>{
+     a.id=n;
+     n++;
+      }
+    )
+    
+  console.log("final dtata",finalData)
+    return finalData
 
   }
 
