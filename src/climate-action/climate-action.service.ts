@@ -204,13 +204,13 @@ async allProject(
       } */
 
     const currentUser = await user;
-    const isUserExternal = currentUser?.userType?.name === 'External';
+    const isUserExternal = currentUser?.userType?.description === 'External';
 
     // console.log("currreenntt", currentUser)
     for (const x of await res) {
       const isSameUser = x.user?.id === currentUser?.id;
       const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.user?.userType?.name !== 'External';
+      const isUserInternal = x.user?.userType?.description !== 'External';
 
       if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
         policyList.push(x);
@@ -237,13 +237,13 @@ async allProject(
    
 
     const currentUser = await user;
-    const isUserExternal = currentUser?.userType?.name === 'External';
+    const isUserExternal = currentUser?.userType?.description === 'External';
 
     // console.log("currreenntt", currentUser)
     for (const x of await reports) {
       const isSameUser = x.climateAction.user?.id === currentUser?.id;
       const isMatchingCountry = x.climateAction.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.climateAction.user?.userType?.name !== 'External';
+      const isUserInternal = x.climateAction.user?.userType?.description !== 'External';
 
       if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
         policyList.push(x.climateAction);
@@ -325,7 +325,7 @@ async allProject(
       .getMany();
   
     const policyList: Results[] = [];
-    const isUserExternal = currentUser?.userType?.name === 'External';
+    const isUserExternal = currentUser?.userType?.description === 'External';
   
     for (const x of res) {
       
@@ -333,7 +333,7 @@ async allProject(
         // console.log("user",  x.assessment?.user?.country?.id,currentUser?.id)
         const isSameUser = x.assessment?.user?.id === currentUser?.id;
         const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
-        const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
+        const isUserInternal = x.assessment?.user?.userType?.description !== 'External';
         // console.log("isSameUser", isSameUser,"isMatchingCountry",isMatchingCountry,"isUserInternal",isUserInternal)
     
         // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
@@ -382,7 +382,7 @@ async allProject(
     countryId: number,
     sectorId: number,
   ): Promise<Pagination<ClimateAction>> {
-    console.log("filterText",filterText)
+    // console.log("filterText",filterText)
     let filter: string = '';
     let user = this.userService.currentUser();
     
@@ -399,12 +399,15 @@ async allProject(
         filter = `dr.projectStatusId = :projectStatusId`;
       }
     }
-
+   
     if (projectApprovalStatusId != 0) {
+      // console.log("projectApprovalStatusId",projectApprovalStatusId)
       if (filter) {
+        // filter = `${filter}  and dr.projectApprovalStatusId  in (1,2,4,5)`;
         filter = `${filter}  and dr.projectApprovalStatusId = :projectApprovalStatusId`;
       } else {
         filter = `dr.projectApprovalStatusId = :projectApprovalStatusId`;
+        // filter = `dr.projectApprovalStatusId in (1,2,4,5)`;
       }
     }
 
@@ -467,43 +470,49 @@ async allProject(
       })
       .orderBy('dr.id', 'DESC');
 
-      const isUserExternal = currentUser?.userType?.name === 'External';
-      const isUserVerifier = currentUser?.userType?.name === 'Verifier';
+      const isUserExternal = currentUser?.userType?.description === 'External';
+      const isUserVerifier = currentUser?.userType?.description === 'Verifier';
       //users filter by country id
-      const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
-      console.log("user type", currentUser?.userType?.name)
+      const isUsersFilterByInstitute=currentUser?.userType?.description === 'Institution Admin'||currentUser?.userType?.description === 'Data Entry Operator'
+      console.log("user type", currentUser?.userType?.description)
       const allowedUserTypes = [
         'Country Admin',
         'Sector Admin',
-        'Country User',
+        'Country_User',
         'MRV Admin',
         'Data Collection Team',
         'QC Team',
-        'MASTER_ADMIN',
+        'Master_Admin',
       ];
       const allowedUserTypesForAcceptedInterverntions = [
         'Sector Admin',
-        'Country User',
+        'Country_User',
         'MRV Admin',
+        'Country Admin',
+        'Master_Admin',
       ];
       if (isUserExternal || isUserVerifier){
         data.andWhere('user.id = :userId', { userId: currentUser.id })
       }
-      else if  (allowedUserTypes.includes(currentUser?.userType?.name)){
-        console.log("............")
+      else if  (allowedUserTypes.includes(currentUser?.userType?.description)){
+        // console.log("............")
         data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
       }
       else if (isUsersFilterByInstitute){
-        console.log("+++++++++++",isUsersFilterByInstitute)
+        // console.log("+++++++++++",isUsersFilterByInstitute)
         data.andWhere('ins.id = :insId', { insId: currentUser?.institution?.id  })
       }
       else{
         data.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
       }
       // accpeted policies showing
-      if  (!allowedUserTypesForAcceptedInterverntions.includes(currentUser?.userType?.name)){
-        console.log("*********")
-        data.andWhere('pas.id != :projectApprovalStatusId', { projectApprovalStatusId: 1 })
+      if  (!allowedUserTypesForAcceptedInterverntions.includes(currentUser?.userType?.description)){
+        console.log("not allowed for accepted policies")
+        data.andWhere('pas.id in (4)')
+      }
+      else{
+        console.log("allowed for accepted policies")
+        data.andWhere('pas.id  in (1,2,4,5)')
       }
 
 

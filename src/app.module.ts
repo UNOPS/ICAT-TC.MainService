@@ -95,6 +95,8 @@ import { BarrierCategory } from './climate-action/entity/barrier-category.entity
 import { PortfolioQuestions } from './investor-tool/entities/portfolio-questions.entity';
 import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_question-details.entity';
 import { MasterDataService } from './shared/entities/master-data.service';
+import { SystemStatusModule } from './system-status/system-status.module';
+import { SystemStatus } from './system-status/entities/system-status.entity';
 
 @Module({
   imports: [
@@ -143,7 +145,8 @@ import { MasterDataService } from './shared/entities/master-data.service';
       SdgAssessment,
       BarrierCategory,
       PortfolioQuestions,
-      PortfolioQuestionDetails
+      PortfolioQuestionDetails,
+      SystemStatus
     ]),
     UsersModule,
     UserTypeModule,
@@ -163,6 +166,7 @@ import { MasterDataService } from './shared/entities/master-data.service';
     MethodologyAssessmentModule,
     AssessmentModule,
     InstitutionModule,
+    SystemStatusModule,
     // ServeStaticModule.forRoot({
     //   rootPath: join(__dirname, '..', '../static-files'),
     //   renderPath: 'icatcountryportal',

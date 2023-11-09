@@ -483,6 +483,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       
       let data = new Results();
       data.assessment = request[0].data[0].assessment;
+      let results = await this.calculateNewAssessmentResults(data?.assessment?.id)
+      data.averageOutcome = results?.outcomeScore;
+      data.averageProcess = results?.processScore
       await this.resultRepository.save(data);
       console.log("saved in results");
        if (data2.isDraft==false && data2.isEdit==true) {
@@ -730,10 +733,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      }
     if (!data2.isDraft) {
       
-     let data = new Results();
-     data.assessment = request[0].data[0].assessment;
-     await this.resultRepository.save(data);
-     console.log("saved in results");
+      let data = new Results();
+      data.assessment = request[0].data[0].assessment;
+      let results = await this.calculateNewAssessmentResults(data?.assessment?.id).then(
+        
+      )
+      data.averageOutcome = results?.outcomeScore;
+      data.averageProcess = results?.processScore;
+      await this.resultRepository.save(data);
+      console.log("saved in results");
       if (data2.isDraft==false && data2.isEdit==true) {
         assessment.processDraftLocation = data2.proDraftLocation;
       assessment.outcomeDraftLocation = data2.outDraftLocation; 
@@ -1792,7 +1800,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     finalProcessDataArray.processScore = process_score === null ? null : this.roundDown(process_score / 100);
 
     // outcome..............
-    let total_outcome_cat_weight = 0
+    let total_outcome_cat_weight = null
     let outcomeArray: typeof outcomeCategoryData[] = []
     for (let category of categories.meth1Outcomes) {
       // let sdg
@@ -1882,8 +1890,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           // console.log(isSutained,category.code)
           category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; //round down
           sdgArray.push(category)
-          // total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          // console.log(category.category, category.category_weight * category.category_score.value)
         }
 
 
@@ -1905,8 +1911,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         else {
           category.category_score = { name: this.mapScaleScores(this.roundDown(cat_score / total_char)), value: this.roundDown(cat_score / total_char) }; //round down
           total_outcome_cat_weight += category.category_weight * category.category_score.value;
-          console.log("total_outcome_cat_weight",total_outcome_cat_weight)
-          // console.log(category.category, category.category_weight * category.category_score.value)
         }
       }
     }
@@ -1929,15 +1933,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // console.log("11")
     }
     finalProcessDataArray.outcomeData = outcomeArray;
-    
-    if(total_outcome_cat_weight==0){
-      finalProcessDataArray.outcomeScore =null
-      // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
-    }
-    else{
+    console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
+    if(total_outcome_cat_weight !=0 && total_outcome_cat_weight != null){
+      // console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
       // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
     }
+    // else{
+    //   finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
+    //   // console.log("total_outcome_cat_weight",total_outcome_cat_weight)
+    // }
     let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD')
     let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD')
     console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
@@ -1953,12 +1958,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .where("id = :id", { id: assesId })
     .execute()
 
-    await this.resultRepository
-    .createQueryBuilder()
-    .update(Results)
-    .set({ averageProcess: finalProcessDataArray.processScore,averageOutcome:finalProcessDataArray.outcomeScore })
-    .where("id = :id", { id: assesId })
-    .execute()
     return finalProcessDataArray;
   }
 
@@ -2075,8 +2074,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
 
-    const sectorSum = this.assessmentRepo
-    .createQueryBuilder('assesment')
+    const sectorSum = this.resultRepository
+    .createQueryBuilder('result')
+    .leftJoinAndMapOne(
+      'result.assessment',
+      Assessment,
+      'assesment',
+      `result.assessment_id = assesment.id`,
+    )
     .leftJoinAndMapMany(
       'assesment.sdgasses',
       SdgAssessment,
@@ -2115,7 +2120,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     sectorSum.where(filter,{tool: tool, userId: userId, userCountryId: userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('sdg.number', 'number')
-      .addSelect('COUNT(sdgasses.id)', 'count')
+      .addSelect('count(DISTINCT concat(assesment.id, sdg.id))', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
       ;
@@ -2391,6 +2396,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
   async getOutcomeData(assesId:number): Promise<any[]>{
+    let len =(await this.getProcessData(assesId)).length
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
@@ -2445,8 +2451,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       finalData[3] = categoryDataNew
     }
-
-  //  console.log("category dataaa",categoryDataNew)
+  let n=0;
+    finalData.forEach((a)=>{
+     a.id=n;
+     n++;
+      }
+    )
+    
+  console.log("final dtata",finalData)
     return finalData
 
   }
