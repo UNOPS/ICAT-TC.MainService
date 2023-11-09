@@ -78,7 +78,7 @@ export const config: ConnectionOptions = {
 
 username: 'root',
 password: '7860150',
- database: 'tc-main',    
+ database: 'tc-main-dump',    
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
