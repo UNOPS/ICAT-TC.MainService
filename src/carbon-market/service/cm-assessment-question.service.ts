@@ -62,11 +62,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
+    let savedSdgs = []
     result.forEach(res => {
-      if (res.selectedSdg.id !== undefined) {
+      if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
         let obj = new SdgAssessment()
         obj.assessment = assessment
         obj.sdg = res.selectedSdg
+        savedSdgs.push(res.selectedSdg.id)
         selectedSdgs.push(obj)
       }
     })
@@ -147,6 +149,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     }
     try {
+      console.log(selectedSdgs)
       let res = await this.sdgAssessmentRepo.save(selectedSdgs)
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
@@ -801,17 +804,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let tool = 'CARBON_MARKET';
     // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
 
-    const results = await this.assessmentRepo.find({
-      relations: ['climateAction'],
+    const results = await this.resultsRepo.find({
+      relations: ['assessment',],
       order: {
         id: 'DESC'
       }
     });
     // let filteredResults =results
-    let filteredResults = results.filter(result => result.tool === tool);
+    let filteredResults = results.filter(result => result?.assessment?.tool === tool);
     if (isUserExternal) {
       filteredResults = filteredResults.filter(result => {
-        if (result?.user?.id === currentUser?.id) {
+        if (result.assessment?.user?.id === currentUser?.id) {
           return result
         }
       })
@@ -819,20 +822,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
     else {
       filteredResults = filteredResults.filter(result => {
-        if (result?.climateAction?.country?.id === currentUser?.country?.id) {
+        if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
           return result;
         }
       })
     }
 
     const formattedResults = await Promise.all(filteredResults.map(async (result) => {
-      const data = await this.calculateResult(result.id);
+      // const data = await this.calculateResult(result.id);
       return {
         assessment: result.id,
-        process_score: data?.process_score,
-        outcome_score: data?.outcome_score?.outcome_score,
-        intervention: result.climateAction?.policyName,
-        intervention_id: result.climateAction?.intervention_id
+        process_score: result.assessment?.process_score,
+        outcome_score: result.assessment?.outcome_score,
+        intervention: result.assessment.climateAction?.policyName,
+        intervention_id: result.assessment.climateAction?.intervention_id
       };
     }));
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
