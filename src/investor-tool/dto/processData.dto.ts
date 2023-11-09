@@ -5,6 +5,7 @@ export class ProcessData {
     categoryID:number;
     data:InvestorAssessment[];
     type: string;
+    id:number
 }
 export class ProcessDataDto {
     processData:ProcessData[]
