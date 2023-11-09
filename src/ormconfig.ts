@@ -73,12 +73,12 @@ export const config: ConnectionOptions = {
  
 
 //   username: 'root',
-//  password: 'pradeep123#',
+ password: 'pradeep123#',
 // password: 'password',
 //  database: 'main',    
 
 username: 'root',
-password: '1997',
+// password: '1997',
  database: 'tc-main',   
   
   autoLoadEntities: true, 
