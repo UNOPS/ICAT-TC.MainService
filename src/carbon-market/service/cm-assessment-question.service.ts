@@ -63,15 +63,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let _answers = []
     let selectedSdgs = []
     let savedSdgs = []
-    result.forEach(res => {
+    let exists = []
+    // result.forEach(async res => {
+    for await (let res of result) {
       if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
-        let obj = new SdgAssessment()
-        obj.assessment = assessment
-        obj.sdg = res.selectedSdg
-        savedSdgs.push(res.selectedSdg.id)
-        selectedSdgs.push(obj)
+        let exist = await this.sdgAssessmentRepo.find({where: {sdg: {id: res.selectedSdg.id}, assessment: {id: assessment.id}}})
+        if (exist.length === 0) {
+          let obj = new SdgAssessment()
+          obj.assessment = assessment
+          obj.sdg = res.selectedSdg
+          savedSdgs.push(res.selectedSdg.id)
+          selectedSdgs.push(obj)
+        } else exists.push(res.selectedSdg.id)
       }
-    })
+    }  
     if (isDraft) {
       assessment.isDraft = isDraft;
       if(type =="prose"){
@@ -130,7 +135,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           }
           if (res.isSDG) {
             // ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100)  //previous calculation
-            ass_answer.score = (res.selectedScore.value / (selectedSdgs.length * 3))
+            ass_answer.score = (res.selectedScore.value / ((selectedSdgs.length + exists.length )* 3))
           }
         }
         ass_answer.assessment_question = q_res
@@ -150,7 +155,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
     try {
       console.log(selectedSdgs)
-      let res = await this.sdgAssessmentRepo.save(selectedSdgs)
+      if (selectedSdgs.length > 0) {
+        let res = await this.sdgAssessmentRepo.save(selectedSdgs)
+      }
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
       console.log(err)
