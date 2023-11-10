@@ -2830,7 +2830,7 @@ export class ReportPagesService {
                 '</td><td>' +
                ( a.sustained_cat_score.name?a.sustained_cat_score.name:'-') +
                 '</td><td>' +
-                (a.category_score.name?a.category_score.name:'-') +
+                (a.category_score.name?a.category_score.name:a.category_score) +
                 '</td></tr>',
             )
             .join('')}
