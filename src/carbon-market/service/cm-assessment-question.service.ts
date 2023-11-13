@@ -79,6 +79,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }  
     if (isDraft) {
       assessment.isDraft = isDraft;
+      assessment.lastDraftLocation =type;
       if(type =="prose"){
         assessment.processDraftLocation=name;
       }else if (type=="out"){
