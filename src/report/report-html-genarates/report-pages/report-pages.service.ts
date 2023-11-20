@@ -5,6 +5,13 @@ import {
   ComparisonReportReportContentThree,
   ComparisonReportReportContentTwo,
   ComparisonReportReportTableOfContent,
+  ReportCarbonMarketDtoContentFive,
+  ReportCarbonMarketDtoContentFour,
+  ReportCarbonMarketDtoContentOne,
+  ReportCarbonMarketDtoContentThree,
+  ReportCarbonMarketDtoContentTwo,
+  ReportCarbonMarketDtoCoverPage,
+  ReportCarbonMarketDtoTableOfContent,
   ReportContentOne,
   ReportContentTwo,
   ReportCoverPage,
@@ -1503,6 +1510,76 @@ export class ReportPagesService {
     );
   }
 
+  coverCarbonMarketPage(coverPage: ReportCarbonMarketDtoCoverPage): string {
+    const cover = `<div id="cover">
+    <div  style="height: 250px;">
+    <!-- <div  class="row ">
+       <div  class="col ">
+       <img height="50px" src="./logo.png" >
+       </div>                
+   </div> -->
+   <div class="row ">
+       <div class="col h2 d-flex justify-content-center">
+         ${coverPage.generateReportName}
+       </div>
+   </div>
+   <div class="row ">
+   <div class="col h4 d-flex justify-content-center">
+      
+   </div>
+</div>
+<div class="row ">
+<div class="col h4 d-flex justify-content-center">
+  
+</div>
+</div>
+   <div class="row ">
+     <div class="col h4 d-flex justify-content-center">
+       Report Date:${coverPage.reportDate}
+     </div>
+ </div>
+ </div>
+ <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+       <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
+ </div>
+    </div>`;
+
+    return cover;
+  }
+
+  CarbonMarketTableOfContent(
+    header: string,
+    footer: string,
+    tableOfContent: ReportCarbonMarketDtoTableOfContent,
+  ): string {
+    return '';
+  }
+  CarbonMarketcontentOne(header: string,
+    footer: string,
+   content: ReportCarbonMarketDtoContentOne,): string {
+    return '';
+  }
+  CarbonMarketcontentTwo(header: string,
+    footer: string,
+    content: ReportCarbonMarketDtoContentTwo,): string {
+    return '';
+  }
+  CarbonMarketcontentThree(header: string,
+    footer: string,
+    content: ReportCarbonMarketDtoContentThree,): string {
+    return '';
+  }
+  CarbonMarketcontentFour(header: string,
+    footer: string,
+    content: ReportCarbonMarketDtoContentFour,): string {
+    return '';
+  }
+  CarbonMarketcontentFive(header: string,
+    footer: string,
+    content: ReportCarbonMarketDtoContentFive,): string {
+    return '';
+  }
+
   comparisonCoverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -1699,21 +1776,23 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                (a.id?a.id:'-') +
+                (a.id ? a.id : '-') +
                 '</td><td>' +
-                (a.name?a.name:'-') +
+                (a.name ? a.name : '-') +
                 '</td><td>' +
-               ( a.tool? a.tool:'-') +
+                (a.tool ? a.tool : '-') +
                 '</td><td>' +
-                (a.status?a.status:'-') +
+                (a.status ? a.status : '-') +
                 '</td><td>' +
-                (a['R_&_D']?a['R_&_D']:'-') +
+                (a['R_&_D'] ? a['R_&_D'] : '-') +
                 '</td><td>' +
-                (a.ADOPTION?a.ADOPTION:'-') +
+                (a.ADOPTION ? a.ADOPTION : '-') +
                 '</td><td>' +
-                (a.SCALE_UP?a.SCALE_UP:'-') +
+                (a.SCALE_UP ? a.SCALE_UP : '-') +
                 '</td><td>' +
-                (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
+                (a.category_score != undefined || a.category_score != null
+                  ? a.category_score
+                  : '-') +
                 '</td></tr>',
             )
             .join('')}
@@ -1756,21 +1835,23 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              (a.id?a.id:'-') +
+              (a.id ? a.id : '-') +
               '</td><td>' +
-              (a.name?a.name:'-') +
+              (a.name ? a.name : '-') +
               '</td><td>' +
-             ( a.tool? a.tool:'-') +
+              (a.tool ? a.tool : '-') +
               '</td><td>' +
-              (a.status?a.status:'-') +
+              (a.status ? a.status : '-') +
               '</td><td>' +
-              (a.ENTREPRENEURS?a.ENTREPRENEURS :'-' )+
+              (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
               '</td><td>' +
-              (a.COALITION_OF_ADVOCATES?a.COALITION_OF_ADVOCATES:'-') +
+              (a.COALITION_OF_ADVOCATES ? a.COALITION_OF_ADVOCATES : '-') +
               '</td><td>' +
-              (a.BENIFICIARIES?a.BENIFICIARIES:'-') +
+              (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
               '</td><td>' +
-              (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
+              (a.category_score != undefined || a.category_score != null
+                ? a.category_score
+                : '-') +
               '</td></tr>',
           )
           .join('')}
@@ -1823,21 +1904,25 @@ export class ReportPagesService {
                  status: string;
                }) =>
                  '<tr><td>' +
-                 (a.id?a.id:'-') +
+                 (a.id ? a.id : '-') +
                  '</td><td>' +
-                 (a.name?a.name:'-') +
+                 (a.name ? a.name : '-') +
                  '</td><td>' +
-                ( a.tool? a.tool:'-') +
+                 (a.tool ? a.tool : '-') +
                  '</td><td>' +
-                 (a.status?a.status:'-') +
+                 (a.status ? a.status : '-') +
                  '</td><td>' +
-                 (a.ECONOMIC_NON_ECONOMIC?a.ECONOMIC_NON_ECONOMIC:'-') +
+                 (a.ECONOMIC_NON_ECONOMIC ? a.ECONOMIC_NON_ECONOMIC : '-') +
                  '</td><td>' +
-                 (a.DISINCENTIVES?a.DISINCENTIVES:'-') +
+                 (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
                  '</td><td>' +
-                ( a.INSTITUTIONAL_AND_REGULATORY? a.INSTITUTIONAL_AND_REGULATORY:'-') +
+                 (a.INSTITUTIONAL_AND_REGULATORY
+                   ? a.INSTITUTIONAL_AND_REGULATORY
+                   : '-') +
                  '</td><td>' +
-                 (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
+                 (a.category_score != undefined || a.category_score != null
+                   ? a.category_score
+                   : '-') +
                  '</td></tr>',
              )
              .join('')}
@@ -1880,21 +1965,23 @@ export class ReportPagesService {
                category_score: string;
              }) =>
                '<tr><td>' +
-               (a.id?a.id:'-') +
+               (a.id ? a.id : '-') +
                '</td><td>' +
-               (a.name?a.name:'-') +
+               (a.name ? a.name : '-') +
                '</td><td>' +
-              ( a.tool? a.tool:'-') +
+               (a.tool ? a.tool : '-') +
                '</td><td>' +
-               (a.status?a.status:'-') +
+               (a.status ? a.status : '-') +
                '</td><td>' +
-               (a.AWARENESS?a.AWARENESS:'-') +
+               (a.AWARENESS ? a.AWARENESS : '-') +
                '</td><td>' +
-               (a.BEHAVIOUR?a.BEHAVIOUR:'-') +
+               (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
                '</td><td>' +
-               (a.SOCIAL_NORMS?a.SOCIAL_NORMS:'-') +
+               (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
                '</td><td>' +
-               (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
+               (a.category_score != undefined || a.category_score != null
+                 ? a.category_score
+                 : '-') +
                '</td></tr>',
            )
            .join('')}
@@ -1951,23 +2038,27 @@ export class ReportPagesService {
                   category_score: string;
                 }) =>
                   '<tr><td>' +
-                  (a.id?a.id:'-') +
+                  (a.id ? a.id : '-') +
                   '</td><td>' +
-                  (a.name?a.name:'-') +
+                  (a.name ? a.name : '-') +
                   '</td><td>' +
-                 ( a.tool? a.tool:'-') +
+                  (a.tool ? a.tool : '-') +
                   '</td><td>' +
-                  (a.status?a.status:'-') +
+                  (a.status ? a.status : '-') +
                   '</td><td>' +
-                  (a.Technology?a.Technology:'-') +
+                  (a.Technology ? a.Technology : '-') +
                   '</td><td>' +
-                  (a.Agents?a.Agents:'-') +
+                  (a.Agents ? a.Agents : '-') +
                   '</td><td>' +
-                  (a.Incentives?a.Incentives:'-') +
+                  (a.Incentives ? a.Incentives : '-') +
                   '</td><td>' +
-                  (a['Norms and behavioral change']?a['Norms and behavioral change']:'-') +
+                  (a['Norms and behavioral change']
+                    ? a['Norms and behavioral change']
+                    : '-') +
                   '</td><td>' +
-                  (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
+                  (a.category_score != undefined || a.category_score != null
+                    ? a.category_score
+                    : '-') +
                   '</td></tr>',
               )
               .join('')}
@@ -2047,21 +2138,21 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                (a.id?a.id:'-') +
+                (a.id ? a.id : '-') +
                 '</td><td>' +
-                (a.name?a.name:'-') +
+                (a.name ? a.name : '-') +
                 '</td><td>' +
-               ( a.tool? a.tool:'-') +
+                (a.tool ? a.tool : '-') +
                 '</td><td>' +
-                (a.status?a.status:'-') +
+                (a.status ? a.status : '-') +
                 '</td><td>' +
-                (a.international.name?a.international.name:'-') +
+                (a.international.name ? a.international.name : '-') +
                 '</td><td>' +
-                (a.national.name?a.national.name:'-') +
+                (a.national.name ? a.national.name : '-') +
                 '</td><td>' +
-                (a.subnational.name?a.subnational.name:'-') +
+                (a.subnational.name ? a.subnational.name : '-') +
                 '</td><td>' +
-                (a.category_score.name?a.category_score.name:'-') +
+                (a.category_score.name ? a.category_score.name : '-') +
                 '</td></tr>',
             )
             .join('')}
@@ -2110,21 +2201,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              (a.id?a.id:'-') +
+              (a.id ? a.id : '-') +
               '</td><td>' +
-              (a.name?a.name:'-') +
+              (a.name ? a.name : '-') +
               '</td><td>' +
-             ( a.tool? a.tool:'-') +
+              (a.tool ? a.tool : '-') +
               '</td><td>' +
-              (a.status?a.status:'-') +
+              (a.status ? a.status : '-') +
               '</td><td>' +
-              (a.long_term.name?a.long_term.name:'-') +
+              (a.long_term.name ? a.long_term.name : '-') +
               '</td><td>' +
-              (a.medium_term.name?a.medium_term.name:'-') +
+              (a.medium_term.name ? a.medium_term.name : '-') +
               '</td><td>' +
-              (a.short_term.name?a.short_term.name:'-') +
+              (a.short_term.name ? a.short_term.name : '-') +
               '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
+              (a.category_score.name ? a.category_score.name : '-') +
               '</td></tr>',
           )
           .join('')}
@@ -2187,21 +2278,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              (a.id?a.id:'-') +
+              (a.id ? a.id : '-') +
               '</td><td>' +
-              (a.name?a.name:'-') +
+              (a.name ? a.name : '-') +
               '</td><td>' +
-             ( a.tool? a.tool:'-') +
+              (a.tool ? a.tool : '-') +
               '</td><td>' +
-              (a.status?a.status:'-') +
+              (a.status ? a.status : '-') +
               '</td><td>' +
-              (a.international.name?a.international.name:'-') +
+              (a.international.name ? a.international.name : '-') +
               '</td><td>' +
-              (a.national.name?a.national.name:'-') +
+              (a.national.name ? a.national.name : '-') +
               '</td><td>' +
-              (a.subnational.name?a.subnational.name:'-') +
+              (a.subnational.name ? a.subnational.name : '-') +
               '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
+              (a.category_score.name ? a.category_score.name : '-') +
               '</td></tr>',
           )
           .join('')}
@@ -2253,21 +2344,21 @@ export class ReportPagesService {
             score: string;
           }) =>
             '<tr><td>' +
-            (a.id?a.id:'-') +
+            (a.id ? a.id : '-') +
             '</td><td>' +
-            (a.name?a.name:'-') +
+            (a.name ? a.name : '-') +
             '</td><td>' +
-           ( a.tool? a.tool:'-') +
+            (a.tool ? a.tool : '-') +
             '</td><td>' +
-            (a.status?a.status:'-') +
+            (a.status ? a.status : '-') +
             '</td><td>' +
-            (a.long_term.name?a.long_term.name:'-') +
+            (a.long_term.name ? a.long_term.name : '-') +
             '</td><td>' +
-            (a.medium_term.name?a.medium_term.name:'-') +
+            (a.medium_term.name ? a.medium_term.name : '-') +
             '</td><td>' +
-            (a.short_term.name?a.short_term.name:'-') +
+            (a.short_term.name ? a.short_term.name : '-') +
             '</td><td>' +
-            (a.category_score.name?a.category_score.name:'-') +
+            (a.category_score.name ? a.category_score.name : '-') +
             '</td></tr>',
         )
         .join('')}
@@ -2280,7 +2371,6 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-    
 
     const sdg_pages = allsdg
       .map(
@@ -2332,21 +2422,21 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              (a.id?a.id:'-') +
+              (a.id ? a.id : '-') +
               '</td><td>' +
-              (a.name?a.name:'-') +
+              (a.name ? a.name : '-') +
               '</td><td>' +
-             ( a.tool? a.tool:'-') +
+              (a.tool ? a.tool : '-') +
               '</td><td>' +
-              (a.status?a.status:'-') +
+              (a.status ? a.status : '-') +
               '</td><td>' +
-              (a.international.name?a.international.name:'-') +
+              (a.international.name ? a.international.name : '-') +
               '</td><td>' +
-              (a.national.name?a.national.name:'-') +
+              (a.national.name ? a.national.name : '-') +
               '</td><td>' +
-              (a.subnational.name?a.subnational.name:'-') +
+              (a.subnational.name ? a.subnational.name : '-') +
               '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
+              (a.category_score.name ? a.category_score.name : '-') +
               '</td></tr>',
           )
           .join('')}
@@ -2394,27 +2484,24 @@ export class ReportPagesService {
             name: string;
             tool: string;
             status: string;
-          }) => 
-           
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.long_term.name?a.long_term.name:'-') +
-              '</td><td>' +
-              (a.medium_term.name?a.medium_term.name:'-') +
-              '</td><td>' +
-              (a.short_term.name?a.short_term.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>'
-            
-          
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.long_term.name ? a.long_term.name : '-') +
+            '</td><td>' +
+            (a.medium_term.name ? a.medium_term.name : '-') +
+            '</td><td>' +
+            (a.short_term.name ? a.short_term.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
         )
         .join('')}
       </tbody>
@@ -2428,7 +2515,7 @@ export class ReportPagesService {
       
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-       </div>`
+       </div>`,
       )
       .join('');
 
@@ -2475,20 +2562,20 @@ export class ReportPagesService {
            status: string;
          }) =>
            '<tr><td>' +
-           (a.id?a.id:'-') +
+           (a.id ? a.id : '-') +
            '</td><td>' +
-           (a.name?a.name:'-') +
+           (a.name ? a.name : '-') +
            '</td><td>' +
-          ( a.tool? a.tool:'-') +
+           (a.tool ? a.tool : '-') +
            '</td><td>' +
-           (a.status?a.status:'-') +
+           (a.status ? a.status : '-') +
            '</td><td>' +
-           (a.scale_score.name?a.scale_score.name:'-') +
+           (a.scale_score.name ? a.scale_score.name : '-') +
            '</td><td>' +
-           (a.sustained_score.name?a.sustained_score.name:'-') +
+           (a.sustained_score.name ? a.sustained_score.name : '-') +
            '</td><td>' +
-           (a.category_score.name?a.category_score.name:'-') +
-           '</td></tr>'
+           (a.category_score.name ? a.category_score.name : '-') +
+           '</td></tr>',
        )
        .join('')}
      </tbody>
@@ -2534,19 +2621,19 @@ export class ReportPagesService {
          status: string;
        }) =>
          '<tr><td>' +
-         (a.id?a.id:'-') +
+         (a.id ? a.id : '-') +
          '</td><td>' +
-         (a.name?a.name:'-') +
+         (a.name ? a.name : '-') +
          '</td><td>' +
-        ( a.tool? a.tool:'-') +
+         (a.tool ? a.tool : '-') +
          '</td><td>' +
-         (a.status?a.status:'-') +
+         (a.status ? a.status : '-') +
          '</td><td>' +
-         (a.scale_score.name?a.scale_score.name:'-') +
+         (a.scale_score.name ? a.scale_score.name : '-') +
          '</td><td>' +
-         (a.sustained_score.name?a.sustained_score.name:'-') +
+         (a.sustained_score.name ? a.sustained_score.name : '-') +
          '</td><td>' +
-         (a.category_score.name?a.category_score.name:'-') +
+         (a.category_score.name ? a.category_score.name : '-') +
          '</td></tr>',
      )
      .join('')}
@@ -2609,19 +2696,19 @@ export class ReportPagesService {
           status: string;
         }) =>
           '<tr><td>' +
-          (a.id?a.id:'-') +
+          (a.id ? a.id : '-') +
           '</td><td>' +
-          (a.name?a.name:'-') +
+          (a.name ? a.name : '-') +
           '</td><td>' +
-         ( a.tool? a.tool:'-') +
+          (a.tool ? a.tool : '-') +
           '</td><td>' +
-          (a.status?a.status:'-') +
+          (a.status ? a.status : '-') +
           '</td><td>' +
-          (a.scale_score.name?a.scale_score.name:'-') +
+          (a.scale_score.name ? a.scale_score.name : '-') +
           '</td><td>' +
-          (a.sustained_score.name?a.sustained_score.name:'-') +
+          (a.sustained_score.name ? a.sustained_score.name : '-') +
           '</td><td>' +
-          (a.category_score.name?a.category_score.name:'-') +
+          (a.category_score.name ? a.category_score.name : '-') +
           '</td></tr>',
       )
       .join('')}
@@ -2643,7 +2730,7 @@ export class ReportPagesService {
     const page_9 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
-   
+  
  
 
         <div class="report-table-sm">
@@ -2685,20 +2772,20 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                (a.id?a.id:'-') +
+                (a.id ? a.id : '-') +
                 '</td><td>' +
-                (a.name?a.name:'-') +
+                (a.name ? a.name : '-') +
                 '</td><td>' +
-               ( a.tool? a.tool:'-') +
+                (a.tool ? a.tool : '-') +
                 '</td><td>' +
-                (a.status?a.status:'-') +
+                (a.status ? a.status : '-') +
                 '</td><td>' +
-                (a.ghg_score.name?a.ghg_score.name:'-') +
+                (a.ghg_score.name ? a.ghg_score.name : '-') +
                 '</td><td>' +
                 '</td><td>' +
-                (a.adaptation_score.name?a.adaptation_score.name:'-') +
+                (a.adaptation_score.name ? a.adaptation_score.name : '-') +
                 '</td><td>' +
-                (a.category_score.name?a.category_score.name:'-') +
+                (a.category_score.name ? a.category_score.name : '-') +
                 '</td></tr>',
             )
             .join('')}
@@ -2745,20 +2832,20 @@ export class ReportPagesService {
               status: string;
             }) =>
               '<tr><td>' +
-              (a.id?a.id:'-') +
+              (a.id ? a.id : '-') +
               '</td><td>' +
-              (a.name?a.name:'-') +
+              (a.name ? a.name : '-') +
               '</td><td>' +
-             ( a.tool? a.tool:'-') +
+              (a.tool ? a.tool : '-') +
               '</td><td>' +
-              (a.status?a.status:'-') +
+              (a.status ? a.status : '-') +
               '</td><td>' +
-              (a.ghg_score.name?a.ghg_score.name:'-') +
+              (a.ghg_score.name ? a.ghg_score.name : '-') +
               '</td><td>' +
               '</td><td>' +
-              (a.adaptation_score.name?a.adaptation_score.name:'-') +
+              (a.adaptation_score.name ? a.adaptation_score.name : '-') +
               '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
+              (a.category_score.name ? a.category_score.name : '-') +
               '</td></tr>',
           )
           .join('')}
@@ -2818,19 +2905,23 @@ export class ReportPagesService {
                 status: string;
               }) =>
                 '<tr><td>' +
-                (a.id?a.id:'-') +
+                (a.id ? a.id : '-') +
                 '</td><td>' +
-                (a.name?a.name:'-') +
+                (a.name ? a.name : '-') +
                 '</td><td>' +
-               ( a.tool? a.tool:'-') +
+                (a.tool ? a.tool : '-') +
                 '</td><td>' +
-                (a.status?a.status:'-') +
+                (a.status ? a.status : '-') +
                 '</td><td>' +
-                (a.scale_cat_score.name?a.scale_cat_score.name:'-') +
+                (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
                 '</td><td>' +
-               ( a.sustained_cat_score.name?a.sustained_cat_score.name:'-') +
+                (a.sustained_cat_score.name
+                  ? a.sustained_cat_score.name
+                  : '-') +
                 '</td><td>' +
-                (a.category_score.name?a.category_score.name:a.category_score) +
+                (a.category_score.name
+                  ? a.category_score.name
+                  : a.category_score) +
                 '</td></tr>',
             )
             .join('')}
@@ -2910,16 +3001,16 @@ export class ReportPagesService {
                 mitigation: string;
               }) =>
                 '<tr><td>' +
-                (a.id?a.id:'-') +
+                (a.id ? a.id : '-') +
                 '</td><td>' +
-                (a.name?a.name:'-') +
+                (a.name ? a.name : '-') +
                 '</td><td>' +
-               ( a.tool? a.tool:'-') +
+                (a.tool ? a.tool : '-') +
                 '</td><td>' +
-                (a.status?a.status:'-') +
+                (a.status ? a.status : '-') +
                 '</td><td>' +
                 a.mitigation +
-                '</td></tr>'
+                '</td></tr>',
             )
             .join('')}
             <tr><td colspan="4" > Total
@@ -3029,10 +3120,10 @@ export class ReportPagesService {
       </div>
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
-  
+
     // console.log("page", page_1)
     // return page_2 + page_3;
-    return page_1 ;
+    return page_1;
   }
 
   generateAlignmentBody(interventions: any[], cols: any[]) {
@@ -3059,7 +3150,7 @@ export class ReportPagesService {
           (int[col.code]?.name ? '' : this.getValue(int[col.code])) +
           '</td>';
       }
-    
+
       body = body + '</tr>';
     }
     return body;

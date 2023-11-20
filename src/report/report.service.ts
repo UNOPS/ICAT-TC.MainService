@@ -13,6 +13,13 @@ import {
   ComparisonReportReportContentTwo,
   ComparisonReportReportContentThree,
   ComparisonReportReportContentFour,
+  ReportCarbonMarketDto,
+  ReportCarbonMarketDtoContentOne,
+  ReportCarbonMarketDtoContentThree,
+  ReportCarbonMarketDtoContentTwo,
+  ReportCarbonMarketDtoContentFour,
+  ReportCarbonMarketDtoContentFive,
+  ReportCarbonMarketDtoCoverPage,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -1648,6 +1655,102 @@ console.log(asssCharacteristicasscalesd)
     return reportContentTwo;
 
   }
+
+
+
+  async genarateReportCarbonMarketDto(
+    createReportDto: CreateReportDto,
+  ): Promise<ReportCarbonMarketDto> {
+    const reportCarbonMarketDto = new ReportCarbonMarketDto();
+    reportCarbonMarketDto.reportName = createReportDto.reportName;
+    reportCarbonMarketDto.coverPage = this.genarateReportCarbonMarketDtoCoverPage(
+      createReportDto.reportTitle,
+    );
+    reportCarbonMarketDto.contentOne = await this.genarateReportCarbonMarketDtoContentOne(
+      createReportDto.assessmentId,
+    );
+    reportCarbonMarketDto.contentTwo = await this.genarateReportCarbonMarketDtoContentTwo(
+      createReportDto.assessmentId,
+    );
+    reportCarbonMarketDto.contentThree = await this.genarateReportCarbonMarketDtoContentThree(
+      createReportDto.assessmentId,
+    );
+    reportCarbonMarketDto.contentFour = await this.genarateReportCarbonMarketDtoContentFour(
+      createReportDto.assessmentId,
+    );
+    reportCarbonMarketDto.contentFive = await this.genarateReportCarbonMarketDtoContentFive(
+      createReportDto.assessmentId,
+    );
+  
+    return reportCarbonMarketDto;
+  }
+  
+  genarateReportCarbonMarketDtoCoverPage(
+    title:string
+  ): ReportCarbonMarketDtoCoverPage{
+    const coverPage=new ReportCarbonMarketDtoCoverPage()
+   
+    // coverPage.generateReportName = title;
+    coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
+    coverPage.reportDate = new Date().toDateString();
+    coverPage.document_prepared_by = 'user';
+    coverPage.companyLogoLink =
+      'http://localhost:7080/report/cover/icatlogo.jpg';
+    return coverPage;
+
+
+  }
+ async genarateReportCarbonMarketDtoContentOne(
+    assessmentId:number
+  ):Promise<ReportCarbonMarketDtoContentOne>{
+    const contentOne=new ReportCarbonMarketDtoContentOne()
+
+
+return contentOne
+  }
+  async genarateReportCarbonMarketDtoContentTwo(
+    assessmentId:number
+  ):Promise<ReportCarbonMarketDtoContentTwo>{
+    const contentTwo=new ReportCarbonMarketDtoContentTwo()
+
+
+return contentTwo
+  }
+  async genarateReportCarbonMarketDtoContentThree(
+    assessmentId:number
+  ):Promise<ReportCarbonMarketDtoContentThree>{
+    const contentThree=new ReportCarbonMarketDtoContentThree()
+
+
+return contentThree
+  }
+  async genarateReportCarbonMarketDtoContentFour(
+    assessmentId:number
+  ):Promise<ReportCarbonMarketDtoContentFour>{
+    const contentFour=new ReportCarbonMarketDtoContentFour()
+
+
+return contentFour
+  }
+  async genarateReportCarbonMarketDtoContentFive(
+    assessmentId:number
+  ):Promise<ReportCarbonMarketDtoContentFive>{
+    const contentFive=new ReportCarbonMarketDtoContentFive()
+
+
+return contentFive
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
