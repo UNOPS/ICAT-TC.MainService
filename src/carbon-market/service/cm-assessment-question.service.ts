@@ -63,17 +63,23 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let _answers = []
     let selectedSdgs = []
     let savedSdgs = []
-    result.forEach(res => {
+    let exists = []
+    // result.forEach(async res => {
+    for await (let res of result) {
       if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
-        let obj = new SdgAssessment()
-        obj.assessment = assessment
-        obj.sdg = res.selectedSdg
-        savedSdgs.push(res.selectedSdg.id)
-        selectedSdgs.push(obj)
+        let exist = await this.sdgAssessmentRepo.find({where: {sdg: {id: res.selectedSdg.id}, assessment: {id: assessment.id}}})
+        if (exist.length === 0) {
+          let obj = new SdgAssessment()
+          obj.assessment = assessment
+          obj.sdg = res.selectedSdg
+          savedSdgs.push(res.selectedSdg.id)
+          selectedSdgs.push(obj)
+        } else exists.push(res.selectedSdg.id)
       }
-    })
+    }  
     if (isDraft) {
       assessment.isDraft = isDraft;
+      assessment.lastDraftLocation =type;
       if(type =="prose"){
         assessment.processDraftLocation=name;
       }else if (type=="out"){
@@ -130,7 +136,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           }
           if (res.isSDG) {
             // ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100)  //previous calculation
-            ass_answer.score = (res.selectedScore.value / (selectedSdgs.length * 3))
+            ass_answer.score = (res.selectedScore.value / ((selectedSdgs.length + exists.length )* 3))
           }
         }
         ass_answer.assessment_question = q_res
@@ -150,7 +156,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
     try {
       console.log(selectedSdgs)
-      let res = await this.sdgAssessmentRepo.save(selectedSdgs)
+      if (selectedSdgs.length > 0) {
+        let res = await this.sdgAssessmentRepo.save(selectedSdgs)
+      }
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
       console.log(err)
@@ -812,6 +820,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     });
     // let filteredResults =results
     let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+
     if (isUserExternal) {
       filteredResults = filteredResults.filter(result => {
         if (result.assessment?.user?.id === currentUser?.id) {
@@ -832,12 +841,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       // const data = await this.calculateResult(result.id);
       return {
         assessment: result.id,
-        process_score: result.assessment?.process_score,
-        outcome_score: result.assessment?.outcome_score,
+        // process_score: result.assessment?.process_score,
+        process_score: result.averageProcess,
+        // outcome_score: result.assessment?.outcome_score,
+        outcome_score: result.averageOutcome,
         intervention: result.assessment.climateAction?.policyName,
         intervention_id: result.assessment.climateAction?.intervention_id
       };
     }));
+    console.log("==================",formattedResults)
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
     return this.paginateArray(filteredData, options)
   }
