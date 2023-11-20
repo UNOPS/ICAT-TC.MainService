@@ -16,7 +16,7 @@ import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ReportGenaratesService } from './report-genarates/report-genarates.service';
 import { ReportHtmlGenaratesService } from './report-html-genarates/report-html-genarates.service';
-import { ComparisonReportDto, ReportDto } from './dto/report.dto';
+import { ComparisonReportDto, ReportCarbonMarketDto, ReportDto } from './dto/report.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AssessmentDto } from './dto/assessment.dto';
 import { AssessmentService } from 'src/assessment/assessment.service';
@@ -114,13 +114,26 @@ export class ReportController {
     const uniqname = req.reportName+randomName + '.pdf'
     req.reportName = req.reportName+ '.pdf'
    
-    const reprtDto: ReportDto = await this.reportService.genarateReportDto(
-      req,
-    );
-    const report = await this.reportGenarateService.reportGenarate(
-      uniqname,
-      await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
-    )
+    if(req.tool=='Carbon Market Tool'){
+      console.log('works',req)
+      const reprtDto: ReportCarbonMarketDto = await this.reportService.genarateReportCarbonMarketDto(
+        req,
+      );
+      const report = await this.reportGenarateService.reportGenarate(
+        uniqname,
+        await this.reportHtmlGenarateService.reportCarbonMarketHtmlGenarate(reprtDto),
+      )
+
+    }else{
+      const reprtDto: ReportDto = await this.reportService.genarateReportDto(
+        req,
+      );
+      const report = await this.reportGenarateService.reportGenarate(
+        uniqname,
+        await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
+      )
+    }
+  
     const response = await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,0,req.tool,req.type)
     return response
   }

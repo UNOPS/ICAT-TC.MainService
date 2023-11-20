@@ -93,6 +93,88 @@ export class ReportContentTwo {
 }
 
 
+export class ReportCarbonMarketDto {
+    reportName:string='';
+    coverPage:ReportCarbonMarketDtoCoverPage=new ReportCarbonMarketDtoCoverPage()
+    tableOfContent:ReportCarbonMarketDtoTableOfContent=new ReportCarbonMarketDtoTableOfContent()
+    contentOne:ReportCarbonMarketDtoContentOne=new ReportCarbonMarketDtoContentOne()
+    contentTwo:ReportCarbonMarketDtoContentTwo=new ReportCarbonMarketDtoContentTwo()
+    contentThree:ReportCarbonMarketDtoContentThree=new ReportCarbonMarketDtoContentThree()
+    contentFour:ReportCarbonMarketDtoContentFour=new ReportCarbonMarketDtoContentFour()
+    contentFive:ReportCarbonMarketDtoContentFive=new ReportCarbonMarketDtoContentFive()
+ 
+ }
+ 
+ export class ReportCarbonMarketDtoCoverPage {
+    generateReportName: string = "";
+    reportName: string = "";
+   
+    companyLogoLink: string = "";
+  
+    document_prepared_by: string = "";
+    ICATLogoLink: string = "";
+    reportDate: string = "";
+   
+    companyAdressLine1 = ""
+    companyAdressLine2 = ""
+    companyAdressLine3 = ""
+    companyregistrationNumber = ""
+    companyEmailAdress = ""
+    companyFax = ""
+    companyTelephone = ""
+ }
+ export class ReportCarbonMarketDtoTableOfContent {}
+ export class ReportCarbonMarketDtoContentOne {
+
+    assesment :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
+    barriers:object[]=[{  barrier: '',
+        explanation: '',
+        characteristics_affected: '',
+        barrier_directly_targeted: '',}];
+    policyOrActionsDetails:object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
+    characteristics :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
+    transformational :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
+    outcomecharacteristics:object[]=[]
+
+ }
+ export class ReportCarbonMarketDtoContentTwo {}
+ export class ReportCarbonMarketDtoContentThree {}
+ export class ReportCarbonMarketDtoContentFour {}
+ export class ReportCarbonMarketDtoContentFive {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export class ComparisonReportDto {
     reportName:string='';
     coverPage:ComparisonReportReportCoverPage=new ComparisonReportReportCoverPage()
