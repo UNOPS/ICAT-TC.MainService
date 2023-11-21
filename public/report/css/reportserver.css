@@ -380,3 +380,7 @@ body {
   font-size:8px;
   
 }
+
+.bold-table-row{
+  font-weight: bold;
+}

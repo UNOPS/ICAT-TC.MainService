@@ -27,6 +27,7 @@ import { PortfolioService } from 'src/portfolio/portfolio.service';
 import { ComparisonDto, ComparisonTableDataDto } from 'src/portfolio/dto/comparison.dto';
 import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -64,10 +65,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const reportDto = new ReportDto();
     reportDto.reportName = createReportDto.reportName;
     reportDto.coverPage = this.genarateReportDtoCoverPage(
-      createReportDto.reportTitle,
+      createReportDto.reportTitle
     );
     reportDto.contentOne = await this.genarateReportDtoContentOne(
-      createReportDto.assessmentId,
+      createReportDto.assessmentId,createReportDto.tool
     );
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
       createReportDto.assessmentId,
@@ -225,10 +226,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   async genarateReportDtoContentOne(
     assessmentId: number,
+    tool:string
   ): Promise<ReportContentOne> {
     const reportContentOne = new ReportContentOne();
+    let investorTool = new InvestorTool();
+    let isInvestment:boolean = false;
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
     console.log("assessmentId", assessmentId)
+    if(tool=='Investment'){
+  
+      investorTool = await this.investorToolService.getResultByAssessment(assessmentId)
+      isInvestment = true;
+      // console.log("investorTool", investorTool,isInvestment)
+    }
+   
     // reportContentOne.policyName = asse.climateAction.policyName;
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
     // reportContentOne.assessmentYear = asse.year;
@@ -301,6 +312,27 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Sectors covered ',
         description: asse.climateAction.policy_sector
           ? asse.climateAction.policy_sector.map((a) => a.sector.name).join(',')
+          : 'N/A',
+      },
+      {
+        information: 'Total investment (in USD)',
+        isInvestment: isInvestment,
+        description: investorTool.total_investment
+          ? investorTool.total_investment
+          : 'N/A',
+      },
+      {
+        information: 'Investment instrument(s) used',
+        isInvestment: isInvestment,
+        description: investorTool.total_investements
+          ? investorTool.total_investements
+          : 'N/A',
+      },
+      {
+        information: 'Proportion of total investment',
+        isInvestment: isInvestment,
+        description: investorTool.total_investements
+          ? investorTool.total_investements
           : 'N/A',
       },
       {
@@ -1388,9 +1420,10 @@ console.log(asssCharacteristicasscalesd)
     let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
 
     reportContentTwo.process_categories_assessment = res.processData;
-
+    
     reportContentTwo.outcomes_categories_assessment = res.outcomeData;
-
+    reportContentTwo.processScore = res.processScore;
+    reportContentTwo.outcomeScore = res.outcomeScore;
 
 
     // let asssIndicatorOutcome =
