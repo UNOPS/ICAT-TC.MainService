@@ -15,7 +15,23 @@ import {
 @Injectable()
 export class ReportPagesService {
   constructor() { }
+xData = [
+    {label: 'Major', value: 3},
+    {label: 'Moderate', value: 2},
+    {label: 'Minor', value: 1},
+    {label: 'None', value: 0},
+    {label: 'Minor Negative', value: -1},
+    {label: 'Moderate Negative', value: -2},
+    {label: 'Major Negative', value: -3}
+  ]
 
+  yData = [
+    {label: 'Very likely', value: 4},
+    {label: 'Likely', value: 3},
+    {label: 'Possible', value: 2},
+    {label: 'Unlikely', value: 1},
+    {label: 'Very Unlikely', value: 0}
+  ]
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -981,30 +997,63 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </tbody>
    </table>
    </div>
-    <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
-      <div class="report-table-sm">
-          <table class="table  table-bordered border-dark">
-            <thead class="table-primary  border-dark">
-              <tr>
-                <th scope="col">Category</th>
-                <th scope="col">Category	Aggrgated Score</th>
-              </tr>
-            </thead>
-            <tbody class="table-active">
-                <tr>
-                  <td class="bold-table-row">Outcomes score </td>
-                  <td class="bold-table-row">${contentTwo.outcomeScore ? contentTwo.outcomeScore : '-'}</td>
-                </tr>
-            </tbody>
-          </table>
-      </div>
+    
    
      </div>
      
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
+      const page_6_1 = `  <div id="page_6_1" class="page text-center" >
+      ${header}
+      <div class="content">
+      <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
+      <div class="report-table-sm">
+      <table id="heatmap" class="heatmap" style="text-align: center;">
+         <tbody>
+        <tr>
+            <td></td>
+            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
+        </tr>
+        <tr>
+            <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
+            <td></td>
+           
+            ${this.xData
+              .map((x) => {
+                return `
+                 <td  >${x.label}</td> `;
+              })
+              .join('')}
+        </tr>
 
+        ${this.yData
+          .map((y) => {
+            return `
+             <tr > 
+              <td >${y.label}</td> 
+              
+              ${this.generateHeatMapforinvestment(y.value,contentTwo)}
+            </tr> `;
+          })
+          .join('')}
+        
+       
+        </tbody>
+      </table>
+      </div>
+    
+    
+   
+ 
+   
+     
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
     const outcomeDescribeResult = contentTwo.outcomeDescribeResult;
     const page_7 = `  <div id="page_5" class="page text-center" >
       ${header}
@@ -1549,7 +1598,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           </div>`;
 
     return (
-      page_1 + page_2 + page_3 + page_4 + page_5 + page_6
+      page_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
       // page_7 +
       // page_8 +
       // page_9 +
@@ -3117,6 +3166,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     }
     return body;
   }
+  generateHeatMapforinvestment(y:number,contentTwo:ReportContentTwo) {
+    let body = '';
+    for (let x of this.xData) {
+        body =
+          body +
+          '<td  class="charttd" style="background-color:' +
+          this.getBackgroundColorInvestmentHeatmap(x.value, y) +
+          '; color:' + ((this.getIntervention(x.value, y,contentTwo))?'blue':this.getBackgroundColorInvestmentHeatmap(x.value, y))+ ';">' +
+          '<span class="'+ (this.getIntervention(x.value, y,contentTwo)? 'intervention':'')+'">1</span>'+
+                        
+          '</td>';
+    }
+    return body;
+  }
 
   getValue(data: any) {
     if (data) {
@@ -3157,5 +3220,41 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     } else {
       return 'white';
     }
+  }
+  getBackgroundColorInvestmentHeatmap(x: number, y: number): string {
+    if ((x <= -1) || (x === 1 && y === 0) || (x === 0 && y === 1) || (x === 0 && y === 0)) {
+      return '#ec6665'
+    } else {
+      let value = x + y
+      switch (value) {
+        case -3:
+          return '#ec6665';
+        case -2:
+          return '#ed816c';
+        case -1:
+          return '#f19f70';
+        case 0:
+          return '#f4b979';
+        case 1:
+          return '#f9d57f';
+        case 2:
+          return '#f98570';
+        case 3:
+          return '#fdbf7b';
+        case 4:
+          return '#fedc82';
+        case 5:
+          return '#a9d27f';
+        case 6:
+          return '#86c97d';
+        case 7:
+          return '#63be7b';
+        default:
+          return 'white';
+      }
+    }
+  }
+  getIntervention(x: number, y: number,contentTwo:ReportContentTwo) {
+    return (contentTwo.processScore === y && contentTwo.outcomeScore === x);
   }
 }
