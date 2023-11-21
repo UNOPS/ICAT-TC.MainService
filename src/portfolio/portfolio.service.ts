@@ -1139,7 +1139,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let ch_data = {}
       for await (let ch of cat.characteristic) {
         characteristics.push({ label: ch.name.toUpperCase(), code: ch.code })
-        ch_data[ch.code] = this.investorToolService.mapSustainedScores(ch.ch_score)
+        ch_data[ch.code] = this.investorToolService.mapLikelihood(ch.ch_score)
       }
       characteristics.push({ label: 'Category score', code: 'category_score' })
       ch_data['category_score'] = cat.cat_score
