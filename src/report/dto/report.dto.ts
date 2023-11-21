@@ -87,6 +87,8 @@ export class ReportContentTwo {
     prossesDescribeResult:object[]=[];
     outcomeDescribeResult:object[]=[];
 
+    processScore: number;
+    outcomeScore :number;
 
 
 

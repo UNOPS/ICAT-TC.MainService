@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import {
   ComparisonReportReportContentFour,
   ComparisonReportReportContentOne,
@@ -13,7 +14,7 @@ import {
 
 @Injectable()
 export class ReportPagesService {
-  constructor() {}
+  constructor() { }
 
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
@@ -75,7 +76,8 @@ export class ReportPagesService {
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
-  </div>
+    <div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    </div>
 
   
   </div>
@@ -109,21 +111,46 @@ export class ReportPagesService {
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Information</th>
-              <th scope="col">Description</th>
+              <th scope="col" colspan="3">Description</th>
               
             </tr>
           </thead>
           <tbody class="table-active ">
           ${policyOrActionsDetails
-            .map(
-              (a: { information: string; description: string }) =>
-                '<tr><td>' +
+        .map(
+          (a: { information: string; description: any; isInvestment: boolean }) => {
+            if (a.isInvestment == undefined) {
+              // console.log("Investment instrument(s) used",a.isInvestment)
+              return '<tr><td>' +
                 a.information +
-                '</td><td>' +
+                '</td><td colspan="3">' +
                 a.description +
-                '</td></tr>',
-            )
-            .join('')}
+                '</td></tr>'
+            }
+            else if (a.isInvestment && (a.information == 'Total investment (in USD)')) {
+              return '<tr><td>' +
+                a.information +
+                '</td><td colspan="3">' +
+                a.description +
+                '</td></tr>'
+            } else if (a.isInvestment && (a.information == 'Investment instrument(s) used')) {
+              // console.log("Investment instrument(s) used",a.description.map(inv=>'<td>'+inv.instrument_name+'</td>').join(''))
+              return '<tr><td>' +
+                a.information +
+                '</td>' +
+                a.description.map(inv => '<td>' + inv.instrument_name + '</td>').join('') +
+                '</tr>'
+            }
+            else if (a.isInvestment && (a.information == 'Proportion of total investment')) {
+              return '<tr><td>' +
+                a.information +
+                '</td>' +
+                a.description.map(inv => '<td>' + inv.propotion + '</td>').join('') +
+                '</tr>'
+            }
+          }
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -143,6 +170,7 @@ export class ReportPagesService {
    <div  class="main_header_sub text-start">1.2	Understanding the transformational vision of the intervention and its context  </div> 
       
       <div class="report-table-sm">
+      <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
@@ -153,19 +181,20 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active">
           ${understanPolicyOrActions
-            .map(
-              (a: { Time_periods: string; description: string }) =>
-                '<tr><td>' +
-                a.Time_periods +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: { Time_periods: string; description: string }) =>
+            '<tr><td>' +
+            a.Time_periods +
+            '</td><td>' +
+            a.description +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
         <div class="report-table-sm">
+        <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
@@ -177,24 +206,24 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active">
           ${barriers
-            .map(
-              (a: {
-                barrier: string;
-                explanation: string;
-                characteristics_affected: string;
-                barrier_directly_targeted: string;
-              }) =>
-                '<tr><td>' +
-                a.barrier +
-                '</td><td>' +
-                a.explanation +
-                '</td><td>' +
-                a.characteristics_affected +
-                '</td><td>' +
-                a.barrier_directly_targeted +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: {
+            barrier: string;
+            explanation: string;
+            characteristics_affected: string;
+            barrier_directly_targeted: string;
+          }) =>
+            '<tr><td>' +
+            a.barrier +
+            '</td><td>' +
+            a.explanation +
+            '</td><td>' +
+            a.characteristics_affected +
+            '</td><td>' +
+            a.barrier_directly_targeted +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -213,6 +242,7 @@ export class ReportPagesService {
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
   <div class="report-table-sm">
+  <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy.</p>
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
@@ -285,27 +315,27 @@ export class ReportPagesService {
   </thead>
   <tbody class="table-active">
   ${catagory_out
-    .map((a: { rows: number; name: string; characteristics: any[] }) =>
-      a.characteristics
-        .map((b, index) => {
-          if (!index) {
-            return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.comment ? b.comment : '-'}</td>
       <td>${b.relevance ? b.relevance : '-'}</td>
      </tr>`;
-          } else {
-            return `<tr>
+              } else {
+                return `<tr>
             <td>${b.name ? b.name : '-'}</td>
             <td>${b.comment ? b.comment : '-'}</td>
             <td>${b.relevance ? b.relevance : '-'}</td>
             </tr>`;
-          }
-        })
-        .join(''),
-    )
-    .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
   
 
   </tbody>
@@ -343,27 +373,27 @@ export class ReportPagesService {
    </thead>
    <tbody class="table-active">
    ${catagory_process
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.comment ? b.comment : '-'}</td>
        <td>${b.relevance ? b.relevance : '-'}</td>
       </tr>`;
-           } else {
-             return `<tr>
+              } else {
+                return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.comment ? b.comment : '-'}</td>
              <td>${b.relevance ? b.relevance : '-'}</td>
              </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
    
  
    </tbody>
@@ -395,7 +425,9 @@ export class ReportPagesService {
 
 
 <div class="report-table-sm">
-
+<p>
+  Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
+</p>
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
@@ -409,36 +441,34 @@ export class ReportPagesService {
   </thead>
   <tbody class="table-active">
   ${prossesAssesmentStartingSituation
-    .map((a: { rows: number; name: string; characteristics: any[] }) =>
-      a.characteristics
-        .map((b, index) => {
-          if (!index) {
-            return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
-      <td>${
-        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
-      }</td>
+      <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                  }</td>
     
      </tr>`;
-          } else {
-            return `<tr>
+              } else {
+                return `<tr>
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
-      <td>${
-        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
-      }</td>
+      <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                  }</td>
             </tr>`;
-          }
-        })
-        .join(''),
-    )
-    .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
   
 
   </tbody>
@@ -467,7 +497,9 @@ export class ReportPagesService {
  
  
  <div class="report-table-sm">
-
+<p>
+Outcome characteristics refer to the scale and sustained nature of outcomes resulting from a policy. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the policy on GHGs, Adaptation and sustainable development. 
+</p>
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -480,11 +512,11 @@ export class ReportPagesService {
    </thead>
    <tbody class="table-active">
    ${scale_ghg
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -493,18 +525,18 @@ export class ReportPagesService {
       
     
      </tr>`;
-           } else {
-             return `<tr>
+              } else {
+                return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
  
  
    </tbody>
@@ -524,11 +556,11 @@ export class ReportPagesService {
    </thead>
    <tbody class="table-active">
    ${sustained_ghg
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -537,18 +569,18 @@ export class ReportPagesService {
       
     
      </tr>`;
-           } else {
-             return `<tr>
+              } else {
+                return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
  
  
    </tbody>
@@ -583,11 +615,11 @@ export class ReportPagesService {
     </thead>
     <tbody class="table-active">
     ${scale_adaptation
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            if (!index) {
-              return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -596,18 +628,18 @@ export class ReportPagesService {
        
      
       </tr>`;
-            } else {
-              return `<tr>
+              } else {
+                return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-            }
-          })
-          .join(''),
-      )
-      .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
   
   
     </tbody>
@@ -627,11 +659,11 @@ export class ReportPagesService {
     </thead>
     <tbody class="table-active">
     ${sustained_adaptation
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            if (!index) {
-              return `<tr>
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -640,18 +672,18 @@ export class ReportPagesService {
        
      
       </tr>`;
-            } else {
-              return `<tr>
+              } else {
+                return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-            }
-          })
-          .join(''),
-      )
-      .join('')}
+              }
+            })
+            .join(''),
+        )
+        .join('')}
   
   
     </tbody>
@@ -690,21 +722,21 @@ export class ReportPagesService {
     <tbody class="table-active">
     
     ${scale_sd.sdg
-      .map(
-        (
-          a: {
-            rows: number;
-            name: string;
-            impact: string;
-            characteristics: any[];
-          },
-          index,
-        ) => {
-          if (!index) {
-            return a.characteristics
-              .map((b, index) => {
-                if (!index) {
-                  return `<tr>
+        .map(
+          (
+            a: {
+              rows: number;
+              name: string;
+              impact: string;
+              characteristics: any[];
+            },
+            index,
+          ) => {
+            if (!index) {
+              return a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
       <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td rowspan="${a.rows}" >${a.impact}</td>
@@ -714,21 +746,21 @@ export class ReportPagesService {
       <td>${b.ustifying ? b.ustifying : '-'}</td>
     
      </tr>`;
-                } else {
-                  return `<tr>
+                  } else {
+                    return `<tr>
             <td>${b.name ? b.name : '-'}</td>
     <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
     <td>${b.score ? b.score : '-'}</td>
     <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-                }
-              })
-              .join('');
-          } else {
-            return a.characteristics
-              .map((b, index) => {
-                if (!index) {
-                  return `<tr>
+                  }
+                })
+                .join('');
+            } else {
+              return a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
 <td rowspan="${a.rows}" >${a.name}</td>
 <td rowspan="${a.rows}" >${a.impact}</td>
 <td>${b.name ? b.name : '-'}</td>
@@ -737,20 +769,20 @@ export class ReportPagesService {
 <td>${b.ustifying ? b.ustifying : '-'}</td>
 
 </tr>`;
-                } else {
-                  return `<tr>
+                  } else {
+                    return `<tr>
    <td>${b.name ? b.name : '-'}</td>
 <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
 <td>${b.score ? b.score : '-'}</td>
 <td>${b.ustifying ? b.ustifying : '-'}</td>
    </tr>`;
-                }
-              })
-              .join('');
-          }
-        },
-      )
-      .join('')}
+                  }
+                })
+                .join('');
+            }
+          },
+        )
+        .join('')}
   
   
     </tbody>
@@ -891,20 +923,23 @@ export class ReportPagesService {
      </thead>
      <tbody class="table-active">
      ${process_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
+        .map((a: { category: any; category_score: any }) => {
+          return `<tr>
            <td>${a.category ? a.category : '-'}</td>
-           <td>${
-             a.category_score.value != null &&
-             a.category_score.value != undefined
-               ? a.category_score.value
-               : '-'
-           }</td>
+           <td>${a.category_score.value != null &&
+              a.category_score.value != undefined
+              ? a.category_score.value
+              : '-'
+            }</td>
              
               </tr>`;
-       })
-       .join('')}
-    
+        })
+        .join('')}
+        <tr>
+          <td class="bold-table-row">Process score</td>
+          <td class="bold-table-row">${contentTwo.processScore ? contentTwo.processScore : '-'}</td>
+        </tr>
+       
    
      </tbody>
    </table>
@@ -925,24 +960,44 @@ export class ReportPagesService {
      </thead>
      <tbody class="table-active">
      ${outcomes_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
+        .map((a: { category: any; category_score: any }) => {
+          return `<tr>
            <td>${a.category ? a.category : '-'}</td>
-           <td>${
-             a.category_score.value != null &&
-             a.category_score.value != undefined
-               ? a.category_score.value
-               : '-'
-           }</td>
+           <td>${a.category_score.value != null &&
+              a.category_score.value != undefined
+              ? a.category_score.value
+              : '-'
+            }</td>
              
               </tr>`;
-       })
-       .join('')}
+        })
+        .join('')}
+         <tr>
+          <td class="bold-table-row">Outcomes score </td>
+          <td class="bold-table-row">${contentTwo.outcomeScore ? contentTwo.outcomeScore : '-'}</td>
+        </tr>
     
    
      </tbody>
    </table>
    </div>
+    <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
+      <div class="report-table-sm">
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Category	Aggrgated Score</th>
+              </tr>
+            </thead>
+            <tbody class="table-active">
+                <tr>
+                  <td class="bold-table-row">Outcomes score </td>
+                  <td class="bold-table-row">${contentTwo.outcomeScore ? contentTwo.outcomeScore : '-'}</td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
    
      </div>
      
@@ -978,22 +1033,22 @@ export class ReportPagesService {
   </thead>
   <tbody class="table-active">
   ${outcomeDescribeResult
-    .map(
-      (a: {
-        relative_importance: any;
-        score: any;
-        justifying_score: any;
-        name: string;
-      }) => {
-        return `<tr>
+        .map(
+          (a: {
+            relative_importance: any;
+            score: any;
+            justifying_score: any;
+            name: string;
+          }) => {
+            return `<tr>
             <td>${a.name ? a.name : '-'}</td>
             <td>${a.score ? a.score : '-'}</td>
            <td>${a.justifying_score ? a.justifying_score : '-'}</td>
           
             </tr>`;
-      },
-    )
-    .join('')}
+          },
+        )
+        .join('')}
  
     
       </tbody>
@@ -1605,15 +1660,15 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${portfolio_details
-            .map(
-              (a: { information: string; description: string }) =>
-                '<tr><td>' +
-                a.information +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: { information: string; description: string }) =>
+            '<tr><td>' +
+            a.information +
+            '</td><td>' +
+            a.description +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -1630,11 +1685,11 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${intervation_details
-            .map(
-              (a: { id: string; name: string }) =>
-                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: { id: string; name: string }) =>
+            '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -1688,35 +1743,35 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${prosses_tech
-            .map(
-              (a: {
-                category_score: string;
-                SCALE_UP: string;
-                ADOPTION: string;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id?a.id:'-') +
-                '</td><td>' +
-                (a.name?a.name:'-') +
-                '</td><td>' +
-               ( a.tool? a.tool:'-') +
-                '</td><td>' +
-                (a.status?a.status:'-') +
-                '</td><td>' +
-                (a['R_&_D']?a['R_&_D']:'-') +
-                '</td><td>' +
-                (a.ADOPTION?a.ADOPTION:'-') +
-                '</td><td>' +
-                (a.SCALE_UP?a.SCALE_UP:'-') +
-                '</td><td>' +
-                (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: {
+            category_score: string;
+            SCALE_UP: string;
+            ADOPTION: string;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a['R_&_D'] ? a['R_&_D'] : '-') +
+            '</td><td>' +
+            (a.ADOPTION ? a.ADOPTION : '-') +
+            '</td><td>' +
+            (a.SCALE_UP ? a.SCALE_UP : '-') +
+            '</td><td>' +
+            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -1744,36 +1799,36 @@ export class ReportPagesService {
         </thead>
         <tbody class="table-active ">
         ${prosses_agent
-          .map(
-            (a: {
-              category_score: string;
-              ENTREPRENEURS: string;
-              COALITION_OF_ADVOCATES: string;
-              BENIFICIARIES: string;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.ENTREPRENEURS?a.ENTREPRENEURS :'-' )+
-              '</td><td>' +
-              (a.COALITION_OF_ADVOCATES?a.COALITION_OF_ADVOCATES:'-') +
-              '</td><td>' +
-              (a.BENIFICIARIES?a.BENIFICIARIES:'-') +
-              '</td><td>' +
-              (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
-              '</td></tr>',
-          )
-          .join('')}
+        .map(
+          (a: {
+            category_score: string;
+            ENTREPRENEURS: string;
+            COALITION_OF_ADVOCATES: string;
+            BENIFICIARIES: string;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
+            '</td><td>' +
+            (a.COALITION_OF_ADVOCATES ? a.COALITION_OF_ADVOCATES : '-') +
+            '</td><td>' +
+            (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
+            '</td><td>' +
+            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
+            '</td></tr>',
+        )
+        .join('')}
         </tbody>
       </table>
     </div>
@@ -1811,36 +1866,36 @@ export class ReportPagesService {
            </thead>
            <tbody class="table-active ">
            ${prosses_incentive
-             .map(
-               (a: {
-                 category_score: string;
-                 ECONOMIC_NON_ECONOMIC: string;
-                 DISINCENTIVES: string;
-                 INSTITUTIONAL_AND_REGULATORY: string;
-                 id: number;
-                 name: string;
-                 tool: string;
-                 status: string;
-               }) =>
-                 '<tr><td>' +
-                 (a.id?a.id:'-') +
-                 '</td><td>' +
-                 (a.name?a.name:'-') +
-                 '</td><td>' +
-                ( a.tool? a.tool:'-') +
-                 '</td><td>' +
-                 (a.status?a.status:'-') +
-                 '</td><td>' +
-                 (a.ECONOMIC_NON_ECONOMIC?a.ECONOMIC_NON_ECONOMIC:'-') +
-                 '</td><td>' +
-                 (a.DISINCENTIVES?a.DISINCENTIVES:'-') +
-                 '</td><td>' +
-                ( a.INSTITUTIONAL_AND_REGULATORY? a.INSTITUTIONAL_AND_REGULATORY:'-') +
-                 '</td><td>' +
-                 (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
-                 '</td></tr>',
-             )
-             .join('')}
+        .map(
+          (a: {
+            category_score: string;
+            ECONOMIC_NON_ECONOMIC: string;
+            DISINCENTIVES: string;
+            INSTITUTIONAL_AND_REGULATORY: string;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.ECONOMIC_NON_ECONOMIC ? a.ECONOMIC_NON_ECONOMIC : '-') +
+            '</td><td>' +
+            (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
+            '</td><td>' +
+            (a.INSTITUTIONAL_AND_REGULATORY ? a.INSTITUTIONAL_AND_REGULATORY : '-') +
+            '</td><td>' +
+            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
+            '</td></tr>',
+        )
+        .join('')}
            </tbody>
          </table>
        </div>
@@ -1868,36 +1923,36 @@ export class ReportPagesService {
          </thead>
          <tbody class="table-active ">
          ${prosses_norms
-           .map(
-             (a: {
-               id: number;
-               name: string;
-               tool: string;
-               status: string;
-               AWARENESS: string;
-               BEHAVIOUR: string;
-               SOCIAL_NORMS: string;
-               category_score: string;
-             }) =>
-               '<tr><td>' +
-               (a.id?a.id:'-') +
-               '</td><td>' +
-               (a.name?a.name:'-') +
-               '</td><td>' +
-              ( a.tool? a.tool:'-') +
-               '</td><td>' +
-               (a.status?a.status:'-') +
-               '</td><td>' +
-               (a.AWARENESS?a.AWARENESS:'-') +
-               '</td><td>' +
-               (a.BEHAVIOUR?a.BEHAVIOUR:'-') +
-               '</td><td>' +
-               (a.SOCIAL_NORMS?a.SOCIAL_NORMS:'-') +
-               '</td><td>' +
-               (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
-               '</td></tr>',
-           )
-           .join('')}
+        .map(
+          (a: {
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+            AWARENESS: string;
+            BEHAVIOUR: string;
+            SOCIAL_NORMS: string;
+            category_score: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.AWARENESS ? a.AWARENESS : '-') +
+            '</td><td>' +
+            (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
+            '</td><td>' +
+            (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
+            '</td><td>' +
+            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
+            '</td></tr>',
+        )
+        .join('')}
          </tbody>
        </table>
      </div>
@@ -1938,39 +1993,39 @@ export class ReportPagesService {
             </thead>
             <tbody class="table-active ">
             ${process_score
-              .map(
-                (a: {
-                  id: number;
-                  name: string;
-                  tool: string;
-                  status: string;
-                  Technology: string;
-                  Agents: string;
-                  Incentives: string;
-                  norms: string;
-                  category_score: string;
-                }) =>
-                  '<tr><td>' +
-                  (a.id?a.id:'-') +
-                  '</td><td>' +
-                  (a.name?a.name:'-') +
-                  '</td><td>' +
-                 ( a.tool? a.tool:'-') +
-                  '</td><td>' +
-                  (a.status?a.status:'-') +
-                  '</td><td>' +
-                  (a.Technology?a.Technology:'-') +
-                  '</td><td>' +
-                  (a.Agents?a.Agents:'-') +
-                  '</td><td>' +
-                  (a.Incentives?a.Incentives:'-') +
-                  '</td><td>' +
-                  (a['Norms and behavioral change']?a['Norms and behavioral change']:'-') +
-                  '</td><td>' +
-                  (a.category_score!=undefined||a.category_score!=null?a.category_score:'-') +
-                  '</td></tr>',
-              )
-              .join('')}
+        .map(
+          (a: {
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+            Technology: string;
+            Agents: string;
+            Incentives: string;
+            norms: string;
+            category_score: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.Technology ? a.Technology : '-') +
+            '</td><td>' +
+            (a.Agents ? a.Agents : '-') +
+            '</td><td>' +
+            (a.Incentives ? a.Incentives : '-') +
+            '</td><td>' +
+            (a['Norms and behavioral change'] ? a['Norms and behavioral change'] : '-') +
+            '</td><td>' +
+            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
+            '</td></tr>',
+        )
+        .join('')}
             </tbody>
           </table>
         </div>
@@ -2035,36 +2090,36 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${ghg_scale
-            .map(
-              (a: {
-                international: any;
-                national: any;
-                subnational: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id?a.id:'-') +
-                '</td><td>' +
-                (a.name?a.name:'-') +
-                '</td><td>' +
-               ( a.tool? a.tool:'-') +
-                '</td><td>' +
-                (a.status?a.status:'-') +
-                '</td><td>' +
-                (a.international.name?a.international.name:'-') +
-                '</td><td>' +
-                (a.national.name?a.national.name:'-') +
-                '</td><td>' +
-                (a.subnational.name?a.subnational.name:'-') +
-                '</td><td>' +
-                (a.category_score.name?a.category_score.name:'-') +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: {
+            international: any;
+            national: any;
+            subnational: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.international.name ? a.international.name : '-') +
+            '</td><td>' +
+            (a.national.name ? a.national.name : '-') +
+            '</td><td>' +
+            (a.subnational.name ? a.subnational.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -2098,36 +2153,36 @@ export class ReportPagesService {
         </thead>
         <tbody class="table-active ">
         ${ghg_sustaind
-          .map(
-            (a: {
-              long_term: any;
-              medium_term: any;
-              short_term: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.long_term.name?a.long_term.name:'-') +
-              '</td><td>' +
-              (a.medium_term.name?a.medium_term.name:'-') +
-              '</td><td>' +
-              (a.short_term.name?a.short_term.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>',
-          )
-          .join('')}
+        .map(
+          (a: {
+            long_term: any;
+            medium_term: any;
+            short_term: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.long_term.name ? a.long_term.name : '-') +
+            '</td><td>' +
+            (a.medium_term.name ? a.medium_term.name : '-') +
+            '</td><td>' +
+            (a.short_term.name ? a.short_term.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
         </tbody>
       </table>
     </div>
@@ -2175,36 +2230,36 @@ export class ReportPagesService {
         </thead>
         <tbody class="table-active ">
         ${adaptation_scale
-          .map(
-            (a: {
-              international: any;
-              national: any;
-              subnational: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.international.name?a.international.name:'-') +
-              '</td><td>' +
-              (a.national.name?a.national.name:'-') +
-              '</td><td>' +
-              (a.subnational.name?a.subnational.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>',
-          )
-          .join('')}
+        .map(
+          (a: {
+            international: any;
+            national: any;
+            subnational: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.international.name ? a.international.name : '-') +
+            '</td><td>' +
+            (a.national.name ? a.national.name : '-') +
+            '</td><td>' +
+            (a.subnational.name ? a.subnational.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
         </tbody>
       </table>
     </div>
@@ -2253,21 +2308,21 @@ export class ReportPagesService {
             score: string;
           }) =>
             '<tr><td>' +
-            (a.id?a.id:'-') +
+            (a.id ? a.id : '-') +
             '</td><td>' +
-            (a.name?a.name:'-') +
+            (a.name ? a.name : '-') +
             '</td><td>' +
-           ( a.tool? a.tool:'-') +
+            (a.tool ? a.tool : '-') +
             '</td><td>' +
-            (a.status?a.status:'-') +
+            (a.status ? a.status : '-') +
             '</td><td>' +
-            (a.long_term.name?a.long_term.name:'-') +
+            (a.long_term.name ? a.long_term.name : '-') +
             '</td><td>' +
-            (a.medium_term.name?a.medium_term.name:'-') +
+            (a.medium_term.name ? a.medium_term.name : '-') +
             '</td><td>' +
-            (a.short_term.name?a.short_term.name:'-') +
+            (a.short_term.name ? a.short_term.name : '-') +
             '</td><td>' +
-            (a.category_score.name?a.category_score.name:'-') +
+            (a.category_score.name ? a.category_score.name : '-') +
             '</td></tr>',
         )
         .join('')}
@@ -2280,7 +2335,7 @@ export class ReportPagesService {
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-    
+
 
     const sdg_pages = allsdg
       .map(
@@ -2320,36 +2375,36 @@ export class ReportPagesService {
         </thead>
         <tbody class="table-active ">
         ${a.sdg_scale
-          .map(
-            (a: {
-              international: any;
-              national: any;
-              subnational: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.international.name?a.international.name:'-') +
-              '</td><td>' +
-              (a.national.name?a.national.name:'-') +
-              '</td><td>' +
-              (a.subnational.name?a.subnational.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>',
-          )
-          .join('')}
+            .map(
+              (a: {
+                international: any;
+                national: any;
+                subnational: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.international.name ? a.international.name : '-') +
+                '</td><td>' +
+                (a.national.name ? a.national.name : '-') +
+                '</td><td>' +
+                (a.subnational.name ? a.subnational.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>',
+            )
+            .join('')}
         </tbody>
       </table>
     </div>
@@ -2384,39 +2439,39 @@ export class ReportPagesService {
       </thead>
       <tbody class="table-active ">
       ${a.sdg_sustaind
-        .map(
-          (a: {
-            long_term: any;
-            medium_term: any;
-            short_term: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) => 
-           
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.long_term.name?a.long_term.name:'-') +
-              '</td><td>' +
-              (a.medium_term.name?a.medium_term.name:'-') +
-              '</td><td>' +
-              (a.short_term.name?a.short_term.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>'
-            
-          
-        )
-        .join('')}
+            .map(
+              (a: {
+                long_term: any;
+                medium_term: any;
+                short_term: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.long_term.name ? a.long_term.name : '-') +
+                '</td><td>' +
+                (a.medium_term.name ? a.medium_term.name : '-') +
+                '</td><td>' +
+                (a.short_term.name ? a.short_term.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>'
+
+
+            )
+            .join('')}
       </tbody>
     </table>
   </div>
@@ -2463,34 +2518,34 @@ export class ReportPagesService {
      </thead>
      <tbody  class="table-active ">
      ${ghg_scale_sustaind_comparison
-       .map(
-         (a: {
-           scale_score: any;
-           sustained_score: any;
+        .map(
+          (a: {
+            scale_score: any;
+            sustained_score: any;
 
-           category_score: any;
-           id: number;
-           name: string;
-           tool: string;
-           status: string;
-         }) =>
-           '<tr><td>' +
-           (a.id?a.id:'-') +
-           '</td><td>' +
-           (a.name?a.name:'-') +
-           '</td><td>' +
-          ( a.tool? a.tool:'-') +
-           '</td><td>' +
-           (a.status?a.status:'-') +
-           '</td><td>' +
-           (a.scale_score.name?a.scale_score.name:'-') +
-           '</td><td>' +
-           (a.sustained_score.name?a.sustained_score.name:'-') +
-           '</td><td>' +
-           (a.category_score.name?a.category_score.name:'-') +
-           '</td></tr>'
-       )
-       .join('')}
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.scale_score.name ? a.scale_score.name : '-') +
+            '</td><td>' +
+            (a.sustained_score.name ? a.sustained_score.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>'
+        )
+        .join('')}
      </tbody>
    </table>
  </div>
@@ -2522,34 +2577,34 @@ export class ReportPagesService {
    </thead>
    <tbody class="table-active ">
    ${adaptation_scale_sustaind_comparison
-     .map(
-       (a: {
-         scale_score: any;
-         sustained_score: any;
+        .map(
+          (a: {
+            scale_score: any;
+            sustained_score: any;
 
-         category_score: any;
-         id: number;
-         name: string;
-         tool: string;
-         status: string;
-       }) =>
-         '<tr><td>' +
-         (a.id?a.id:'-') +
-         '</td><td>' +
-         (a.name?a.name:'-') +
-         '</td><td>' +
-        ( a.tool? a.tool:'-') +
-         '</td><td>' +
-         (a.status?a.status:'-') +
-         '</td><td>' +
-         (a.scale_score.name?a.scale_score.name:'-') +
-         '</td><td>' +
-         (a.sustained_score.name?a.sustained_score.name:'-') +
-         '</td><td>' +
-         (a.category_score.name?a.category_score.name:'-') +
-         '</td></tr>',
-     )
-     .join('')}
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.scale_score.name ? a.scale_score.name : '-') +
+            '</td><td>' +
+            (a.sustained_score.name ? a.sustained_score.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
    </tbody>
  </table>
 </div>    
@@ -2598,33 +2653,33 @@ export class ReportPagesService {
     </thead>
     <tbody class="table-active ">
     ${b.data
-      .map(
-        (a: {
-          scale_score: any;
-          sustained_score: any;
-          category_score: any;
-          id: number;
-          name: string;
-          tool: string;
-          status: string;
-        }) =>
-          '<tr><td>' +
-          (a.id?a.id:'-') +
-          '</td><td>' +
-          (a.name?a.name:'-') +
-          '</td><td>' +
-         ( a.tool? a.tool:'-') +
-          '</td><td>' +
-          (a.status?a.status:'-') +
-          '</td><td>' +
-          (a.scale_score.name?a.scale_score.name:'-') +
-          '</td><td>' +
-          (a.sustained_score.name?a.sustained_score.name:'-') +
-          '</td><td>' +
-          (a.category_score.name?a.category_score.name:'-') +
-          '</td></tr>',
-      )
-      .join('')}
+            .map(
+              (a: {
+                scale_score: any;
+                sustained_score: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.scale_score.name ? a.scale_score.name : '-') +
+                '</td><td>' +
+                (a.sustained_score.name ? a.sustained_score.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>',
+            )
+            .join('')}
     </tbody>
   </table>
   </div>
@@ -2674,34 +2729,34 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${sacle_comparison
-            .map(
-              (a: {
-                ghg_score: any;
-                adaptation_score: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id?a.id:'-') +
-                '</td><td>' +
-                (a.name?a.name:'-') +
-                '</td><td>' +
-               ( a.tool? a.tool:'-') +
-                '</td><td>' +
-                (a.status?a.status:'-') +
-                '</td><td>' +
-                (a.ghg_score.name?a.ghg_score.name:'-') +
-                '</td><td>' +
-                '</td><td>' +
-                (a.adaptation_score.name?a.adaptation_score.name:'-') +
-                '</td><td>' +
-                (a.category_score.name?a.category_score.name:'-') +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: {
+            ghg_score: any;
+            adaptation_score: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.ghg_score.name ? a.ghg_score.name : '-') +
+            '</td><td>' +
+            '</td><td>' +
+            (a.adaptation_score.name ? a.adaptation_score.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -2734,34 +2789,34 @@ export class ReportPagesService {
         </thead>
         <tbody class="table-active ">
         ${sustaind_comparison
-          .map(
-            (a: {
-              ghg_score: any;
-              adaptation_score: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id?a.id:'-') +
-              '</td><td>' +
-              (a.name?a.name:'-') +
-              '</td><td>' +
-             ( a.tool? a.tool:'-') +
-              '</td><td>' +
-              (a.status?a.status:'-') +
-              '</td><td>' +
-              (a.ghg_score.name?a.ghg_score.name:'-') +
-              '</td><td>' +
-              '</td><td>' +
-              (a.adaptation_score.name?a.adaptation_score.name:'-') +
-              '</td><td>' +
-              (a.category_score.name?a.category_score.name:'-') +
-              '</td></tr>',
-          )
-          .join('')}
+        .map(
+          (a: {
+            ghg_score: any;
+            adaptation_score: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.ghg_score.name ? a.ghg_score.name : '-') +
+            '</td><td>' +
+            '</td><td>' +
+            (a.adaptation_score.name ? a.adaptation_score.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
         </tbody>
       </table>
     </div>
@@ -2807,33 +2862,33 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${outcome_level
-            .map(
-              (a: {
-                scale_cat_score: any;
-                sustained_cat_score: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id?a.id:'-') +
-                '</td><td>' +
-                (a.name?a.name:'-') +
-                '</td><td>' +
-               ( a.tool? a.tool:'-') +
-                '</td><td>' +
-                (a.status?a.status:'-') +
-                '</td><td>' +
-                (a.scale_cat_score.name?a.scale_cat_score.name:'-') +
-                '</td><td>' +
-               ( a.sustained_cat_score.name?a.sustained_cat_score.name:'-') +
-                '</td><td>' +
-                (a.category_score.name?a.category_score.name:a.category_score) +
-                '</td></tr>',
-            )
-            .join('')}
+        .map(
+          (a: {
+            scale_cat_score: any;
+            sustained_cat_score: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
+            '</td><td>' +
+            (a.sustained_cat_score.name ? a.sustained_cat_score.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : a.category_score) +
+            '</td></tr>',
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -2901,27 +2956,27 @@ export class ReportPagesService {
           </thead>
           <tbody class="table-active ">
           ${aggregation.data
-            .map(
-              (a: {
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-                mitigation: string;
-              }) =>
-                '<tr><td>' +
-                (a.id?a.id:'-') +
-                '</td><td>' +
-                (a.name?a.name:'-') +
-                '</td><td>' +
-               ( a.tool? a.tool:'-') +
-                '</td><td>' +
-                (a.status?a.status:'-') +
-                '</td><td>' +
-                a.mitigation +
-                '</td></tr>'
-            )
-            .join('')}
+        .map(
+          (a: {
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+            mitigation: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            a.mitigation +
+            '</td></tr>'
+        )
+        .join('')}
             <tr><td colspan="4" > Total
             </td><td> ${aggregation.total}
                 </td></tr>
@@ -2960,33 +3015,32 @@ export class ReportPagesService {
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
-                <th colspan="${
-                  alignment_table.sdg_count
-                }">SUSTAINABLE DEVELOPMENT</th>
+                <th colspan="${alignment_table.sdg_count
+      }">SUSTAINABLE DEVELOPMENT</th>
               </tr>
               <tr>
                 ${alignment_table.col_set_1
-                  .map(
-                    (a) =>
-                      '<th scope="col" colspan="' +
-                      a.colspan +
-                      '">' +
-                      a.label +
-                      '</th>',
-                  )
-                  .join('')}
+        .map(
+          (a) =>
+            '<th scope="col" colspan="' +
+            a.colspan +
+            '">' +
+            a.label +
+            '</th>',
+        )
+        .join('')}
               </tr>
               <tr>
                 ${alignment_table.col_set_2
-                  .map((a) => '<th scope="col">' + a.label + '</th>')
-                  .join('')}
+        .map((a) => '<th scope="col">' + a.label + '</th>')
+        .join('')}
               </tr>
             </thead>
             <tbody class="table-active">
                   ${this.generateAlignmentBody(
-                    alignment_table.interventions,
-                    alignment_table.col_set_2,
-                  )}
+          alignment_table.interventions,
+          alignment_table.col_set_2,
+        )}
             </tbody>
           </table>
         </div>
@@ -2995,33 +3049,32 @@ export class ReportPagesService {
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
-                <th colspan="${
-                  alignment_table.sdg_count
-                }">SUSTAINABLE DEVELOPMENT</th>
+                <th colspan="${alignment_table.sdg_count
+      }">SUSTAINABLE DEVELOPMENT</th>
               </tr>
               <tr>
                 ${alignment_table.col_set_1
-                  .map(
-                    (a) =>
-                      '<th scope="col" colspan="' +
-                      a.colspan +
-                      '">' +
-                      a.label +
-                      '</th>',
-                  )
-                  .join('')}
+        .map(
+          (a) =>
+            '<th scope="col" colspan="' +
+            a.colspan +
+            '">' +
+            a.label +
+            '</th>',
+        )
+        .join('')}
               </tr>
               <tr>
                 ${alignment_table.col_set_2
-                  .map((a) => '<th scope="col">' + a.label + '</th>')
-                  .join('')}
+        .map((a) => '<th scope="col">' + a.label + '</th>')
+        .join('')}
               </tr>
             </thead>
             <tbody class="table-active">
                   ${this.generateHeatMapBody(
-                    alignment_table.interventions,
-                    alignment_table.col_set_2,
-                  )}
+          alignment_table.interventions,
+          alignment_table.col_set_2,
+        )}
             </tbody>
           </table>
         </div>
@@ -3029,10 +3082,10 @@ export class ReportPagesService {
       </div>
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
-  
+
     // console.log("page", page_1)
     // return page_2 + page_3;
-    return page_1 ;
+    return page_1;
   }
 
   generateAlignmentBody(interventions: any[], cols: any[]) {
@@ -3059,7 +3112,7 @@ export class ReportPagesService {
           (int[col.code]?.name ? '' : this.getValue(int[col.code])) +
           '</td>';
       }
-    
+
       body = body + '</tr>';
     }
     return body;
