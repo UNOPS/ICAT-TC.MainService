@@ -24,8 +24,18 @@ export class ReportPagesService {
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
-         ${coverPage.generateReportName}
+      <div class="col h2 d-flex justify-content-center">
+       TRANSFORMATIONAL CHANGE ASSESSMENT
+       </div>                
+   </div>
+   <div class="row ">
+   <div class="col h2 d-flex justify-content-center">
+        REPORT
+       </div>
+   </div>     
+   <div class="row ">
+   <div class="col h2 d-flex justify-content-center">
+       GENERAL INTERVENTIONS TOOL
        </div>
    </div>
    <div class="row ">
@@ -213,6 +223,8 @@ export class ReportPagesService {
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
   <div class="report-table-sm">
+  <lablel text-align: left;>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy. </lablel>
+  <br><br>
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
@@ -383,8 +395,10 @@ export class ReportPagesService {
     contentTwo: ReportContentTwo,
   ): string {
     let pageNumber = 5;
-    const prossesAssesmentStartingSituation =
-      contentTwo.prossesAssesmentStartingSituation;
+    const prossesAssesmentStartingSituation1 =
+      contentTwo.prossesAssesmentStartingSituation1;
+      const prossesAssesmentStartingSituation2 =
+      contentTwo.prossesAssesmentStartingSituation2;
 
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
@@ -395,6 +409,10 @@ export class ReportPagesService {
 
 
 <div class="report-table-sm">
+<lablel text-align: left;>Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification. 
+</lablel>
+
+<br><br>
 
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
@@ -402,13 +420,14 @@ export class ReportPagesService {
       <th scope="col">Category</th>
       <th scope="col">Process Characteristic</th>
       <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+      <th scope="col">Guiding Question </th>
       <th scope="col">Likelihood score  </th>
       <th scope="col">Rationale justifying the score  </th>
       <th scope="col">Supporting Documents Supplied </th>
     </tr>
   </thead>
   <tbody class="table-active">
-  ${prossesAssesmentStartingSituation
+  ${prossesAssesmentStartingSituation1
     .map((a: { rows: number; name: string; characteristics: any[] }) =>
       a.characteristics
         .map((b, index) => {
@@ -417,6 +436,7 @@ export class ReportPagesService {
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${
@@ -428,6 +448,7 @@ export class ReportPagesService {
             return `<tr>
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${
@@ -456,6 +477,70 @@ export class ReportPagesService {
   
    </div>`;
 
+   const page_1_1 = `  <div id="page_5" class="page text-center" >
+   ${header}
+
+   <div class="content">
+   <div class="report-table-sm">
+   <table class="table  table-bordered border-dark">
+   <thead class="table-primary  border-dark">
+     <tr>
+       <th scope="col">Category</th>
+       <th scope="col">Process Characteristic</th>
+       <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+       <th scope="col">Guiding Question </th>
+       <th scope="col">Likelihood score  </th>
+       <th scope="col">Rationale justifying the score  </th>
+       <th scope="col">Supporting Documents Supplied </th>
+     </tr>
+   </thead>
+   <tbody class="table-active">
+   ${prossesAssesmentStartingSituation2
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
+       <td rowspan="${a.rows}" >${a.name}</td>
+       <td>${b.name ? b.name : '-'}</td>
+       <td>${b.relavance ? b.relavance : '-'}</td>
+       <td>${b.question ? b.question : '-'}</td>
+       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+       <td>${
+         b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+       }</td>
+     
+      </tr>`;
+           } else {
+             return `<tr>
+             <td>${b.name ? b.name : '-'}</td>
+       <td>${b.relavance ? b.relavance : '-'}</td>
+       <td>${b.question ? b.question : '-'}</td>
+       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+       <td>${
+         b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+       }</td>
+             </tr>`;
+           }
+         })
+         .join(''),
+     )
+     .join('')}
+   
+ 
+   </tbody>
+ 
+ 
+   </tbody>
+ </table>
+   </div>
+   </div>
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
     const scale_ghg = contentTwo.scale_ghg;
     const sustained_ghg = contentTwo.sustained_ghg;
     const page_2 = `  <div id="page_5" class="page text-center" >
@@ -467,6 +552,8 @@ export class ReportPagesService {
  
  
  <div class="report-table-sm">
+ <lablel text-align: left;>Outcome characteristics refer to the scale and sustained nature of outcomes resulting from a policy. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the policy on GHGs, Adaptation and sustainable development. </lablel>
+<br><br>
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -884,7 +971,7 @@ export class ReportPagesService {
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Category	Aggrgated Score</th>
+         <th scope="col">Aggrgated Score</th>
       
          
        </tr>
@@ -904,7 +991,10 @@ export class ReportPagesService {
               </tr>`;
        })
        .join('')}
-    
+       <tr>
+       <td><b>Process score</td>
+       <td><b>${contentTwo.processScore}</td>
+       </tr>
    
      </tbody>
    </table>
@@ -918,7 +1008,7 @@ export class ReportPagesService {
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Category	Aggrgated Score</th>
+         <th scope="col">Aggrgated Score</th>
       
          
        </tr>
@@ -935,10 +1025,14 @@ export class ReportPagesService {
                : '-'
            }</td>
              
-              </tr>`;
+           </tr>
+          `;
        })
        .join('')}
-    
+       <tr>
+       <td><b>Outcome score</td>
+       <td><b>${contentTwo.outcomeScore}</td>
+       </tr>
    
      </tbody>
    </table>
@@ -1494,7 +1588,7 @@ export class ReportPagesService {
           </div>`;
 
     return (
-      page_1 + page_2 + page_3 + page_4 + page_5 + page_6
+      page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6
       // page_7 +
       // page_8 +
       // page_9 +
@@ -1512,10 +1606,20 @@ export class ReportPagesService {
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
-         ${coverPage.generateReportName}
-       </div>
-   </div>
+    <div class="col h2 d-flex justify-content-center">
+     TRANSFORMATIONAL CHANGE ASSESSMENT
+    </div>                
+  </div>
+  <div class="row ">
+    <div class="col h2 d-flex justify-content-center">
+     REPORT
+    </div>
+  </div>     
+  <div class="row ">
+  <div class="col h2 d-flex justify-content-center">
+    GENERAL INTERVENTIONS TOOL
+    </div>
+  </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
        </div>
@@ -2956,6 +3060,10 @@ export class ReportPagesService {
       <div class="report-all-table-sm-rotate">
 
         <div class="report-table-sm-rotate">
+        <br><br>
+        <lablel text-align: left;>The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation. </lablel>
+
+        <br><br>
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
               <tr>
