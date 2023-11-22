@@ -1752,6 +1752,167 @@ console.log(asssCharacteristicasscalesd)
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentOne>{
     const contentOne=new ReportCarbonMarketDtoContentOne()
+    let asse = await this.assessmentService.findbyIDforReport(assessmentId);
+    console.log("assessmentId", assessmentId)
+   
+    // contentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
+    // // reportContentOne.objectives = await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
+    // reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
+    // reportContentOne.principles = asse.principles ? asse.principles : 'N/A';
+    // // reportContentOne.assessmentBoundary = asse.assessBoundry;
+
+    // reportContentOne.impactCoverd = asse.impactsCovered;
+    // reportContentOne.sectorCoverd = asse.investor_sector && asse.investor_sector.length ? asse.investor_sector
+    //   ?.map((a) => a.sector.name)
+    //   .join(',') : 'N/A';
+    // reportContentOne.geograpycalCover = asse.geographical_areas_covered && asse.geographical_areas_covered.length ? asse.geographical_areas_covered
+    //   ?.map((a) => a.name)
+    //   .join(',') : 'N/A';;
+    contentOne.policyOrActionsDetails = [
+      {
+        information: 'Title of the intervention',
+        description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
+      },
+      {
+        information: 'Type',
+        description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
+      },
+      {
+        information: 'Description of the intervention',
+        description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
+      },
+      // {
+      //   information: 'Status',
+      //   description: asse.climateAction.projectStatus
+      //     ? asse.climateAction.projectStatus.name
+      //     : 'N/A'
+      // },
+      {
+        information: 'Date of implementation',
+        description: asse.climateAction.dateOfImplementation
+          ? new Date(
+            asse.climateAction.dateOfImplementation,
+          ).toLocaleDateString()
+          : 'N/A',
+      },
+      {
+        information: 'Date of completion (if relevant)',
+        description: asse.climateAction.dateOfCompletion
+          ? new Date(asse.climateAction.dateOfCompletion).toLocaleDateString()
+          : 'N/A',
+      },
+      {
+        information: 'Implementing entity or entities',
+        description: asse.climateAction.implementingEntity ? asse.climateAction.implementingEntity : 'N/A',
+      },
+      {
+        information: 'Objectives and intended impacts or benefits of the intervention ',
+        description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
+      },
+      {
+        information: 'Level of the policy or action ',
+        description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
+      },
+      {
+        information: 'Geographic coverage',
+        description: asse.climateAction.geographicCoverage
+          ? asse.climateAction.geographicCoverage
+          : 'N/A',
+      },
+      {
+        information: 'Sectors covered ',
+        description: asse.climateAction.policy_sector
+          ? asse.climateAction.policy_sector.map((a) => a.sector.name).join(',')
+          : 'N/A',
+      },
+      {
+        information: 'Related interventions ',
+        description: asse.climateAction.related_policies
+          ? asse.climateAction.related_policies
+          : 'N/A',
+      },
+      {
+        information: 'Reference',
+        description: asse.climateAction.reference
+          ? asse.climateAction.reference
+          : 'N/A',
+      },
+    ];
+
+
+
+    // reportContentOne.understanPolicyOrActions = [
+    //   // {
+
+    //   //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+
+    //   //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+
+    //   // },
+
+    //   {
+
+    //     Time_periods: 'Long-term (≥15 years)',
+
+    //     description: asse.vision_long ? asse.vision_long : 'N/A',
+
+    //   },
+
+    //   {
+
+    //     Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
+
+    //     description: asse.vision_medium ? asse.vision_medium : 'N/A',
+
+    //   },
+
+    //   {
+
+    //     Time_periods: 'Short-term (&lt; 5 years)',
+
+    //     description: asse.vision_short ? asse.vision_short : 'N/A',
+
+    //   },
+
+    //   {
+
+    //     Time_periods: 'Phase of transformation',
+
+    //     description: asse.phase_of_transformation ? asse.phase_of_transformation : 'N/A',
+
+    //   },
+
+    // ];
+
+
+
+
+
+    
+
+    // reportContentOne.barriers = []
+
+    // asse.policy_barrier.map(a => {
+
+    //   reportContentOne.barriers.push({
+    //     barrier: a.barrier ? a.barrier : 'N/A',
+
+    //     explanation: a.explanation ? a.explanation : 'N/A',
+
+    //     characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
+
+    //     barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
+    //   })
+
+    // })
+
+    // reportContentOne.contextOfPolicy = [];
+
+    // let catagoryProcess = [];
+    // let catagoryOutcome = [];
+    // reportContentOne.outcomecharacteristics = catagoryOutcome;
+
+    // reportContentOne.prossescharacteristics = catagoryProcess;
 
 
 return contentOne
