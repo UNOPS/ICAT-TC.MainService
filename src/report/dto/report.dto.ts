@@ -158,7 +158,7 @@ export class ReportCarbonMarketDto {
 
 }
  export class ReportCarbonMarketDtoContentThree {
-    prossesAssesmentStartingSituation:object[]=[];
+    prossesAssesmentStartingSituation:{ rows: number; name: string; characteristics: any[] }[][]=[[]];
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2
@@ -171,7 +171,8 @@ export class ReportCarbonMarketDto {
 
     process_categories_assessment:object[]=[];
     outcomes_categories_assessment:object[]=[];
-
+    processScore: number;
+    outcomeScore :number;
 
  }
  export class ReportCarbonMarketDtoContentFour {}
