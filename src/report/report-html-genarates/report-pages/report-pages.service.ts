@@ -1701,7 +1701,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
+       <div  class="col h2 d-flex justify-content-center">
          ${coverPage.generateReportName}
        </div>
    </div>
@@ -1734,22 +1734,1185 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     footer: string,
     tableOfContent: ReportCarbonMarketDtoTableOfContent,
   ): string {
-    return '';
+    let pageNumber = 1;
+
+    const page_one = `  <div id="page_5" class="page text-center" >
+  ${header}
+  <div class="content">
+  <div class="table-of-content ">
+  <div  class="table-of-content-main-headers text-start">Table of Contents</div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............3</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.4	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............4</bdi></div> </div>
+  
+
+  <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment....................................................................................................................................................................</div><div ><bdi>.............2</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards on environmental integrity ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention on GHG emissions lock-in	 ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+
+  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+
+
+    <div class="table-of-content-header-item"><div >3. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+ 
+    <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+
+ 
+ 
+    </div>
+
+  
+  </div>
+  
+  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+  
+   </div>`;
+
+    return page_one;
   }
   CarbonMarketcontentOne(header: string,
     footer: string,
    content: ReportCarbonMarketDtoContentOne,): string {
-    return '';
+    let pageNumber = 2;
+    const policyOrActionsDetails = content.policyOrActionsDetails;
+
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">1 Single Intervention Information</div>
+ 
+ <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${policyOrActionsDetails
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    const characteristics = content.characteristics;
+    const transformational = content.transformational;
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_2 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+  
+ 
+ <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${characteristics
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+    
+ 
+      <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
+
+      <blockquote class=" paragraph blockquote text-start ">
+      <p class="mb-0 lh-base">The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices. 
+        </p>
+    </blockquote>  
+             <div class="report-table-sm">
+            
+             <table class="table  table-bordered border-dark">
+               <thead class="table-primary  border-dark">
+                 <tr>
+                   <th scope="col">Information</th>
+                   <th scope="col">Description</th>
+                   
+                 </tr>
+               </thead>
+               <tbody class="table-active ">
+               ${transformational
+                 .map(
+                   (a: { information: string; description: string }) =>
+                     '<tr><td>' +
+                     a.information +
+                     '</td><td>' +
+                     a.description +
+                     '</td></tr>',
+                 )
+                 .join('')}
+               </tbody>
+             </table>
+           </div>
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+   
+    const barriers = content.barriers;
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_3 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+
+   <blockquote class=" paragraph blockquote text-start ">
+   <p class="mb-0 lh-base">
+   Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions. 
+   </p>
+ </blockquote> 
+   <div class="report-table-sm">
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Barriers</th>
+         <th scope="col">Explanation</th>
+         <th scope="col">Characteristics affected</th>
+         <th scope="col">Barrier directly targeted by the policy or action</th>
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${barriers
+       .map(
+         (a: {
+           barrier: string;
+           explanation: string;
+           characteristics_affected: string;
+           barrier_directly_targeted: string;
+         }) =>
+           '<tr><td>' +
+           a.barrier +
+           '</td><td>' +
+           a.explanation +
+           '</td><td>' +
+           a.characteristics_affected +
+           '</td><td>' +
+           a.barrier_directly_targeted +
+           '</td></tr>',
+       )
+       .join('')}
+     </tbody>
+   </table>
+ </div>
+
+
+ 
+ <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
+
+ <blockquote class=" paragraph blockquote text-start ">
+ <p class="mb-0 lh-base">It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy.  </p>
+</blockquote> 
+<div class="report-table-sm">
+<table class="table  table-bordered border-dark">
+  <thead class="table-primary  border-dark">
+    <tr>
+      <th scope="col">Information</th>
+      <th scope="col">Description </th>
+    
+    </tr>
+  </thead>
+  <tbody class="table-active">
+  <tr><td>
+  Assesment type
+  </td><td> 
+  ${content.assessmetType ? content.assessmetType : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Geographical area covered
+  </td><td> 
+  ${content.geograpycalCover ? content.geograpycalCover : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Sectors covered 
+  </td><td> 
+  ${content.sectorCoverd ? content.sectorCoverd : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Opportunities for stakeholders to participate in the assessment
+  </td><td> 
+  ${content.opportunities ? content.opportunities : 'N/A'}
+  </td></tr>
+
+  
+  </tbody>
+</table>
+</div>
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    return page_1+page_2+page_3;
   }
   CarbonMarketcontentTwo(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentTwo,): string {
-    return '';
+      let pageNumber = 3;
+     let safeguards=content.safeguards
+    const page_1 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
+    <blockquote class=" paragraph blockquote text-start ">
+    <p class="mb-0 lh-base">These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: Safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
+   </blockquote> 
+  <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
+  <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+             <tr>
+               <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${safeguards[0]
+             .map(
+               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 '<tr><td>' +
+                 a.question +
+                 '</td><td>' +
+                 a.answer +
+                 '</td><td>' +
+                 a.justification +
+                 '</td><td>' +
+                 a.supporting_information_uploaded +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+     const page_1_2 =safeguards.length<2?'': `  <div id="page_9" class="page text-center" >
+     ${header}
+     <div class="content">
+    
+          <div class="report-table-sm">
+         
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+              <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+                
+              </tr>
+            </thead>
+            <tbody class="table-active ">
+            ${safeguards[1]
+              .map(
+                (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                  '<tr><td>' +
+                  a.question +
+                  '</td><td>' +
+                  a.answer +
+                  '</td><td>' +
+                  a.justification +
+                  '</td><td>' +
+                  a.supporting_information_uploaded +
+                  '</td></tr>',
+              )
+              .join('')}
+            </tbody>
+          </table>
+        </div>
+   
+     
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+
+
+      let prevention_ghg_emissions=content.prevention_ghg_emissions
+      let prevention_negative_environmental=content.prevention_negative_environmental
+      const page_2 = `  <div id="page_9" class="page text-center" >
+      ${header}
+      <div class="content">
+    
+    <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
+           <div class="report-table-sm">
+          
+           <table class="table  table-bordered border-dark">
+             <thead class="table-primary  border-dark">
+               <tr>
+               <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+                 
+               </tr>
+             </thead>
+             <tbody class="table-active ">
+             ${prevention_ghg_emissions
+               .map(
+                 (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                   '<tr><td>' +
+                   a.question +
+                   '</td><td>' +
+                   a.answer +
+                   '</td><td>' +
+                   a.justification +
+                   '</td><td>' +
+                   a.supporting_information_uploaded +
+                   '</td></tr>',
+               )
+               .join('')}
+             </tbody>
+           </table>
+         </div>
+
+         <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+             <tr>
+             <th scope="col">Question </th>
+             <th scope="col">Answer </th>
+             <th scope="col">Justification </th>
+             <th scope="col">Supporting information uploaded </th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${prevention_negative_environmental
+             .map(
+               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 '<tr><td>' +
+                 a.question +
+                 '</td><td>' +
+                 a.answer +
+                 '</td><td>' +
+                 a.justification +
+                 '</td><td>' +
+                 a.supporting_information_uploaded +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+    
+      
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+       let outcomes=content.outcomes;
+       const page_3 = `  <div id="page_9" class="page text-center" >
+       ${header}
+       <div class="content">
+       <div  class="main_header_sub text-start">2.2 Outcomes of the preconditions assessment  </div> 
+   
+            <div class="report-table-sm">
+           
+            <table class="table  table-bordered border-dark">
+              <thead class="table-primary  border-dark">
+                <tr>
+                <th scope="col">Preocndition  </th>
+                <th scope="col">Outcome   </th>
+                <th scope="col">Evidence Provided?  </th>
+                
+                  
+                </tr>
+              </thead>
+              <tbody class="table-active ">
+              ${outcomes
+                .map(
+                  (a: { preocndition:string,outcome:string,evidence_provided:string  }) =>
+                    '<tr><td>' +
+                    a.preocndition +
+                    '</td><td>' +
+                    a.outcome +
+                    '</td><td>' +
+                    a.evidence_provided +
+                    '</td></tr>',
+                )
+                .join('')}
+              </tbody>
+            </table>
+          </div>
+ 
+       
+     
+       
+       </div>
+       
+       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+       
+        </div>`;
+    return page_1+page_1_2+page_2+page_3;
   }
   CarbonMarketcontentThree(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentThree,): string {
-    return '';
+
+      let pageNumber = 4;
+     let prossesAssesmentStartingSituation=content.prossesAssesmentStartingSituation
+    const page_1 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
+  
+  <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
+  <blockquote class=" paragraph blockquote text-start ">
+    <p class="mb-0 lh-base">Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.   
+     </p>
+   </blockquote> 
+   <div class="report-table-sm">
+   <p>
+     Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
+   </p>
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Process Characteristic</th>
+         <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+         <th scope="col">Guiding Question </th>
+         <th scope="col">Likelihood score  </th>
+         <th scope="col">Rationale justifying the score  </th>
+         <th scope="col">Supporting Documents Supplied </th>
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${prossesAssesmentStartingSituation[0]
+       .map((a: { rows: number; name: string; characteristics: any[] }) =>
+         a.characteristics
+           .map((b, index) => {
+             if (!index) {
+               return `<tr>
+         <td rowspan="${a.rows}" >${a.name}</td>
+         <td>${b.name ? b.name : '-'}</td>
+         <td>${b.relavance ? b.relavance : '-'}</td>
+         <td>${b.question ? b.question : '-'}</td>
+         <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+         <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+         <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                     }</td>
+       
+        </tr>`;
+                 } else {
+                   return `<tr>
+               <td>${b.name ? b.name : '-'}</td>
+         <td>${b.relavance ? b.relavance : '-'}</td>
+         <td>${b.question ? b.question : '-'}</td>
+         <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+         <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+         <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                     }</td>
+               </tr>`;
+                 }
+               })
+               .join(''),
+           )
+           .join('')}
+     
+   
+     </tbody>
+   
+   
+     </tbody>
+   </table>
+   </div>
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+     const page_1_1 =prossesAssesmentStartingSituation.length<2?'': `  <div id="page_9" class="page text-center" >
+     ${header}
+     <div class="content">
+    
+    <div class="report-table-sm">
+    <p>
+      Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
+    </p>
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Process Characteristic</th>
+          <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+          <th scope="col">Guiding Question </th>
+          <th scope="col">Likelihood score  </th>
+          <th scope="col">Rationale justifying the score  </th>
+          <th scope="col">Supporting Documents Supplied </th>
+        </tr>
+      </thead>
+      <tbody class="table-active">
+      ${prossesAssesmentStartingSituation[0]
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              if (!index) {
+                return `<tr>
+          <td rowspan="${a.rows}" >${a.name}</td>
+          <td>${b.name ? b.name : '-'}</td>
+          <td>${b.relavance ? b.relavance : '-'}</td>
+          <td>${b.question ? b.question : '-'}</td>
+          <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+          <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+          <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                      }</td>
+        
+         </tr>`;
+                  } else {
+                    return `<tr>
+                <td>${b.name ? b.name : '-'}</td>
+          <td>${b.relavance ? b.relavance : '-'}</td>
+          <td>${b.question ? b.question : '-'}</td>
+          <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+          <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+          <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+                      }</td>
+                </tr>`;
+                  }
+                })
+                .join(''),
+            )
+            .join('')}
+      
+    
+      </tbody>
+    
+    
+      </tbody>
+    </table>
+    </div>
+   
+     
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+      const scale_ghg = content.scale_ghg;
+      const sustained_ghg = content.sustained_ghg;
+      const page_2 = `  <div id="page_5" class="page text-center" >
+     ${header}
+     <div class="content">
+     <div  class="main_header_sub text-start">3.2	Outcomes characteristics assessment  </div> 
+      
+  
+   
+   
+   <div class="report-table-sm">
+  <p>
+  Outcome characteristics refer to the scale and sustained nature of outcomes resulting from a policy. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the policy on GHGs, Adaptation and sustainable development. 
+  </p>
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Outcome Characteristic</th>
+         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+         <th scope="col">Starting situation   </th>
+         <th scope="col">Expected impact   </th>
+         <th scope="col">Score  </th>
+         <th scope="col">Rationale justifying the score </th>
+         <th scope="col">Documentation uploaded?   </th>
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${scale_ghg
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+        <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.ustifying ? b.ustifying : '-'}</td>
+        <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+        
+      
+       </tr>`;
+                } else {
+                  return `<tr>
+               <td>${b.name ? b.name : '-'}</td>
+               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+               <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+               <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+               <td>${b.score ? b.score : '-'}</td>
+               <td>${b.ustifying ? b.ustifying : '-'}</td>
+               <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+              </tr>`;
+                }
+              })
+              .join(''),
+          )
+          .join('')}
+   
+   
+     </tbody>
+   </table>
+   </div>
+   <div class="report-table-sm">
+  
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Outcome Characteristic</th>
+         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+         <th scope="col">Is the intervention’s GHG outcome sustained over time</th>
+         <th scope="col">Likelihood Score   </th>
+         <th scope="col">Rationale justifying the score </th>
+         <th scope="col">Documentation uploaded? </th>
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${sustained_ghg
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        <td>${b.sustained_over_time ? b.sustained_over_time : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.ustifying ? b.ustifying : '-'}</td>
+        <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+      
+       </tr>`;
+                } else {
+                  return `<tr>
+               <td>${b.name ? b.name : '-'}</td>
+               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+               <td>${b.sustained_over_time ? b.sustained_over_time : '-'}</td>
+               <td>${b.score ? b.score : '-'}</td>
+               <td>${b.ustifying ? b.ustifying : '-'}</td>
+               <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+              </tr>`;
+                }
+              })
+              .join(''),
+          )
+          .join('')}
+   
+   
+     </tbody>
+   </table>
+   </div>
+   
+   
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+      const scale_adaptation = content.scale_adaptation;
+      const sustained_adaptation = content.sustained_adaptation;
+  
+      const page_3 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content">
+   
+    <div class="report-table-sm">
+  
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Outcome Characteristic</th>
+          <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+          <th scope="col">Starting situation   </th>
+          <th scope="col">Expected impact   </th>
+          <th scope="col">Score  </th>
+          <th scope="col">Rationale justifying the score </th>
+          <th scope="col">Documentation uploaded?   </th>
+        </tr>
+      </thead>
+      <tbody class="table-active">
+      ${scale_adaptation
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+         <td rowspan="${a.rows}" >${a.name}</td>
+         <td>${b.name ? b.name : '-'}</td>
+         <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+         <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+         <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+         
+       
+        </tr>`;
+                } else {
+                  return `<tr>
+                <td>${b.name ? b.name : '-'}</td>
+                <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+                <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+                <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+                <td>${b.score ? b.score : '-'}</td>
+                <td>${b.ustifying ? b.ustifying : '-'}</td>
+                <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+               </tr>`;
+                }
+              })
+              .join(''),
+          )
+          .join('')}
+    
+    
+      </tbody>
+    </table>
+    </div>
+    <div class="report-table-sm">
+  
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Outcome Characteristic</th>
+          <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+          <th scope="col">Is the intervention’s contribution to the adaptation co-benefit sustained in nature? </th>
+          <th scope="col">Likelihood Score   </th>
+          <th scope="col">Rationale justifying the score </th>
+          <th scope="col">Documentation uploaded? </th>
+        </tr>
+      </thead>
+      <tbody class="table-active">
+      ${sustained_adaptation
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
+         <td rowspan="${a.rows}" >${a.name}</td>
+         <td>${b.name ? b.name : '-'}</td>
+         <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+         <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+         
+       
+        </tr>`;
+                } else {
+                  return `<tr>
+                <td>${b.name ? b.name : '-'}</td>
+                <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+                <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+                <td>${b.score ? b.score : '-'}</td>
+                <td>${b.ustifying ? b.ustifying : '-'}</td>
+                <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+               </tr>`;
+                }
+              })
+              .join(''),
+          )
+          .join('')}
+    
+    
+      </tbody>
+    </table>
+    </div>
+    
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+  
+      const scale_sd = content.scale_sd;
+  
+      const page_4 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content">
+     
+    
+    
+    <div class="report-table-sm">
+  
+    <table class="table  table-bordered border-dark">
+      <thead class="table-primary  border-dark">
+        <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Sustainable Development Goal</th>
+        <th scope="col">Could the intervention have an impact on this particular SDG?</th>
+        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Is the characteristic within the assessment boundaries?</th>
+        <th scope="col">Starting situation   </th>
+        <th scope="col">Expected impact   </th>
+        <th scope="col">Score  </th>
+        <th scope="col">Rationale justifying the score</th>
+        <th scope="col">Justification uploaded   </th>
+        </tr>
+      </thead>
+      <tbody class="table-active">
+      
+      ${scale_sd.sdg
+          .map(
+            (
+              a: {
+                rows: number;
+                name: string;
+                impact: string;
+                characteristics: any[];
+              },
+              index,
+            ) => {
+              if (!index) {
+                return a.characteristics
+                  .map((b, index) => {
+                    if (!index) {
+                      return `<tr>
+        <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
+        <td rowspan="${a.rows}" >${a.name}</td>
+        <td rowspan="${a.rows}" >${a.impact}</td>
+        <td>${b.name ? b.name : '-'}</td>
+        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+        <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+        <td>${b.score ? b.score : '-'}</td>
+        <td>${b.ustifying ? b.ustifying : '-'}</td>
+        <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+      
+       </tr>`;
+                    } else {
+                      return `<tr>
+              <td>${b.name ? b.name : '-'}</td>
+      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+         <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+              </tr>`;
+                    }
+                  })
+                  .join('');
+              } else {
+                return a.characteristics
+                  .map((b, index) => {
+                    if (!index) {
+                      return `<tr>
+  <td rowspan="${a.rows}" >${a.name}</td>
+  <td rowspan="${a.rows}" >${a.impact}</td>
+  <td>${b.name ? b.name : '-'}</td>
+  <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+  <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+  <td>${b.score ? b.score : '-'}</td>
+  <td>${b.ustifying ? b.ustifying : '-'}</td>
+  <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+  
+  </tr>`;
+                    } else {
+                      return `<tr>
+     <td>${b.name ? b.name : '-'}</td>
+  <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+  <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
+         <td>${b.expected_impact ? b.expected_impact : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+     </tr>`;
+                    }
+                  })
+                  .join('');
+              }
+            },
+          )
+          .join('')}
+    
+    
+      </tbody>
+    </table>
+    </div>
+   
+    
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+  
+      const sustained_sd = content.sustained_sd;
+  
+      const page_5 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content">
+     
+    
+     
+    
+    
+      <div class="report-table-sm">
+    
+      <table class="table  table-bordered border-dark">
+        <thead class="table-primary  border-dark">
+          <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Sustainable Development Goal</th>
+          <th scope="col">Could the intervention have an impact on this particular SDG?</th>
+          <th scope="col">Outcome Characteristic</th>
+          <th scope="col">Is the characteristic within the assessment boundaries?</th>
+          <th scope="col">Is the intervention’s GHG outcome sustained over time</th>
+          <th scope="col">Likelihood Score   </th>
+          <th scope="col">Rationale justifying the score </th>
+          <th scope="col">Justification uploaded </th>
+          </tr>
+        </thead>
+        <tbody class="table-active">
+        
+        ${sustained_sd.sdg
+          .map(
+            (
+              a: {
+                rows: number;
+                name: string;
+                impact: string;
+                characteristics: any[];
+              },
+              index,
+            ) => {
+              if (!index) {
+                return a.characteristics
+                  .map((b, index) => {
+                    if (!index) {
+                      return `<tr>
+          <td rowspan="${sustained_sd.rows}" >${sustained_sd.name}</td>
+          <td rowspan="${a.rows}" >${a.name}</td>
+          <td rowspan="${a.rows}" >${a.impact}</td>
+          <td>${b.name ? b.name : '-'}</td>
+          <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+          <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+        
+         </tr>`;
+                    } else {
+                      return `<tr>
+                <td>${b.name ? b.name : '-'}</td>
+        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+                </tr>`;
+                    }
+                  })
+                  .join('');
+              } else {
+                return a.characteristics
+                  .map((b, index) => {
+                    if (!index) {
+                      return `<tr>
+    <td rowspan="${a.rows}" >${a.name}</td>
+    <td rowspan="${a.rows}" >${a.impact}</td>
+    <td>${b.name ? b.name : '-'}</td>
+    <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+    <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+    
+    </tr>`;
+                    } else {
+                      return `<tr>
+       <td>${b.name ? b.name : '-'}</td>
+    <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+    <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
+         <td>${b.score ? b.score : '-'}</td>
+         <td>${b.ustifying ? b.ustifying : '-'}</td>
+         <td>${b.documentation_uploaded ? b.documentation_uploaded : '-'}</td>
+       </tr>`;
+                    }
+                  })
+                  .join('');
+              }
+            },
+          )
+          .join('')}
+      
+      
+        </tbody>
+      </table>
+      </div>
+   
+    
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+  
+      let process_categories_assessment =
+      content.process_categories_assessment;
+      let outcomes_categories_assessment =
+      content.outcomes_categories_assessment;
+  
+      const page_6 = `  <div id="page_5" class="page text-center" >
+       ${header}
+       <div class="content">
+       <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
+     
+     
+     <div class="report-table-sm">
+    
+     <table class="table  table-bordered border-dark">
+       <thead class="table-primary  border-dark">
+         <tr>
+           <th scope="col">Category</th>
+           <th scope="col">Aggrgated Score</th>
+        
+           
+         </tr>
+       </thead>
+       <tbody class="table-active">
+       ${process_categories_assessment
+          .map((a: { category: any; category_score: any }) => {
+            return `<tr>
+             <td>${a.category ? a.category : '-'}</td>
+             <td>${a.category_score.value != null &&
+                a.category_score.value != undefined
+                ? a.category_score.value
+                : '-'
+              }</td>
+               
+                </tr>`;
+          })
+          .join('')}
+          <tr>
+            <td class="bold-table-row">Process score</td>
+            <td class="bold-table-row">${content.processScore!==null ? content.processScore : '-'}</td>
+          </tr>
+         
+     
+       </tbody>
+     </table>
+     </div>
+    
+     <div  class="main_header_sub text-start">2.4	Outcomes categories assessment </div> 
+  
+     <div class="report-table-sm">
+    
+     <table class="table  table-bordered border-dark">
+       <thead class="table-primary  border-dark">
+         <tr>
+           <th scope="col">Category</th>
+           <th scope="col">Aggrgated Score</th>
+        
+           
+         </tr>
+       </thead>
+       <tbody class="table-active">
+       ${outcomes_categories_assessment
+          .map((a: { category: any; category_score: any }) => {
+            return `<tr>
+             <td>${a.category ? a.category : '-'}</td>
+             <td>${a.category_score.value != null &&
+                a.category_score.value != undefined
+                ? a.category_score.value
+                : '-'
+              }</td>
+               
+                </tr>`;
+          })
+          .join('')}
+           <tr>
+            <td class="bold-table-row">Outcomes score </td>
+            <td class="bold-table-row">${content.outcomeScore!==null?content.outcomeScore:'-'}</td>
+          </tr>
+      
+     
+       </tbody>
+     </table>
+     </div>
+      
+     
+       </div>
+       
+       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+       
+        </div>`;
+
+    return page_1+page_1_1;
   }
   CarbonMarketcontentFour(header: string,
     footer: string,
