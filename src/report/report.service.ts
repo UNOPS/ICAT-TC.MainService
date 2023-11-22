@@ -1841,48 +1841,48 @@ console.log(asssCharacteristicasscalesd)
 
 
 
-    // reportContentOne.understanPolicyOrActions = [
-    //   // {
+    contentOne.transformational = [
+      // {
 
-    //   //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+      //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
 
-    //   //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+      //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
 
-    //   // },
+      // },
 
-    //   {
+      {
 
-    //     Time_periods: 'Long-term (≥15 years)',
+        Time_periods: 'Long-term (≥15 years)',
 
-    //     description: asse.vision_long ? asse.vision_long : 'N/A',
+        description: asse.vision_long ? asse.vision_long : 'N/A',
 
-    //   },
+      },
 
-    //   {
+      {
 
-    //     Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
+        Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
 
-    //     description: asse.vision_medium ? asse.vision_medium : 'N/A',
+        description: asse.vision_medium ? asse.vision_medium : 'N/A',
 
-    //   },
+      },
 
-    //   {
+      {
 
-    //     Time_periods: 'Short-term (&lt; 5 years)',
+        Time_periods: 'Short-term (&lt; 5 years)',
 
-    //     description: asse.vision_short ? asse.vision_short : 'N/A',
+        description: asse.vision_short ? asse.vision_short : 'N/A',
 
-    //   },
+      },
 
-    //   {
+      {
 
-    //     Time_periods: 'Phase of transformation',
+        Time_periods: 'Phase of transformation',
 
-    //     description: asse.phase_of_transformation ? asse.phase_of_transformation : 'N/A',
+        description: asse.phase_of_transformation ? asse.phase_of_transformation : 'N/A',
 
-    //   },
+      },
 
-    // ];
+    ];
 
 
 
@@ -1890,21 +1890,21 @@ console.log(asssCharacteristicasscalesd)
 
     
 
-    // reportContentOne.barriers = []
+    contentOne.barriers = []
 
-    // asse.policy_barrier.map(a => {
+    asse.policy_barrier.map(a => {
 
-    //   reportContentOne.barriers.push({
-    //     barrier: a.barrier ? a.barrier : 'N/A',
+      contentOne.barriers.push({
+        barrier: a.barrier ? a.barrier : 'N/A',
 
-    //     explanation: a.explanation ? a.explanation : 'N/A',
+        explanation: a.explanation ? a.explanation : 'N/A',
 
-    //     characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
+        characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
 
-    //     barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
-    //   })
+        barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
+      })
 
-    // })
+    })
 
     // reportContentOne.contextOfPolicy = [];
 
