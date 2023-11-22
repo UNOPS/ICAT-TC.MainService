@@ -1519,7 +1519,7 @@ export class ReportPagesService {
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
+       <div  class="col h2 d-flex justify-content-center">
          ${coverPage.generateReportName}
        </div>
    </div>
@@ -1552,21 +1552,534 @@ export class ReportPagesService {
     footer: string,
     tableOfContent: ReportCarbonMarketDtoTableOfContent,
   ): string {
-    return '';
+    let pageNumber = 1;
+
+    const page_one = `  <div id="page_5" class="page text-center" >
+  ${header}
+  <div class="content">
+  <div class="table-of-content ">
+  <div  class="table-of-content-main-headers text-start">Table of Contents</div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............3</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.4	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............4</bdi></div> </div>
+  
+
+  <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment....................................................................................................................................................................</div><div ><bdi>.............2</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards on environmental integrity ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention on GHG emissions lock-in	 ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts ........................................................................................................................................................................</div><div ><bdi>.....13</bdi></div></div></div>
+
+  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
+
+
+    <div class="table-of-content-header-item"><div >3. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+ 
+    <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
+
+ 
+ 
+    </div>
+
+  
+  </div>
+  
+  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+  
+   </div>`;
+
+    return page_one;
   }
   CarbonMarketcontentOne(header: string,
     footer: string,
    content: ReportCarbonMarketDtoContentOne,): string {
-    return '';
+    let pageNumber = 2;
+    const policyOrActionsDetails = content.policyOrActionsDetails;
+
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_1 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+   <div  class="main_header text-start">1 Single Intervention Information</div>
+ 
+ <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${policyOrActionsDetails
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    const characteristics = content.characteristics;
+    const transformational = content.transformational;
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_2 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+  
+ 
+ <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
+        <div class="report-table-sm">
+       
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th scope="col">Information</th>
+              <th scope="col">Description</th>
+              
+            </tr>
+          </thead>
+          <tbody class="table-active ">
+          ${characteristics
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
+          </tbody>
+        </table>
+      </div>
+ 
+    
+ 
+      <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
+
+      <blockquote class=" paragraph blockquote text-start ">
+      <p class="mb-0 lh-base">The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices. 
+        </p>
+    </blockquote>  
+             <div class="report-table-sm">
+            
+             <table class="table  table-bordered border-dark">
+               <thead class="table-primary  border-dark">
+                 <tr>
+                   <th scope="col">Information</th>
+                   <th scope="col">Description</th>
+                   
+                 </tr>
+               </thead>
+               <tbody class="table-active ">
+               ${transformational
+                 .map(
+                   (a: { information: string; description: string }) =>
+                     '<tr><td>' +
+                     a.information +
+                     '</td><td>' +
+                     a.description +
+                     '</td></tr>',
+                 )
+                 .join('')}
+               </tbody>
+             </table>
+           </div>
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+   
+    const barriers = content.barriers;
+    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
+
+    const page_3 = `  <div id="page_9" class="page text-center" >
+   ${header}
+   <div class="content">
+
+   <blockquote class=" paragraph blockquote text-start ">
+   <p class="mb-0 lh-base">
+   Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions. 
+   </p>
+ </blockquote> 
+   <div class="report-table-sm">
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Barriers</th>
+         <th scope="col">Explanation</th>
+         <th scope="col">Characteristics affected</th>
+         <th scope="col">Barrier directly targeted by the policy or action</th>
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${barriers
+       .map(
+         (a: {
+           barrier: string;
+           explanation: string;
+           characteristics_affected: string;
+           barrier_directly_targeted: string;
+         }) =>
+           '<tr><td>' +
+           a.barrier +
+           '</td><td>' +
+           a.explanation +
+           '</td><td>' +
+           a.characteristics_affected +
+           '</td><td>' +
+           a.barrier_directly_targeted +
+           '</td></tr>',
+       )
+       .join('')}
+     </tbody>
+   </table>
+ </div>
+
+
+ 
+ <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
+
+ <blockquote class=" paragraph blockquote text-start ">
+ <p class="mb-0 lh-base">It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy.  </p>
+</blockquote> 
+<div class="report-table-sm">
+<table class="table  table-bordered border-dark">
+  <thead class="table-primary  border-dark">
+    <tr>
+      <th scope="col">Information</th>
+      <th scope="col">Description </th>
+    
+    </tr>
+  </thead>
+  <tbody class="table-active">
+  <tr><td>
+  Assesment type
+  </td><td> 
+  ${content.assessmetType ? content.assessmetType : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Geographical area covered
+  </td><td> 
+  ${content.geograpycalCover ? content.geograpycalCover : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Sectors covered 
+  </td><td> 
+  ${content.sectorCoverd ? content.sectorCoverd : 'N/A'}
+  </td></tr>
+  <tr><td>
+  Opportunities for stakeholders to participate in the assessment
+  </td><td> 
+  ${content.opportunities ? content.opportunities : 'N/A'}
+  </td></tr>
+
+  
+  </tbody>
+</table>
+</div>
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+
+    return page_1+page_2+page_3;
   }
   CarbonMarketcontentTwo(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentTwo,): string {
-    return '';
+      let pageNumber = 3;
+     let safeguards=content.safeguards
+    const page_1 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
+  
+  <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
+  <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+             <tr>
+               <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${safeguards[0]
+             .map(
+               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 '<tr><td>' +
+                 a.question +
+                 '</td><td>' +
+                 a.answer +
+                 '</td><td>' +
+                 a.justification +
+                 '</td><td>' +
+                 a.supporting_information_uploaded +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+     const page_1_2 =safeguards.length>0?'': `  <div id="page_9" class="page text-center" >
+     ${header}
+     <div class="content">
+    
+          <div class="report-table-sm">
+         
+          <table class="table  table-bordered border-dark">
+            <thead class="table-primary  border-dark">
+              <tr>
+              <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+                
+              </tr>
+            </thead>
+            <tbody class="table-active ">
+            ${safeguards[1]
+              .map(
+                (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                  '<tr><td>' +
+                  a.question +
+                  '</td><td>' +
+                  a.answer +
+                  '</td><td>' +
+                  a.justification +
+                  '</td><td>' +
+                  a.supporting_information_uploaded +
+                  '</td></tr>',
+              )
+              .join('')}
+            </tbody>
+          </table>
+        </div>
+   
+     
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+
+
+      let prevention_ghg_emissions=content.prevention_ghg_emissions
+      let prevention_negative_environmental=content.prevention_negative_environmental
+      const page_2 = `  <div id="page_9" class="page text-center" >
+      ${header}
+      <div class="content">
+    
+    <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
+           <div class="report-table-sm">
+          
+           <table class="table  table-bordered border-dark">
+             <thead class="table-primary  border-dark">
+               <tr>
+               <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+                 
+               </tr>
+             </thead>
+             <tbody class="table-active ">
+             ${prevention_ghg_emissions
+               .map(
+                 (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                   '<tr><td>' +
+                   a.question +
+                   '</td><td>' +
+                   a.answer +
+                   '</td><td>' +
+                   a.justification +
+                   '</td><td>' +
+                   a.supporting_information_uploaded +
+                   '</td></tr>',
+               )
+               .join('')}
+             </tbody>
+           </table>
+         </div>
+
+         <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+             <tr>
+             <th scope="col">Question </th>
+             <th scope="col">Answer </th>
+             <th scope="col">Justification </th>
+             <th scope="col">Supporting information uploaded </th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${prevention_negative_environmental
+             .map(
+               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 '<tr><td>' +
+                 a.question +
+                 '</td><td>' +
+                 a.answer +
+                 '</td><td>' +
+                 a.justification +
+                 '</td><td>' +
+                 a.supporting_information_uploaded +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+    
+      
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+       let outcomes=content.outcomes;
+       const page_3 = `  <div id="page_9" class="page text-center" >
+       ${header}
+       <div class="content">
+       <div  class="main_header_sub text-start">2.2 Outcomes of the preconditions assessment  </div> 
+   
+            <div class="report-table-sm">
+           
+            <table class="table  table-bordered border-dark">
+              <thead class="table-primary  border-dark">
+                <tr>
+                <th scope="col">Preocndition  </th>
+                <th scope="col">Outcome   </th>
+                <th scope="col">Evidence Provided?  </th>
+                
+                  
+                </tr>
+              </thead>
+              <tbody class="table-active ">
+              ${outcomes
+                .map(
+                  (a: { preocndition:string,outcome:string,evidence_provided:string  }) =>
+                    '<tr><td>' +
+                    a.preocndition +
+                    '</td><td>' +
+                    a.outcome +
+                    '</td><td>' +
+                    a.evidence_provided +
+                    '</td></tr>',
+                )
+                .join('')}
+              </tbody>
+            </table>
+          </div>
+ 
+       
+     
+       
+       </div>
+       
+       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+       
+        </div>`;
+    return page_1+page_1_2+page_2+page_3;
   }
   CarbonMarketcontentThree(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentThree,): string {
+
+      let pageNumber = 4;
+     let prossesAssesmentStartingSituation=content.prossesAssesmentStartingSituation
+    const page_1 = `  <div id="page_9" class="page text-center" >
+    ${header}
+    <div class="content">
+    <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
+  
+  <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
+
+         <div class="report-table-sm">
+        
+         <table class="table  table-bordered border-dark">
+           <thead class="table-primary  border-dark">
+             <tr>
+               <th scope="col">Question </th>
+               <th scope="col">Answer </th>
+               <th scope="col">Justification </th>
+               <th scope="col">Supporting information uploaded </th>
+               
+             </tr>
+           </thead>
+           <tbody class="table-active ">
+           ${prossesAssesmentStartingSituation
+             .map(
+               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 '<tr><td>' +
+                 a.question +
+                 '</td><td>' +
+                 a.answer +
+                 '</td><td>' +
+                 a.justification +
+                 '</td><td>' +
+                 a.supporting_information_uploaded +
+                 '</td></tr>',
+             )
+             .join('')}
+           </tbody>
+         </table>
+       </div>
+  
+    
+    </div>
+    
+    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    
+     </div>`;
+
+
+
     return '';
   }
   CarbonMarketcontentFour(header: string,
