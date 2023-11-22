@@ -65,19 +65,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const reportDto = new ReportDto();
     reportDto.reportName = createReportDto.reportName;
     reportDto.coverPage = this.genarateReportDtoCoverPage(
-      createReportDto.reportTitle
+      createReportDto.reportTitle,createReportDto.tool
     );
     reportDto.contentOne = await this.genarateReportDtoContentOne(
       createReportDto.assessmentId,createReportDto.tool
     );
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
-      createReportDto.assessmentId,
+      createReportDto.assessmentId,createReportDto.tool
     );
     return reportDto;
   }
 
-  genarateReportDtoCoverPage(title: string): ReportCoverPage {
+  genarateReportDtoCoverPage(title: string,tool:string): ReportCoverPage {
     const coverPage = new ReportCoverPage();
+    coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
@@ -352,13 +353,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
     reportContentOne.understanPolicyOrActions = [
-      {
+      // {
 
-        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+      //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
 
-        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+      //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
 
-      },
+      // },
 
       {
 
@@ -548,11 +549,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
   async genarateReportDtoContentTwo(
 
     assessmentId: number,
+    tool:string
 
   ): Promise<ReportContentTwo> {
 
     const reportContentTwo = new ReportContentTwo();
-
+    reportContentTwo.tool = tool;
     let asssIndicatorsProcess =
 
       await this.assessmentService.getCharacteristicasforReport(
@@ -695,7 +697,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -735,7 +737,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -803,7 +805,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -845,7 +847,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -918,7 +920,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -961,7 +963,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1038,7 +1040,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1080,7 +1082,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1158,8 +1160,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     if (asssCharacteristicasscalesd) {
 console.log(asssCharacteristicasscalesd)
       scale_sd.name = 'SDG Scale of the Outcome';
-      reportContentTwo.processScore = asssCharacteristicasscalesd.process_score;
-      reportContentTwo.outcomeScore = asssCharacteristicasscalesd.outcome_score;
+      // reportContentTwo.processScore = asssCharacteristicasscalesd.process_score;
+      // reportContentTwo.outcomeScore = asssCharacteristicasscalesd.outcome_score;
 
       const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
 
@@ -1181,7 +1183,7 @@ console.log(asssCharacteristicasscalesd)
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1226,7 +1228,7 @@ console.log(asssCharacteristicasscalesd)
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1324,7 +1326,7 @@ console.log(asssCharacteristicasscalesd)
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1369,7 +1371,7 @@ console.log(asssCharacteristicasscalesd)
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1428,14 +1430,15 @@ console.log(asssCharacteristicasscalesd)
 
 
     let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
-    console.log("=============",res.processData)
-    console.log("=============================")
+    // console.log("=============",res.processData)
+    // console.log("=============================")
 
     reportContentTwo.process_categories_assessment = res.processData;
-    
+   
     reportContentTwo.outcomes_categories_assessment = res.outcomeData;
     reportContentTwo.processScore = res.processScore;
     reportContentTwo.outcomeScore = res.outcomeScore;
+    // console.log("processScore",reportContentTwo.processScore,"outcomeScore",reportContentTwo.outcomeScore)
 
 
     // let asssIndicatorOutcome =
@@ -1757,6 +1760,7 @@ console.log(asssCharacteristicasscalesd)
     coverPage.companyLogoLink =
 
       'http://localhost:7080/report/cover/icatlogo.jpg';
+      
 
     return coverPage;
 
@@ -1985,5 +1989,22 @@ console.log(asssCharacteristicasscalesd)
       return contentOne;
 
     }
+    mapCharacteristicsnames(name: string) {
+      // console.log(name)
+      if(name=='International/global level'){
+        return 'Macro level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'Medium level '
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Micro level '
+      }
+      else{
+        return name
+      }
+    }
 
   }
+
+

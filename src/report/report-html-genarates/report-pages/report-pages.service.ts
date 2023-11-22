@@ -33,6 +33,7 @@ xData = [
     {label: 'Very Unlikely', value: 0}
   ]
   coverPage(coverPage: ReportCoverPage): string {
+    // console.log("coverpage tool",coverPage.tool)
     const cover = `<div id="cover">
     <div  style="height: 250px;">
     <!-- <div  class="row ">
@@ -42,19 +43,10 @@ xData = [
    </div> -->
    <div class="row ">
       <div class="col h2 d-flex justify-content-center">
-       TRANSFORMATIONAL CHANGE ASSESSMENT
+       ${coverPage.tool=='Investment'?'REPORT FORMAT FOR INVESMENT AND PRIVATE SECTOR TOOL ':'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL'}
        </div>                
    </div>
-   <div class="row ">
-   <div class="col h2 d-flex justify-content-center">
-        REPORT
-       </div>
-   </div>     
-   <div class="row ">
-   <div class="col h2 d-flex justify-content-center">
-       GENERAL INTERVENTIONS TOOL
-       </div>
-   </div>
+   
    <div class="row ">
    <div class="col h4 d-flex justify-content-center">
       
@@ -83,9 +75,10 @@ xData = [
     header: string,
     footer: string,
     tableOfContent: ReportTableOfContent,
+    tool:string,
   ): string {
     let pageNumber = 1;
-
+//  console.log("tableOfContent",tool)
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
@@ -102,7 +95,7 @@ xData = [
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    ${tool=='Investment'?'<div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>':''}
     </div>
 
   
@@ -154,6 +147,7 @@ xData = [
                 '</td></tr>'
             }
             else if (a.isInvestment && (a.information == 'Total investment (in USD)')) {
+              // console.log("Total investment (in USD)",a.isInvestment)
               return '<tr><td>' +
                 a.information +
                 '</td><td colspan="3">' +
@@ -168,6 +162,7 @@ xData = [
                 '</tr>'
             }
             else if (a.isInvestment && (a.information == 'Proportion of total investment')) {
+              // console.log("Proportion of total investment",a.description.map(inv => '<td>' + inv.propotion + '</td>').join('') )
               return '<tr><td>' +
                 a.information +
                 '</td>' +
@@ -200,8 +195,8 @@ xData = [
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
-              <th scope="col">Time periods</th>
               <th scope="col">Description of the vision for desired societal, environmental and technical changes</th>
+              <th scope="col"></th>
               
             </tr>
           </thead>
@@ -443,7 +438,6 @@ xData = [
       contentTwo.prossesAssesmentStartingSituation1;
       const prossesAssesmentStartingSituation2 =
       contentTwo.prossesAssesmentStartingSituation2;
-
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
@@ -1032,7 +1026,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         .join('')}
         <tr>
           <td class="bold-table-row">Process score</td>
-          <td class="bold-table-row">${contentTwo.processScore ? contentTwo.processScore : '-'}</td>
+          <td class="bold-table-row">${contentTwo.processScore!==null ? contentTwo.processScore : '-'}</td>
         </tr>
        
    
@@ -1069,7 +1063,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         .join('')}
          <tr>
           <td class="bold-table-row">Outcomes score </td>
-          <td class="bold-table-row">${contentTwo.outcomeScore ? contentTwo.outcomeScore : '-'}</td>
+          <td class="bold-table-row">${contentTwo.outcomeScore!==null?contentTwo.outcomeScore:'-'}</td>
         </tr>
     
    
@@ -1676,14 +1670,19 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
           </div>`;
 
-    return (
-      page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
-      // page_7 +
-      // page_8 +
-      // page_9 +
-      // page_10 +
-      // page_11
-    );
+    
+    if(contentTwo.tool=='Investment'){
+  
+      return (
+        page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
+      );
+    }
+    else{
+      return (
+        page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6
+      );
+    }
+     
   }
 
   comparisonCoverPage(coverPage: ReportCoverPage): string {
