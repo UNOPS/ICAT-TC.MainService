@@ -1762,85 +1762,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     return '';
   }
 
-  coverCarbonMarketPage(coverPage: ReportCarbonMarketDtoCoverPage): string {
-    const cover = `<div id="cover">
-    <div  style="height: 250px;">
-    <!-- <div  class="row ">
-       <div  class="col ">
-       <img height="50px" src="./logo.png" >
-       </div>                
-   </div> -->
-   <div class="row ">
-    <div class="col h2 d-flex justify-content-center">
-     TRANSFORMATIONAL CHANGE ASSESSMENT
-    </div>                
-  </div>
-  <div class="row ">
-    <div class="col h2 d-flex justify-content-center">
-     REPORT
-    </div>
-  </div>     
-  <div class="row ">
-  <div class="col h2 d-flex justify-content-center">
-    GENERAL INTERVENTIONS TOOL
-    </div>
-  </div>
-   <div class="row ">
-   <div class="col h4 d-flex justify-content-center">
-      
-   </div>
-</div>
-<div class="row ">
-<div class="col h4 d-flex justify-content-center">
-  
-</div>
-</div>
-   <div class="row ">
-     <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
-     </div>
- </div>
- </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
-       <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
- </div>
-    </div>`;
 
-    return cover;
-  }
-
-  CarbonMarketTableOfContent(
-    header: string,
-    footer: string,
-    tableOfContent: ReportCarbonMarketDtoTableOfContent,
-  ): string {
-    return '';
-  }
-  CarbonMarketcontentOne(header: string,
-    footer: string,
-   content: ReportCarbonMarketDtoContentOne,): string {
-    return '';
-  }
-  CarbonMarketcontentTwo(header: string,
-    footer: string,
-    content: ReportCarbonMarketDtoContentTwo,): string {
-    return '';
-  }
-  CarbonMarketcontentThree(header: string,
-    footer: string,
-    content: ReportCarbonMarketDtoContentThree,): string {
-    return '';
-  }
-  CarbonMarketcontentFour(header: string,
-    footer: string,
-    content: ReportCarbonMarketDtoContentFour,): string {
-    return '';
-  }
-  CarbonMarketcontentFive(header: string,
-    footer: string,
-    content: ReportCarbonMarketDtoContentFive,): string {
-    return '';
-  }
+ 
 
   comparisonCoverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
