@@ -34,6 +34,7 @@ import { PortfolioService } from 'src/portfolio/portfolio.service';
 import { ComparisonDto, ComparisonTableDataDto } from 'src/portfolio/dto/comparison.dto';
 import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -71,20 +72,21 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const reportDto = new ReportDto();
     reportDto.reportName = createReportDto.reportName;
     reportDto.coverPage = this.genarateReportDtoCoverPage(
-      createReportDto.reportTitle,
+      createReportDto.reportTitle,createReportDto.tool
     );
     reportDto.contentOne = await this.genarateReportDtoContentOne(
-      createReportDto.assessmentId,
+      createReportDto.assessmentId,createReportDto.tool
     );
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
-      createReportDto.assessmentId,
+      createReportDto.assessmentId,createReportDto.tool
     );
     return reportDto;
   }
 
-  genarateReportDtoCoverPage(title: string): ReportCoverPage {
+  genarateReportDtoCoverPage(title: string,tool:string): ReportCoverPage {
     const coverPage = new ReportCoverPage();
-    coverPage.generateReportName = title;
+    coverPage.tool = tool;
+    coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =
@@ -232,10 +234,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   async genarateReportDtoContentOne(
     assessmentId: number,
+    tool:string
   ): Promise<ReportContentOne> {
     const reportContentOne = new ReportContentOne();
+    let investorTool = new InvestorTool();
+    let isInvestment:boolean = false;
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
     console.log("assessmentId", assessmentId)
+    if(tool=='Investment'){
+  
+      investorTool = await this.investorToolService.getResultByAssessment(assessmentId)
+      isInvestment = true;
+      // console.log("investorTool", investorTool,isInvestment)
+    }
+   
     // reportContentOne.policyName = asse.climateAction.policyName;
     // reportContentOne.assesmentPersonOrOrganization = asse.person;
     // reportContentOne.assessmentYear = asse.year;
@@ -255,7 +267,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       .join(',') : 'N/A';;
     reportContentOne.policyOrActionsDetails = [
       {
-        information: 'Name',
+        information: 'Title of the intervention',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
       // {
@@ -263,7 +275,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
       // },
       {
-        information: 'Description',
+        information: 'Description of the intervention',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
       },
       {
@@ -291,11 +303,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
         description: asse.climateAction.implementingEntity ? asse.climateAction.implementingEntity : 'N/A',
       },
       {
-        information: 'Objectives and benefits ',
+        information: 'Objectives and intended impacts or benefits of the intervention ',
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
-        information: 'Level of the policy ',
+        information: 'Level of the policy or action ',
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
@@ -311,7 +323,28 @@ export class ReportService extends TypeOrmCrudService<Report> {
           : 'N/A',
       },
       {
-        information: 'Other related policies ',
+        information: 'Total investment (in USD)',
+        isInvestment: isInvestment,
+        description: investorTool.total_investment
+          ? investorTool.total_investment
+          : 'N/A',
+      },
+      {
+        information: 'Investment instrument(s) used',
+        isInvestment: isInvestment,
+        description: investorTool.total_investements
+          ? investorTool.total_investements
+          : 'N/A',
+      },
+      {
+        information: 'Proportion of total investment',
+        isInvestment: isInvestment,
+        description: investorTool.total_investements
+          ? investorTool.total_investements
+          : 'N/A',
+      },
+      {
+        information: 'Related interventions ',
         description: asse.climateAction.related_policies
           ? asse.climateAction.related_policies
           : 'N/A',
@@ -327,13 +360,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
     reportContentOne.understanPolicyOrActions = [
-      {
+      // {
 
-        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+      //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
 
-        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+      //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
 
-      },
+      // },
 
       {
 
@@ -523,11 +556,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
   async genarateReportDtoContentTwo(
 
     assessmentId: number,
+    tool:string
 
   ): Promise<ReportContentTwo> {
 
     const reportContentTwo = new ReportContentTwo();
-
+    reportContentTwo.tool = tool;
     let asssIndicatorsProcess =
 
       await this.assessmentService.getCharacteristicasforReport(
@@ -572,7 +606,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
               : '-',
 
+              question: invesass.characteristics.main_question
+            ? invesass.characteristics.main_question
+            : '-',
+
             likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ? invesass.likelihood : '-',
+            
 
             rationalejustifying: invesass.likelihood_justification
 
@@ -605,6 +644,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
                   ? this.getrelavance(invesass.relavance)
 
                   : '-',
+                  question: invesass.characteristics.main_question
+            ? invesass.characteristics.main_question
+            : '-',
 
                 likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined
 
@@ -662,7 +704,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -702,7 +744,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -770,7 +812,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -812,7 +854,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -885,7 +927,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -928,7 +970,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1005,7 +1047,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1047,7 +1089,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1125,6 +1167,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     if (asssCharacteristicasscalesd) {
 console.log(asssCharacteristicasscalesd)
       scale_sd.name = 'SDG Scale of the Outcome';
+      // reportContentTwo.processScore = asssCharacteristicasscalesd.process_score;
+      // reportContentTwo.outcomeScore = asssCharacteristicasscalesd.outcome_score;
 
       const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
 
@@ -1146,7 +1190,7 @@ console.log(asssCharacteristicasscalesd)
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1191,7 +1235,7 @@ console.log(asssCharacteristicasscalesd)
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1289,7 +1333,7 @@ console.log(asssCharacteristicasscalesd)
 
             name: invesass.characteristics
 
-              ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+              ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
               : '-',
 
@@ -1334,7 +1378,7 @@ console.log(asssCharacteristicasscalesd)
 
                 name: invesass.characteristics
 
-                  ? invesass.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
+                  ? this.mapCharacteristicsnames(invesass.characteristics.name).replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")
 
                   : '-',
 
@@ -1393,11 +1437,15 @@ console.log(asssCharacteristicasscalesd)
 
 
     let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
+    // console.log("=============",res.processData)
+    // console.log("=============================")
 
     reportContentTwo.process_categories_assessment = res.processData;
-
+   
     reportContentTwo.outcomes_categories_assessment = res.outcomeData;
-
+    reportContentTwo.processScore = res.processScore;
+    reportContentTwo.outcomeScore = res.outcomeScore;
+    // console.log("processScore",reportContentTwo.processScore,"outcomeScore",reportContentTwo.outcomeScore)
 
 
     // let asssIndicatorOutcome =
@@ -1530,8 +1578,8 @@ console.log(asssCharacteristicasscalesd)
 
 
 
-    reportContentTwo.prossesAssesmentStartingSituation = catagoryProcess;
-
+    reportContentTwo.prossesAssesmentStartingSituation1 = catagoryProcess.slice(0,catagoryProcess.length/2);
+    reportContentTwo.prossesAssesmentStartingSituation2 = catagoryProcess.slice(catagoryProcess.length/2,catagoryProcess.length);
     // reportContentTwo.outcomeAssesmentStartingSituation = catagoryOutcome;
 
     reportContentTwo.prossesExAnteAssesment = catagoryProcessExAnteAssesment;
@@ -1815,6 +1863,7 @@ return contentFive
     coverPage.companyLogoLink =
 
       'http://localhost:7080/report/cover/icatlogo.jpg';
+      
 
     return coverPage;
 
@@ -1857,6 +1906,10 @@ return contentFive
         {
           information: 'Date',
           description: portfolio.date ? portfolio.date : 'N/A',
+        },
+        {
+          information: 'Implementing entity or entities',
+          description: portfolio.person ? portfolio.person : 'N/A',
         },
         {
           information: 'Objectives of the assessment',
@@ -2039,5 +2092,22 @@ return contentFive
       return contentOne;
 
     }
+    mapCharacteristicsnames(name: string) {
+      // console.log(name)
+      if(name=='International/global level'){
+        return 'Macro level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'Medium level '
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Micro level '
+      }
+      else{
+        return name
+      }
+    }
 
   }
+
+

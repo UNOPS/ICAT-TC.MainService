@@ -26,11 +26,11 @@ export class ReportCoverPage {
     companyEmailAdress = ""
     companyFax = ""
     companyTelephone = ""
-
+    tool:string=""
 }
 
 export class ReportTableOfContent {
-
+    tool:string =""
 }
 export class ReportContentOne {
    
@@ -59,7 +59,8 @@ export class ReportContentOne {
 export class ReportContentTwo {
     assesmentType:string;
 //    2.1
-    prossesAssesmentStartingSituation:object[]=[];
+    prossesAssesmentStartingSituation1:object[]=[];
+    prossesAssesmentStartingSituation2:object[]=[];
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2
@@ -87,6 +88,9 @@ export class ReportContentTwo {
     prossesDescribeResult:object[]=[];
     outcomeDescribeResult:object[]=[];
 
+    processScore: number;
+    outcomeScore :number;
+    tool:string;
 
 
 
@@ -234,6 +238,7 @@ export class ComparisonReportDto {
     companyEmailAdress = ""
     companyFax = ""
     companyTelephone = ""
+    tool:string = ""
 
 }
 
