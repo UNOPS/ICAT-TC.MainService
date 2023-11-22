@@ -78,7 +78,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   genarateReportDtoCoverPage(title: string): ReportCoverPage {
     const coverPage = new ReportCoverPage();
-    coverPage.generateReportName = title;
+    coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =
@@ -259,7 +259,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       .join(',') : 'N/A';;
     reportContentOne.policyOrActionsDetails = [
       {
-        information: 'Name',
+        information: 'Title of the intervention',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
       // {
@@ -267,7 +267,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
       // },
       {
-        information: 'Description',
+        information: 'Description of the intervention',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
       },
       {
@@ -295,11 +295,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
         description: asse.climateAction.implementingEntity ? asse.climateAction.implementingEntity : 'N/A',
       },
       {
-        information: 'Objectives and benefits ',
+        information: 'Objectives and intended impacts or benefits of the intervention ',
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
-        information: 'Level of the policy ',
+        information: 'Level of the policy or action ',
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
@@ -336,7 +336,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
           : 'N/A',
       },
       {
-        information: 'Other related policies ',
+        information: 'Related interventions ',
         description: asse.climateAction.related_policies
           ? asse.climateAction.related_policies
           : 'N/A',
@@ -597,7 +597,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
               : '-',
 
+              question: invesass.characteristics.main_question
+            ? invesass.characteristics.main_question
+            : '-',
+
             likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ? invesass.likelihood : '-',
+            
 
             rationalejustifying: invesass.likelihood_justification
 
@@ -630,6 +635,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
                   ? this.getrelavance(invesass.relavance)
 
                   : '-',
+                  question: invesass.characteristics.main_question
+            ? invesass.characteristics.main_question
+            : '-',
 
                 likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined
 
@@ -1150,6 +1158,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     if (asssCharacteristicasscalesd) {
 console.log(asssCharacteristicasscalesd)
       scale_sd.name = 'SDG Scale of the Outcome';
+      reportContentTwo.processScore = asssCharacteristicasscalesd.process_score;
+      reportContentTwo.outcomeScore = asssCharacteristicasscalesd.outcome_score;
 
       const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
 
@@ -1418,6 +1428,8 @@ console.log(asssCharacteristicasscalesd)
 
 
     let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
+    console.log("=============",res.processData)
+    console.log("=============================")
 
     reportContentTwo.process_categories_assessment = res.processData;
     
@@ -1556,8 +1568,8 @@ console.log(asssCharacteristicasscalesd)
 
 
 
-    reportContentTwo.prossesAssesmentStartingSituation = catagoryProcess;
-
+    reportContentTwo.prossesAssesmentStartingSituation1 = catagoryProcess.slice(0,catagoryProcess.length/2);
+    reportContentTwo.prossesAssesmentStartingSituation2 = catagoryProcess.slice(catagoryProcess.length/2,catagoryProcess.length);
     // reportContentTwo.outcomeAssesmentStartingSituation = catagoryOutcome;
 
     reportContentTwo.prossesExAnteAssesment = catagoryProcessExAnteAssesment;
@@ -1787,6 +1799,10 @@ console.log(asssCharacteristicasscalesd)
         {
           information: 'Date',
           description: portfolio.date ? portfolio.date : 'N/A',
+        },
+        {
+          information: 'Implementing entity or entities',
+          description: portfolio.person ? portfolio.person : 'N/A',
         },
         {
           information: 'Objectives of the assessment',
