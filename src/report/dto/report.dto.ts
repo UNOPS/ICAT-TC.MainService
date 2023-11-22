@@ -59,7 +59,8 @@ export class ReportContentOne {
 export class ReportContentTwo {
     assesmentType:string;
 //    2.1
-    prossesAssesmentStartingSituation:object[]=[];
+    prossesAssesmentStartingSituation1:object[]=[];
+    prossesAssesmentStartingSituation2:object[]=[];
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2

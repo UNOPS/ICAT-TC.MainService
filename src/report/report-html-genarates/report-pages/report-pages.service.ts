@@ -41,8 +41,18 @@ xData = [
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
-         ${coverPage.generateReportName}
+      <div class="col h2 d-flex justify-content-center">
+       TRANSFORMATIONAL CHANGE ASSESSMENT
+       </div>                
+   </div>
+   <div class="row ">
+   <div class="col h2 d-flex justify-content-center">
+        REPORT
+       </div>
+   </div>     
+   <div class="row ">
+   <div class="col h2 d-flex justify-content-center">
+       GENERAL INTERVENTIONS TOOL
        </div>
    </div>
    <div class="row ">
@@ -429,8 +439,10 @@ xData = [
     contentTwo: ReportContentTwo,
   ): string {
     let pageNumber = 5;
-    const prossesAssesmentStartingSituation =
-      contentTwo.prossesAssesmentStartingSituation;
+    const prossesAssesmentStartingSituation1 =
+      contentTwo.prossesAssesmentStartingSituation1;
+      const prossesAssesmentStartingSituation2 =
+      contentTwo.prossesAssesmentStartingSituation2;
 
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
@@ -450,21 +462,23 @@ xData = [
       <th scope="col">Category</th>
       <th scope="col">Process Characteristic</th>
       <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+      <th scope="col">Guiding Question </th>
       <th scope="col">Likelihood score  </th>
       <th scope="col">Rationale justifying the score  </th>
       <th scope="col">Supporting Documents Supplied </th>
     </tr>
   </thead>
   <tbody class="table-active">
-  ${prossesAssesmentStartingSituation
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+  ${prossesAssesmentStartingSituation1
+    .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      a.characteristics
+        .map((b, index) => {
+          if (!index) {
+            return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
@@ -475,6 +489,7 @@ xData = [
                 return `<tr>
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
+      <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
@@ -501,6 +516,70 @@ xData = [
   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
   
    </div>`;
+
+   const page_1_1 = `  <div id="page_5" class="page text-center" >
+   ${header}
+
+   <div class="content">
+   <div class="report-table-sm">
+   <table class="table  table-bordered border-dark">
+   <thead class="table-primary  border-dark">
+     <tr>
+       <th scope="col">Category</th>
+       <th scope="col">Process Characteristic</th>
+       <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
+       <th scope="col">Guiding Question </th>
+       <th scope="col">Likelihood score  </th>
+       <th scope="col">Rationale justifying the score  </th>
+       <th scope="col">Supporting Documents Supplied </th>
+     </tr>
+   </thead>
+   <tbody class="table-active">
+   ${prossesAssesmentStartingSituation2
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
+       <td rowspan="${a.rows}" >${a.name}</td>
+       <td>${b.name ? b.name : '-'}</td>
+       <td>${b.relavance ? b.relavance : '-'}</td>
+       <td>${b.question ? b.question : '-'}</td>
+       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+       <td>${
+         b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+       }</td>
+     
+      </tr>`;
+           } else {
+             return `<tr>
+             <td>${b.name ? b.name : '-'}</td>
+       <td>${b.relavance ? b.relavance : '-'}</td>
+       <td>${b.question ? b.question : '-'}</td>
+       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
+       <td>${
+         b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+       }</td>
+             </tr>`;
+           }
+         })
+         .join(''),
+     )
+     .join('')}
+   
+ 
+   </tbody>
+ 
+ 
+   </tbody>
+ </table>
+   </div>
+   </div>
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
 
     const scale_ghg = contentTwo.scale_ghg;
     const sustained_ghg = contentTwo.sustained_ghg;
@@ -932,7 +1011,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Category	Aggrgated Score</th>
+         <th scope="col">Aggrgated Score</th>
       
          
        </tr>
@@ -969,7 +1048,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Category	Aggrgated Score</th>
+         <th scope="col">Aggrgated Score</th>
       
          
        </tr>
@@ -1598,7 +1677,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           </div>`;
 
     return (
-      page_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
+      page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
       // page_7 +
       // page_8 +
       // page_9 +
@@ -1616,10 +1695,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </div>                
    </div> -->
    <div class="row ">
-       <div class="col h2 d-flex justify-content-center">
-         ${coverPage.generateReportName}
-       </div>
-   </div>
+    <div class="col h2 d-flex justify-content-center">
+     TRANSFORMATIONAL CHANGE ASSESSMENT
+    </div>                
+  </div>
+  <div class="row ">
+    <div class="col h2 d-flex justify-content-center">
+     REPORT
+    </div>
+  </div>     
+  <div class="row ">
+  <div class="col h2 d-flex justify-content-center">
+    GENERAL INTERVENTIONS TOOL
+    </div>
+  </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
        </div>
@@ -3060,6 +3149,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div class="report-all-table-sm-rotate">
 
         <div class="report-table-sm-rotate">
+        <br><br>
+        <lablel text-align: left;>The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation. </lablel>
+
+        <br><br>
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
               <tr>
