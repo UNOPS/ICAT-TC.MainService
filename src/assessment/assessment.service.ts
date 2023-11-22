@@ -206,8 +206,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       userNameFromTocken
   ): Promise<any> {
 
+    console.log("cuserRoleFromTocken",cuserRoleFromTocken)
     let filter: string = `asse.isDraft = true AND proj.countryId = ${countryIdFromTocken}`;
-    if(cuserRoleFromTocken=="External"){
+    if( cuserRoleFromTocken !="Country Admin"){
       let userItem = await this.userService.findByUserName(userNameFromTocken);
       `${filter} AND asse.user_id =${userItem.id}`
     }

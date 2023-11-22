@@ -56,7 +56,7 @@ export class ReportHtmlGenaratesService {
   
             <body>
              ${this.reportPagesService.coverPage(repportDto.coverPage)}
-             ${this.reportPagesService.tableOfContent(header,footer,repportDto.tableOfContent)}
+             ${this.reportPagesService.tableOfContent(header,footer,repportDto.tableOfContent,repportDto.contentTwo.tool)}
              ${this.reportPagesService.contentOne(header,footer,repportDto.contentOne)}
              ${this.reportPagesService.contentTwo(header,footer,repportDto.contentTwo)}
             </body></html>`,

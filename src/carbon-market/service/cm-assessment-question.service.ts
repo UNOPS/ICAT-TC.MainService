@@ -79,6 +79,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }  
     if (isDraft) {
       assessment.isDraft = isDraft;
+      assessment.lastDraftLocation =type;
       if(type =="prose"){
         assessment.processDraftLocation=name;
       }else if (type=="out"){
@@ -819,6 +820,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     });
     // let filteredResults =results
     let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+
     if (isUserExternal) {
       filteredResults = filteredResults.filter(result => {
         if (result.assessment?.user?.id === currentUser?.id) {
@@ -839,12 +841,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       // const data = await this.calculateResult(result.id);
       return {
         assessment: result.id,
-        process_score: result.assessment?.process_score,
-        outcome_score: result.assessment?.outcome_score,
+        // process_score: result.assessment?.process_score,
+        process_score: result.averageProcess,
+        // outcome_score: result.assessment?.outcome_score,
+        outcome_score: result.averageOutcome,
         intervention: result.assessment.climateAction?.policyName,
         intervention_id: result.assessment.climateAction?.intervention_id
       };
     }));
+    console.log("==================",formattedResults)
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
     return this.paginateArray(filteredData, options)
   }
