@@ -26,11 +26,11 @@ export class ReportCoverPage {
     companyEmailAdress = ""
     companyFax = ""
     companyTelephone = ""
-
+    tool:string=""
 }
 
 export class ReportTableOfContent {
-
+    tool:string =""
 }
 export class ReportContentOne {
    
@@ -90,6 +90,7 @@ export class ReportContentTwo {
 
     processScore: number;
     outcomeScore :number;
+    tool:string;
 
 
 
@@ -124,6 +125,7 @@ export class ComparisonReportDto {
     companyEmailAdress = ""
     companyFax = ""
     companyTelephone = ""
+    tool:string = ""
 
 }
 
