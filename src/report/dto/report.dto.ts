@@ -125,20 +125,51 @@ export class ReportCarbonMarketDto {
  }
  export class ReportCarbonMarketDtoTableOfContent {}
  export class ReportCarbonMarketDtoContentOne {
+    
 
+   
+
+    opportunities:string="";
+    assessmetType:string="";
+   
+    sectorCoverd:string="";
+    geograpycalCover:string="";
+    
     assesment :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
-    barriers:object[]=[{  barrier: '',
-        explanation: '',
-        characteristics_affected: '',
-        barrier_directly_targeted: '',}];
+    barriers:object[]=[{  barrier: 'aaa',
+        explanation: 'sss',
+        characteristics_affected: 'ddd',
+        barrier_directly_targeted: 'ccc',}];
     policyOrActionsDetails:object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
     characteristics :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
     transformational :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
     outcomecharacteristics:object[]=[]
 
  }
- export class ReportCarbonMarketDtoContentTwo {}
- export class ReportCarbonMarketDtoContentThree {}
+ export class ReportCarbonMarketDtoContentTwo {
+    safeguards:object[][]=[[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]] //if one page not enough split array and send as 2D array
+    prevention_ghg_emissions  :object[]=[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]
+    prevention_negative_environmental:object[] =[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]
+    outcomes:object[]=[{preocndition:'teat',outcome:'teats',evidence_provided:'test'   }]
+
+}
+ export class ReportCarbonMarketDtoContentThree {
+    prossesAssesmentStartingSituation:object[]=[];
+    outcomeAssesmentStartingSituation:object[]=[];
+
+    //2.2
+    scale_ghg:object[]=[];
+    scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    sustained_ghg:object[]=[];
+    sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    scale_adaptation:object[]=[];
+    sustained_adaptation:object[]=[];
+
+    process_categories_assessment:object[]=[];
+    outcomes_categories_assessment:object[]=[];
+
+
+ }
  export class ReportCarbonMarketDtoContentFour {}
  export class ReportCarbonMarketDtoContentFive {}
 
