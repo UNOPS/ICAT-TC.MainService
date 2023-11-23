@@ -210,7 +210,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     let filter: string = `asse.isDraft = true AND proj.countryId = ${countryIdFromTocken}`;
     if( cuserRoleFromTocken !="Country Admin"){
       let userItem = await this.userService.findByUserName(userNameFromTocken);
-      `${filter} AND asse.user_id =${userItem.id}`
+      filter =`${filter} AND asse.user_id =${userItem.id}`
     }
     
     if (filterText != null && filterText != undefined && filterText != '') {
