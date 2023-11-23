@@ -2912,12 +2912,29 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
         </div>`;
 
-    return page_1+page_1_1;
+    return page_1+page_1_1+page_2;
   }
   CarbonMarketcontentFour(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentFour,): string {
-    return '';
+      let pageNumber = 5;
+      const page_1 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content">
+      <div  class="main_header_sub text-start">  </div> 
+      <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
+    
+   
+     
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+
+
+    return page_1;
   }
   CarbonMarketcontentFive(header: string,
     footer: string,
