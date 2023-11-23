@@ -1840,7 +1840,6 @@ console.log(asssCharacteristicasscalesd)
     ];
 
     //table 1.2
-   console.log("sm assesment", asse.cmAssementDetails)
     contentOne.characteristics = [
       {
         information: 'Selection of the activity',
