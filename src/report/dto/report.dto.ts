@@ -163,9 +163,17 @@ export class ReportCarbonMarketDto {
 
     //2.2
     scale_ghg:object[]=[];
-    scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={
+        rows: 0,
+        name: "",
+        sdg: []
+    };
     sustained_ghg:object[]=[];
-    sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]};
+    sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={
+        rows: 0,
+        name: "",
+        sdg: []
+    };
     scale_adaptation:object[]=[];
     sustained_adaptation:object[]=[];
 
