@@ -1927,7 +1927,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         sdg_count_aggre++
     }
     if(sdg_count_aggre!=0){
-      finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/sdg_count_aggre);
+      // console.log("sdg_count_aggre",sdg_count_aggre,aggre_Score)
+      finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/2);
       finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre))
       total_outcome_cat_weight += 50*final_aggre_score;
       // console.log("22")
@@ -1938,7 +1939,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       // console.log("11")
     }
     finalProcessDataArray.outcomeData = outcomeArray;
-    console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
+    // console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
     if(total_outcome_cat_weight !=0 && total_outcome_cat_weight != null){
       // console.log("final total_outcome_cat_weight",total_outcome_cat_weight)
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100)
@@ -1950,7 +1951,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     // }
     let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD')
     let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD')
-    console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
+    // console.log("sdg",scale_sdg?.characteristicData.length,"scale",sustained_sdg?.characteristicData.length)
     if(scale_sdg?.characteristicData.length>0 && sustained_sdg?.characteristicData.length>0){
       finalProcessDataArray.sdgListwithScores = this.calculateSDGScores(scale_sdg?.characteristicData,sustained_sdg?.characteristicData);
     }
