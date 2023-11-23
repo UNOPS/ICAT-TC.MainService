@@ -1752,7 +1752,7 @@ console.log(asssCharacteristicasscalesd)
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentOne>{
     const contentOne=new ReportCarbonMarketDtoContentOne()
-    let asse = await this.assessmentService.findbyIDforReport(assessmentId);
+    let asse = await this.assessmentService.findbyIDforCarbonMarketReport(assessmentId);
     console.log("assessmentId", assessmentId)
    
     // contentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
@@ -1760,7 +1760,7 @@ console.log(asssCharacteristicasscalesd)
     // reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
     // reportContentOne.principles = asse.principles ? asse.principles : 'N/A';
     // // reportContentOne.assessmentBoundary = asse.assessBoundry;
-
+// console.log("sectors",asse.climateAction.policy_sector)
     // reportContentOne.impactCoverd = asse.impactsCovered;
     // reportContentOne.sectorCoverd = asse.investor_sector && asse.investor_sector.length ? asse.investor_sector
     //   ?.map((a) => a.sector.name)
@@ -1773,10 +1773,10 @@ console.log(asssCharacteristicasscalesd)
         information: 'Title of the intervention',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
-      {
-        information: 'Type',
-        description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
-      },
+      // {
+      //   information: 'Type',
+      //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
+      // },
       {
         information: 'Description of the intervention',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
@@ -1839,20 +1839,37 @@ console.log(asssCharacteristicasscalesd)
       },
     ];
 
-
+    //table 1.2
+   console.log("sm assesment", asse.cmAssementDetails)
+    contentOne.characteristics = [
+      {
+        information: 'Selection of the activity',
+        description: asse.climateAction.policyName
+      },
+      {
+        information: 'Scale of the activity',
+        description: asse.cmAssementDetails.scale
+      },
+      {
+        information: 'Assessment boundaries',
+        description: asse.cmAssementDetails.boundraries
+      },
+      {
+        information: 'International carbon market approach used ',
+        description: asse.cmAssementDetails.intCMApproach
+      },
+      {
+        information: 'Baseline and monitoring methodology applied by the activity ',
+        description: asse.cmAssementDetails.appliedMethodology
+      },
+    ]
 
     contentOne.transformational = [
-      // {
-
-      //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
-
-      //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
-
-      // },
+    
 
       {
 
-        Time_periods: 'Long-term (≥15 years)',
+        information: 'Long-term (≥15 years)',
 
         description: asse.vision_long ? asse.vision_long : 'N/A',
 
@@ -1860,7 +1877,7 @@ console.log(asssCharacteristicasscalesd)
 
       {
 
-        Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
+        information: 'Medium-term (≥5 years and &lt; than 15 years)',
 
         description: asse.vision_medium ? asse.vision_medium : 'N/A',
 
@@ -1868,7 +1885,7 @@ console.log(asssCharacteristicasscalesd)
 
       {
 
-        Time_periods: 'Short-term (&lt; 5 years)',
+        information: 'Short-term (&lt; 5 years)',
 
         description: asse.vision_short ? asse.vision_short : 'N/A',
 
@@ -1876,20 +1893,13 @@ console.log(asssCharacteristicasscalesd)
 
       {
 
-        Time_periods: 'Phase of transformation',
+        information: 'Phase of transformation',
 
         description: asse.phase_of_transformation ? asse.phase_of_transformation : 'N/A',
 
       },
 
     ];
-
-
-
-
-
-    
-
     contentOne.barriers = []
 
     asse.policy_barrier.map(a => {
@@ -1905,6 +1915,11 @@ console.log(asssCharacteristicasscalesd)
       })
 
     })
+    //table 1.4
+    contentOne.assessmetType = asse.assessmentType;
+    contentOne.geograpycalCover = asse.geographical_areas_covered.map(a=>a.name).join('')
+    // console.log("asse.investor_sector",asse.investor_sector)
+    contentOne.sectorCoverd = asse.investor_sector.map(a=>a.sector.name).join('')
 
     // reportContentOne.contextOfPolicy = [];
 
