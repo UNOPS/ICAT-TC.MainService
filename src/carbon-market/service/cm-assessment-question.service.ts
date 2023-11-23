@@ -580,6 +580,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
       }
 
+      let criterias = this.checkPreConditions(answers2)
+
       answers2.forEach(ans => {
         let obj = {
           section: ans?.assessment_question?.question?.criteria?.section?.name,
@@ -588,6 +590,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           answer: ans?.answer?.label,
           comment: ans.assessment_question.comment,
           document: ans?.assessment_question?.uploadedDocumentPath,
+          satisfied: criterias[ans?.assessment_question?.question?.criteria.id]
 
         }
         criteria.push(ans?.assessment_question?.question?.criteria?.name)
@@ -605,6 +608,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         sdgs: [...new Map(sdgs.map((item) => [item["id"], item])).values()]
       }
     }
+  }
+
+  checkPreConditions(assessmentAnswers: CMAssessmentAnswer[]) {
+    let criterias = {}
+    assessmentAnswers.forEach(ans => {
+      if (criterias[ans.assessment_question.question.criteria.id]) {
+        if (criterias[ans.assessment_question.question.criteria.id]) {
+          criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing
+        }
+      } else {
+        criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing
+      }
+    })
+    return criterias
   }
 
   async getProcessData(assessmentId: number) {
