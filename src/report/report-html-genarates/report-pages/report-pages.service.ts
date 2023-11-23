@@ -1976,11 +1976,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   </td><td> 
   ${content.sectorCoverd ? content.sectorCoverd : 'N/A'}
   </td></tr>
-  <tr><td>
+  <!--<tr><td>
   Opportunities for stakeholders to participate in the assessment
   </td><td> 
   ${content.opportunities ? content.opportunities : 'N/A'}
-  </td></tr>
+  </td></tr> -->
 
   
   </tbody>
