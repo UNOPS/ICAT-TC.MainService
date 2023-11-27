@@ -150,6 +150,9 @@ export class CMSeedService {
                     q.answer_type = question.answer_type
                     q.order = question.order
                     q.short_label = question.short_label
+                    if (question.related_questions?.length > 0) {
+                        q.related_questions = JSON.stringify(question.related_questions)
+                    }
                     let ch = await this.characRepo.findOne({where: {code: question.characteristic}})
                     if (ch) q.characteristic = ch
                     _questions.push(q)
