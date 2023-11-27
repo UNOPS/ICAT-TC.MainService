@@ -183,8 +183,16 @@ export class ReportCarbonMarketDto {
     outcomeScore :number;
 
  }
- export class ReportCarbonMarketDtoContentFour {}
- export class ReportCarbonMarketDtoContentFive {}
+ export class ReportCarbonMarketDtoContentFour {
+    
+    processScore: number;
+    outcomeScore :number;
+ }
+ export class ReportCarbonMarketDtoContentFive {
+
+    annex:object[]=[]
+
+ }
 
 
 

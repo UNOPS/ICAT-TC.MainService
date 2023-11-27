@@ -48,12 +48,11 @@ xData = [
        <img height="50px" src="./logo.png" >
        </div>                
    </div> -->
-   <div class="row ">
-      <div class="col h2 d-flex justify-content-center">
-       ${coverPage.tool=='Investment'?'REPORT FORMAT FOR INVESMENT AND PRIVATE SECTOR TOOL ':'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL'}
-       </div>                
-   </div>
-   
+  
+
+    
+          ${coverPage.tool=='Investment'?' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   ':' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'}
+
    <div class="row ">
    <div class="col h4 d-flex justify-content-center">
       
@@ -480,7 +479,7 @@ xData = [
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.question ? b.question : '-'}</td>
-      <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+      <td>${b.likelihoodscore}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                   }</td>
@@ -491,7 +490,7 @@ xData = [
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.question ? b.question : '-'}</td>
-      <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+      <td>${b.likelihoodscore}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
       <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                   }</td>
@@ -546,7 +545,7 @@ xData = [
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.relavance ? b.relavance : '-'}</td>
        <td>${b.question ? b.question : '-'}</td>
-       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.likelihoodscore}</td>
        <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
        <td>${
          b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
@@ -558,7 +557,7 @@ xData = [
              <td>${b.name ? b.name : '-'}</td>
        <td>${b.relavance ? b.relavance : '-'}</td>
        <td>${b.question ? b.question : '-'}</td>
-       <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+       <td>${b.likelihoodscore}</td>
        <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
        <td>${
          b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
@@ -1758,10 +1757,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
 
     <div class="table-of-content-header-item"><div >3. Impact Assessment .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................5</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >3.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................5</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >3.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.....6</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >3.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >3.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>.....10</bdi></div> </div>
  
     <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
     <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification .................................................................................................................................................................</div><div ><bdi>.....5</bdi></div> </div>
@@ -1864,10 +1863,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  
       <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
 
-      <blockquote class=" paragraph blockquote text-start ">
-      <p class="mb-0 lh-base">The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices. 
-        </p>
-    </blockquote>  
+     
              <div class="report-table-sm">
             
              <table class="table  table-bordered border-dark">
@@ -1905,11 +1901,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    ${header}
    <div class="content">
 
-   <blockquote class=" paragraph blockquote text-start ">
-   <p class="mb-0 lh-base">
-   Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions. 
-   </p>
- </blockquote> 
+   
    <div class="report-table-sm">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1948,9 +1940,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  
  <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
 
- <blockquote class=" paragraph blockquote text-start ">
- <p class="mb-0 lh-base">It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy.  </p>
-</blockquote> 
+
 <div class="report-table-sm">
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
@@ -2223,14 +2213,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
-  <blockquote class=" paragraph blockquote text-start ">
-    <p class="mb-0 lh-base">Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.   
-     </p>
-   </blockquote> 
+
    <div class="report-table-sm">
-   <p>
-     Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
-   </p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2254,7 +2238,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          <td>${b.name ? b.name : '-'}</td>
          <td>${b.relavance ? b.relavance : '-'}</td>
          <td>${b.question ? b.question : '-'}</td>
-         <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+         <td>${b.likelihoodscore }</td>
          <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
          <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                      }</td>
@@ -2265,7 +2249,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                <td>${b.name ? b.name : '-'}</td>
          <td>${b.relavance ? b.relavance : '-'}</td>
          <td>${b.question ? b.question : '-'}</td>
-         <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+         <td>${b.likelihoodscore }</td>
          <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
          <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                      }</td>
@@ -2295,9 +2279,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div class="content">
     
     <div class="report-table-sm">
-    <p>
-      Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
-    </p>
+    
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -2321,7 +2303,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           <td>${b.name ? b.name : '-'}</td>
           <td>${b.relavance ? b.relavance : '-'}</td>
           <td>${b.question ? b.question : '-'}</td>
-          <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+          <td>${b.likelihoodscore }</td>
           <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
           <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                       }</td>
@@ -2332,7 +2314,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 <td>${b.name ? b.name : '-'}</td>
           <td>${b.relavance ? b.relavance : '-'}</td>
           <td>${b.question ? b.question : '-'}</td>
-          <td>${b.likelihoodscore ? b.likelihoodscore : '-'}</td>
+          <td>${b.likelihoodscore}</td>
           <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
           <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                       }</td>
@@ -2368,15 +2350,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
    
    <div class="report-table-sm">
-  <p>
-  Outcome characteristics refer to the scale and sustained nature of outcomes resulting from a policy. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the policy on GHGs, Adaptation and sustainable development. 
-  </p>
+
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
          <th scope="col">Outcome Characteristic</th>
-         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        
          <th scope="col">Starting situation   </th>
          <th scope="col">Expected impact   </th>
          <th scope="col">Score  </th>
@@ -2393,7 +2373,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   return `<tr>
         <td rowspan="${a.rows}" >${a.name}</td>
         <td>${b.name ? b.name : '-'}</td>
-        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       
         <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
         <td>${b.expected_impact ? b.expected_impact : '-'}</td>
         <td>${b.score ? b.score : '-'}</td>
@@ -2405,7 +2385,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 } else {
                   return `<tr>
                <td>${b.name ? b.name : '-'}</td>
-               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+              
                <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
                <td>${b.expected_impact ? b.expected_impact : '-'}</td>
                <td>${b.score ? b.score : '-'}</td>
@@ -2429,7 +2409,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <tr>
          <th scope="col">Category</th>
          <th scope="col">Outcome Characteristic</th>
-         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        
          <th scope="col">Is the intervention’s GHG outcome sustained over time</th>
          <th scope="col">Likelihood Score   </th>
          <th scope="col">Rationale justifying the score </th>
@@ -2445,7 +2425,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   return `<tr>
         <td rowspan="${a.rows}" >${a.name}</td>
         <td>${b.name ? b.name : '-'}</td>
-        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       
         <td>${b.sustained_over_time ? b.sustained_over_time : '-'}</td>
         <td>${b.score ? b.score : '-'}</td>
         <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2455,7 +2435,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 } else {
                   return `<tr>
                <td>${b.name ? b.name : '-'}</td>
-               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+             
                <td>${b.sustained_over_time ? b.sustained_over_time : '-'}</td>
                <td>${b.score ? b.score : '-'}</td>
                <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2492,7 +2472,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <tr>
           <th scope="col">Category</th>
           <th scope="col">Outcome Characteristic</th>
-          <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+          
           <th scope="col">Starting situation   </th>
           <th scope="col">Expected impact   </th>
           <th scope="col">Score  </th>
@@ -2509,7 +2489,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   return `<tr>
          <td rowspan="${a.rows}" >${a.name}</td>
          <td>${b.name ? b.name : '-'}</td>
-         <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+         
          <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
          <td>${b.expected_impact ? b.expected_impact : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
@@ -2521,7 +2501,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 } else {
                   return `<tr>
                 <td>${b.name ? b.name : '-'}</td>
-                <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+              
                 <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
                 <td>${b.expected_impact ? b.expected_impact : '-'}</td>
                 <td>${b.score ? b.score : '-'}</td>
@@ -2545,7 +2525,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <tr>
           <th scope="col">Category</th>
           <th scope="col">Outcome Characteristic</th>
-          <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+         
           <th scope="col">Is the intervention’s contribution to the adaptation co-benefit sustained in nature? </th>
           <th scope="col">Likelihood Score   </th>
           <th scope="col">Rationale justifying the score </th>
@@ -2561,7 +2541,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   return `<tr>
          <td rowspan="${a.rows}" >${a.name}</td>
          <td>${b.name ? b.name : '-'}</td>
-         <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+        
          <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
          <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2572,7 +2552,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 } else {
                   return `<tr>
                 <td>${b.name ? b.name : '-'}</td>
-                <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+                
                 <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
                 <td>${b.score ? b.score : '-'}</td>
                 <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2613,7 +2593,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Sustainable Development Goal</th>
         <th scope="col">Could the intervention have an impact on this particular SDG?</th>
         <th scope="col">Outcome Characteristic</th>
-        <th scope="col">Is the characteristic within the assessment boundaries?</th>
+      
         <th scope="col">Starting situation   </th>
         <th scope="col">Expected impact   </th>
         <th scope="col">Score  </th>
@@ -2643,7 +2623,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <td rowspan="${a.rows}" >${a.name}</td>
         <td rowspan="${a.rows}" >${a.impact}</td>
         <td>${b.name ? b.name : '-'}</td>
-        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       
         <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
         <td>${b.expected_impact ? b.expected_impact : '-'}</td>
         <td>${b.score ? b.score : '-'}</td>
@@ -2654,7 +2634,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     } else {
                       return `<tr>
               <td>${b.name ? b.name : '-'}</td>
-      <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+      
       <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
          <td>${b.expected_impact ? b.expected_impact : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
@@ -2682,7 +2662,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     } else {
                       return `<tr>
      <td>${b.name ? b.name : '-'}</td>
-  <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+
   <td>${b.starting_situation  ? b.starting_situation : '-'}</td>
          <td>${b.expected_impact ? b.expected_impact : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
@@ -2729,7 +2709,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           <th scope="col">Sustainable Development Goal</th>
           <th scope="col">Could the intervention have an impact on this particular SDG?</th>
           <th scope="col">Outcome Characteristic</th>
-          <th scope="col">Is the characteristic within the assessment boundaries?</th>
+         
           <th scope="col">Is the intervention’s GHG outcome sustained over time</th>
           <th scope="col">Likelihood Score   </th>
           <th scope="col">Rationale justifying the score </th>
@@ -2758,7 +2738,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           <td rowspan="${a.rows}" >${a.name}</td>
           <td rowspan="${a.rows}" >${a.impact}</td>
           <td>${b.name ? b.name : '-'}</td>
-          <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+          
           <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
          <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2768,7 +2748,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     } else {
                       return `<tr>
                 <td>${b.name ? b.name : '-'}</td>
-        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+       
         <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
          <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2785,7 +2765,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     <td rowspan="${a.rows}" >${a.name}</td>
     <td rowspan="${a.rows}" >${a.impact}</td>
     <td>${b.name ? b.name : '-'}</td>
-    <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+   
     <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
          <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2795,7 +2775,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     } else {
                       return `<tr>
        <td>${b.name ? b.name : '-'}</td>
-    <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
+   
     <td>${b.sustained_in_nature ? b.sustained_in_nature : '-'}</td>
          <td>${b.score ? b.score : '-'}</td>
          <td>${b.ustifying ? b.ustifying : '-'}</td>
@@ -2912,7 +2892,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
         </div>`;
 
-    return page_1+page_1_1+page_2;
+    return page_1+page_1_1+page_2+page_3+page_4+page_5+page_6;
   }
   CarbonMarketcontentFour(header: string,
     footer: string,
@@ -2921,10 +2901,43 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       const page_1 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
-      <div  class="main_header_sub text-start">  </div> 
+     
       <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
     
-   
+      <div class="report-table-sm">
+      <table id="heatmap" class="heatmap" style="text-align: center;">
+         <tbody>
+        <tr>
+            <td></td>
+            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
+        </tr>
+        <tr>
+            <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
+            <td></td>
+           
+            ${this.xData
+              .map((x) => {
+                return `
+                 <td  >${x.label}</td> `;
+              })
+              .join('')}
+        </tr>
+
+        ${this.yData
+          .map((y) => {
+            return `
+             <tr > 
+              <td >${y.label}</td> 
+              
+              ${this.generateHeatMapforinvestment(y.value,content)}
+            </tr> `;
+          })
+          .join('')}
+        
+       
+        </tbody>
+      </table>
+      </div>
      
     
       </div>
@@ -2939,7 +2952,52 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   CarbonMarketcontentFive(header: string,
     footer: string,
     content: ReportCarbonMarketDtoContentFive,): string {
-    return '';
+      let pageNumber = 5;
+      let annex= content.annex;
+      const page_1 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content">
+     
+      <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
+    
+      <div class="report-table-sm">
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Key</th>
+         <th scope="col">Valu</th>
+         <th scope="col">Link </th>
+      
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${annex
+       .map(
+         (a: {
+           key: string;
+           value: string;
+           link: string;
+         }) =>
+           '<tr><td>' +
+           a.key +
+           '</td><td>' +
+           a.value +
+           '</td><td>' +
+           a.link +
+           '</td></tr>',
+       )
+       .join('')}
+     </tbody>
+   </table>
+ </div>
+     
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+    return page_1;
   }
 
 
@@ -2955,19 +3013,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </div> -->
    <div class="row ">
     <div class="col h2 d-flex justify-content-center">
-     TRANSFORMATIONAL CHANGE ASSESSMENT
+    TRANSFORMATIONAL CHANGE 
     </div>                
   </div>
   <div class="row ">
-    <div class="col h2 d-flex justify-content-center">
-     REPORT
-    </div>
-  </div>     
-  <div class="row ">
   <div class="col h2 d-flex justify-content-center">
-    GENERAL INTERVENTIONS TOOL
-    </div>
-  </div>
+  ASSESSMENT REPORT 
+  </div>                
+</div>
+<div class="row ">
+<div class="col h2 d-flex justify-content-center">
+PORTFOLIO TOOL
+</div>                
+</div>
+ 
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
        </div>
@@ -4518,7 +4577,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     }
     return body;
   }
-  generateHeatMapforinvestment(y:number,contentTwo:ReportContentTwo) {
+  generateHeatMapforinvestment(y:number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
     let body = '';
     for (let x of this.xData) {
         body =
@@ -4606,7 +4665,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       }
     }
   }
-  getIntervention(x: number, y: number,contentTwo:ReportContentTwo) {
+  getIntervention(x: number, y: number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
     return (contentTwo.processScore === y && contentTwo.outcomeScore === x);
   }
 }
