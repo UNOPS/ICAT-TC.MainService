@@ -1990,6 +1990,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     content: ReportCarbonMarketDtoContentTwo,): string {
       let pageNumber = 3;
      let safeguards=content.safeguards
+    //  console.log("",safeguards.length)
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
@@ -2012,17 +2013,19 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
              </tr>
            </thead>
            <tbody class="table-active ">
-           ${safeguards[0]
+           ${safeguards
              .map(
-               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+               (a: {
+                 document: string; question:string,answer:string,comment :string,
+}) =>
                  '<tr><td>' +
                  a.question +
                  '</td><td>' +
                  a.answer +
                  '</td><td>' +
-                 a.justification +
+                 a.comment +
                  '</td><td>' +
-                 a.supporting_information_uploaded +
+                 ((a.document==null)?'-':a.document) +
                  '</td></tr>',
              )
              .join('')}
@@ -2037,47 +2040,49 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     
      </div>`;
 
-     const page_1_2 =safeguards.length<2?'': `  <div id="page_9" class="page text-center" >
-     ${header}
-     <div class="content">
+    //  const page_1_2 =safeguards.length<2?'': `  <div id="page_9" class="page text-center" >
+    //  ${header}
+    //  <div class="content">
     
-          <div class="report-table-sm">
+    //       <div class="report-table-sm">
          
-          <table class="table  table-bordered border-dark">
-            <thead class="table-primary  border-dark">
-              <tr>
-              <th scope="col">Question </th>
-               <th scope="col">Answer </th>
-               <th scope="col">Justification </th>
-               <th scope="col">Supporting information uploaded </th>
+    //       <table class="table  table-bordered border-dark">
+    //         <thead class="table-primary  border-dark">
+    //           <tr>
+    //           <th scope="col">Question </th>
+    //            <th scope="col">Answer </th>
+    //            <th scope="col">Justification </th>
+    //            <th scope="col">Supporting information uploaded </th>
                 
-              </tr>
-            </thead>
-            <tbody class="table-active ">
-            ${safeguards[1]
-              .map(
-                (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
-                  '<tr><td>' +
-                  a.question +
-                  '</td><td>' +
-                  a.answer +
-                  '</td><td>' +
-                  a.justification +
-                  '</td><td>' +
-                  a.supporting_information_uploaded +
-                  '</td></tr>',
-              )
-              .join('')}
-            </tbody>
-          </table>
-        </div>
+    //           </tr>
+    //         </thead>
+    //         <tbody class="table-active ">
+    //         ${safeguards
+    //           .map(
+    //             (a: {
+    //               document: string;comment: string; question:string,answer:string
+    //               }) =>
+    //               '<tr><td>' +
+    //               a.question +
+    //               '</td><td>' +
+    //               a.answer +
+    //               '</td><td>' +
+    //               a.comment +
+    //               '</td><td>' +
+    //               a.document +
+    //               '</td></tr>',
+    //           )
+    //           .join('')}
+    //         </tbody>
+    //       </table>
+    //     </div>
    
      
-     </div>
+    //  </div>
      
-     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+    //  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
-      </div>`;
+    //   </div>`;
 
 
       let prevention_ghg_emissions=content.prevention_ghg_emissions
@@ -2102,15 +2107,18 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
              <tbody class="table-active ">
              ${prevention_ghg_emissions
                .map(
-                 (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+                 (a: {
+                   comment: string,document: string, question:string, answer:string,
+                   
+}) =>
                    '<tr><td>' +
                    a.question +
                    '</td><td>' +
                    a.answer +
                    '</td><td>' +
-                   a.justification +
+                   a.comment +
                    '</td><td>' +
-                   a.supporting_information_uploaded +
+                   ((a.document==null)?'-':a.document) +
                    '</td></tr>',
                )
                .join('')}
@@ -2134,15 +2142,15 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            <tbody class="table-active ">
            ${prevention_negative_environmental
              .map(
-               (a: { question:string,answer:string,justification :string,supporting_information_uploaded :string }) =>
+               (a: { question:string,answer:string,comment :string,document :string }) =>
                  '<tr><td>' +
                  a.question +
                  '</td><td>' +
                  a.answer +
                  '</td><td>' +
-                 a.justification +
+                 a.comment +
                  '</td><td>' +
-                 a.supporting_information_uploaded +
+                 ((a.document==null)?'-':a.document) +
                  '</td></tr>',
              )
              .join('')}
@@ -2199,7 +2207,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-    return page_1+page_1_2+page_2+page_3;
+    // return page_1+page_1_2+page_2+page_3;
+    return page_1+page_2+page_3;
   }
   CarbonMarketcontentThree(header: string,
     footer: string,
@@ -2233,12 +2242,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          a.characteristics
            .map((b, index) => {
              if (!index) {
+              console.log(b,index)
                return `<tr>
          <td rowspan="${a.rows}" >${a.name}</td>
          <td>${b.name ? b.name : '-'}</td>
-         <td>${b.relavance ? b.relavance : '-'}</td>
+         <td>${b.relevance ? b.relevance : '-'}</td>
          <td>${b.question ? b.question : '-'}</td>
-         <td>${b.likelihoodscore }</td>
+         <td>${b.ch_score }</td>
          <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
          <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
                      }</td>
@@ -2293,7 +2303,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         </tr>
       </thead>
       <tbody class="table-active">
-      ${prossesAssesmentStartingSituation[0]
+      ${prossesAssesmentStartingSituation[1]
         .map((a: { rows: number; name: string; characteristics: any[] }) =>
           a.characteristics
             .map((b, index) => {
