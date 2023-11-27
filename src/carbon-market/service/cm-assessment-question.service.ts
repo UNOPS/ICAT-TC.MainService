@@ -586,22 +586,60 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let obj = {
           section: ans?.assessment_question?.question?.criteria?.section?.name,
           criteria: ans?.assessment_question?.question?.criteria?.name,
-          question: ans.assessment_question?.question?.label,
+          question: ans.assessment_question?.question,
           answer: ans?.answer?.label,
           comment: ans.assessment_question.comment,
           document: ans?.assessment_question?.uploadedDocumentPath,
-          satisfied: criterias[ans?.assessment_question?.question?.criteria.id]
+          satisfied: criterias[ans?.assessment_question?.question?.criteria.id],
+          isPassing: ans?.answer?.isPassing,
+          relatedQuestions: ans?.assessment_question?.question?.related_questions? JSON.parse(ans?.assessment_question?.question?.related_questions) : [],
+          short_label: ans?.assessment_question?.question.short_label
 
         }
         criteria.push(ans?.assessment_question?.question?.criteria?.name)
         result.push(obj)
       })
 
+      let result_final = []
+      result.forEach(res => {
+        let obj = {}
+        let docs = []
+        let isPassing = true
+        if (res.short_label) {
+          obj['section'] = res.section
+          obj['criteria'] = res.criteria
+          obj['satisfied'] = res.satisfied
+          obj['short_label'] = res.short_label
+          obj['code'] = res.question.code
+        }
+        if (res.relatedQuestions.length > 0 && res.short_label) {
+          res.relatedQuestions?.map(q => {
+            let question = result.find(o => o.question.code === q)
+            if (question){
+              if (isPassing) isPassing = question.isPassing
+              if (question.document) docs.push(question.document)
+            }
+          })
+          obj['isPassing'] = isPassing
+          obj['document'] = docs
+          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No'
+        } else if (res.short_label){
+          obj['isPassing'] = res.isPassing
+          if (res.document) docs.push(res.document)
+          obj['document'] = docs
+          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No'
+        }
+        if (obj['section']) result_final.push(obj)
+      })
 
-      result = this.group(result, 'section')
+    result_final.sort((a,b) => b.code - a.code)
+
+
+
+      result_final = this.group(result_final, 'section')
 
       return {
-        result: result,
+        result: result_final,
         criteria: criteria,
         processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
@@ -613,7 +651,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   checkPreConditions(assessmentAnswers: CMAssessmentAnswer[]) {
     let criterias = {}
     assessmentAnswers.forEach(ans => {
-      if (criterias[ans.assessment_question.question.criteria.id]) {
+      if (criterias[ans.assessment_question.question.criteria.id] !== undefined) {
         if (criterias[ans.assessment_question.question.criteria.id]) {
           criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing
         }
