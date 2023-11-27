@@ -115,7 +115,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where({ id: id })
       .getOne();
 
-      console.log("tmmm", data)
+      // console.log("tmmm", data)
       
     return data;
   }

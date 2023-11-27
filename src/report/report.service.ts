@@ -35,6 +35,7 @@ import { ComparisonDto, ComparisonTableDataDto } from 'src/portfolio/dto/compari
 import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
+import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -46,10 +47,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
     private usersService: UsersService,
     public assessmentService: AssessmentService,
     private readonly investorToolService: InvestorToolService,
-    private readonly portfolioService: PortfolioService
+    private readonly portfolioService: PortfolioService,
+    private readonly cmAssessmentQuestionService : CMAssessmentQuestionService
   ) {
     super(repo);
   }
+  cmResult:any;
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';
   }
@@ -1920,32 +1923,60 @@ console.log(asssCharacteristicasscalesd)
     // console.log("asse.investor_sector",asse.investor_sector)
     contentOne.sectorCoverd = asse.investor_sector.map(a=>a.sector.name).join('')
 
-    // reportContentOne.contextOfPolicy = [];
-
-    // let catagoryProcess = [];
-    // let catagoryOutcome = [];
-    // reportContentOne.outcomecharacteristics = catagoryOutcome;
-
-    // reportContentOne.prossescharacteristics = catagoryProcess;
-
-
-return contentOne
+    return contentOne
   }
   async genarateReportCarbonMarketDtoContentTwo(
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentTwo>{
     const contentTwo=new ReportCarbonMarketDtoContentTwo()
+    this.cmResult = await this.cmAssessmentQuestionService.getResults(assessmentId)
+    // console.log("cmResult",cmResult.result)
+    let safeguardsArray = new Array();
+    let preventionGHGArray = new Array();
+    let preventionAvoidanceArray = new Array();
+    let questions:any[] = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
+    if(questions)
+    {
+      for  (const res of questions) {
+        if(res.criteria == 'Criterion 1: Safeguards on environmental integrity'){
+          safeguardsArray.push(res)
+        }
+        else if(res.criteria == 'Criterion 2: Prevention of GHG emissions lock-in'){
+          preventionGHGArray.push(res)
+        }
+        else if(res.criteria =='Criterion 3: Prevention/avoidance of negative environmental and social impacts'){
+          preventionAvoidanceArray.push(res)
+        }
+      }
+    contentTwo.safeguards=safeguardsArray
+    contentTwo.prevention_ghg_emissions = preventionGHGArray
+    contentTwo.prevention_negative_environmental =preventionAvoidanceArray
+    }
 
-
-return contentTwo
+    return contentTwo
   }
   async genarateReportCarbonMarketDtoContentThree(
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentThree>{
     const contentThree=new ReportCarbonMarketDtoContentThree()
-
-
-return contentThree
+    let processData = this.cmResult.processData;
+    if(processData?.data.length>0){
+      for (let cat of processData?.data) {
+        let category:any={};
+        let categoryarray = new Array()
+        category.name = cat.name;
+        category.characteristics = cat.characteristic;
+        let rows:number=0;
+        for (let char of cat.characteristic) {
+          rows += char.raw_questions.length
+        }
+        category.rows = rows;
+        categoryarray.push(category)
+        contentThree.prossesAssesmentStartingSituation.push(categoryarray)
+      }
+    }
+    // console.log("contentThree",contentThree.prossesAssesmentStartingSituation)
+    return contentThree
   }
   async genarateReportCarbonMarketDtoContentFour(
     assessmentId:number
