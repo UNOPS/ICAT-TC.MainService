@@ -639,6 +639,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       result_final = this.group(result_final, 'section')
 
       return {
+        questions:result,
         result: result_final,
         criteria: criteria,
         processData: await this.getProcessData(assessmentId),
@@ -725,6 +726,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         for (let q of chs[ch]) {
           let o = new QuestionData()
           o.question = q.assessmentAnswers[0]?.answer?.question.label
+          o.justification = q?.comment
           o.weight = q.assessmentAnswers[0]?.answer?.weight
           o.score = q.assessmentAnswers[0]?.answer?.score_portion
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
@@ -1032,6 +1034,7 @@ export class QuestionData {
   question: string = '-'
   weight: string = '-'
   score: string = '-'
+  justification ='-'
 }
 
 export class CharacteristicProcessData {

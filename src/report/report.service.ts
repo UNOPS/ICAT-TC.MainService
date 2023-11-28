@@ -36,6 +36,7 @@ import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
+import { CMScoreDto, CalculateDto } from 'src/carbon-market/dto/cm-result.dto';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -53,6 +54,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     super(repo);
   }
   cmResult:any;
+  cmScores :CMScoreDto;
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';
   }
@@ -1934,7 +1936,8 @@ console.log(asssCharacteristicasscalesd)
     let safeguardsArray = new Array();
     let preventionGHGArray = new Array();
     let preventionAvoidanceArray = new Array();
-    let questions:any[] = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
+    let questions:any[] = this.cmResult.questions
+
     if(questions)
     {
       for  (const res of questions) {
@@ -1950,7 +1953,9 @@ console.log(asssCharacteristicasscalesd)
       }
     contentTwo.safeguards=safeguardsArray
     contentTwo.prevention_ghg_emissions = preventionGHGArray
-    contentTwo.prevention_negative_environmental =preventionAvoidanceArray
+    contentTwo.prevention_negative_environmental = preventionAvoidanceArray 
+    contentTwo.outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
+    // console.log("outcomes",contentTwo.outcomes)
     }
 
     return contentTwo
@@ -1960,29 +1965,109 @@ console.log(asssCharacteristicasscalesd)
   ):Promise<ReportCarbonMarketDtoContentThree>{
     const contentThree=new ReportCarbonMarketDtoContentThree()
     let processData = this.cmResult.processData;
+    this.cmScores = await this.cmAssessmentQuestionService.calculateResult(assessmentId)
+    if(this.cmScores.outcome_score){
+      contentThree.outcomes_categories_assessment = this.cmScores.outcome_score;
+      contentThree.outcomeScore = this.cmScores.outcome_score.outcome_score;
+      contentThree.processScore = this.cmScores.process_score;
+      // console.log(contentThree.outcomes_categories_assessment)
+    }
     if(processData?.data.length>0){
+      contentThree.process_categories_assessment = processData.data;
       for (let cat of processData?.data) {
         let category:any={};
         let categoryarray = new Array()
         category.name = cat.name;
-        category.characteristics = cat.characteristic;
+        category.characteristics = cat.characteristic.map(a=>{
+          a.relevance=this.mapRelevance(a.relevance);
+          return a
+        });
         let rows:number=0;
         for (let char of cat.characteristic) {
           rows += char.raw_questions.length
         }
+        
         category.rows = rows;
-        categoryarray.push(category)
-        contentThree.prossesAssesmentStartingSituation.push(categoryarray)
+        // console.log("category.name",category.name)
+        if(category.name=='Incentives'){
+          // console.log("called Incentives",category.characteristics)
+          let cat1 =  { ...category, characteristics: [category.characteristics[0]] }
+          cat1.rows = 3
+          let cat2 = { 
+            ...category, 
+            characteristics: [
+              category.characteristics[1],
+              category.characteristics[2],
+            ],
+          };
+          cat2.rows = category.rows -cat1.rows
+          // console.log("cat1",cat1,"cat2",cat2)
+          categoryarray.push(cat1)
+          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
+          categoryarray=[]
+          categoryarray.push(cat2)
+          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
+
+        }else{
+          categoryarray.push(category)
+          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
+        }
+        
       }
+      // console.log("categories",contentThree.prossesAssesmentStartingSituation)
     }
-    // console.log("contentThree",contentThree.prossesAssesmentStartingSituation)
+    // console.log("ghg scale" ,this.cmResult?.scale_GHGs,this.cmResult?.scale_GHGs.length)
+    if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
+      contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+      
+    }
+    if(this.cmResult.outComeData?.sustained_GHGs && this.cmResult.outComeData?.sustained_GHGs.length>0 ){
+      contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+    }
+    if(this.cmResult.outComeData?.scale_adaptation && this.cmResult.outComeData?.scale_adaptation.length>0 ){
+      contentThree.scale_adaptation = this.cmResult.outComeData.scale_adaptation.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+    }
+    if(this.cmResult.outComeData?.sustained_adaptation && this.cmResult.outComeData?.sustained_adaptation.length>0 ){
+      contentThree.sustained_adaptation = this.cmResult.outComeData.sustained_adaptation.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+    }
+    if(this.cmResult.outComeData?.scale_SDs && this.cmResult.outComeData?.scale_SDs.length>0 ){
+      contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+    }
+    if(this.cmResult.outComeData?.sustained_SDs && this.cmResult.outComeData?.sustained_SDs.length>0 ){
+      contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(a=>{
+        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        return a
+      })
+    }
+    // console.log("contentThree.scale_sd ",contentThree.scale_sd)
     return contentThree
   }
   async genarateReportCarbonMarketDtoContentFour(
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentFour>{
     const contentFour=new ReportCarbonMarketDtoContentFour()
-
+    if(this.cmScores.process_score!=null ||this.cmScores.process_score!=undefined){
+      contentFour.processScore = this.cmScores.process_score
+    }
+    if(this.cmScores.outcome_score.outcome_score!=null ||this.cmScores.outcome_score.outcome_score!=undefined){
+      contentFour.outcomeScore = this.cmScores.outcome_score.outcome_score
+    }
+    
 
 return contentFour
   }
@@ -2298,6 +2383,16 @@ return contentFive
       return contentOne;
 
     }
+    mapRelevance(value: number) {
+      switch (value) {
+        case 0:
+          return 'Not relevant';
+        case 1:
+          return 'Possibly relvant';
+        case 2:
+          return 'Relevant';
+      }
+    }
     mapCharacteristicsnames(name: string) {
       // console.log(name)
       if(name=='International/global level'){
@@ -2308,6 +2403,9 @@ return contentFive
       }
       else if(name=='Subnational/regional/municipal or sub sectorial level'){
         return 'Micro level '
+      }
+      if(name=='Short term (<5 years)'){
+        return 'Short term (&#60 5 years)'
       }
       else{
         return name
