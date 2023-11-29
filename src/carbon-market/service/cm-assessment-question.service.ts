@@ -64,8 +64,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let selectedSdgs = []
     let savedSdgs = []
     let exists = []
-    // result.forEach(async res => {
+    let results = []
     for await (let res of result) {
+      let ex = await this.assessmentQuestionRepo.find({where: {question: {code: res.question.code}, assessment: {id: assessment.id}}})
+      if ( ex.length === 0) {
+        results.push(res)
+      }
+    }
+    
+    for await (let res of results) {
       if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
         let exist = await this.sdgAssessmentRepo.find({where: {sdg: {id: res.selectedSdg.id}, assessment: {id: assessment.id}}})
         if (exist.length === 0) {
@@ -87,7 +94,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
       this.assessmentRepo.save(assessment)
     }
-    for await (let res of result) {
+    for await (let res of results) {
       let ass_question = new CMAssessmentQuestion()
       ass_question.assessment = assessment;
       ass_question.comment = res.comment;
@@ -155,7 +162,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
     }
     try {
-      console.log(selectedSdgs)
       if (selectedSdgs.length > 0) {
         let res = await this.sdgAssessmentRepo.save(selectedSdgs)
       }
@@ -340,7 +346,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let key of Object.keys(obj)) {
       let score = null
       obj[key].characteristics.forEach(ch => {
-        console.log(ch)
         // score === null ? (ch.score === null ? score === null : score === ch.score) : score += ch.score
         if (ch.relevance !== 0) {
           score += ch.score
@@ -355,14 +360,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       resObj[key] = { score: score, weight: obj[key].weight }
     }
 
-    console.log('resObj', resObj)
     let process_score = null
     for (let key of Object.keys(resObj)) {
       process_score === null ? (resObj[key].score === null ? process_score === null : process_score = Math.round(resObj[key].score * resObj[key].weight / 100)) :
         process_score += Math.round(resObj[key].score * resObj[key].weight / 100)
     }
-
-    console.log(process_score)
 
     return process_score
   }
@@ -907,7 +909,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         intervention_id: result.assessment.climateAction?.intervention_id
       };
     }));
-    console.log("==================",formattedResults)
     const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
     return this.paginateArray(filteredData, options)
   }
