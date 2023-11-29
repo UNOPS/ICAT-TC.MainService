@@ -1019,10 +1019,35 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     return await data.getMany()
   }
-
-
+  async getDocumentListForReport(assessmentId:number):Promise<CMAssessmentQuestion[]>{
+    let result =  await this.assessmentQuestionRepo
+    .createQueryBuilder('aq')
+    .innerJoin(
+      'aq.assessment',
+      'assessment',
+      'assessment.id = aq.assessmentId'
+    )
+    .leftJoinAndSelect(
+      'aq.characteristic',
+      'characteristic',
+      'characteristic.id = aq.characteristicId'
+    )
+    .leftJoinAndSelect(
+      'characteristic.category',
+      'category',
+      'category.id = characteristic.category_id'
+    )
+    .leftJoinAndMapMany(
+      'aq.assessmentAnswers',
+      CMAssessmentAnswer,
+      'assessmentAnswers',
+      'assessmentAnswers.assessmentQuestionId = aq.id'
+    )
+    .where('assessment.id = :id and aq.uploadedDocumentPath is not null ', { id: assessmentId })
+    .getMany()
+    return result
+  }
 }
-
 export class CharacteristicData {
   characteristic: string
   relevance: string
