@@ -579,6 +579,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           outcomeData.scale_adaptation.push(obj)
         }
       }
+      answers2 = [
+        ...new Map(answers2.map((item) => [item.assessment_question.question.code, item])).values(),
+      ];
 
       let criterias = this.checkPreConditions(answers2)
 
