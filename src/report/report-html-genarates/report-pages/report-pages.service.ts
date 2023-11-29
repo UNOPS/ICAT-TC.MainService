@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
+import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import {
   ComparisonReportReportContentFour,
   ComparisonReportReportContentOne,
@@ -39,6 +40,7 @@ xData = [
     {label: 'Unlikely', value: 1},
     {label: 'Very Unlikely', value: 0}
   ]
+  fileServerURL = 'https://icat-tc-tool.climatesi.com/web-api/uploads/'
   coverPage(coverPage: ReportCoverPage): string {
     // console.log("coverpage tool",coverPage.tool)
     const cover = `<div id="cover">
@@ -2025,7 +2027,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  '</td><td>' +
                  ((a.comment==null||a.comment==undefined)?'-':a.comment) +
                  '</td><td>' +
-                 ((a.document==null)?'-':a.document) +
+                 ((a.document==null|| a.document==undefined)?'No':'Yes') +
                  '</td></tr>',
              )
              .join('')}
@@ -2118,7 +2120,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                    '</td><td>' +
                    ((a.comment==null||a.comment==undefined)?'-':a.comment) +
                    '</td><td>' +
-                   ((a.document==null)?'-':a.document) +
+                   ((a.document==null|| a.document==undefined)?'No':'Yes') +
                    '</td></tr>',
                )
                .join('')}
@@ -2150,7 +2152,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  '</td><td>' +
                  ((a.comment==null||a.comment==undefined)?'-':a.comment) +
                  '</td><td>' +
-                 ((a.document==null)?'-':a.document) +
+                 ((a.document==null|| a.document==undefined)?'No':'Yes') +
                  '</td></tr>',
              )
              .join('')}
@@ -2369,40 +2371,58 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </thead>
        <tbody class="table-active">
        ${prossesAssesmentStartingSituation[2]
-         .map((a: { rows: number; name: string; characteristics: any[] }) =>
-           a.characteristics
-             .map((b, index) => {
-               const questionsLength = b.raw_questions.length;
-       
-               if (!index) {
-                 return `<tr>
-                   <td rowspan="${a.rows}" >${a.name}</td>
-                   <td rowspan="${questionsLength}">${b.name}</td>
-                   <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                   <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                   <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
-                   <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                   <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
-                 </tr>`;
-               } else {
-                 return b.raw_questions
-                   .map((question, questionIndex) => `
-                     <tr>
-                       <td>${b.name}</td>
-                       <td>${b.relevance ? b.relevance : '-'}</td>
-                       <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                       <td>${questionsLength > questionIndex ? question.score : '-'}</td>
-                       <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                       <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
-                     </tr>
-                   `)
-                   .join('');
-               }
-             })
-             .join(''),
-         )
-         .join('')}
-       
+        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+          a.characteristics
+            .map((b, index) => {
+              const questionsLength = b.raw_questions.length;
+      
+              if (!index) {
+                // console.log("not index.........",b,index)
+                return `<tr>
+                  <td rowspan="${a.rows}" >${a.name}</td>
+                  <td>${b.name}</td>
+                  <td>${b.relevance ? b.relevance : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                </tr>
+                <tr>
+                  <td>${b.name}</td>
+                  <td>${b.relevance ? b.relevance : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[1].question : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[1].score : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[1].justification!=null && b.raw_questions[1].justification!=undefined? b.raw_questions[1].justification : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[1].document == null ? 'No' : 'Yes'}</td>
+                </tr>
+                <tr>
+                  <td>${b.name}</td>
+                  <td>${b.relevance ? b.relevance : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[2].question : '-'}</td>
+                  <td>${questionsLength > 0 ? b.raw_questions[2].score : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[2].justification!=null && b.raw_questions[2].justification!=undefined? b.raw_questions[2].justification : '-'}</td>
+                  <td>${questionsLength > 0 && b.raw_questions[2].document == null ? 'No' : 'Yes'}</td>
+                </tr>
+               `;
+              } else {
+                // console.log("index.........",b,index)
+                return b.raw_questions
+                  .map((question, questionIndex) => `
+                    <tr>
+                      <td>${b.name}</td>
+                      <td>${b.relevance ? b.relevance : '-'}</td>
+                      <td>${questionsLength > questionIndex ? question.question : '-'}</td>
+                      <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                      <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
+                      <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                    </tr>
+                  `)
+                  .join('');
+              }
+            })
+            .join(''),
+        )
+        .join('')}
      
        </tbody>
      
@@ -2444,6 +2464,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
               const questionsLength = b.raw_questions.length;
       
               if (!index) {
+              
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
@@ -2471,7 +2492,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             .join(''),
         )
         .join('')}
-      
     
       </tbody>
     
@@ -2867,7 +2887,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             if (!index) {
               // console.log(a.characteristic,"==========",index)
               return `<tr>
-                <td rowspan="${sustained_sd.length}">Scale of outcome - sustainable development </td>
+                <td rowspan="${sustained_sd.length}">Outcome sustained over time – sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
@@ -3076,9 +3096,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
-         <th scope="col">Key</th>
-         <th scope="col">Valu</th>
-         <th scope="col">Link </th>
+         <th scope="col">Characteristic</th>
+         <th scope="col">Category</th>
+         <th scope="col">File </th>
       
        </tr>
      </thead>
@@ -3086,16 +3106,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${annex
        .map(
          (a: {
-           key: string;
-           value: string;
-           link: string;
+           characteristic: Characteristics;
+           uploadedDocumentPath: string;
          }) =>
            '<tr><td>' +
-           a.key +
+           ((a.characteristic?.category)?a.characteristic.category.name:'-') +
            '</td><td>' +
-           a.value +
-           '</td><td>' +
-           a.link +
+           ((a.characteristic)?a.characteristic.name:'-') +
+           '</td><td>' + '<a href="'+ this.fileServerURL+a.uploadedDocumentPath +'">'+a.uploadedDocumentPath+'</a>'+
            '</td></tr>',
        )
        .join('')}
@@ -4778,7 +4796,7 @@ PORTFOLIO TOOL
     }
   }
   getIntervention(x: number, y: number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
-    console.log(contentTwo.processScore,contentTwo.outcomeScore,x,y)
+    // console.log(contentTwo.processScore,contentTwo.outcomeScore,x,y)
     return (contentTwo.processScore === y && contentTwo.outcomeScore === x);
   }
 }
