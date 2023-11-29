@@ -3411,13 +3411,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             '</td><td>' +
             (a.status ? a.status : '-') +
             '</td><td>' +
-            (a.Technology ? a.Technology : '-') +
+            (a.Technology !=undefined || a.Technology != null? a.Technology : '-') +
             '</td><td>' +
-            (a.Agents ? a.Agents : '-') +
+            (a.Agents !=undefined || a.Agents !=null ? a.Agents : '-') +
             '</td><td>' +
-            (a.Incentives ? a.Incentives : '-') +
+            (a.Incentives !=undefined || a.Incentives !=null ? a.Incentives : '-') +
             '</td><td>' +
-            (a['Norms and behavioral change'] ? a['Norms and behavioral change'] : '-') +
+            (a['Norms and behavioral change'] != undefined ||  a['Norms and behavioral change'] !=null ? a['Norms and behavioral change'] : '-') +
             '</td><td>' +
             (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
             '</td></tr>',
