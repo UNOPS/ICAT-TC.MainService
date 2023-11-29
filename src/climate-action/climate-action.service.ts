@@ -338,7 +338,7 @@ async allProject(
     
         // Change "PORTFOLIO" to "OTHER INTERVENTIONS" and "CARBON_MARKET" to "CARBON MARKET"
         const toolName =
-          x.assessment?.tool === "PORTFOLIO" ? "Other Interventions" :
+          x.assessment?.tool === "PORTFOLIO" ? "General Tool" :
           x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market Tool" :
           x.assessment?.tool === "INVESTOR" ? "Investor & Private Sector Tool" :
           x.assessment?.tool;

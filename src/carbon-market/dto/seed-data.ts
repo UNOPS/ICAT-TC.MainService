@@ -94,10 +94,10 @@ export const questions = [
         characteristic: "",
         short_label: 'Regulatory additionality',
         message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
-        label: "Q2: Is the carbon market intervention financially additional, i.e. the revenue from the sale of ITMOs enables the intervention?",
+        label: "Q2: Does the intervention exhibit financial additionality or can it be proved that the intervention faces specified barriers to implementation (e.g. investment barriers, technological barriers, etc.)?",
         code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -116,7 +116,7 @@ export const questions = [
         characteristic: "",
         short_label: 'For ITMOs: NDC alignment',
         message: "The envisaged Article 6 intervention might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q4: Does the carbon market intervention robustly quantify and verify mitigation outcomes by disclosing underlying assumptions and considering uncertainty?",
@@ -127,6 +127,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Robust quantification and verification of mitigation outcomes',
         message: "The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
+        related_questions: ['S-2-C-1-Q-4', 'S-2-C-1-Q-5', 'S-2-C-1-Q-6', 'S-2-C-1-Q-7'],
         isUpdate: true
     },
     {
@@ -138,7 +139,7 @@ export const questions = [
         characteristic: '',
         short_label: '',
         message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: 'Q6: Does the carbon market intervention robustly quantify and verify mitigation outcomes by ensuring conservativeness of parameters, default values and the overall quantification methodologies?',
@@ -149,7 +150,7 @@ export const questions = [
         characteristic: '',
         short_label: '',
         message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: 'Q7: Does the carbon market intervention robustly quantify and verify mitigation outcomes by addressing and minimising leakage?',
@@ -160,7 +161,7 @@ export const questions = [
         characteristic: '',
         short_label: '',
         message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: 'Q8: This only applies to carbon market interventions that involve carbon storage (compared to the baseline): Does the carbon market intervention design aim to minimise the risk of non-permanence and does the intervention foresee the full addressing of reversals of emission reductions and removals if these occur?',
@@ -171,7 +172,7 @@ export const questions = [
         characteristic: '',
         short_label: 'Minimising non-permanance and addressing reversals in full',
         message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q1: Is the intervention type listed on any negative list of activities that could lead to lock in (e.g., developed by the host country, the Article 6.4 Supervisory Body, the Integrity Council for Voluntary Carbon Markets, the International Energy Agency etc.)? ",
@@ -182,7 +183,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Intervention does not appear on a negative list',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q2: Is the carbon market intervention in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the intervention does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions-intensive technologies or by constructing new installations using emissions intensive technologies?",
@@ -193,7 +194,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Alignment with long-term low-emission development strategy',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q1: Does the implementation of the carbon market intervention result in significant negative environmental impacts (i.e., air, water and soil pollution, destruction of biodiversity, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
@@ -204,7 +205,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Prevention/avoidance of negative environmental impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q2: Does the implementation of the carbon market intervention result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
@@ -215,7 +216,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Prevention/avoidance of negative social impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies? ',
@@ -710,7 +711,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-5",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Yes",
@@ -719,7 +720,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-6",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "No",
@@ -728,7 +729,7 @@ export const answers = [
         score_portion: 1,
         isPassing: false,
         question: "S-2-C-1-Q-6",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Unsure",
@@ -737,7 +738,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-6",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Yes",
@@ -746,7 +747,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-7",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "No",
@@ -755,7 +756,7 @@ export const answers = [
         score_portion: 1,
         isPassing: false,
         question: "S-2-C-1-Q-7",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Unsure",
@@ -764,7 +765,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-7",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Yes",
@@ -773,7 +774,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-8",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "No",
@@ -782,7 +783,7 @@ export const answers = [
         score_portion: 1,
         isPassing: false,
         question: "S-2-C-1-Q-8",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Not relevant",
@@ -791,7 +792,7 @@ export const answers = [
         score_portion: 1,
         isPassing: false,
         question: "S-2-C-1-Q-8",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Unsure",
@@ -800,7 +801,7 @@ export const answers = [
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-8",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Yes",

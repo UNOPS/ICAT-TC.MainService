@@ -38,6 +38,7 @@ import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity'
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
+import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -114,7 +115,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where({ id: id })
       .getOne();
 
-      console.log("tmmm", data)
+      // console.log("tmmm", data)
       
     return data;
   }
@@ -437,6 +438,92 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       //   `assessment_barriers.barriers_id = barriers.id`,
       // )
       
+      .leftJoinAndMapMany(
+        'asse.geographical_areas_covered',
+        GeographicalAreasCovered,
+        'geographical_areas_covered',
+        `geographical_areas_covered.assessmentId = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id`,
+      )
+      .leftJoinAndMapMany(
+        'proj.policy_sector',
+        PolicySector,
+        'policy_sector',
+        `proj.id = policy_sector.intervention_id`,
+      )
+      .leftJoinAndMapOne(
+        'policy_sector.sector',
+        Sector,
+        'sector',
+        `sector.id = policy_sector.sector_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.methodology',
+        Methodology,
+        'meth',
+        `meth.id = asse.methodology_id`,
+      )
+      .leftJoinAndMapOne(
+        'proj.sector',
+        Sector,
+        'sec',
+        `sec.id = proj.sectorId`,
+      )
+      .leftJoinAndMapOne(
+        'proj.projectStatus',
+        ProjectStatus,
+        'prostatus',
+        `prostatus.id = proj.projectStatusId`,
+      )
+      .where({ id: id })
+      .getOne();
+    // console.log("qqqqqqq", data)
+    return data;
+  }
+  async findbyIDforCarbonMarketReport(id: number) {
+
+    let data = await this.repo
+      .createQueryBuilder('asse')
+      .leftJoinAndMapMany(
+        'asse.policy_barrier',
+        PolicyBarriers,
+        'policy_barrier',
+        `policy_barrier.assessmentId = asse.id`,
+      ).leftJoinAndMapOne(
+        'asse.cmAssementDetails',
+        AssessmentCMDetail,
+        'cmAssementDetails',
+        `cmAssementDetails.cmassessmentId = asse.id`,
+      )
+      .leftJoinAndMapMany(
+        'policy_barrier.barrierCategory',
+        BarrierCategory,
+        'barrierCategory',
+        `barrierCategory.barriersId = policy_barrier.id`,
+      )
+      .leftJoinAndMapOne(
+        'barrierCategory.characteristics',
+        Characteristics,
+        'characteristics',
+        `characteristics.id = barrierCategory.characteristicsId`,
+      )
+      .leftJoinAndMapMany(
+        'asse.investor_sector',
+        InvestorSector,
+        'investor_sector',
+        `investor_sector.assessment_id = asse.id`,
+      )
+      .leftJoinAndMapOne(
+        'investor_sector.sector',
+        Sector,
+        'sectorinvest',
+        `sectorinvest.id = investor_sector.sector_id`,
+      )
       .leftJoinAndMapMany(
         'asse.geographical_areas_covered',
         GeographicalAreasCovered,

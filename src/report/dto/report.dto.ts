@@ -151,14 +151,15 @@ export class ReportCarbonMarketDto {
 
  }
  export class ReportCarbonMarketDtoContentTwo {
-    safeguards:object[][]=[[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]] //if one page not enough split array and send as 2D array
-    prevention_ghg_emissions  :object[]=[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]
-    prevention_negative_environmental:object[] =[{question:'test1',answer:'teat2',justification :'teat2',supporting_information_uploaded :'teat3'  }]
+    // safeguards:object[][]=[[{question:'test1',answer:'teat2',comment :'teat2',document :'teat3'  }]] //if one page not enough split array and send as 2D array
+    safeguards:object[] = [[{question:'test1',answer:'teat2',comment :'teat2',document :'teat3'  }]]
+    prevention_ghg_emissions  :object[]=[{question:'test1',answer:'teat2',comment :'teat2',document :'teat3'  }]
+    prevention_negative_environmental:object[] =[{question:'test1',answer:'teat2',comment :'teat2',document :'teat3'  }]
     outcomes:object[]=[{preocndition:'teat',outcome:'teats',evidence_provided:'test'   }]
 
 }
  export class ReportCarbonMarketDtoContentThree {
-    prossesAssesmentStartingSituation:{ rows: number; name: string; characteristics: any[] }[][]=[[]];
+    prossesAssesmentStartingSituation:{ rows: number; name: string; characteristics: any[] }[][]=[];
     outcomeAssesmentStartingSituation:object[]=[];
 
     //2.2
@@ -183,8 +184,16 @@ export class ReportCarbonMarketDto {
     outcomeScore :number;
 
  }
- export class ReportCarbonMarketDtoContentFour {}
- export class ReportCarbonMarketDtoContentFive {}
+ export class ReportCarbonMarketDtoContentFour {
+    
+    processScore: number;
+    outcomeScore :number;
+ }
+ export class ReportCarbonMarketDtoContentFive {
+
+    annex:object[]=[]
+
+ }
 
 
 
