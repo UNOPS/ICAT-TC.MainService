@@ -2177,7 +2177,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             <table class="table  table-bordered border-dark">
               <thead class="table-primary  border-dark">
                 <tr>
-                <th scope="col">Preocndition  </th>
+                <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
                 <th scope="col">Evidence Provided?  </th>
                 
@@ -2193,7 +2193,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     '</td><td>' +
                     ((a.isPassing) ? 'Yes' : 'No') +
                     '</td><td>' +
-                    ((a.hasEvidence)?'No':'Yes') +
+                    (a.hasEvidence) +
                     '</td></tr>',
                 )
                 .join('')}
@@ -2218,7 +2218,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
       let pageNumber = 4;
      let prossesAssesmentStartingSituation=content.prossesAssesmentStartingSituation
-    const page_1 = `  <div id="page_9" class="page text-center" >
+    const page_1 = prossesAssesmentStartingSituation.length==0?'':`  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
     <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
@@ -2250,8 +2250,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 <td rowspan="${a.rows}" >${a.name}</td>
                 <td rowspan="${questionsLength}">${b.name}</td>
                 <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
+                <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
                 <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
                 <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
               </tr>`;
@@ -2261,8 +2261,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   <tr>
                     <td>${b.name}</td>
                     <td>${b.relevance ? b.relevance : '-'}</td>
-                    <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                    <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                    <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
+                    <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
                     <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
                     <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
                   </tr>
@@ -2313,8 +2313,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
                   <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
                 </tr>`;
@@ -2324,8 +2324,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
                       <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
                       <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
                     </tr>
@@ -2382,24 +2382,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
                 </tr>
                 <tr>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[1].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[1].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[1].question!=null &&  b.raw_questions[1].question!= undefined)? b.raw_questions[1].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[1].score!=null &&  b.raw_questions[1].score!= undefined)? (b.raw_questions[1].score+'-'+b.raw_questions[1].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[1].justification!=null && b.raw_questions[1].justification!=undefined? b.raw_questions[1].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[1].document == null ? 'No' : 'Yes'}</td>
                 </tr>
                 <tr>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[2].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[2].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[2].question!=null &&  b.raw_questions[2].question!= undefined)? b.raw_questions[2].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[2].score!=null &&  b.raw_questions[2].score!= undefined)? (b.raw_questions[2].score+'-'+b.raw_questions[2].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[2].justification!=null && b.raw_questions[2].justification!=undefined? b.raw_questions[2].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[2].document == null ? 'No' : 'Yes'}</td>
                 </tr>
@@ -2411,8 +2411,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
                       <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
                       <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
                     </tr>
@@ -2469,8 +2469,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
                   <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
                 </tr>`;
@@ -2480,8 +2480,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
                       <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
                       <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
                     </tr>
@@ -2536,8 +2536,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
                   <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].question : '-'}</td>
-                  <td>${questionsLength > 0 ? b.raw_questions[0].score : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
+                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
                   <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
                 </tr>`;
@@ -2547,8 +2547,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex ? question.score : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
+                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
                       <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
                       <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
                     </tr>
@@ -2635,7 +2635,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </table>
    </div>
    <div class="report-table-sm">
-  
+    <p>Question - Is the intervention’s GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2739,7 +2739,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </table>
     </div>
     <div class="report-table-sm">
-  
+  <p>Question - Is the intervention’s contribution to the adaptation co-benefit sustained in nature?</p>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -2868,7 +2868,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     
     
       <div class="report-table-sm">
-    
+      <p>Question - Is the activity’s contribution to the selected SDG sustained in nature?</p>
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
           <tr>
@@ -3023,8 +3023,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
+        if(prossesAssesmentStartingSituation.length==0){
+          return page_1
+        }
+        else{
+          return page_1+page_1_1+page_1_2+page_1_3+page_1_4+page_2+page_4+page_5+page_3+page_6;
+        }
 
-    return page_1+page_1_1+page_1_2+page_1_3+page_1_4+page_2+page_4+page_5+page_3+page_6;
+    
   }
   CarbonMarketcontentFour(header: string,
     footer: string,

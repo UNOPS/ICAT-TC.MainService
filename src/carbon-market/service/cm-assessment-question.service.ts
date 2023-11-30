@@ -734,6 +734,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.justification = q?.comment
           o.weight = q.assessmentAnswers[0]?.answer?.weight
           o.score = q.assessmentAnswers[0]?.answer?.score_portion
+          o.label = q.assessmentAnswers[0]?.answer?.label
+          o.document = q.uploadedDocumentPath
           score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
           questions.push(o)
           raw_questions.push(o)
@@ -1064,6 +1066,8 @@ export class QuestionData {
   weight: string = '-'
   score: string = '-'
   justification ='-'
+  label:string=''
+  document:string=''
 }
 
 export class CharacteristicProcessData {

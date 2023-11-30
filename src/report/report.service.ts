@@ -1939,7 +1939,15 @@ console.log(asssCharacteristicasscalesd)
     let questions:any[] = this.cmResult.questions
 
     if(questions)
+    // console.log("questions",questions)
     {
+      questions.sort((a, b) => {
+        const questionNumberA = parseInt(a.question.label.match(/\d+/)[0])
+        const questionNumberB = parseInt(b.question.label.match(/\d+/)[0])
+    
+        // Compare the question numbers
+        return questionNumberA - questionNumberB;
+        });
       for  (const res of questions) {
         if(res.criteria == 'Criterion 1: Safeguards on environmental integrity'){
           safeguardsArray.push(res)
@@ -1954,7 +1962,8 @@ console.log(asssCharacteristicasscalesd)
     contentTwo.safeguards=safeguardsArray
     contentTwo.prevention_ghg_emissions = preventionGHGArray
     contentTwo.prevention_negative_environmental = preventionAvoidanceArray 
-    contentTwo.outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
+    let outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
+    contentTwo.outcomes = [...outcomes].reverse();
     // console.log("outcomes",contentTwo.outcomes)
     }
 
@@ -1988,7 +1997,18 @@ console.log(asssCharacteristicasscalesd)
         }
         
         category.rows = rows;
-        // console.log("category.name",category.name)
+        if(category.name=='Technology'){
+          // console.log("category",category)
+         category.characteristics.map(char=>char.raw_questions.map(raw_question=>
+            { //console.log("raw_question",raw_question)
+            if(raw_question.label!=null ||raw_question.label!=undefined){
+              raw_question.label=raw_question.label.replace(/\([^)]*\)/, '').trim()
+            }
+              
+              return raw_question
+            }
+            ))
+          };
         if(category.name=='Incentives'){
           // console.log("called Incentives",category.characteristics)
           let cat1 =  { ...category, characteristics: [category.characteristics[0]] }
@@ -2064,7 +2084,7 @@ console.log(asssCharacteristicasscalesd)
     if(this.cmScores.process_score!=null ||this.cmScores.process_score!=undefined){
       contentFour.processScore = this.cmScores.process_score
     }
-    if(this.cmScores.outcome_score.outcome_score!=null ||this.cmScores.outcome_score.outcome_score!=undefined){
+    if(this.cmScores.outcome_score?.outcome_score!=null ||this.cmScores.outcome_score?.outcome_score!=undefined){
       contentFour.outcomeScore = this.cmScores.outcome_score.outcome_score
     }
     
