@@ -164,22 +164,26 @@ export class ReportCarbonMarketDto {
 
     //2.2
     scale_ghg:object[]=[];
-    scale_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={
-        rows: 0,
-        name: "",
-        sdg: []
-    };
+//     scale_sd:{
+//       [x: string]: any;rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]
+// }={
+//         rows: 0,
+//         name: "",
+//         sdg: []
+//     };
+    scale_sd:object[]=[];
     sustained_ghg:object[]=[];
-    sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={
-        rows: 0,
-        name: "",
-        sdg: []
-    };
+    // sustained_sd:{rows:number,name:string,sdg:{rows:number,name:string,impact:string,characteristics:any[]}[]}={
+    //     rows: 0,
+    //     name: "",
+    //     sdg: []
+    // };
+    sustained_sd:object[]=[]
     scale_adaptation:object[]=[];
     sustained_adaptation:object[]=[];
 
     process_categories_assessment:object[]=[];
-    outcomes_categories_assessment:object[]=[];
+    outcomes_categories_assessment:any={};
     processScore: number;
     outcomeScore :number;
 
