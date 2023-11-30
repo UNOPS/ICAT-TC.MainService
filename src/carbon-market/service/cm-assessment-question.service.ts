@@ -65,12 +65,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let savedSdgs = []
     let exists = []
     let results = []
-    for await (let res of result) {
-      let ex = await this.assessmentQuestionRepo.find({where: {question: {code: res.question.code}, assessment: {id: assessment.id}}})
-      if ( ex.length === 0) {
-        results.push(res)
-      }
-    }
+    // if (isDraft) {
+      results = [...result]
+    // } else {
+      // for await (let res of result) {
+      //   let ex = await this.assessmentQuestionRepo.find({where: {question: {code: res.question.code}, assessment: {id: assessment.id}}})
+      //   if ( ex.length === 0) {
+      //     results.push(res)
+      //   }
+      // }
+    // }
     
     for await (let res of results) {
       if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
