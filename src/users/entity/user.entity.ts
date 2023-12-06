@@ -63,10 +63,7 @@ export class User extends BaseTrackingEntity {
   mobile: string;
 
   @Column({nullable: true})
-  admin: string; // added by
-
-  // @Column({ nullable: true })
-  // mrvInstitution: string;
+  admin: string; 
 
   @ManyToOne((type) => Country, { cascade: false, eager:true })
   @JoinColumn({ name: 'countryId' })
@@ -95,14 +92,10 @@ export class User extends BaseTrackingEntity {
 
   fullName: string;
 
-  // @OneToMany(() => Notification, (notification) => notification.t)
-  // notifications: Notification[]
 
   updateFullName() {
     this.fullName = this.firstName + (this.lastName ? ' ' + this.lastName : '');
   }
-
-  // abc: string = ()=>{  this.firstName + this.lastName};
 
   get fullname2() {
     return this.firstName;

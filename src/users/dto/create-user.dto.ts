@@ -1,5 +1,5 @@
 export class CreateUserDto {
-  userType : number;//change userTypeId
+  userType : number;
   firstName: string;
   lastName: string;
   username : string;
@@ -7,11 +7,10 @@ export class CreateUserDto {
   email : string;
   title: string;
   loginProfile: string;
-  institution: number;//institutionId
- // designation: string;
+  institution: number;
   mrvInstitution:string
   telephone: string;
   mobile: string;
   nic: string;
-  country:number;//add by pasindu
+  country:number;
 }

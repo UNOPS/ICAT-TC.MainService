@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import {
   ComparisonReportReportContentFour,
@@ -40,9 +39,8 @@ xData = [
     {label: 'Unlikely', value: 1},
     {label: 'Very Unlikely', value: 0}
   ]
-  fileServerURL = 'https://icat-tc-tool.climatesi.com/web-api/uploads/'
+  fileServerURL = process.env.MAIN_URL + '/uploads/'
   coverPage(coverPage: ReportCoverPage): string {
-    // console.log("coverpage tool",coverPage.tool)
     const cover = `<div id="cover">
     <div  style="height: 250px;">
     <!-- <div  class="row ">
@@ -86,7 +84,6 @@ xData = [
     tool:string,
   ): string {
     let pageNumber = 1;
-//  console.log("tableOfContent",tool)
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
@@ -124,8 +121,6 @@ xData = [
     let pageNumber = 2;
     const policyOrActionsDetails = contentOne.policyOrActionsDetails;
 
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
-
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
@@ -147,7 +142,6 @@ xData = [
         .map(
           (a: { information: string; description: any; isInvestment: boolean }) => {
             if (a.isInvestment == undefined) {
-              // console.log("Investment instrument(s) used",a.isInvestment)
               return '<tr><td>' +
                 a.information +
                 '</td><td colspan="3">' +
@@ -155,14 +149,12 @@ xData = [
                 '</td></tr>'
             }
             else if (a.isInvestment && (a.information == 'Total investment (in USD)')) {
-              // console.log("Total investment (in USD)",a.isInvestment)
               return '<tr><td>' +
                 a.information +
                 '</td><td colspan="3">' +
                 a.description +
                 '</td></tr>'
             } else if (a.isInvestment && (a.information == 'Investment instrument(s) used')) {
-              // console.log("Investment instrument(s) used",a.description.map(inv=>'<td>'+inv.instrument_name+'</td>').join(''))
               return '<tr><td>' +
                 a.information +
                 '</td>' +
@@ -170,7 +162,6 @@ xData = [
                 '</tr>'
             }
             else if (a.isInvestment && (a.information == 'Proportion of total investment')) {
-              // console.log("Proportion of total investment",a.description.map(inv => '<td>' + inv.propotion + '</td>').join('') )
               return '<tr><td>' +
                 a.information +
                 '</td>' +
@@ -1786,8 +1777,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     let pageNumber = 2;
     const policyOrActionsDetails = content.policyOrActionsDetails;
 
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
-
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
@@ -1828,7 +1817,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
     const characteristics = content.characteristics;
     const transformational = content.transformational;
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_2 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -1897,7 +1885,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </div>`;
    
     const barriers = content.barriers;
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_3 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -1992,7 +1979,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     content: ReportCarbonMarketDtoContentTwo,): string {
       let pageNumber = 3;
      let safeguards=content.safeguards
-    //  console.log("safeguards",safeguards)
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
@@ -2041,51 +2027,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-
-    //  const page_1_2 =safeguards.length<2?'': `  <div id="page_9" class="page text-center" >
-    //  ${header}
-    //  <div class="content">
-    
-    //       <div class="report-table-sm">
-         
-    //       <table class="table  table-bordered border-dark">
-    //         <thead class="table-primary  border-dark">
-    //           <tr>
-    //           <th scope="col">Question </th>
-    //            <th scope="col">Answer </th>
-    //            <th scope="col">Justification </th>
-    //            <th scope="col">Supporting information uploaded </th>
-                
-    //           </tr>
-    //         </thead>
-    //         <tbody class="table-active ">
-    //         ${safeguards
-    //           .map(
-    //             (a: {
-    //               document: string;comment: string; question:string,answer:string
-    //               }) =>
-    //               '<tr><td>' +
-    //               a.question +
-    //               '</td><td>' +
-    //               a.answer +
-    //               '</td><td>' +
-    //               a.comment +
-    //               '</td><td>' +
-    //               a.document +
-    //               '</td></tr>',
-    //           )
-    //           .join('')}
-    //         </tbody>
-    //       </table>
-    //     </div>
-   
-     
-    //  </div>
-     
-    //  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-     
-    //   </div>`;
-
 
       let prevention_ghg_emissions=content.prevention_ghg_emissions
       let prevention_negative_environmental=content.prevention_negative_environmental
@@ -2209,7 +2150,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-    // return page_1+page_1_2+page_2+page_3;
     return page_1+page_2+page_3;
   }
   CarbonMarketcontentThree(header: string,
@@ -2377,7 +2317,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
               const questionsLength = b.raw_questions.length;
       
               if (!index) {
-                // console.log("not index.........",b,index)
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td>${b.name}</td>
@@ -2405,7 +2344,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 </tr>
                `;
               } else {
-                // console.log("index.........",b,index)
                 return b.raw_questions
                   .map((question, questionIndex) => `
                     <tr>
@@ -2604,7 +2542,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <tbody class="table-active">
      ${scale_ghg
           .map((a: any,index) =>{
-            // console.log(index)
             if (!index) {
               return `<tr>
                 <td rowspan="${scale_ghg.length}" >Scale of outcome - GHGs</td>
@@ -2649,7 +2586,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <tbody class="table-active">
      ${sustained_ghg
           .map((a: any,index) =>{
-            // console.log(index)
             if (!index) {
               return `<tr>
                 <td rowspan="${sustained_ghg.length}" >Outcome sustained over time - GHGs</td>
@@ -2660,7 +2596,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             </tr>`;
             }
             else {
-              // console.log("obj",a)
               return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
@@ -2708,7 +2643,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tbody class="table-active">
       ${scale_adaptation
         .map((a: any,index) =>{
-          // console.log(index)
           if (!index) {
             return `<tr>
               <td rowspan="${scale_adaptation.length}" >Scale of outcome – Adaptation cobenefits</td>
@@ -2721,7 +2655,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           </tr>`;
           }
           else {
-            // console.log("obj",a)
             return `<tr>
             <td>${a.characteristic ? a.characteristic : '-'}</td>
             <td>${a.starting_situation  ? a.starting_situation : '-'}</td>
@@ -2753,7 +2686,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tbody class="table-active">
       ${sustained_adaptation
         .map((a: any,index) =>{
-          // console.log(index)
           if (!index) {
             return `<tr>
               <td rowspan="${sustained_adaptation.length}" >Outcome sustained over time – Adaptation cobenefits</td>
@@ -2764,7 +2696,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           </tr>`;
           }
           else {
-            // console.log("obj",a)
             return `<tr>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
@@ -2816,7 +2747,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             .map((a: any,index) =>{
               
               if (!index) {
-                // console.log(a.characteristic,"==========",index)
                 return `<tr>
                   <td rowspan="${scale_sd.length}">Scale of outcome - sustainable development </td>
                   <td>${a.SDG ? a.SDG : '-'}</td>
@@ -2829,7 +2759,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
               </tr>`;
               }
               else {
-                // console.log("obj",a)
                 return `<tr>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
@@ -2885,7 +2814,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           .map((a: any,index) =>{
             
             if (!index) {
-              // console.log(a.characteristic,"==========",index)
               return `<tr>
                 <td rowspan="${sustained_sd.length}">Outcome sustained over time – sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
@@ -2896,7 +2824,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
             </tr>`;
             }
             else {
-              // console.log("obj",a)
               return `<tr>
               <td>${a.SDG ? a.SDG : '-'}</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
@@ -3231,8 +3158,6 @@ PORTFOLIO TOOL
     let pageNumber = 2;
     const portfolio_details = contentOne.portfolio_details;
     const intervation_details = contentOne.intervation_details;
-
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -3635,8 +3560,6 @@ PORTFOLIO TOOL
     const ghg_scale_sustaind_comparison = content.ghg_scale_sustaind_comparison;
 
     const allsdg = content.allsdg;
-    // const sdg_scale = content.sdg_scale;
-    // const sdg_sustaind = content.sdg_sustaind;
     const sdg_scale_sustaind_comparison = content.sdg_scale_sustaind_comparison;
 
     const adaptation_scale = content.adaptation_scale;
@@ -4504,9 +4427,7 @@ PORTFOLIO TOOL
       page_7 +
       sdg_scale_sustaind_comparison_all +
       page_10
-      // page_9 +
     );
-    // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
   comparisonContentThree(
     header: string,
@@ -4679,8 +4600,6 @@ PORTFOLIO TOOL
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
-    // console.log("page", page_1)
-    // return page_2 + page_3;
     return page_1;
   }
 
@@ -4802,7 +4721,6 @@ PORTFOLIO TOOL
     }
   }
   getIntervention(x: number, y: number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
-    // console.log(contentTwo.processScore,contentTwo.outcomeScore,x,y)
     return (contentTwo.processScore === y && contentTwo.outcomeScore === x);
   }
 }

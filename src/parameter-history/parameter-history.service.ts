@@ -23,15 +23,14 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
       }
 
     public async SaveParameterHistory(
-        dataReqestId: number, // daat requst ID
+        dataReqestId: number, 
         action: ParameterHistoryAction,
         description: string,
         comment: string,
         status: string,
         statusPrevious: string | null,
       ) {
-        let datareqest = await this.parameterRequestRepo.findOne({where:{id:dataReqestId}}); // let parametr
-       // console.log("my datarequest id ..",datareqest.id)
+        let datareqest = await this.parameterRequestRepo.findOne({where:{id:dataReqestId}}); 
     
         let data = this.parameterRequestRepo
         .createQueryBuilder('paraReq')
@@ -52,17 +51,9 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
             `paraReq.investmentParameterId = para.id and paraReq.id = ${dataReqestId}`,
           )
         }
-        
-        //.where('paraHis.id = dataReqestId')
+      
     
         let result1 = await data.getOne();
-        // console.log("my parameter111..",result1)
-
-    
-    
-       // let parameter = await this.parameterRepo.findOne(datareqest.parameter.id);
-       
-       // console.log("my parameter..",parameter.name)
     
         let parameterHistory = new ParameterHistory();
         parameterHistory.description = description;
@@ -76,13 +67,11 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
          
         }
         
-        // parameterHistory.parameterName = result1.parameter?.name;
         parameterHistory.parameterCreatedDate = datareqest.createdOn;
         parameterHistory.parameterAllocatedDate = datareqest.deadline;
         parameterHistory.parameterAssignDateByIA = datareqest.deadlineDataEntry;
         parameterHistory.parameterStatus = status!;
         parameterHistory.parameterStatusPrevious = statusPrevious!;
-        // parameterHistory.deoAssumption = result1.parameter?.enterDataAssumption;
         parameterHistory.qcAssumption = datareqest?.qaComment;
         
     
@@ -94,7 +83,6 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
       async getHistory(id: number): Promise<any> 
       
       {
-        console.log("id.....",id)
         let filter: string = 'as.parameterId = :id';
         var data = this.repo
           .createQueryBuilder('as')
@@ -104,9 +92,6 @@ export class ParameterHistoryService extends TypeOrmCrudService<ParameterHistory
           })
           .orderBy('as.createdOn', 'DESC');;
     
-    
-        // console.log('data.....',data)
-        //console.log('query...', data.getQueryAndParameters());
         return await data.getMany();
       }
 }

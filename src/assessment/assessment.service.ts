@@ -47,7 +47,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     @InjectRepository(Assessment) repo,
     @InjectRepository(AssessmentObjectives) private assessmentObjectivesRepo: Repository<AssessmentObjectives>,
     private readonly userService: UsersService,
-    // private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
@@ -114,18 +113,15 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-
-      // console.log("tmmm", data)
       
     return data;
   }
 
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
     let ass =await this.repo.findOne({ where: { id: id }});
-    ass.qaDeadline = updateAssessmentDto.deadline
-    ass.editedOn = updateAssessmentDto.editedOn
-    ass.verificationStatus = updateAssessmentDto.verificationStatus
-    // await this.repo.save(ass);
+    ass.qaDeadline = updateAssessmentDto.deadline;
+    ass.editedOn = updateAssessmentDto.editedOn;
+    ass.verificationStatus = updateAssessmentDto.verificationStatus;
     return await this.repo.save(ass);
   }
 
@@ -194,7 +190,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
 
     let resualt = await paginate(data, options);
     if (resualt) {
-      // console.log('results for manage..', resualt);
       return resualt;
     }
   }
@@ -207,7 +202,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       userNameFromTocken
   ): Promise<any> {
 
-    console.log("cuserRoleFromTocken",cuserRoleFromTocken)
     let filter: string = `asse.isDraft = true AND proj.countryId = ${countryIdFromTocken}`;
     if( cuserRoleFromTocken !="Country Admin"){
       let userItem = await this.userService.findByUserName(userNameFromTocken);
@@ -291,7 +285,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     userName: string,
   ): Promise<any> {
     let userItem = await this.userService.findByUserName(userName);
-    // console.log('userItem', userItem);
 
     var data = this.repo
       .createQueryBuilder('as')
@@ -303,7 +296,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `as.id = ${assessmentId} AND par.dataRequestStatus in (9,-9,11)`,
       );
     let result = await data.getOne();
-    // console.log('qqqqqqqqqq111qqqqqq', result)
     return result;
   }
 
@@ -315,23 +307,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id }});
-      // console.log('dataRequestItem', dataRequestItem);
       let originalStatus = dataRequestItem.qaStatus;
       dataRequestItem.qaStatus = updateDataRequestDto.status;
 
-
-      // inscon = dataRequestItem.assessment.project.country;
-      // console.log("inscon", dataRequestItem.assessment.project.country)
-      // insSec = dataRequestItem.assessment.project.sector;
-      // console.log("insSec", insSec)
-
       this.repo.save(dataRequestItem).then((res) => {
-        // console.log('res', res);
       });
     }
-  //   let user:User[];
-  //  let ins = await this.institutionRepo.findOne({ where: { country: inscon, sector: insSec, type: 2 } });
-  //  user= await this.userService.find({where:{country:inscon,userType:7,institution:ins}})
     return true;
   }
 
@@ -360,7 +341,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       );
     let totalRecordsAllStatus: any[] = await data.execute();
 
-    ///////////////////////////////////////////////////////////
 
     var data2 = this.repo
       .createQueryBuilder('as')
@@ -380,7 +360,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .where(
         'par.dataRequestStatus in (11) AND as.id =' + assessmentId.toString() + ')',
       );
-    // console.log('data1SQL2', data2.execute());
     let totalRecordsApprovedStatus: any[] = await data2.execute();
     if (totalRecordsApprovedStatus.length == totalRecordsAllStatus.length) {
       return true;
@@ -425,18 +404,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'sectorinvest',
         `sectorinvest.id = investor_sector.sector_id`,
       )
-      // .leftJoinAndMapMany(
-      //   'asse.assessment_barriers',
-      //   AssessmentBarriers,
-      //   'assessment_barriers',
-      //   `asse.id = assessment_barriers.assessment_id`,
-      // )
-      // .leftJoinAndMapOne(
-      //   'assessment_barriers.barriers',
-      //   Barriers,
-      //   'barriers',
-      //   `assessment_barriers.barriers_id = barriers.id`,
-      // )
       
       .leftJoinAndMapMany(
         'asse.geographical_areas_covered',
@@ -482,7 +449,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    // console.log("qqqqqqq", data)
     return data;
   }
   async findbyIDforCarbonMarketReport(id: number) {
@@ -568,7 +534,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       .where({ id: id })
       .getOne();
-    // console.log("qqqqqqq", data)
     return data;
   }
 
@@ -631,14 +596,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `sdg_assessment.sdgId = portfolioSdg.id and sdg_assessment.assessmentId=asse.id`,
       )
     
-      // .leftJoinAndMapOne(
-      //   'parameters.indicator',
-      //   Indicators,
-      //   'indicator',
-      //   `indicator.id = parameters.indicator_id`,
-      // )
       .where(filter,{ assessmentId,catagoryType,assessmentType,catagoryCode });
-    // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }
   async getResultforReport(assessmentId: number,catagoryType:string,assessmentType:string) {
@@ -687,7 +645,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `indicator.id = parameters.indicator_id`,
       )
       .where(filter,{ assessmentId,catagoryType,assessmentType });
-    // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getOne();
   }
   async getAssessmentObjectiveforReport(assessmentId: number) {
@@ -704,7 +661,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       )
       
       .where(filter,{ assessmentId });
-    // console.log("qqqqqqq", data.getQueryAndParameters())
     return await data.getMany();
   }
 }

@@ -11,7 +11,6 @@ import { VerificationDetail } from './entity/verification-detail.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { User } from 'src/users/entity/user.entity';
-import { AssessmentService } from 'src/assessment/assessment.service';
 import { ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
@@ -39,7 +38,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     super(repo);
   }
 
-  async GetVRParameters( //for sector admin
+  async GetVRParameters( 
     options: IPaginationOptions,
     filterText: string,
     VRstatusId: number,
@@ -65,18 +64,11 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
         filterText: `%${filterText}%`,
         VRstatusId,
       })
-      // .groupBy('ae.Assessmentid')
-      // .groupBy('ae.AssessmentYear')
       .orderBy('assessment.qaDeadline', 'DESC');
-    // console.log(
-    //   '=====================================================================',
-    // );
-    console.log("PPPPPPPP",data.getQuery());
 
     let resualt = await paginate(data, options);
 
     if (resualt) {
-      console.log("result is...",resualt)
       return resualt;
     }
   }
@@ -122,19 +114,15 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
       this.verificationDetailRepo.save(verificationDetail);
 
       let ass = verificationDetail[0].assessment.id;
-      console.log("asseYa", verificationDetail)
       let assesment = await this.assessmentRepo.findOne({
         where: { id: ass } , 
         relations: ['climateAction', 'climateAction.country', 'climateAction.sector']})
-      // let assesment = await this.assesmentservice.findOne({ where: { id: verificationDetail[0].assessmentId }})
 
       let user: User[];
       let inscon = assesment.climateAction.country;
-      let insSec = assesment.climateAction.sector
-      // let ins = await this.institutionRepo.findOne({ where: { country: inscon, sector: insSec, type: 2 } });
-      let ins = await this.institutionRepo.findOne({ where: { country: { id: inscon.id }, sector: { id: insSec.id }, type: { id: 2 } } })
-      console.log(ins)
-      user = await this.userRepo.find({ where: { country: { id: inscon.id }, userType: { id: 5 }, institution: { id: ins.id } } })
+      let insSec = assesment.climateAction.sector;
+      let ins = await this.institutionRepo.findOne({ where: { country: { id: inscon.id }, sector: { id: insSec.id }, type: { id: 2 } } });
+      user = await this.userRepo.find({ where: { country: { id: inscon.id }, userType: { id: 5 }, institution: { id: ins.id } } });
 
       user.forEach((ab) => {
         let template =
@@ -142,8 +130,6 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
           ab.username + ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Accepted Verifir value' +
-          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-          // '<br/> value -:' + dataRequestItem.parameter.value +
           '<br> project -: ' + assesment.climateAction.policyName;
 
         this.emaiService.sendMail(
@@ -178,7 +164,6 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
             )
 
           let result1 = await data.getOne();
-          console.log("my parameter111..", result1)
 
           this.parameterHistoryService.SaveParameterHistory(
             result1.id,
@@ -193,7 +178,6 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
             let dataRequest = await this.ParameterRequestRepo.findOne({
               where: { parameter: {id: a.parameter.id} },
             });
-            console.log(dataRequest);
             dataRequest.dataRequestStatus =
               DataRequestStatus.Verifier_Data_Request;
             await this.ParameterRequestRepo.save(dataRequest);
@@ -210,7 +194,6 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
   async getVerificationDetails(
     assessmentId: number,
   ): Promise<VerificationDetail[]> {
-    // let filter: string = `dataRequestStatus in (${DataRequestStatus.QA_Assign.valueOf()},${DataRequestStatus.QAPass.valueOf()},${DataRequestStatus.QAFail.valueOf()})`;
 
     let data = this.verificationDetailRepo
       .createQueryBuilder('vd')

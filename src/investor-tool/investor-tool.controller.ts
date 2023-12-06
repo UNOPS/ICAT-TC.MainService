@@ -3,16 +3,13 @@ import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto, SdgPriorityDto, ToolsMultiselectDto, TotalInvestmentDto } from './dto/final-investor-assessment.dto';
 import { InvestorQuestions } from './entities/investor-questions.entity';
-import { query } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
-import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
@@ -98,7 +95,6 @@ export class InvestorToolController {
   @UseGuards(JwtAuthGuard)
   @Get('getSectorCountByTool/:tool')
   async getSectorCountByTool(@Param('tool') tool:string){
-    // console.log(tool)
     return await this.investorToolService.getSectorCountByTool(tool);
   }
 
@@ -113,11 +109,8 @@ export class InvestorToolController {
   @UseGuards(JwtAuthGuard)
   @Get('calculate-final-result')
   async calculateFinalResults(@Query('assessID') assessID: number) {
-    // console.log("ssss",assessID)
     let res =  await this.investorToolService.calculateNewAssessmentResults(assessID);
-    // console.log("res",res)
     return res;
-  //  res;
 
   }
   @Get('get-investor-question-by-id')
@@ -142,7 +135,6 @@ export class InvestorToolController {
         }),
     )
     async uploadFileExcel(@UploadedFile() file) {
-        console.log("====file++++",file);
         const newSavedfile = file.filename;
         await this.investorToolService.uplaodFileUpload(newSavedfile);
     }
@@ -164,7 +156,6 @@ export class InvestorToolController {
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
-    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
 
   @Post('upload-file-investment')
@@ -172,7 +163,6 @@ export class InvestorToolController {
   async uploadJustificationInvestment(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
-    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
   }
   @UseGuards(JwtAuthGuard)
   @Get('sdgSumCalculateInvester/:tool')
@@ -225,7 +215,6 @@ export class InvestorToolController {
     return await this.investorToolService.getSdgPrioritiesByCountryId(id)
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('get-processData')
   async getProcessData(@Query('assessID') assessID: number) {
     let res =  await this.investorToolService.getProcessData(assessID);

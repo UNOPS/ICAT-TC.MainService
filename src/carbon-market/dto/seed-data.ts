@@ -471,26 +471,6 @@ export const questions = [
         short_label: '',
         isUpdate: false
     },
-    // {
-    //     label: "Does the intervention contribute to increased ambition by charging a carbon credit issuance fee and using it to fund national mitigation action that contributes to national targets?",
-    //     code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3",
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 3,
-    //     criteria: '',
-    //     message: '',
-    //     characteristic: "ECONOMIC_NON_ECONOMIC",
-    //     isUpdate: false
-    // },
-    // {
-    //     label: "Is the intervention’s crediting baseline set in an ambitious manner, i.e., below business-as-usual (BAU)?",
-    //     code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4",
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 4,
-    //     criteria: '',
-    //     message: '',
-    //     characteristic: "ECONOMIC_NON_ECONOMIC",
-    //     isUpdate: false
-    // },
     {
         label: "Is the intervention’s baseline emission factor reduced over time to align with the long-term temperature goal of the Paris Agreement? If the baseline does not use an emission factor, are baseline emissions declining over time?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5",
@@ -678,14 +658,6 @@ export const answers = [
         question: "S-2-C-1-Q-4",
         isUpdate: false
     },
-    // {
-    //     label: "The country does not differentiate between conditional and unconditional targets",
-    //     code: "S-2-C-1-Q-4-A-4",
-    //     weight: 0,
-    //     score_portion: 1,
-    //     isPassing: true,
-    //     question: "S-2-C-1-Q-4"
-    // },
     {
         label: "Yes",
         code: "S-2-C-1-Q-5-A-1",
