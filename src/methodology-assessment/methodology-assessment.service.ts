@@ -1,5 +1,4 @@
 import { Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
-import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,15 +18,10 @@ import { MethodologyIndicators } from './entities/methodologyindicators.entity';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
-import {
-  IPaginationOptions,
-  paginate,
-  Pagination,
-} from 'nestjs-typeorm-paginate';
+import { IPaginationOptions, paginate,} from 'nestjs-typeorm-paginate';
 import { Results } from './entities/results.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { BarriersCharacteristics } from './entities/barriercharacteristics.entity';
-import { getConnection } from 'typeorm';
 import { AssessmentCategory } from './entities/assessmentCategory.entity';
 import { Objectives } from './entities/objectives.entity';
 import { AssessmentObjectives } from './entities/assessmentobjectives.entity';
@@ -38,12 +32,11 @@ import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { ParameterRequestDto } from './dto/parameter-request.dto';
-const MainCalURL = 'http://localhost:7100/indicator_calculation';
+const MainCalURL =  process.env.CALCULATION_URL + '/indicator_calculation';
 import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { OutcomeCategory } from './dto/outcome-category.dto';
 import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
@@ -80,50 +73,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     super(repo)
   }
   
-/*   create(MethData : any) {
-   // console.log("result")
-   // console.log(createMethodologyAssessmentDto)
-   let methName = MethData.methodology;
-   console.log("MethName : ", methName)
-
-   for(let category of MethData.categoryData ){
-    
-    let categoryId = category.categoryId;
-    let categoryName = category.category;
-    let categoryScore = category.categoryScore;
- //   console.log("categoryName : ", categoryName)
-    for(let characteristic of category.characteristics){
-      //  console.log("chadata", characteristic)
-      //  console.log("categryID : ", categoryId)
-      ///  console.log(typeof categoryId)
-
-        let data ={
-          category_id : categoryId,
-        //  methodology_id : methName,
-          characteristics_id : 1,
-          relevance: characteristic.relevance,
-          characteristics_score : characteristic.score,
-          category_score :categoryScore,
-        }
-
-        console.log("dataaa : ", data)
-
-        this.repo.save(data);
-
-    }
-   // this.repo.save(MethData);
-   }
-    return MethData;
-  } */
 
 
   async create(MethData: any) {
-
-    console.log("aaaa", MethData)
     let methodology = new Methodology();
     let policy = new ClimateAction();
      methodology.id = MethData.methodology;
-  //  console.log("MethName: ", methodology.id);
     policy.id = MethData.policyId;
 
 
@@ -150,31 +105,28 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     assessement.audience = MethData.audience
 
    let assessRes =  this.assessmentRepository.save(assessement);
-   let assessementId = (await assessRes).id
-   console.log("wwwwwwww")
-   assessement.id = assessementId
-
-    console.log("assessRes : ",(await assessRes).id)
+   let assessementId = (await assessRes).id;
+   assessement.id = assessementId;
 
    for(let y of MethData.selectedBarriers){
-      let assessmentBarriers = new AssessmentBarriers()
+      let assessmentBarriers = new AssessmentBarriers();
       let barrier = new Barriers();
       barrier.id = y.id,
       barrier.barrier = y.barrier
 
-      assessmentBarriers.barriers = barrier
-      assessmentBarriers.assessment = assessement
+      assessmentBarriers.barriers = barrier;
+      assessmentBarriers.assessment = assessement;
 
       await this.assessRepository.save(assessmentBarriers);
     } 
 
     let createdAssessment = new Assessment();
-    createdAssessment.id = assessementId
+    createdAssessment.id = assessementId;
 
     for(let objectives of MethData.selectedObjectives){
-      let assessObj = new AssessmentObjectives()
-      assessObj.assessment = createdAssessment
-      assessObj.objectives = objectives
+      let assessObj = new AssessmentObjectives();
+      assessObj.assessment = createdAssessment;
+      assessObj.objectives = objectives;
       await this.assessObjRepo.save(assessObj);
     }
   
@@ -185,33 +137,27 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
       let savedAssessment = new Assessment();
 
-      savedAssessment.id = assessementId
+      savedAssessment.id = assessementId;
 
       let dataForCategory = new MethodologyAssessmentParameters();
-      dataForCategory.score = categoryData.categoryScore
-      dataForCategory.category = category
-      dataForCategory.assessment = savedAssessment
-      dataForCategory.methodology = methodology
-      dataForCategory.isCategory = 1
-      dataForCategory.institution = categoryData.categoryInstitution
-      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment
-      dataForCategory.fileName = categoryData.categoryFile
+      dataForCategory.score = categoryData.categoryScore;
+      dataForCategory.category = category;
+      dataForCategory.assessment = savedAssessment;
+      dataForCategory.methodology = methodology;
+      dataForCategory.isCategory = 1;
+      dataForCategory.institution = categoryData.categoryInstitution;
+      dataForCategory.scoreOrInstitutionJusti = categoryData.categoryComment;
+      dataForCategory.fileName = categoryData.categoryFile;
      
-     // category.categoryScore = categoryData.categoryScore;
-     // console.log("Category: ", category);
   
       for (let characteristic of categoryData.characteristics) {
         let characteristics = new Characteristics();
         characteristics.name = characteristic.name;
         characteristics.id = characteristic.id;
-     //   console.log("Characteristics: ", characteristics);
-  
-  
        
         let data = new MethodologyAssessmentParameters();
         data.methodology = methodology;
         data.category = category;
-      //  data.category_score = categoryData.categoryScore;
         data.characteristics = characteristics;
         data.score = characteristic.score;
         data.relevance = characteristic.relevance;
@@ -222,7 +168,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.institution = characteristic.institution;
         data.chaDescription = characteristic.chaDescription;
         data.chaRelJustification = characteristic.chaRelJustification;
-      //  console.log("Data: ", data);
   
        await this.repo.save(data);
       }
@@ -232,14 +177,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       
 
     }
-    //assessementId
-    console.log("iddd", assessementId)
     return assessementId;
   }
 
   async saveAssessment(assessment: Assessment){
     let user = this.userService.currentUser();
-    console.log(" : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id)
 
     let currentUser = new User();
     currentUser.id = (await user).id
@@ -253,13 +195,11 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let methodology = new Methodology();
     let policy = new ClimateAction();
      methodology.id = dataArr.alldata.methodology;
-  //  console.log("MethName: ", methodology.id);
     policy.id = dataArr.alldata.policyId;
 
 
-    let data = dataArr.alldata
-    console.log("dattaaaa",data)
-    let  date  = new Date()
+    let data = dataArr.alldata;
+    let  date  = new Date();
      const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
@@ -274,46 +214,44 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     savedAssessment.from = data.date1;
     savedAssessment.to = data.date2;
     savedAssessment.tool = data.tool;
-    savedAssessment.year = y
-    savedAssessment.person = data.person
-    savedAssessment.opportunities = data.opportunities
-    savedAssessment.impactsCovered = data.impactsCovered
-    savedAssessment.assessBoundry = data.assessBoundry
-    savedAssessment.audience = data.audience
+    savedAssessment.year = y;
+    savedAssessment.person = data.person;
+    savedAssessment.opportunities = data.opportunities;
+    savedAssessment.impactsCovered = data.impactsCovered;
+    savedAssessment.assessBoundry = data.assessBoundry;
+    savedAssessment.audience = data.audience;
 
     let assessRes =  this.assessmentRepository.save(savedAssessment);
-    let assessementId = (await assessRes).id
+    let assessementId = (await assessRes).id;
  
-    savedAssessment.id = assessementId
+    savedAssessment.id = assessementId;
  
-     console.log("assessRes : ",(await assessRes).id)
  
     for(let y of data.selectedBarriers){
-       let assessmentBarriers = new AssessmentBarriers()
+       let assessmentBarriers = new AssessmentBarriers();
        let barrier = new Barriers();
        barrier.id = y.id,
        barrier.barrier = y.barrier
  
-       assessmentBarriers.barriers = barrier
-       assessmentBarriers.assessment = savedAssessment
+       assessmentBarriers.barriers = barrier;
+       assessmentBarriers.assessment = savedAssessment;
  
        await this.assessRepository.save(assessmentBarriers);
      } 
 
      let createdAssessment = new Assessment();
-    createdAssessment.id = assessementId
+    createdAssessment.id = assessementId;
 
     for(let objectives of data.selectedObjectives){
-      let assessObj = new AssessmentObjectives()
-      assessObj.assessment = createdAssessment
-      assessObj.objectives = objectives
+      let assessObj = new AssessmentObjectives();
+      assessObj.assessment = createdAssessment;
+      assessObj.objectives = objectives;
       await this.assessObjRepo.save(assessObj);
     }
 
 
      for(let barrierCharacteristic of dataArr.dataArray){
       let obj = new BarriersCharacteristics()
-    //  let assessmentBarriers = new AssessmentBarriers()
       let barrierdata = new Barriers()
       barrierdata.id = barrierCharacteristic.barrier
       let assess = new Assessment();
@@ -355,25 +293,20 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       dataForCategory.fileName = categoryData.categoryFile
       dataForCategory.weight = Number(categoryData.categoryWeight)
      
-     // category.categoryScore = categoryData.categoryScore;
-     // console.log("Category: ", category);
   
      if(categoryData.categoryScore || categoryData.categoryInstitution || categoryData.categoryWeight){
-      console.log("bbbb",dataForCategory)
       await this.repo.save(dataForCategory);
     }
       for (let characteristic of categoryData.characteristics) {
         let characteristics = new Characteristics();
         characteristics.name = characteristic.name;
         characteristics.id = characteristic.id;
-     //   console.log("Characteristics: ", characteristics);
   
   
        
         let data = new MethodologyAssessmentParameters();
         data.methodology = methodology;
         data.category = category;
-      //  data.category_score = categoryData.categoryScore;
         data.characteristics = characteristics;
         data.score = characteristic.score;
         data.relevance = characteristic.relevance;
@@ -386,9 +319,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         data.chaDescription = characteristic.chaDescription;
         data.chaRelJustification = characteristic.chaRelJustification;
         
-      //  console.log("Data: ", data);
-  
-      console.log("kkkk",data)
        await this.repo.save(data);
       }
     
@@ -403,39 +333,36 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   async barrierCharSave(dataArr : any){
 
-    console.log("barrierCharSave", dataArr)
     for(let barrierCharacteristic of dataArr.dataArray){
-      let obj = new BarriersCharacteristics()
-    //  let assessmentBarriers = new AssessmentBarriers()
-      let barrierdata = new Barriers()
-      barrierdata.id = barrierCharacteristic.barrier
+      let obj = new BarriersCharacteristics();
+      let barrierdata = new Barriers();
+      barrierdata.id = barrierCharacteristic.barrier;
       let savedAssessment = new Assessment();
-      savedAssessment.id = dataArr.assessmentId
+      savedAssessment.id = dataArr.assessmentId;
     
-      obj.assessment = savedAssessment
-      obj.barriers = barrierdata
-      obj.characteristics = barrierCharacteristic.chaId
-      obj.barrier_score = barrierCharacteristic.barrierScore
-      obj.barrier_target = barrierCharacteristic.barrierTarget
-      obj.bscore_comment = barrierCharacteristic.barrierComment
-      obj.barrier_weight = barrierCharacteristic.barrierWeight
-      obj.bweight_comment = barrierCharacteristic.bWeightComment
+      obj.assessment = savedAssessment;
+      obj.barriers = barrierdata;
+      obj.characteristics = barrierCharacteristic.chaId;
+      obj.barrier_score = barrierCharacteristic.barrierScore;
+      obj.barrier_target = barrierCharacteristic.barrierTarget;
+      obj.bscore_comment = barrierCharacteristic.barrierComment;
+      obj.barrier_weight = barrierCharacteristic.barrierWeight;
+      obj.bweight_comment = barrierCharacteristic.bWeightComment;
       
 
 
       await this.barrierCharacterRepo.save(obj);
      }
 
-    return dataArr
+    return dataArr;
   }
 
 
   async createAssessCharacteristics(charAssessData :any){
 
-    console.log("assessChaData:", charAssessData)
     let charAssessment = new Assessment();
 
-    charAssessment.id = charAssessData.assessment
+    charAssessment.id = charAssessData.assessment;
 
     for(let item of charAssessData.characteristics){
       let newdata = new AssessmentCharacteristics();
@@ -444,14 +371,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       characteristic.id = item.id;
       characteristic.name = item.name;
 
-      newdata.assessment = charAssessment
-      newdata.characteristics = characteristic
+      newdata.assessment = charAssessment;
+      newdata.characteristics = characteristic;
 
       await this.assessmentCharcteristicsRepository.save(newdata);
 
     }
 
-    return charAssessData
+    return charAssessData;
   }
 
 
@@ -472,22 +399,21 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async assessCategory(resData :any){
-    console.log("yyyyyyyyy", resData)
     for(let item of resData.result.categoryCalculatedProcess){
-      let data = new AssessmentCategory ()
-      data.assessment = resData.assesId
-      data.category = item.categoryId
-     data.categoryScore = item.score
-     data.categoryWeight = item.weight
+      let data = new AssessmentCategory ();
+      data.assessment = resData.assesId;
+      data.category = item.categoryId;
+     data.categoryScore = item.score;
+     data.categoryWeight = item.weight;
       await this.assessCategoryRepo.save(data);
     }
 
     for(let item of resData.result.categoryCalculatedoutcome){
-      let data = new AssessmentCategory ()
-      data.assessment = resData.assesId
-      data.category = item.categoryId
-     data.categoryScore = item.score
-     data.categoryWeight = item.weight
+      let data = new AssessmentCategory ();
+      data.assessment = resData.assesId;
+      data.category = item.categoryId;
+     data.categoryScore = item.score;
+     data.categoryWeight = item.weight;
       await this.assessCategoryRepo.save(data);
     }
 
@@ -495,10 +421,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async createResults(result :any){
-    let data = new Results ()
-    data.assessment = result.assessment_id
-    data.averageOutcome = result.averageOutcome
-    data.averageProcess = result.averageProcess
+    let data = new Results ();
+    data.assessment = result.assessment_id;
+    data.averageOutcome = result.averageOutcome;
+    data.averageProcess = result.averageProcess;
     await this.resultRepository.save(data);
 
   }
@@ -540,10 +466,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 }
 
 
-/*   findAll(): Promise<Category[]> {
-    return this.methodologyRepository.find();
-  } */
-
   findAll(): Promise<Category[]> {
     return this.categotyRepository.createQueryBuilder('category')
       .leftJoinAndSelect('category.methodology', 'methodology')
@@ -575,8 +497,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async findByAllAssessmentBarriers(): Promise<AssessmentBarriers[]> {
-   // return await this.assessRepository.find();
-
+  
     return await this.assessRepository.find({
       relations: ['assessment', 'barriers'],
     });
@@ -588,7 +509,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
-    // const ass =await  this.assessmentRepository.findOne({where:{id:id}})
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
     .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
@@ -604,7 +524,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async getResultPageData(skip, pageSize, filterText, sectorList, assessmentType): Promise<any[]> {
-    // skip = skip - 10
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = '(climateAction.policyName LIKE :filterText OR assessment.assessment_approach LIKE :filterText OR assessment.assessmentType LIKE :filterText OR assessment.tool LIKE :filterText OR climateAction.intervention_id LIKE :filterText)'
@@ -674,18 +593,14 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         let res=  await data.getManyAndCount()
         return res
       } catch (err) {
-        console.log(err)
       }
   }
 
   async results(): Promise<Results[]> {
-    // return await this.assessRepository.find();
-    /**Previously implemented logic by TM */
      return await this.resultRepository.find({
        relations: ['assessment'],
      });
     
-    /**END returns 102 records */
    
   }
 
@@ -697,17 +612,13 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    }
 
   async findByAllAssessmentData(): Promise<MethodologyAssessmentParameters[]> {
-  //  return await this.repo.find();
     return this.repo.find({
       relations: ['assessment', 'methodology', 'category', 'characteristics', 'institution', 'status'],
     });
   }
 
-  //@UseGuards(JwtAuthGuard)
   async AssessmentDetails(): Promise<Assessment[]> {
     let user = this.userService.currentUser();
-   // console.log("ussssser : ",(await user).fullname, "and ", (await user).username, "Id :", (await user).id , "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
-
       let res = this.assessmentRepository.find({
         relations: [ 'methodology', 'climateAction','user'],
       });
@@ -733,8 +644,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
    
     async AssessmentDetailsforTool(tools: string[]): Promise<any[]> {
       let user = this.userService.currentUser();
-      console.log("ussssser : ", (await user).fullname, "and ", (await user).username, "Id :", (await user).id, "user Type", (await user)?.userType?.name, "country ID :", (await user)?.country?.id)
-  
       let res = this.assessmentRepository.find({
         relations: ['methodology', 'climateAction', 'user'],
       });
@@ -761,32 +670,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       } 
 
   async findAllPolicyBarriers(): Promise<any[]> {
-    // const policyBarriers = await this.policyBarrierRepository.find({
-    //   relations: ['climateAction', 'barriers'],
-    //   select: ['id'],
-    //   join: {
-    //     alias: 'policyBarriers',
-    //     leftJoinAndSelect: {
-    //       climateAction: 'policyBarriers.climateAction',
-    //     },
-    //   },
-    // });
-  
-    // return policyBarriers.map((pb) => ({
-    //   id: pb.id,
-    //   policyName: pb.climateAction?.policyName,
-    //   // barriers: pb.barriers,
-    //   editedBy: pb.editedBy,
-    // }));
     return []
   }
   
 
-
-/*   async dataCollectionInstitution(): Promise<Institution[]> {
-    return await this.institutionRepository.find();
-
-  } */
 
   async findAllBarrierData(assessmentId: number): Promise<BarriersCharacteristics[]> {
     return this.barrierCharacterRepo.find({
@@ -804,8 +691,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
   
   async findAllIndicators(): Promise<Indicators[]> {
-   // return this.indicatorRepository.find();
-
     const indicators = await this.indicatorRepository.createQueryBuilder('indicators')
         .leftJoinAndSelect('indicators.characteristics', 'characteristics')
         .getMany();
@@ -845,63 +730,60 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let result = await data.getMany()
     for await (let ch of result) {
-      let isGHG: boolean = false
-      let isSDG: boolean = false
-      // ch.name = ch.code === 'LONG_TERM' ? 'Macro Level' : (ch.code === 'MEDIUM_TERM' ? 'Medium Level' : (ch.code === 'SHORT_TERM' ? 'Micro Level' : ch.name))
-      // ch.code = ch.code === 'LONG_TERM' ? 'MACRO_LEVEL' : (ch.code === 'MEDIUM_TERM' ? 'MEDIUM_LEVEL' : (ch.code === 'SHORT_TERM' ? 'MICRO_LEVEL' : ch.code))
-      let res = this.mapCharacteristicNames(ch)
-      console.log(ch.name)
-      ch.name = res.name
-      ch.code = res.code
-      let cat = response.find(o => o.code === ch.category.code)
-      let cmRes = new CMResultDto()
-      cmRes.characteristic = ch 
-      ch.category.code.indexOf('GHG') !== -1 ? isGHG = true : isSDG = true
-      cmRes.isGHG = isGHG
-      cmRes.isSDG = isSDG
+      let isGHG: boolean = false;
+      let isSDG: boolean = false;
+      let res = this.mapCharacteristicNames(ch);
+      ch.name = res.name;
+      ch.code = res.code;
+      let cat = response.find(o => o.code === ch.category.code);
+      let cmRes = new CMResultDto();
+      cmRes.characteristic = ch ;
+      ch.category.code.indexOf('GHG') !== -1 ? isGHG = true : isSDG = true;
+      cmRes.isGHG = isGHG;
+      cmRes.isSDG = isSDG;
       if (cat) {
-        cat.results.push(cmRes)
+        cat.results.push(cmRes);
       } else {
-        let obj = new OutcomeCategory()
-        obj.name = this.mapCategoryNames(ch.category)
-        obj.code = ch.category.code
-        obj.method = ch.category.code.indexOf('SCALE') !== -1 ? 'SCALE' : 'SUSTAINED'
-        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : (ch.category.code.indexOf('ADAPTATION') !== -1 ? 'ADAPTATION' : 'SD')
-        obj.results = [cmRes]
-        response.push(obj)
+        let obj = new OutcomeCategory();
+        obj.name = this.mapCategoryNames(ch.category);
+        obj.code = ch.category.code;
+        obj.method = ch.category.code.indexOf('SCALE') !== -1 ? 'SCALE' : 'SUSTAINED';
+        obj.type = ch.category.code.indexOf('GHG') !== -1 ? 'GHG' : (ch.category.code.indexOf('ADAPTATION') !== -1 ? 'ADAPTATION' : 'SD');
+        obj.results = [cmRes];
+        response.push(obj);
       }
     }
 
     response = response.map(res => {
-      if (res.method === 'SCALE' && res.type === 'GHG') res.order = 1
-      else if (res.method === 'SUSTAINED' && res.type === 'GHG') res.order = 2
-      else if(res.method === 'SCALE' && res.type === 'SD') res.order = 3
-      else if (res.method === 'SUSTAINED' && res.type === 'SD') res.order = 4
-      else if (res.method === 'SCALE' && res.type === 'ADAPTATION') res.order = 5
-      else if (res.method === 'SUSTAINED' && res.type === 'ADAPTATION') res.order = 6
-      else res.order = 0
-      return res
+      if (res.method === 'SCALE' && res.type === 'GHG') res.order = 1;
+      else if (res.method === 'SUSTAINED' && res.type === 'GHG') res.order = 2;
+      else if(res.method === 'SCALE' && res.type === 'SD') res.order = 3;
+      else if (res.method === 'SUSTAINED' && res.type === 'SD') res.order = 4;
+      else if (res.method === 'SCALE' && res.type === 'ADAPTATION') res.order = 5;
+      else if (res.method === 'SUSTAINED' && res.type === 'ADAPTATION') res.order = 6;
+      else res.order = 0;
+      return res;
      })
 
-     response.sort((a,b) => a.order - b.order)
+     response.sort((a,b) => a.order - b.order);
 
-    return response
+    return response;
   }
 
   mapCategoryNames(category: Category){
     switch (category.code) {
       case 'SCALE_GHG':
-        return 'GHGs <br> Scale of outcomes'
+        return 'GHGs <br> Scale of outcomes';
       case 'SCALE_SD':
-        return 'SDGs <br> Scale of outcomes'
+        return 'SDGs <br> Scale of outcomes';
       case 'SUSTAINED_GHG':
-        return 'Time frame <br> outcome is sustained'
+        return 'Time frame <br> outcome is sustained';
       case 'SUSTAINED_SD':
-        return 'Time frame <br> outcome is sustained'
+        return 'Time frame <br> outcome is sustained';
       case 'SCALE_ADAPTATION':
-        return 'Adaptation co-benifits <br> Scale of outcomes'
+        return 'Adaptation co-benifits <br> Scale of outcomes';
       case 'SUSTAINED_ADAPTATION':
-        return 'Time frame <br> outcome is sustained'
+        return 'Time frame <br> outcome is sustained';
     }
   }
 
@@ -1020,7 +902,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async findAllCharacteristics(): Promise<Characteristics[]> {
-  //  return this.characteristicsRepository.find();
     return this.characteristicsRepository.createQueryBuilder('characteristics')
     .leftJoinAndSelect('characteristics.category', 'category')
     .where('characteristics.category_id = category.id')
@@ -1053,35 +934,17 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
 
   async updateEnterDataValue(
-    /// Unit Conversion Applied
     updateValueDto: UpdateValueEnterData,
   ): Promise<boolean> {
     let dataEnterItem = await this.repo.findOne({
       where: { id: updateValueDto.id },
     });
-    console.log('dataEnterItem+++',dataEnterItem)
     if (dataEnterItem) {
       dataEnterItem.score = updateValueDto.value;
       if(updateValueDto.assumptionParameter != null)
       {
         dataEnterItem.enterDataAssumption = updateValueDto.assumptionParameter;
       }
-      // dataEnterItem.uomDataEntry = updateValueDto.unitType;
-      // if (dataEnterItem.uomDataEntry != dataEnterItem.uomDataRequest) {
-      //   let ratioItem = await this.unitConversionRepository.findOne({
-      //     where: {
-      //       fromUnit: updateValueDto.unitType,
-      //       toUnit: dataEnterItem.uomDataRequest,
-      //     },
-      //   });
-      //   if (ratioItem) {
-      //     dataEnterItem.conversionValue = (
-      //       Number(updateValueDto.value) * ratioItem.conversionFactor
-      //     ).toString();
-      //   }
-      // } else {
-      //   dataEnterItem.conversionValue = updateValueDto.value;
-      // }
       this.repo.save(dataEnterItem);
       return true;
     }
@@ -1100,23 +963,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let dataEnterItem = await this.repo.findOne({
       where: { id: (await data).parameter.id }
     });
-    // dataEnterItem.value = updateValueDto.value;  // not comming value
     dataEnterItem.institution = institutionItem;
-    console.log('updateValueDto', updateValueDto);
-    console.log('institutionItem', institutionItem);
     this.repo.save(dataEnterItem);
 
-    // let template = 'Dear ' +
-    // institutionItem.name + ' '  +
-    // '<br/>Data request with following information has shared with you.'+
-    // ' <br/> We are assign  Data entry' ;
-
-    // this.emaiService.sendMail(
-    //   institutionItem.email,
-    //   'Assign  Data Entry',
-    //   '',
-    //   template,
-    // );
     return true;
   }
 
@@ -1129,7 +978,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         throw new InternalServerErrorException()
       }
     } catch(error){
-      console.log(error)
       throw new InternalServerErrorException()
     }
   }
@@ -1143,7 +991,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         throw new InternalServerErrorException()
       }
     } catch(error) {
-      console.log(error)
       throw new InternalServerErrorException()
     }
   }
@@ -1161,7 +1008,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     countryIdFromTocken:number
   ): Promise<any> {
 
-    console.log("getAssessmentForAssignVerifier")
 
     let data = this.assessmentRepository
       .createQueryBuilder('assessment')
@@ -1187,7 +1033,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .orderBy('assessment.verificationDeadline', 'DESC')
       .groupBy('assessment.id');
 
-    console.log('AssessmentFor Verifier', data.getSql());
 
     let result = await paginate(data, options);
     return result;
@@ -1196,26 +1041,20 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   async acceptDataVerifiersForIds(
     updateDataRequestDto: DataVerifierDto,
   ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.assessmentRepository.findOne({ where: { id: id } });
       let originalStatus = dataRequestItem.verificationStatus;
-      // dataRequestItem.verificationStatus = updateDataRequestDto.status;
       dataRequestItem.verificationDeadline = updateDataRequestDto.deadline;
       dataRequestItem.verificationUser = updateDataRequestDto.userId;
 
       let user=await this.userService.findOne({where:{id:updateDataRequestDto.userId}});
-      // let user = await this.userRepo.findOne({where:{id:updateDataRequestDto.userId}})
       var template: any;
         template =
           'Dear ' +
           user.firstName + ' ' + user.lastName+
-          ' <br/> Data request with following information has shared with you.' +
-          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-          // '<br/> value -:' + dataRequestItem.parameter.value +
-          // '<br> comment -: ' + updateDataRequestDto.comment;
+          ' <br/> Data request with following information has shared with you.' 
       
           this.emaiService.sendMail(
             user.email,
@@ -1223,20 +1062,9 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
             '',
             template,
           );
-      // dataRequestItemList.push(dataRequestItem);
       this.assessmentRepository.save(dataRequestItem).then((res) => {
-        // this.parameterHistoryService.SaveParameterHistory(
-        //   res.id,
-        //   ParameterHistoryAction.AssignVerifier,
-        //   'AssignVerifier',
-        //   '',
-        //   res.verificationStatus.toString(),
-        //   originalStatus.toString(),
-        // );
       });
     }
-
-    // this.repo.save(dataRequestItemList);
 
     return true;
   }
@@ -1259,13 +1087,10 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   }
 
   async updateIndicatorValue(req: UpdateIndicatorDto) {
-    // console.log("data1",req)
     let data =req.data
     for (let x of data) {
-      console.log("data",x)
       
       if(x.indicatorValue && !x.parameter){
-        console.log("data",x)
         await this.repo
         .createQueryBuilder()
         .update(MethodologyAssessmentParameters)
@@ -1274,28 +1099,22 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         .andWhere(new Brackets(qb => {
           qb.where("characteristics_id = :char_id", { char_id: x.id })
         }))
-        // .andWhere("characteristics_id = :id", { id: x.id })
         .execute()
       }
       if(x.indicator && !x.indicatorValue && x.parameters.length!==0){
-        console.log("data with param",x)
         let assessID = req.assessmentId
         let a= await this.assessmentRepository.findOneBy({id:assessID});
         let meth = x.selectedMethodology
         let request = new ParameterRequestDto()
-        console.log("meth_code",meth.meth_code)
         request.equation =meth.meth_code;
         request.data = x.parameters;
         let response = await axios.post(MainCalURL + '/calculate', request);
-        console.log("======== response", response.data.result)
         let indicatorValue:number = response.data.result;
         for (let paramData of x.parameters) {
-          console.log("pramdata",paramData.id)
           let  paramResult = new CalculationResults ();
           
           paramResult.assessment=a;
           paramResult.characteristics =x.id;
-          // paramResult.parameter =await this.methParameterRepo.findOneBy({id:paramData.id});
           paramResult.parameter = paramData.id;
           paramResult.result= indicatorValue;
           paramResult.value =paramData.value;
@@ -1312,7 +1131,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         .andWhere(new Brackets(qb => {
           qb.where("characteristics_id = :char_id", { char_id: x.id })
         }))
-        // .andWhere("characteristics_id = :id", { id: x.id })
         .execute()
       }
      
@@ -1345,8 +1163,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       relations: ['assessment'],
     });
   
-    // const filteredResults = results.filter(result => result.assessment?.tool === tool && result.averageProcess !== null && result.averageOutcome !== null);
-  
     const formattedResults = filteredResults.map(result => {
       return {
         data: result.assessment.climateAction.policyName,
@@ -1364,17 +1180,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
-    
     const results = await this.assessmentRepository.find({
       relations: ['climateAction','user']
     });
   
-    //  let filteredResults = results.filter(result => result.tool === tool && result.tc_value !== null);
      let filteredResults = results.filter(result => result.tool === tool );
-     console.log("current user:",currentUser?.userType?.name)
      if(isUserExternal){
-      console.log("external user results",currentUser?.id)
       filteredResults= filteredResults.filter(result => 
         
         { 
@@ -1387,9 +1198,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
      else {
       filteredResults= filteredResults.filter(result => {
         
-        // console.log(result?.climateAction?.country,currentUser?.country?.id)
         if(result?.climateAction?.country?.id===currentUser?.country?.id){
-          // console.log(result?.id,result?.climateAction?.country?.id,currentUser?.country?.id)
           return result;
         }})
      }

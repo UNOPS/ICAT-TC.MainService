@@ -29,24 +29,6 @@ export class Sector extends BaseTrackingEntity{
   @OneToMany(() => CountrySector, countrySector => countrySector.sector)
   countrysector: CountrySector[];
   
-  
-
-
-
-  
-
-  
-  /*
-  @ManyToMany((type) => Sector, {
-    eager: true,
-    cascade: false,
-  })
-  @JoinTable({ name: 'country_sector' })
-  Sector?: Sector[];*/
-
-  //new added
-  
-
 
   
 }

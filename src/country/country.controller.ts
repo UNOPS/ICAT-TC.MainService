@@ -53,18 +53,11 @@ export class CountryController implements CrudController<Country>{
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Country,
   ) {
-    console.log('connn',dto)
     let coun_sec = dto.countrysector;
 
     let old_countrysector = (await this.CountryRepo.findOne({where:{id:dto.id}})).countrysector;
-
-    // console.log("++++",old_countrysector)
-    // let sec = old_countrysector.filter((a) => !coun_sec.some((b) => a.sectorId == b.sector.id));
-    // console.log("++",sec)
-
-    // sec.forEach((a) => this.CountrySectorRepo.delete(a.id));
     let coun = await this.base.updateOneBase(req, dto);
-    coun_sec.forEach((a) => { a.country.id = dto.id, this.CountrySectorRepo.save(a) })
+    coun_sec.forEach((a) => { a.country.id = dto.id, this.CountrySectorRepo.save(a) });
 
    
     return coun;
@@ -81,8 +74,7 @@ export class CountryController implements CrudController<Country>{
 
     dto.isSystemUse = true;
 
-    var x: number = 0
-    console.log('connn', dto)
+    var x: number = 0;
     dto.countrysector.map((a) => {
 
       a.country.id = dto.id;
@@ -96,7 +88,6 @@ export class CountryController implements CrudController<Country>{
         let lms = await this.CountrySectorRepo.save(await a);
       });
     } catch (error) {
-      console.log(error);
     }
 
     let coun = await this.base.createOneBase(req, dto);
@@ -120,14 +111,13 @@ export class CountryController implements CrudController<Country>{
   async syncCountry(
     @Body() dto: any,
   ): Promise<any> {
-    this.CountryRepo.save(dto)
+    this.CountryRepo.save(dto);
   }
 
   @Get('country-sector')
   async getCountrySector(
     @Query('countryId') countryId: number,
   ): Promise<any> {
-    console.log("country")
     return await this.service.getCountrySector(countryId);
   }
 
@@ -135,7 +125,7 @@ export class CountryController implements CrudController<Country>{
   async findall():Promise<Country[]>{
     let allCountries= await this.CountryRepo.find();
     let countriesWithoutzero=allCountries.filter(object => {
-      return object.id !== 0;})
+      return object.id !== 0;});
     return countriesWithoutzero;
   }
 

@@ -1,4 +1,3 @@
-import { User } from 'src/users/entity/user.entity';
 import {
   Body,
   Controller,
@@ -55,7 +54,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
 
 
 
-  // @UseGuards(LocalAuthGuard,JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.DATA_COLLECTION_TEAM]))
   @Get('getDateRequestToManageDataStatus')
   async getDateRequestToManageDataStatus(
     @Request() request,
@@ -129,7 +127,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
     let countryIdFromTocken:number;
 
     [countryIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId])
-    console.log("*******************************")
     return await this.service.getNewDataRequestForClimateList(
       {
         limit: limit,
@@ -305,9 +302,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     let audit: AuditDto=new AuditDto();
     audit.action='Deadline Updated';
     audit.comment='Deadline Updated';
-    audit.actionStatus ='Updated'
-    // this.auditService.create(audit);
-    console.log(updateDeadlineDto);
+    audit.actionStatus ='Updated';
     return this.service.updateDeadlineForIds(updateDeadlineDto);
   }
 
@@ -319,25 +314,19 @@ export class ParameterRequestController implements CrudController<ParameterReque
     let audit: AuditDto=new AuditDto();
     audit.action='Deadline Updated';
     audit.comment=updateDeadlineDto.comment+' Updated';
-    audit.actionStatus ='Updated'
-    // this.auditService.create(audit);
-    console.log(updateDeadlineDto);
+    audit.actionStatus ='Updated';
     return this.service.updateDataEntryDeadlineForIds(updateDeadlineDto);
   }
 
-  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.DATA_ENTRY_OPERATOR,LoginRole.INSTITUTION_ADMIN]))
   @Put('accept-review-data')
   acceptReviewData(
     @Body() updateDeadlineDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    console.log("================",updateDeadlineDto);
     let audit: AuditDto=new AuditDto();
     audit.action='Review Data Accepted';
     audit.comment=updateDeadlineDto.comment+' Accepted';
-    audit.actionStatus ='Approved'
+    audit.actionStatus ='Approved';
   
-    // this.auditService.create(audit);
-    
     return this.service.acceptReviewDataForIds(updateDeadlineDto);
   }
 
@@ -350,10 +339,8 @@ export class ParameterRequestController implements CrudController<ParameterReque
     let audit: AuditDto=new AuditDto();
     audit.action='Review Data Rejected';
     audit.comment=updateDeadlineDto.comment+' Rejected';
-    audit.actionStatus ='Rejected'
+    audit.actionStatus ='Rejected';
   
-    // this.auditService.create(audit);
-    console.log("==========",updateDeadlineDto);
     return this.service.rejectReviewDataForIds(updateDeadlineDto);
   }
 
@@ -368,8 +355,6 @@ export class ParameterRequestController implements CrudController<ParameterReque
     audit.comment = updateDeadlineDto.comment + ' Rejected';
     audit.actionStatus = 'Rejected';
 
-    // this.auditService.create(audit);
-    console.log("==========",updateDeadlineDto);
     return this.service.rejectEnterDataForIds(updateDeadlineDto);
   }
 
@@ -380,9 +365,7 @@ export class ParameterRequestController implements CrudController<ParameterReque
     
     
   ): Promise<any> {
-    return await this.service.getClimateActionByDataRequestStatus(
-     
-    );
+    return await this.service.getClimateActionByDataRequestStatus();
   }
 
 
@@ -394,20 +377,16 @@ export class ParameterRequestController implements CrudController<ParameterReque
     
     
   ): Promise<any> {
-    return await this.service.getClimateActionByDataRequestStatusSix(
-     
-    );
+    return await this.service.getClimateActionByDataRequestStatusSix();
   }
 
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.INSTITUTION_ADMIN]))
-
   @Post('update-institution/:id')
   updateInstitution(
     @Query('id') id: number,
     
     @Body() updateValueDto: ParameterRequest,
   ): Promise<boolean> {
-    // console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
     return this.service.updateInstitution(updateValueDto,id);
   }
 

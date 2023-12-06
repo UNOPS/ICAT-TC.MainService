@@ -69,19 +69,12 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     return await this.service.getResults(assessmentId)
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post('saveTcValue')
-  // async saveTcValue(@Query('assessmentId') assessmentId: number){
-  //   return await this.service.saveTcValue(assessmentId)
-  // }
 
   @Post('upload-file')
   @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
-    return {fileName: files[0].filename}
-    // let savedFiles = await Promise.all(files.map(file => this.saveFile(file)));
-    // return savedFiles;
+    return {fileName: files[0].filename};
   }
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')

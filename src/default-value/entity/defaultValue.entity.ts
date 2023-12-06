@@ -44,11 +44,8 @@ export class DefaultValue extends BaseTrackingEntity {
   @Column({ default: null })
   isMac: Number; //1
   
-  @Column({ default: null })  // baseLine , project
+  @Column({ default: null }) 
   scenario: string;
 
   name: string;
-  //   public setName() {
-  //     this.name = `${this.value} - ${this.unit} - ${this.administrationLevel} - ${this.source}  - ${this.year}`;
-  //   }
 }

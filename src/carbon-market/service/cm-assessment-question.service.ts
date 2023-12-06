@@ -20,7 +20,6 @@ import { UsersService } from "src/users/users.service";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
-import { PortfolioSdg } from "src/investor-tool/entities/portfolio-sdg.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -51,12 +50,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return await this.repo.save(question)
   }
 
-  /**
-   * 
-   * @param result 
-   * @param assessment 
-   * For passing answers and answers with 0 score set weight in answer table as 0.
-   */
 
   async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean,name:string,type:string, score = 1) {
     let a_ans: any[]
@@ -65,16 +58,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let savedSdgs = []
     let exists = []
     let results = []
-    // if (isDraft) {
       results = [...result]
-    // } else {
-      // for await (let res of result) {
-      //   let ex = await this.assessmentQuestionRepo.find({where: {question: {code: res.question.code}, assessment: {id: assessment.id}}})
-      //   if ( ex.length === 0) {
-      //     results.push(res)
-      //   }
-      // }
-    // }
     
     for await (let res of results) {
       if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
@@ -122,7 +106,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       try {
         q_res = await this.repo.save(ass_question)
       } catch (err) {
-        console.log(err)
         return new InternalServerErrorException()
       }
 
@@ -137,16 +120,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         ass_answer.institution = undefined
         if (res.answer && res.answer.id !== undefined) {
           ass_answer.answer = res.answer
-          // ass_answer.score = (score * res.answer.score_portion * res.answer.weight / 100 ) / 4 //previous calculation
           ass_answer.score = res.answer.score_portion * res.answer.weight / 100
         }
         if (res.selectedScore && res.selectedScore.value) {
           if (res.isGHG || res.isAdaptation) {
-            // ass_answer.score = (res.selectedScore.value / 6) * (10 / 100) //previous calculation
             ass_answer.score = (res.selectedScore.value / 6)
           }
           if (res.isSDG) {
-            // ass_answer.score = (res.selectedScore.value / 6) * (2.5 / 100) * (10 / 100)  //previous calculation
             ass_answer.score = (res.selectedScore.value / ((selectedSdgs.length + exists.length )* 3))
           }
         }
@@ -171,26 +151,21 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
       a_ans = await this.assessmentAnswerRepo.save(_answers)
     } catch (err) {
-      console.log(err)
       return new InternalServerErrorException()
     }
-    /*   let result = new Results()
-      result.assessment = assessment;
-      await this.resultsRepo.save(result)  */
-    await this.saveDataRequests(_answers)
-    // }
+    await this.saveDataRequests(_answers);
 
     if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
-      assessment.isDraft = isDraft
-      this.assessmentRepo.save(assessment)
-      let resultObj = new Results()
-      let res = await this.calculateResult(assessment.id)
+      assessment.isDraft = isDraft;
+      this.assessmentRepo.save(assessment);
+      let resultObj = new Results();
+      let res = await this.calculateResult(assessment.id);
       resultObj.assessment = assessment;
-      resultObj.averageProcess = res.process_score
-      resultObj.averageOutcome = res.outcome_score?.outcome_score
-      await this.resultsRepo.save(resultObj)
+      resultObj.averageProcess = res.process_score;
+      resultObj.averageOutcome = res.outcome_score?.outcome_score;
+      await this.resultsRepo.save(resultObj);
 
-      this.saveTcValue(assessment.id, res)
+      this.saveTcValue(assessment.id, res);
     }
 
 
@@ -198,45 +173,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return a_ans
   }
 
-  // async calculateResult(assessmentId: number) {
-  //   let tc_score = 0
-  //   let questions = await this.assessmentQuestionRepo
-  //     .createQueryBuilder('aq')
-  //     .innerJoin(
-  //       'aq.assessment',
-  //       'assessment',
-  //       'assessment.id = aq.assessmentId'
-  //     )
-  //     .where('assessment.id = :id', { id: assessmentId })
-  //     .getMany()
-  //   if (questions.length > 0) {
-  //     let qIds: number[] = questions.map((q) => q.id)
-  //     let answers = await this.assessmentAnswerRepo
-  //       .createQueryBuilder('ans')
-  //       .innerJoin(
-  //         'ans.assessment_question',
-  //         'question',
-  //         'question.id = ans.assessmentQuestionId'
-  //       )
-  //       .where('question.id In (:id)', { id: qIds })
-  //       .getMany()
-  //     answers.forEach(ans => {
-  //       tc_score += ans.score
-  //     })
-  //     let score = tc_score * 100
-  //     let res
-  //     if (score > 70 || score === 70){
-  //       res =  score.toFixed(3) + '% - Highly transformational activity'
-  //     } else if (score > 30 || score === 30 || score < 69 || score === 69){
-  //       res =  score.toFixed(3) + '% - Mild/medium transformation potential'
-  //     } else {
-  //       res =  score.toFixed(3) + '% - Low transformation potential'
-  //     }
-  //     return {score: res}
-  //   } else {
-  //     return 'No questions found for this assessment'
-  //   }
-  // }
 
   async calculateResult(assessmentId: number): Promise<CMScoreDto> {
     let response: CMScoreDto = new CMScoreDto()
@@ -295,18 +231,18 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessmentAnswers.assessmentQuestionId = aq.id'
       )
       .where('assessment.id = :id and category.type = "outcome"', { id: assessmentId })
-      .getMany()
+      .getMany();
 
     if (cmAssessmentQuestions_process.length > 0) {
-      response.process_score = await this.calculateProcessResult(cmAssessmentQuestions_process)
+      response.process_score = await this.calculateProcessResult(cmAssessmentQuestions_process);
     } else {
-      response.message += 'No questions found for process. '
+      response.message += 'No questions found for process. ';
     }
 
     if (cmAssessmentQuestions_outcome.length > 0) {
-      response.outcome_score = await this.calculateOutcomeResult(cmAssessmentQuestions_outcome, assessmentId)
+      response.outcome_score = await this.calculateOutcomeResult(cmAssessmentQuestions_outcome, assessmentId);
     } else {
-      response.message += 'No questions found for outcome. '
+      response.message += 'No questions found for outcome. ';
     }
 
     return response
@@ -350,17 +286,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     for (let key of Object.keys(obj)) {
       let score = null
       obj[key].characteristics.forEach(ch => {
-        // score === null ? (ch.score === null ? score === null : score === ch.score) : score += ch.score
         if (ch.relevance !== 0) {
           score += ch.score
         }
       })
-      // let _score = obj[key].characteristics.reduce((accumulator, object) => {
-      //   accumulator = null
-      //   accumulator === null ? (object.score === null ? null : accumulator = object.score) :
-      //     accumulator + object.score;
-      //   return accumulator;
-      // }, 0);
       resObj[key] = { score: score, weight: obj[key].weight }
     }
 
@@ -545,44 +474,35 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let criteria = []
       let sdgs = []
       for await (let ans of answers) {
-        let obj = new OutcomeResult()
-        obj.characteristic = ans.assessment_question?.characteristic?.name
-        obj.ch_code = ans.assessment_question?.characteristic?.code
-        obj.question = ans?.assessment_question?.question?.label
-        obj.score = ans?.answer?.label
-        obj.justification = ans?.assessment_question?.comment
-        obj.document = ans?.assessment_question?.uploadedDocumentPath
-        obj.category = ans?.assessment_question?.characteristic?.category
-        obj.SDG = 'SDG ' + ans?.assessment_question?.selectedSdg?.number + ' - ' + ans?.assessment_question?.selectedSdg?.name
-        obj.outcome_score = ans?.selectedScore
-        obj.weight = ans.assessment_question?.characteristic?.category.cm_weight
-        obj.starting_situation = ans?.assessment_question?.startingSituation
-        obj.expected_impact = ans?.assessment_question?.expectedImpact
-        obj.SDG_indicator = ans?.assessment_question?.sdgIndicator
-        obj.adaptation = ans?.assessment_question?.adaptationCoBenifit
-        // if (obj?.category?.code == 'TECHNOLOGY') {
-        //   processData.technology.push(obj)
-        // }
-        // else if (obj?.category?.code == 'INCENTIVES') {
-        //   processData.incentives.push(obj)
-        // }
-        // else if (obj?.category?.code == 'NORMS') {
-        //   processData.norms.push(obj)
-        // }
-        if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg)
+        let obj = new OutcomeResult();
+        obj.characteristic = ans.assessment_question?.characteristic?.name;
+        obj.ch_code = ans.assessment_question?.characteristic?.code;
+        obj.question = ans?.assessment_question?.question?.label;
+        obj.score = ans?.answer?.label;
+        obj.justification = ans?.assessment_question?.comment;
+        obj.document = ans?.assessment_question?.uploadedDocumentPath;
+        obj.category = ans?.assessment_question?.characteristic?.category;
+        obj.SDG = 'SDG ' + ans?.assessment_question?.selectedSdg?.number + ' - ' + ans?.assessment_question?.selectedSdg?.name;
+        obj.outcome_score = ans?.selectedScore;
+        obj.weight = ans.assessment_question?.characteristic?.category.cm_weight;
+        obj.starting_situation = ans?.assessment_question?.startingSituation;
+        obj.expected_impact = ans?.assessment_question?.expectedImpact;
+        obj.SDG_indicator = ans?.assessment_question?.sdgIndicator;
+        obj.adaptation = ans?.assessment_question?.adaptationCoBenifit;
+        if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg);
 
         if (obj?.category?.code == 'SCALE_GHG') {
-          outcomeData.scale_GHGs.push(obj)
+          outcomeData.scale_GHGs.push(obj);
         } else if (obj?.category?.code == 'SUSTAINED_GHG') {
-          outcomeData.sustained_GHGs.push(obj)
+          outcomeData.sustained_GHGs.push(obj);
         } else if (obj?.category?.code == 'SCALE_SD') {
-          outcomeData.scale_SDs.push(obj)
+          outcomeData.scale_SDs.push(obj);
         } else if (obj?.category?.code == 'SUSTAINED_SD') {
-          outcomeData.sustained_SDs.push(obj)
+          outcomeData.sustained_SDs.push(obj);
         } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
-          outcomeData.sustained_adaptation.push(obj)
+          outcomeData.sustained_adaptation.push(obj);
         } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
-          outcomeData.scale_adaptation.push(obj)
+          outcomeData.scale_adaptation.push(obj);
         }
       }
       answers2 = [
@@ -615,37 +535,37 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let docs = []
         let isPassing = true
         if (res.short_label) {
-          obj['section'] = res.section
-          obj['criteria'] = res.criteria
-          obj['satisfied'] = res.satisfied
-          obj['short_label'] = res.short_label
-          obj['code'] = res.question.code
+          obj['section'] = res.section;
+          obj['criteria'] = res.criteria;
+          obj['satisfied'] = res.satisfied;
+          obj['short_label'] = res.short_label;
+          obj['code'] = res.question.code;
         }
         if (res.relatedQuestions.length > 0 && res.short_label) {
           res.relatedQuestions?.map(q => {
-            let question = result.find(o => o.question.code === q)
+            let question = result.find(o => o.question.code === q);
             if (question){
-              if (isPassing) isPassing = question.isPassing
-              if (question.document) docs.push(question.document)
+              if (isPassing) isPassing = question.isPassing;
+              if (question.document) docs.push(question.document);
             }
           })
-          obj['isPassing'] = isPassing
-          obj['document'] = docs
-          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No'
+          obj['isPassing'] = isPassing;
+          obj['document'] = docs;
+          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No';
         } else if (res.short_label){
-          obj['isPassing'] = res.isPassing
-          if (res.document) docs.push(res.document)
-          obj['document'] = docs
-          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No'
+          obj['isPassing'] = res.isPassing;
+          if (res.document) docs.push(res.document);
+          obj['document'] = docs;
+          obj['hasEvidence'] = docs.length > 0 ? 'Yes' : 'No';
         }
-        if (obj['section']) result_final.push(obj)
+        if (obj['section']) result_final.push(obj);
       })
 
-    result_final.sort((a,b) => b.code - a.code)
+    result_final.sort((a,b) => b.code - a.code);
 
 
 
-      result_final = this.group(result_final, 'section')
+      result_final = this.group(result_final, 'section');
 
       return {
         questions:result,
@@ -654,7 +574,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         processData: await this.getProcessData(assessmentId),
         outComeData: outcomeData,
         sdgs: [...new Map(sdgs.map((item) => [item["id"], item])).values()]
-      }
+      };
     }
   }
 
@@ -663,13 +583,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     assessmentAnswers.forEach(ans => {
       if (criterias[ans.assessment_question.question.criteria.id] !== undefined) {
         if (criterias[ans.assessment_question.question.criteria.id]) {
-          criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing
+          criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing;
         }
       } else {
-        criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing
+        criterias[ans.assessment_question.question.criteria.id] = ans.answer.isPassing;
       }
     })
-    return criterias
+    return criterias;
   }
 
   async getProcessData(assessmentId: number) {
@@ -708,49 +628,49 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'question.id = answer.questionId'
       )
       .where('assessment.id = :id and category.type = "process"', { id: assessmentId })
-      .getMany()
+      .getMany();
 
-    let categories = cmAssessmentQuestions.map(q => q.characteristic.category)
+    let categories = cmAssessmentQuestions.map(q => q.characteristic.category);
     let uniqueCats = [
       ...new Map(categories.map((item) => [item["code"], item])).values(),
     ];
-    let data = []
+    let data = [];
     let maxLength = 0;
 
     for (let cat of uniqueCats) {
-      let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code)
-      let chs = this.group(qs, 'characteristic', 'code')
+      let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code);
+      let chs = this.group(qs, 'characteristic', 'code');
       let ch_data = Object.keys(chs).map(ch => {
         if (chs[ch].length > maxLength) {
           maxLength = chs[ch].length;
         }
-        let _obj = new CharacteristicProcessData()
-        _obj.name = chs[ch][0].characteristic.name
-        _obj.code = chs[ch][0].characteristic.code
-        _obj.relevance = chs[ch][0].relevance
-        _obj.weight = chs[ch][0].characteristic.cm_weight
-        let questions = []
-        let raw_questions = []
-        let score = 0
+        let _obj = new CharacteristicProcessData();
+        _obj.name = chs[ch][0].characteristic.name;
+        _obj.code = chs[ch][0].characteristic.code;
+        _obj.relevance = chs[ch][0].relevance;
+        _obj.weight = chs[ch][0].characteristic.cm_weight;
+        let questions = [];
+        let raw_questions = [];
+        let score = 0;
         for (let q of chs[ch]) {
-          let o = new QuestionData()
-          o.question = q.assessmentAnswers[0]?.answer?.question.label
-          o.justification = q?.comment
-          o.weight = q.assessmentAnswers[0]?.answer?.weight
-          o.score = q.assessmentAnswers[0]?.answer?.score_portion
-          o.label = q.assessmentAnswers[0]?.answer?.label
-          o.document = q.uploadedDocumentPath
-          score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)))
-          questions.push(o)
-          raw_questions.push(o)
+          let o = new QuestionData();
+          o.question = q.assessmentAnswers[0]?.answer?.question.label;
+          o.justification = q?.comment;
+          o.weight = q.assessmentAnswers[0]?.answer?.weight;
+          o.score = q.assessmentAnswers[0]?.answer?.score_portion;
+          o.label = q.assessmentAnswers[0]?.answer?.label;
+          o.document = q.uploadedDocumentPath;
+          score = score + (+_obj.relevance === 0 ? 0 : (+_obj.relevance === 1 ? Math.round(+o.score * +o.weight / 2 / 100) : Math.round(+o.score * +o.weight / 100)));
+          questions.push(o);
+          raw_questions.push(o);
         }
-        _obj.questions = questions
-        _obj.raw_questions = raw_questions
-        _obj.ch_score = Math.round(score)
-        return _obj
+        _obj.questions = questions;
+        _obj.raw_questions = raw_questions;
+        _obj.ch_score = Math.round(score);
+        return _obj;
       })
       let cat_score = ch_data.reduce((accumulator, object) => {
-        return accumulator + (object.ch_score * object.weight / 100)
+        return accumulator + (object.ch_score * object.weight / 100);
       }, 0);
       cat_score = Math.round(cat_score)
       data.push({
@@ -765,33 +685,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let chs = _data.characteristic.map(ch => {
         if (ch.questions.length < maxLength) {
           while (ch.questions.length < maxLength) {
-            ch.questions.push(new QuestionData())
+            ch.questions.push(new QuestionData());
           }
         }
         return ch
       })
-      return { name: _data.name, characteristic: chs, cat_score: _data.cat_score, weight: _data.weight }
+      return { name: _data.name, characteristic: chs, cat_score: _data.cat_score, weight: _data.weight };
     })
 
-    let guiding_questions = []
+    let guiding_questions = [];
 
     for (let i = 0; i < maxLength; i++) {
       let obj = {}
       data.map(_data => {
         _data.characteristic.map(ch => {
-          obj[ch.name + 'question'] = ch.questions[i].question
-          obj[ch.name + 'weight'] = ch.questions[i].weight
-          obj[ch.name + 'score'] = ch.questions[i].score
+          obj[ch.name + 'question'] = ch.questions[i].question;
+          obj[ch.name + 'weight'] = ch.questions[i].weight;
+          obj[ch.name + 'score'] = ch.questions[i].score;
         })
       })
-      guiding_questions.push(obj)
+      guiding_questions.push(obj);
     }
 
     let response = {
       data: data,
       guidingQuestions: guiding_questions
     }
-    return response
+    return response;
 
   }
 
@@ -835,14 +755,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         )
         .where('question.id In (:id)', { id: qIds })
         .getMany()
-      // answers.forEach(ans => {
-      //   tc_score += ans.score
-      // })
-      // let score = tc_score * 100
-      let score = (result.process_score + result.outcome_score?.outcome_score) / 2
+      let score = (result.process_score + result.outcome_score?.outcome_score) / 2;
       let update_score = {}
       if (result.process_score) {
-        update_score = { tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score }
+        update_score = { tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score };
       }
 
       if (update_score['tc_value']) {
@@ -851,7 +767,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           .update(Assessment)
           .set({ tc_value: score, process_score: result.process_score, outcome_score: result.outcome_score?.outcome_score })
           .where("id = :id", { id: assessmentId })
-          .execute()
+          .execute();
       }
 
     }
@@ -877,22 +793,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
-    let tool = 'CARBON_MARKET';
-    // const isUsersFilterByInstitute=currentUser?.userType?.name === 'Institution Admin'||currentUser?.userType?.name === 'Data Entry Operator'
+    let tool = 'CARBON_MARKET';;
 
     const results = await this.resultsRepo.find({
       relations: ['assessment',],
       order: {
         id: 'DESC'
       }
-    });
-    // let filteredResults =results
+    });;
     let filteredResults = results.filter(result => result?.assessment?.tool === tool);
 
     if (isUserExternal) {
       filteredResults = filteredResults.filter(result => {
         if (result.assessment?.user?.id === currentUser?.id) {
-          return result
+          return result;
         }
       })
 
@@ -905,13 +819,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       })
     }
 
-    const formattedResults = await Promise.all(filteredResults.map(async (result) => {
-      // const data = await this.calculateResult(result.id);
+    const formattedResults = await Promise.all(filteredResults.map(async (result) => {;
       return {
         assessment: result.id,
-        // process_score: result.assessment?.process_score,
         process_score: result.averageProcess,
-        // outcome_score: result.assessment?.outcome_score,
         outcome_score: result.averageOutcome,
         intervention: result.assessment.climateAction?.policyName,
         intervention_id: result.assessment.climateAction?.intervention_id
@@ -1027,7 +938,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     )
     .where('assessment.id = :id', {id: assessmentId})
 
-    return await data.getMany()
+    return await data.getMany();
   }
   async getDocumentListForReport(assessmentId:number):Promise<CMAssessmentQuestion[]>{
     let result =  await this.assessmentQuestionRepo
@@ -1055,51 +966,51 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     )
     .where('assessment.id = :id and aq.uploadedDocumentPath is not null ', { id: assessmentId })
     .getMany()
-    return result
+    return result;
   }
 }
 export class CharacteristicData {
-  characteristic: string
-  relevance: string
-  ch_weight: number
-  score: number
+  characteristic: string;
+  relevance: string;
+  ch_weight: number;
+  score: number;
 }
 
 export class QuestionData {
-  question: string = '-'
-  weight: string = '-'
-  score: string = '-'
-  justification ='-'
-  label:string=''
-  document:string=''
+  question: string = '-';
+  weight: string = '-';
+  score: string = '-';
+  justification ='-';
+  label:string='';
+  document:string='';
 }
 
 export class CharacteristicProcessData {
-  name: string
-  code: string
-  relevance: number
-  weight: number
-  score: number
-  ch_score: number
-  questions: QuestionData[]
-  raw_questions: QuestionData[]
+  name: string;
+  code: string;
+  relevance: number;
+  weight: number;
+  score: number;
+  ch_score: number;
+  questions: QuestionData[];
+  raw_questions: QuestionData[];
 }
 
 export class OutcomeResult {
-  characteristic: string
-  ch_code: string
-  question: string
-  score: string
-  justification: string
-  document: string
-  category: Category
-  SDG: string
-  outcome_score: string
-  weight: number
-  starting_situation: string
-  expected_impact: string
-  SDG_indicator: string
-  adaptation: string
+  characteristic: string;
+  ch_code: string;
+  question: string;
+  score: string;
+  justification: string;
+  document: string;
+  category: Category;
+  SDG: string;
+  outcome_score: string;
+  weight: number;
+  starting_situation: string;
+  expected_impact: string;
+  SDG_indicator: string;
+  adaptation: string;
 
 }
 

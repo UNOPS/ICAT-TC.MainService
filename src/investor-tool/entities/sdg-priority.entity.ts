@@ -10,17 +10,17 @@ export class SdgPriority extends BaseTrackingEntity{
     id: number;
 
     @Column({nullable: true})
-    priority: string //code
+    priority: string ;
 
     @Column({nullable: true})
-    value: number
+    value: number;
 
     @ManyToOne((type) => PortfolioSdg)
     @JoinColumn()
-    sdg: PortfolioSdg
+    sdg: PortfolioSdg;
 
     @ManyToOne((type) => Country)
     @JoinColumn()
-    country: Country
+    country: Country;
 
 }

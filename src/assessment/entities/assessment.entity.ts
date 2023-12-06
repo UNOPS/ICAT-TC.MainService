@@ -12,7 +12,6 @@ import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
 import { AssessmentBarriers } from "src/methodology-assessment/entities/assessmentbarriers.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 import { ApiHideProperty } from "@nestjs/swagger";
-import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { Results } from "src/methodology-assessment/entities/results.entity";

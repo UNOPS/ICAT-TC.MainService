@@ -40,39 +40,37 @@ export class ClimateAction extends BaseTrackingEntity {
   id: number;
 
   @Column()
-  policyName: string; // name of the policy
+  policyName: string; 
 
   @Column({ default: null })
-  description: string; // description of the policy
+  description: string; 
 
   @Column({ length: 50, default: null, nullable: true })
-  contactPersoFullName: string;  // full name
+  contactPersoFullName: string; 
 
   @Column({ length: 30, default: null, nullable: true })
-  email: string;  //email
+  email: string;
 
   @Column({ length: 30, default: null, nullable: true })
-  contactPersonDesignation: string; // designation
+  contactPersonDesignation: string;
 
   @Column({ default: null })
-  telephoneNumber: string;  // telephone number 
+  telephoneNumber: string; 
 
   @Column({ default: null })
-  mobileNumber: string;  // mobile number 
+  mobileNumber: string; 
 
   @Column({ default: null })
   typeofAction: string;
 
-  // @Column({length: 500, default: null, nullable: true  })
-  // defenitionofAssessment: string;
 
   @ManyToOne((type) => Institution, { cascade: false, nullable: true , eager:false})
   @JoinColumn()
-  mappedInstitution?: Institution;//
+  mappedInstitution?: Institution;
 
   @ManyToOne((type) => Country, { cascade: false ,eager:true})
   @JoinColumn({ name: 'countryId' })
-  country?: Country; // country of the policy
+  country?: Country; 
   
   @ManyToOne(() => Sector, { cascade: false })
   sector?: Sector;
@@ -80,10 +78,10 @@ export class ClimateAction extends BaseTrackingEntity {
  
 
   @ManyToOne(() => AggregatedAction, { cascade: false, nullable: true })
-  aggregatedAction: AggregatedAction; //ndc
+  aggregatedAction: AggregatedAction; 
 
   @ManyToOne(() => ActionArea, { cascade: false, nullable: true })
-  actionArea: ActionArea; // subndc
+  actionArea: ActionArea; 
 
   
 
@@ -91,29 +89,16 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn()
   projectStatus?: ProjectStatus;
 
-  // @Column({ default: null })
-  // policyScope: string;  //scope of the policy 
-
-  // @ManyToOne((type) => ProjectOwner, { cascade: false })
-  // @JoinColumn()
-  // projectOwner?: ProjectOwner;
-
-
 
   @Column({ default: null })
   acceptedDate: Date;
 
   @Column()
-  proposeDateofCommence: Date; // proposed date
-
-  // @Column({ default: null }) 
-  // duration: number;  //project duration 
+  proposeDateofCommence: Date; 
 
   @Column({ length: 500, default: null, nullable: true })
-  objective: string; // objectives of the policy
+  objective: string; 
 
-
-  //location
   @Column({ default: null, nullable: true })
   subNationalLevl1: string;
 
@@ -145,52 +130,8 @@ export class ClimateAction extends BaseTrackingEntity {
   geographicCoverage: string;
   
 
-  // outcome
-  // @Column({ length: 500, default: null, nullable: true })
-  // outcome: string;
-
-  // @Column({ length: 500, default: null, nullable: true })
-  // contextOfPolicy: string;
-
-  // @Column({ length: 500,default: null, nullable: true })
-  // intendedImpacts: string;
-
-  // @Column({ length: 500, default: null, nullable: true })
-  // adaptationBenefits: string;
-
-  // @Column({ length: 500, default: null })
-  // directSDBenefit: string;
-
-  // @Column({ length: 500, default: null })
-  // indirectSDBenefit: string;
-
-  //stakeholders
   @Column({ default: null })
   implementingEntity: string;
-
-  // @Column({ default: null })
-  // executingEntity: string;
-
-  // @Column({ length: 300, default: null })
-  // partiesInvolved?: string;
-
-  // @Column({ length: 300, default: null })
-  // beneficiaries: string;
-
-  // @ManyToOne((type) => FinancingScheme, {
-  //   cascade: false,
-  // })
-  // @JoinColumn()
-  // financingScheme?: FinancingScheme;
-
-  // @Column({ length: 100, default: null })
-  // donors: string;
-
-  // @Column({ length: 100, default: null })
-  // investors: string;
-
-  // @Column({ length: 300, default: null })
-  // fundingOrganization: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
   initialInvestment?: number;
@@ -198,16 +139,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
   tc_value?: number;
 
-  // @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-  // annualFunding?: number;
-
-  // @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-  // annualRevenue?: number;
-
-  // @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
-  // expectedRecurrentExpenditure;
-
-  //For mistgation actions - related to climate action table in future
 
 
   @ManyToOne((type) => ProjectApprovalStatus, { cascade: false,nullable: true })
@@ -222,9 +153,6 @@ export class ClimateAction extends BaseTrackingEntity {
 
   @Column({ default: null })
   isDelete: boolean;
-
-  // @Column({ length: 500, default: null, nullable: true })
-  // barriers: string;
   
   @Column({ length: 500, default: null, nullable: true })
   otherRelatedActivities: string;
@@ -232,12 +160,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ length: 500, default: null, nullable: true })
   actionJustification: string;
 
-  // @OneToMany(() => PolicyBarriers, policyBarriers => policyBarriers.climateAction)
-  // @JoinColumn()
-  // policyBarriers: PolicyBarriers[];
-
-
-  // new fields (2023/05/17)
   @OneToMany(() => PolicySector, policySector => policySector.intervention,{cascade: false, nullable: true,eager: true,})
   @JoinColumn()
     policySector: PolicySector[];
@@ -257,7 +179,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ default: null })
   dateOfCompletion: Date;
 
-  //vision for design
   @Column({ type: 'longtext', default: null, nullable: true })
   vision_long: string;
 
@@ -276,12 +197,9 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ type: 'longtext', default: null, nullable: true })
   change_in_system: string;
 
-  //location
-
   @Column({ length: 100, default: null, nullable: true })
   location_country: string;
 
-  //bottom
   @Column({ length: 500, default: null, nullable: true })
   related_policies: string;
 
@@ -303,8 +221,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({type: 'int', nullable: true,})
   isCity: number;
 
-
-  //institute addded 2023/07/06(TC-441)
   @Column({ length: 500, default: null, nullable: true })
   institute: string;
 
@@ -313,8 +229,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @JoinColumn({ name: 'user_id' })
   user?: User; 
 
-  // @ApiHideProperty()
-  // policy_sector:PolicySector[];
 
   @OneToMany(() => PolicySector, (as) => as.intervention, {
     cascade: false,

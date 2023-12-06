@@ -49,8 +49,6 @@ import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
 import { Indicators } from './methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
-// import {config} from './config';
-// import { DataRequestService } from './data-request/data-request.service';
 import {ParameterRequestController as DataRequestController } from './data-request/data-request.controller';
 import { ParameterRequestModule } from './data-request/data-request.module';
 import { QualityCheckService } from './quality-check/quality-check.service';
@@ -81,9 +79,6 @@ import { UserType } from './users/entity/user.type.entity';
 import { ReportModule } from './report/report.module';
 import { InvestorToolModule } from './investor-tool/investor-tool.module';
 import { InvestorTool } from './investor-tool/entities/investor-tool.entity';
-import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
-import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
-import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
 import { InvestorAssessment } from './investor-tool/entities/investor-assessment.entity';
 import { IndicatorDetails } from './investor-tool/entities/indicator-details.entity';
 import { InvestorQuestions } from './investor-tool/entities/investor-questions.entity';
@@ -167,31 +162,23 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
     AssessmentModule,
     InstitutionModule,
     SystemStatusModule,
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', '../static-files'),
-    //   renderPath: 'icatcountryportal',
-    //   exclude: ['/api*'],
-    //   serveStaticOptions: { index: false },
-
-    // }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.office365.com',
+        host: process.env.EMAIL_HOST, 
         port: 587,
         secure: false,
 
         auth: {
-          user: "no-reply-icat-ca-tool@climatesi.com",
-          pass: "ICAT2022tool",
+          user: process.env.EMAIL,
+          pass:  process.env.EMAIL_PASSWORD,
 
         },
-        // 'smtp://janiya.rolfson49@ethereal.email:T8pnMS7xzzX7k3QSkM@ethereal.email',
       },
       defaults: {
-        from: '"Admin" <no-reply-icat-ca-tool@climatesi.com>',
+        from: process.env.EMAIL,
       },
     }),
     ServeStaticModule.forRoot({
@@ -220,8 +207,6 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
     QualityCheckController,
     ParameterHistoryController,
     DefaultValueController,
-    // InstitutionCategoryController,
-    // UserController,
   ],
   providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
      ParameterHistoryService, DefaultValueService, MasterDataService],

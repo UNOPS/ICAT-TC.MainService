@@ -20,11 +20,6 @@ export class IndicatorDetails extends BaseTrackingEntity {
     @JoinColumn({ name: 'investorQuestions_id' })
     question: InvestorQuestions;
     
-    // @ManyToOne((type) => Institution, { cascade: false,nullable:true })
-    // @JoinColumn({ name: 'institution_id' })
-    // institution: Institution;
-
-
     @Column({ nullable: true })
     value: string;
     
@@ -35,12 +30,5 @@ export class IndicatorDetails extends BaseTrackingEntity {
 
     @Column({ nullable: true, length: 3000})
     justification: string;
-
-    // @ManyToOne((type) => InvestorTool, { cascade: false })
-    // @JoinColumn({ name: 'investorTool_id' })
-    // investorTool?: InvestorTool;
-
-    
-
 
 }

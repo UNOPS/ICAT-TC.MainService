@@ -52,7 +52,7 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   isMember: boolean;
 
-  @Column({ default: null })  // enum 
+  @Column({ default: null })
   countryStatus: countryStatus;
 
   @Column({ default: null })
