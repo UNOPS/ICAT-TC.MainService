@@ -72,14 +72,14 @@ export const config: ConnectionOptions = {
   port: 3306,
  
 
-//   username: 'root',
-//  password: 'pradeep123#',
+  username: 'root',
+ password: 'pradeep123#',
 // password: 'password',
-//  database: 'main',    
-
-username: 'root',
-password: '1997',
  database: 'tc-main',    
+
+// username: 'root',
+// password: '1997',
+//  database: 'tc-main',    
   
   autoLoadEntities: true, 
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
