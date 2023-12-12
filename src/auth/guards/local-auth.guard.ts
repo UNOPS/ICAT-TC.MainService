@@ -7,7 +7,7 @@ export class LocalAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const apiKeys = process.env.KEY;
+    const apiKeys = ['1234'];
     const request = context.switchToHttp().getRequest();
      const headerFieldValue = request.headers;
 

@@ -16,10 +16,7 @@ async function bootstrap() {
   app.enableCors(option);
  app.use(json({ limit: '100mb' }));
 
- app.use(function (request: Request, response: Response, next: NextFunction) {
-  response.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL);
-  next();
-});
+ 
 
  app.use(urlencoded({ extended: true, limit: '50mb' }));
   const options = new DocumentBuilder()

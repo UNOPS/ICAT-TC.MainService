@@ -131,8 +131,18 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       filter =
         '(ins.name LIKE :filterText )';
     }
-    let cou = await this.countryRepository.findOne({ where: { id: countryIdFromTocken } });
-    let num = await this.repo.find({ where: { name: filterText } })
+
+
+    let data = this.repo
+      .createQueryBuilder('ins')
+      .innerJoinAndMapOne(
+        'ins.country',
+        Country,
+        'cou',
+        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken}`,
+      )
+
+    let num = await data.getMany();
     return num;
   }
 

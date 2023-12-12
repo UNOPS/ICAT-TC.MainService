@@ -5,7 +5,7 @@ import { AuditService } from 'src/audit/audit.service';
 import { HttpService } from '@nestjs/axios';
 
 
-const AUTH_URL = process.env.AUTH_URL
+const AUTH_URL = process.env.AUTH_URL || 'http://localhost:7090'
 @Injectable()
 export class  AuthService {
   constructor(

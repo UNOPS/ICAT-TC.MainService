@@ -32,7 +32,7 @@ import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { ParameterRequestDto } from './dto/parameter-request.dto';
-const MainCalURL =  process.env.CALCULATION_URL + '/indicator_calculation';
+const MainCalURL =   'http://localhost:7100/indicator_calculation';
 import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { OutcomeCategory } from './dto/outcome-category.dto';

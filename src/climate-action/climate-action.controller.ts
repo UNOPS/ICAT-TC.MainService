@@ -273,7 +273,8 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     });
 
     let updateData = await this.base.updateOneBase(req, dto);
-    const baseurl = process.env.ClientURl;
+    const baseurl =this.configService.get<string>('ClientURl');
+
 
     if (
       dto.projectApprovalStatus &&
