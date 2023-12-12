@@ -17,8 +17,8 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { UsersService } from 'src/users/users.service';
 var multer = require('multer');
 
-const MainMethURL = process.env.CALCULATION_URL + '/methodology';
-const auditlogURL = process.env.AUDIT_URL +'/audit';
+const MainMethURL = 'http://localhost:7100/methodology';
+const auditlogURL = 'http://localhost:7000/audit';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
