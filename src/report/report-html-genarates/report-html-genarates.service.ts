@@ -35,10 +35,10 @@ export class ReportHtmlGenaratesService {
         
         <div class="col-1 align-self-center">  <img height="50px" src="" ></div>
         <div class="col-9  align-self-start"></div>
-        <div class="col-2 align-self-center"> #pageNumber# | Page</div>
+        <div class="col-2 align-self-center"> </div>
     </div>
   </div>`;
-
+//<div class="col-2 align-self-center"> #pageNumber# | Page</div>
     return {
       content: `<!DOCTYPE html>
         <html lang="en">
@@ -87,10 +87,10 @@ export class ReportHtmlGenaratesService {
         
         <div class="col-1 align-self-center">  <img height="50px" src="" ></div>
         <div class="col-9  align-self-start"></div>
-        <div class="col-2 align-self-center"> #pageNumber# | Page</div>
+        <div class="col-2 align-self-center"></div>
     </div>
   </div>`;
-
+// <div class="col-2 align-self-center"> #pageNumber# | Page</div>
     return {
       content: `<!DOCTYPE html>
         <html lang="en">
@@ -142,10 +142,10 @@ export class ReportHtmlGenaratesService {
         
         <div class="col-1 align-self-center">  <img height="50px" src="" ></div>
         <div class="col-9  align-self-start"></div>
-        <div class="col-2 align-self-center"> #pageNumber# | Page</div>
+        <div class="col-2 align-self-center"></div>
     </div>
   </div>`;
-
+// <div class="col-2 align-self-center"> #pageNumber# | Page</div>
 let pageHeadersNumbers={}
 
 
@@ -207,12 +207,12 @@ let comparisonContentFour=this.reportPagesService.comparisonContentFour(header,f
         <div style="background-color: yellow;" class="col-4"></div>
     </div>
     <div class="row ">
-        <div class="col-2 align-self-center"> #pageNumber# | Page</div>
+        <div class="col-2 align-self-center"> </div>
         <div class="col-9  align-self-start"></div>
         <div class="col-1 align-self-center">  <img height="50px" src="" ></div>
     </div>
   </div>`;
-
+//   <div class="col-2 align-self-center"> #pageNumber# | Page</div>
     return {
       content: `<!DOCTYPE html>
     <html lang="en">
