@@ -42,7 +42,7 @@ export class DefaultValue extends BaseTrackingEntity {
   country: Country;
 
   @Column({ default: null })
-  isMac: Number; //1
+  isMac: Number; 
   
   @Column({ default: null }) 
   scenario: string;

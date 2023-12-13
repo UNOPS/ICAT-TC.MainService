@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { log } from 'console';
 import { extname, join } from "path";
 const path = require('path');
 var fs = require('fs');

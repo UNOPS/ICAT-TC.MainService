@@ -79,7 +79,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     let data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne('dr.user', User, 'usr', 'usr.id = dr.userId')
-      .leftJoinAndMapOne('usr.institution', Institution, 'Institution', 'Institution.id = usr.institutionId')//userType.id 
+      .leftJoinAndMapOne('usr.institution', Institution, 'Institution', 'Institution.id = usr.institutionId')
 
 
       .where(filter, {
