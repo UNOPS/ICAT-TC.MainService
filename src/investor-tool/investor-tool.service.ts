@@ -2135,7 +2135,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'INVESTOR';
-    let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null) '
+    // let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null) '
+    let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
