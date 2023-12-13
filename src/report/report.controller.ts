@@ -78,10 +78,11 @@ export class ReportController {
   async generateReport(
     @Body() req: CreateReportDto
   ): Promise<any> {
-    let countryIdFromTocken: number
-    [countryIdFromTocken] =
+    let countryIdFromTocken: number;
+    let UsernnameFromTocken: string;
+    [countryIdFromTocken,UsernnameFromTocken] =
       this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
+        TokenReqestType.countryId,TokenReqestType.username
       ]);
     req.reportTitle = req.reportName
    
@@ -111,7 +112,7 @@ export class ReportController {
       )
     }
   
-    const response = await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,0,req.tool,req.type)
+    const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
     return response
   }
 
@@ -121,10 +122,11 @@ export class ReportController {
     @Body() req: CreateComparisonReportDto,
     @Res({ passthrough: true }) res, 
   ): Promise<any> {
-    let countryIdFromTocken: number
-    [countryIdFromTocken] =
+    let countryIdFromTocken: number;
+    let UsernnameFromTocken: string;
+    [countryIdFromTocken,UsernnameFromTocken] =
       this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
+        TokenReqestType.countryId,TokenReqestType.username
       ]);
     req.reportTitle = req.reportTitle
 
@@ -142,7 +144,7 @@ export class ReportController {
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-    let report=  await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
+    let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
    
     return report;
   }

@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, Type } from '@nestjs/common'
 
 
 export enum LoginRole {
-  MASTER_ADMIN = "Master_Admin", //icat admin
+  MASTER_ADMIN = "Master_Admin", 
   COUNTRY_ADMIN = "Country Admin",
   VERIFIER = "Verifier",
   SECTOR_ADMIN = "Sector Admin",

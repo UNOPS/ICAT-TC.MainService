@@ -37,12 +37,14 @@ import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.
 import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { CMScoreDto } from 'src/carbon-market/dto/cm-result.dto';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
     @InjectRepository(Report) repo,
     @InjectRepository(Country) private countryRepo: Repository<Country>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Portfolio) private portfolioRepo: Repository<Portfolio>,
     @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,
     private usersService: UsersService,
@@ -102,16 +104,25 @@ export class ReportService extends TypeOrmCrudService<Report> {
   async saveReport(
     name: string,
     fileName: string,
-    countryId: number,
+    UsernnameFromTocken: string,
     climateAction: ClimateAction,
     portfolioid:number,
     tool:string,
     type:string
   ) {
-    let country = await this.countryRepo
-      .createQueryBuilder('country')
-      .where('id = :id', { id: countryId })
-      .getOne();
+   let res1 = await this.userRepo.findOne({
+      where: {
+        email: UsernnameFromTocken ,
+      },
+      relations: ['country'],
+    });
+    let country = new Country()
+    if(res1 .userType.name =="External"){
+      country.id=0;
+    }
+    else if(res1 .userType.name !="External"){
+      country.id= res1.country.id;
+    }
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
@@ -236,7 +247,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
          isUserInternal =  x.portfolio?.user?.userType?.name !== 'External';
         }        
       }
-  
+  console.log(isUserExternal,isSameUser)
       if ((isUserExternal && isSameUser) ||(!isUserExternal && isMatchingCountry && isUserInternal)) {
         reportList.push(x);
       }

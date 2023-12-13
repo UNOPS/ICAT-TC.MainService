@@ -1703,7 +1703,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'INVESTOR';
     let filter = 'asses.tool=:tool '
-    // let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;

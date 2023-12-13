@@ -242,7 +242,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       })
       .orderBy('asse.id', 'ASC');
     let resualt = await paginate(data, options);
-    console.log(resualt.items) 
     let newarray = new Array();
     for (let asse of resualt.items) {
       newarray.push(asse.id)
