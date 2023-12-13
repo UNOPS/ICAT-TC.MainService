@@ -241,8 +241,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   @UseGuards(JwtAuthGuard)
   async currentUser(): Promise<User> {
     let userNameFromTocken: string;
-    [userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username])
-    let user = this.findByUseremail(userNameFromTocken)
+    [userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.username]);
+    let user = await this.findByUseremail(userNameFromTocken)
     return user
   }
 

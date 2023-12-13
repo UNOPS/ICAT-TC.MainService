@@ -69,8 +69,8 @@ export const config: ConnectionOptions = {
   port: 3306,
 
   username: 'root',
-  password: 'TCtool23#',
-  database: 'main',
+  password: 'pradeep123#',
+  database: 'tc-main',
 
   autoLoadEntities: true,
   entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, countryStatus, DataRequestStatus, ParameterRequest, DefaultValue,

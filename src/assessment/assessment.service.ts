@@ -202,14 +202,14 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       userNameFromTocken
   ): Promise<any> {
 
-    let filter: string ='asse.isDraft = true'
+     let filter: string ='asse.isDraft = true';
     if( cuserRoleFromTocken !="External"){
      filter = `${filter} AND proj.countryId = ${countryIdFromTocken}`;
     }
     if( cuserRoleFromTocken !="Country Admin"){
-      let userItem = await this.userService.findByUseremail(userNameFromTocken)
+      let userItem = await this.userService.findByUseremail(userNameFromTocken);
       filter =`${filter} AND asse.user_id =${userItem.id}`
-    }
+         }
     
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = `${filter} AND (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
@@ -242,7 +242,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       })
       .orderBy('asse.id', 'ASC');
     let resualt = await paginate(data, options);
-
+    console.log(resualt.items) 
     let newarray = new Array();
     for (let asse of resualt.items) {
       newarray.push(asse.id)
@@ -273,7 +273,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       let item =new Array()
       let re =new Array()
       let total :number;
-
+    
     if (data1) {
       total = (await data3).length;
       item= await data1.getMany();

@@ -202,7 +202,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
           where: {
             country: { id: countryIdFromTocken },
           },
-          relations: ['climateAction'],
+          relations: ['climateAction','portfolio','country'],
         });
       } else {
         res = await this.repo.find({
@@ -218,20 +218,30 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     let reportList: Report[] = [];
     const isUserExternal = currentUser?.userType?.name === 'External';
-    for (const x of await res) {
-      const isSameUser = x.climateAction?.user?.id === currentUser?.id;
-      const isMatchingCountry =
-        x.climateAction?.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal =
-        x.climateAction?.user?.userType?.name !== 'External';
-      if (
-        (isUserExternal && isSameUser) ||
-        (!isUserExternal && isMatchingCountry && isUserInternal)
-      ) {
+    for await  (const x of await res) {
+      let isSameUser:boolean;
+      let isMatchingCountry :boolean;
+      let isUserInternal :boolean;
+      if(x.climateAction !=null || x.climateAction != undefined){
+        if(x.climateAction?.user !=null || x.climateAction?.user != undefined){
+          isSameUser = x.climateAction?.user?.id === currentUser?.id;
+          isMatchingCountry = x.climateAction?.country?.id === currentUser?.country?.id;
+         isUserInternal =  x.climateAction?.user?.userType?.name !== 'External';
+        }        
+      }
+      else if(x.portfolio !=null || x.portfolio != undefined){
+        if(x.portfolio?.user !=null || x.portfolio?.user != undefined){
+          isSameUser = x.portfolio?.user?.id === currentUser?.id;
+          isMatchingCountry = x.country?.id === currentUser?.country?.id;
+         isUserInternal =  x.portfolio?.user?.userType?.name !== 'External';
+        }        
+      }
+  
+      if ((isUserExternal && isSameUser) ||(!isUserExternal && isMatchingCountry && isUserInternal)) {
         reportList.push(x);
       }
     }
-    return res;
+    return reportList;
   }
 
   async genarateReportDtoContentOne(
