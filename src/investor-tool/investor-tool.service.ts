@@ -2135,8 +2135,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
     let tool = 'INVESTOR';
-    // let filter = 'asses.tool=:tool and (asses.process_score is not null and asses.outcome_score is not null) '
-    let filter = ''
+    let filter = 'asses.tool=:tool '
+    // let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -2152,6 +2152,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
       .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
       .leftJoinAndMapOne(
         'asses.climateAction',
         ClimateAction,
