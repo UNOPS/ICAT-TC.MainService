@@ -29,7 +29,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
   app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
-  await app.listen(7080);
+  await app.listen(parseInt(process.env.PORT));
  
 }
 bootstrap();
