@@ -1004,7 +1004,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggrgated Score</th>
+         <th scope="col">Aggregated Score</th>
       
          
        </tr>
@@ -1041,7 +1041,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggrgated Score</th>
+         <th scope="col">Aggregated Score</th>
       
          
        </tr>
@@ -2867,7 +2867,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggrgated Score</th>
+           <th scope="col">Aggregated Score</th>
         
            
          </tr>
@@ -2904,7 +2904,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggrgated Score</th>
+           <th scope="col">Aggregated Score</th>
         
            
          </tr>
