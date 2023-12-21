@@ -1992,7 +1992,7 @@ return contentFour
         case 0:
           return 'Not relevant';
         case 1:
-          return 'Possibly relvant';
+          return 'Possibly relevant';
         case 2:
           return 'Relevant';
       }
