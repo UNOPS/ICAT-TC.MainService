@@ -59,7 +59,7 @@ export class Institution extends BaseTrackingEntity {
   @Column({ length: 100 ,nullable: true })
   address: string;
 
-  @Column({ name: 'sectorId' })
+  @Column({ name: 'sectorId', nullable: true })
   sectorId: number;
 
   @ManyToOne((type) => Sector, { cascade: false, nullable: true ,eager:true})
