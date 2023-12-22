@@ -4531,13 +4531,12 @@ PORTFOLIO TOOL
     <div class="content" style=" height:1000px">
       <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
 
-      <div class="report-all-table-sm-rotate">
-
+      <div class="report-all-table-sm-rotate same-page">
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation.   </p>
+     </blockquote> 
         <div class="report-table-sm-rotate">
-        <br><br>
-        <lablel text-align: left;>The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation. </lablel>
-
-        <br><br>
+       
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
               <tr>
@@ -4571,40 +4570,44 @@ PORTFOLIO TOOL
             </tbody>
           </table>
         </div>
-        <div class="report-table-sm-rotate">
-          <table class="table  table-bordered border-dark">
-            <thead class="table-primary  border-dark">
-              <tr>
-                <th colspan="4" scope="col">ALIGNMENT</th>
-                <th colspan="${alignment_table.sdg_count
-      }">SUSTAINABLE DEVELOPMENT</th>
-              </tr>
-              <tr>
-                ${alignment_table.col_set_1
-        .map(
-          (a) =>
-            '<th scope="col" colspan="' +
-            a.colspan +
-            '">' +
-            a.label +
-            '</th>',
-        )
-        .join('')}
-              </tr>
-              <tr>
-                ${alignment_table.col_set_2
-        .map((a) => '<th scope="col">' + a.label + '</th>')
-        .join('')}
-              </tr>
-            </thead>
-            <tbody class="table-active">
-                  ${this.generateHeatMapBody(
-          alignment_table.interventions,
-          alignment_table.col_set_2,
-        )}
-            </tbody>
-          </table>
+      
         </div>
+
+        <div class="report-all-table-sm-rotate same-page">
+        <div class="report-table-sm-rotate">
+        <table class="table  table-bordered border-dark">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th colspan="4" scope="col">ALIGNMENT</th>
+              <th colspan="${alignment_table.sdg_count
+    }">SUSTAINABLE DEVELOPMENT</th>
+            </tr>
+            <tr>
+              ${alignment_table.col_set_1
+      .map(
+        (a) =>
+          '<th scope="col" colspan="' +
+          a.colspan +
+          '">' +
+          a.label +
+          '</th>',
+      )
+      .join('')}
+            </tr>
+            <tr>
+              ${alignment_table.col_set_2
+      .map((a) => '<th scope="col">' + a.label + '</th>')
+      .join('')}
+            </tr>
+          </thead>
+          <tbody class="table-active">
+                ${this.generateHeatMapBody(
+        alignment_table.interventions,
+        alignment_table.col_set_2,
+      )}
+          </tbody>
+        </table>
+      </div>
         </div>
       </div>
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
