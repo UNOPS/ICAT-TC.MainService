@@ -13,7 +13,7 @@ constructor(){}
       format: 'A4',
       margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
        path: '/home/ubuntu/code/Main/main/public/' + fileName,
-      // path:  './public/' + fileName,
+     
       printBackground: true,
       landscape:true
     };
@@ -29,7 +29,7 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
     format: 'A4',
     margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
      path: '/home/ubuntu/code/Main/main/public/' + fileName,
-    // path:  './public/' + fileName,
+   
     printBackground: true,
     landscape:true
   };
