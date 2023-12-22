@@ -235,9 +235,9 @@ async allProject(
         const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
         const isUserInternal = x.assessment?.user?.userType?.description !== 'External';
         const toolName =
-          x.assessment?.tool === "PORTFOLIO" ? "General Tool" :
-          x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market Tool" :
-          x.assessment?.tool === "INVESTOR" ? "Investor & Private Sector Tool" :
+          x.assessment?.tool === "PORTFOLIO" ? "General" :
+          x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market" :
+          x.assessment?.tool === "INVESTOR" ? "Investment" :
           x.assessment?.tool;
     
           if(x?.assessment?.tool){
@@ -262,6 +262,8 @@ async allProject(
   
       return acc;
     }, []);
+    const order = ["Carbon Market","Investment","General"];
+    actions.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
   
     return actions;
   } 
