@@ -4530,11 +4530,11 @@ PORTFOLIO TOOL
    ${header}
     <div class="content" style=" height:1000px">
       <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
-
-      <div class="report-all-table-sm-rotate same-page">
       <blockquote class=" paragraph blockquote text-start ">
       <p >The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation.   </p>
      </blockquote> 
+      <div class="report-all-table-sm-rotate same-page">
+   
         <div class="report-table-sm-rotate">
        
           <table class="table  table-bordered border-dark">
