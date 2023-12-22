@@ -102,8 +102,11 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column()
   proposeDateofCommence: Date; 
 
-  @Column({ length: 1500, default: null, nullable: true, type: 'varchar' })
+  @Column({ length: 500, default: null, nullable: true })
   objective: string; 
+
+  @Column({ length: 1500, default: null, nullable: true, type: 'varchar' })
+  objective_new: string; 
 
   @Column({ default: null, nullable: true })
   subNationalLevl1: string;
