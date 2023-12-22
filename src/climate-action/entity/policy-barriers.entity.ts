@@ -26,6 +26,12 @@ export class PolicyBarriers extends BaseTrackingEntity {
   barrier: string;
   @Column({ type: 'longtext', nullable: true })
   explanation: string;
+  ///
+  @Column({ length: 150, type: 'varchar', default: null, nullable: true })
+  barrier_new: string;
+  @Column({ type: 'varchar', length: 1500, nullable: true })
+  explanation_new: string;
+  ///
 
   @Column({ nullable: true })
   is_affected: boolean;
