@@ -376,7 +376,7 @@ body {
   .report-table-sm-rotate {
  
    
-    text-align:end;
+    text-align:start;
   }
   
   .report-table-sm-rotate td:last-child {
@@ -386,8 +386,8 @@ body {
     /* height: 100%; */
     text-align:end;
     position: relative; 
-    transform:rotate(270deg);
-    bottom: -60%; 
+    /* transform:rotate(270deg); */
+    /* bottom: -60%;  */
     font-size:8px;
     
   }
