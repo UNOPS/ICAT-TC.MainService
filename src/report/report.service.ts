@@ -1582,8 +1582,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
     contentTwo.safeguards=safeguardsArray
     contentTwo.prevention_ghg_emissions = preventionGHGArray;
     contentTwo.prevention_negative_environmental = preventionAvoidanceArray ;
+   
     let outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
-    contentTwo.outcomes = [...outcomes].reverse();
+
+    contentTwo.outcomes = outcomes?[...outcomes].reverse():[];
     }
 
     return contentTwo;

@@ -11,9 +11,9 @@ constructor(){}
     let fileName = name;
     let options = {
       format: 'A4',
-      margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-      //  path: '/home/ubuntu/code/Main/main/public/' + fileName,
-      path:  './public/' + fileName,
+      margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
+       path: '/home/ubuntu/code/Main/main/public/' + fileName,
+      // path:  './public/' + fileName,
       printBackground: true,
       landscape:true
     };
@@ -27,9 +27,9 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
   let fileName = name;
   let options = {
     format: 'A4',
-    margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
-    //  path: '/home/ubuntu/code/Main/main/public/' + fileName,
-    path:  './public/' + fileName,
+    margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
+     path: '/home/ubuntu/code/Main/main/public/' + fileName,
+    // path:  './public/' + fileName,
     printBackground: true,
     landscape:true
   };
@@ -40,7 +40,7 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
   });
   const page = await browser.newPage();
   await page.setContent(file.content, { waitUntil: 'domcontentloaded' });
-  await page.emulateMediaType('screen');
+  await page.emulateMediaType('print');
 
 
   const PDF = await page.pdf(options);
