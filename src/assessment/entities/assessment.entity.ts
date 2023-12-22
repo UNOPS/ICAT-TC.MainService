@@ -110,22 +110,22 @@ export class Assessment extends BaseTrackingEntity {
   outcome_score: number;
 
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   envisioned_change: string;
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   vision_short: string;
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   vision_medium: string;
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   vision_long: string;
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   phase_of_transformation: string;
 
-  @Column({ type: 'longtext', default: null, nullable: true })
+  @Column({ type: 'varchar', length: 1500, default: null, nullable: true })
   change_in_system: string;
 
   @Column({ default: false })
