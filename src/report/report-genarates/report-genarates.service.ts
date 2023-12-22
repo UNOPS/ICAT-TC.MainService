@@ -14,7 +14,8 @@ constructor(){}
       margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
       //  path: '/home/ubuntu/code/Main/main/public/' + fileName,
       path:  './public/' + fileName,
-      printBackground: true
+      printBackground: true,
+      landscape:true
     };
 
     
@@ -29,7 +30,8 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
     margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
     //  path: '/home/ubuntu/code/Main/main/public/' + fileName,
     path:  './public/' + fileName,
-    printBackground: true
+    printBackground: true,
+    landscape:true
   };
 
 
