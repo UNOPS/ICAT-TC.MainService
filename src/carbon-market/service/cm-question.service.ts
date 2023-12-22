@@ -6,7 +6,6 @@ import { Criteria } from "../entity/criteria.entity";
 import { Section } from "../entity/section.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
 import { Repository } from "typeorm";
-import { categories, characteristic, questions } from "../dto/seed-data";
 import { CMResultDto, UniqueCategories, UniqueCategory, UniqueCharacteristic } from "../dto/cm-result.dto";
 
 @Injectable()
@@ -60,7 +59,6 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
   }
 
   async getAnswersByQuestion(questionId: number){
-    // return await this.answerRepo.find({question: {id: questionId}})
     let data = this.answerRepo.createQueryBuilder('answer')
     .leftJoinAndSelect(
       'answer.question',
@@ -74,7 +72,6 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
 
   async getUniqueCharacterisctics(): Promise<UniqueCategories> {
     let data = this.repo.createQueryBuilder('question')
-      // .distinct(true)
       .innerJoinAndSelect(
         'question.characteristic',
         'characteristic',
@@ -86,7 +83,6 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'category.id = characteristic.category_id'
       )
       .where('characteristic.id is not null and status = 0')
-      // .groupBy('characteristic.code')
 
     let questions = await data.getMany()
 
@@ -164,18 +160,6 @@ export class CMQuestionService extends TypeOrmCrudService<CMQuestion> {
         'characteristic',
         'characteristic.id = question.characteristicId'
       )
-      // .innerJoinAndMapOne(
-      //   'question.criteria',
-      //   Criteria,
-      //   'criteria',
-      //   'criteria.id = question.criteriaId'
-      // )
-      // .innerJoinAndMapOne(
-      //   'criteria.section',
-      //   Section,
-      //   'section',
-      //   'section.id = criteria.sectionId'
-      // )
       .where('characteristic.id In (:id)', {id: ids})
 
       let questions = await data.getMany()

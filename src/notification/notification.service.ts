@@ -9,12 +9,6 @@ export class NotificationService extends TypeOrmCrudService<Notification>  {
 
     constructor(
         @InjectRepository(Notification) repo,
-        // @InjectRepository(User)
-        // private readonly userRepository: Repository<User>,
-        // @InjectRepository(User)
-        // private readonly userService: UsersService,
-        // @InjectRepository(Country)
-        // private readonly countryRepository: Repository<Country>,
     ) {
         super(repo);
     }
@@ -35,9 +29,7 @@ export class NotificationService extends TypeOrmCrudService<Notification>  {
           )
         .where('notification.toUser=' + id)
         .getMany();
-        // re.push( this.repo.find({ where: { toUser: { id: id }} }));
-        return re
-        // return this.repo.findOne({ where: { id: id } });
+        return re;
     }
 
     async findByUSerId(id: number) {

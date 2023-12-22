@@ -16,7 +16,7 @@ export class LearningMaterial extends BaseTrackingEntity {
     id: number;
 
     @Column({ default: null })
-    documentType: string;  // Learning Material and User Guidence
+    documentType: string; 
     
     @Column({ default: null })
     documentName: string;
@@ -39,27 +39,5 @@ export class LearningMaterial extends BaseTrackingEntity {
 
     @OneToMany(() => LearningMaterialUserType, learningMaterialUserType => learningMaterialUserType.userType)
     public learningMaterialusertype!: LearningMaterialUserType[];
-
-   /* 
-    @ManyToMany((type) => UserType, {
-      eager: true,
-      cascade: false,
-    })
-
-
-    @ManyToMany(() => UserType, userType => userType.learningmaterils)
-    @JoinTable()
-    userTypes?: UserType[];
-
-    @ManyToMany(() => Sector, sector => sector.learningmaterils)
-    @JoinTable()
-    sectors?: Sector[];*/
-
-
-
-
-
-    		 	
-
 
 }

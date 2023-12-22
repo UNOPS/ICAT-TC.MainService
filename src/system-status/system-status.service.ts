@@ -23,7 +23,6 @@ export class SystemStatusService extends TypeOrmCrudService<SystemStatus> {
 
 
   async setIsDeploying(status: number){
-    console.log("setIsDeploying status",status)
     let s = await this.repo.findOne({
       where: { id: 1}
     });

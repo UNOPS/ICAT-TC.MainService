@@ -67,7 +67,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .createQueryBuilder('dr')
 
       if (tool === Tool.CM_tool){
-        console.log("cm")
         data.leftJoinAndMapMany(
           'dr.cmAssessmentAnswer',
           CMAssessmentAnswer,
@@ -87,7 +86,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           `assessment.id = ${assesmentId}`,
         )
       } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
-        console.log("ip")
         data.leftJoinAndMapMany(
           'dr.investmentParameter',
           InvestorAssessment,
@@ -106,13 +104,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           `para.assessment_id = ${assesmentId}`,
         )
       ]
-      // data.select(['dr.dataRequestStatus', 'para.id'])
-      // .where(
-      //   `para.assessment_id = ${assesmentId} 
-      //   AND ((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false ))
-      //    AND COALESCE(para.AssessmentYear ,para.projectionBaseYear ) = ${assessmentYear}`,
-      // );
-
 
     return await data.execute();
   }
@@ -127,27 +118,10 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     countryIdFromTocken: number,
     tool:string,
   ): Promise<Pagination<any>> {
-    console.log("tool :",tool)
-    // let whereCond = (
-    //   (climateActionId != 0
-    //     ? `p.id=${climateActionId} AND  p.countryId = ${countryIdFromTocken} AND `
-    //     : '') +
-    //   (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
-    //   (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
-    //   // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
-    //   `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
-    //   (filterText != ''
-    //     ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
-    //        )`
-    //     : '')
-    // ).replace(/AND $/, '');
-
-    // console.log(whereCond);
     let data = this.repo
       .createQueryBuilder('dr')
       .where('dr.tool = :value AND (dr.dataRequestStatus !=:status OR dr.dataRequestStatus IS NULL )', { value: tool,status:2})
-      // .andWhere('dr.dataRequestStatus :value',{value: DataRequestStatus.Assign_Data_Request_Sent})
-      
+            
       if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
         data.leftJoinAndMapOne(
           'dr.investmentParameter',
@@ -201,18 +175,11 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
               : '')
           ).replace(/AND $/, ''),
         )
-        // .innerJoinAndMapOne(
-        //   'p.Country',
-        //   Country,
-        //   'cou',
-        //   `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
-        // )
         
       }
     
       
        if(tool ===Tool.CM_tool ){
-        console.log("called",tool)
         data.leftJoinAndMapOne(
           'dr.cmAssessmentAnswer',
           CMAssessmentAnswer,
@@ -279,12 +246,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
               : '')
           ).replace(/AND $/, ''),
         )
-        // .innerJoinAndMapOne(
-        //   'p.Country',
-        //   Country,
-        //   'cou',
-        //   `p.countryId = cou.id and p.countryId = ${countryIdFromTocken}`,
-        // )
         
       }
       data
@@ -312,7 +273,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         : '') +
       (year != '' ? `ay.assessmentYear='${year}' AND ` : '') +
       (dataProvider != 0 ? `para.institution_id=${dataProvider} AND ` : '') +
-      // '((para.isEnabledAlternative = true AND para.isAlternative = true) OR (para.isEnabledAlternative = false AND para.isAlternative = false) ) AND ' +
       `dr.dataRequestStatus in (-1,1,30,-6) AND ` +
       (filterText != ''
         ? `(p.climateActionName LIKE '%${filterText}%' OR para.name LIKE '%${filterText}%' OR i.name LIKE '%${filterText}%'
@@ -320,8 +280,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         : '')
     ).replace(/AND $/, '');
 
-    console.log(whereCond);
-    console.log("{==========================}");
     let data = this.repo
       .createQueryBuilder('dr')
       .select(['dr.id', 'para.id ', 'a.id as aid', 'p.id as pid'])
@@ -353,11 +311,9 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .where(whereCond)
       .orderBy('dr.createdOn', 'DESC')
       .groupBy('dr.id');
-    console.log(options);
     let result = await paginate(data, options);
 
     if (result) {
-      console.log('resulthhhhh====', result);
       return result;
     }
   }
@@ -387,7 +343,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         'a.id = para.assessment_id',
       )
       .leftJoinAndMapMany('a.Prject', Project, 'p', 'p.id = a.climateAction_id')
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
       .select([
         'p.climateActionName as climateAction',
         'para.AssessmentYear as year',
@@ -400,7 +355,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       })
       .orderBy('dr.createdOn', 'DESC');
     let result = await data.execute();
-    //   console.log('result2', result2);
     if (result) {
       return result;
     }
@@ -416,8 +370,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
    
     let userItem = await this.userService.findByUserName(userName);
     let institutionId = userItem.institution ? userItem.institution.id : 0;
-    // console.log(userName,"-----",userItem)
-    // console.log(whereCond);
     let data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne(
@@ -428,10 +380,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
        )
      
       .where('dr.tool = :value', { value: tool})
-      // .andWhere('dr.dataRequestStatus :value',{value: DataRequestStatus.Assign_Data_Request_Sent})
-      
       if(tool ===Tool.Investor_tool|| tool ===Tool.Portfolio_tool ){
-        console.log("tool",tool);
         data.leftJoinAndMapOne(
           'dr.investmentParameter',
           InvestorAssessment,
@@ -489,7 +438,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     
       
        else if(tool ===Tool.CM_tool ){
-        console.log("called",tool)
         data.leftJoinAndMapOne(
           'dr.cmAssessmentAnswer',
           CMAssessmentAnswer,
@@ -563,12 +511,10 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
       .orderBy('dr.id', 'DESC')
       .groupBy('dr.id')
      
-      console.log(data.getQuery())
      
 
     let result = await paginate(data, options);
     if (result) {
-      console.log('ffff',result)
       return result;
     }
   }
@@ -580,14 +526,10 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
     year: string,
     userName: string,
   ): Promise<Pagination<any>> {
-    console.log("++++++++++++++++",userName)
     let userItem = await this.userService.findByUserName(userName);
-    // console.log("++++++++++++++++",userItem)
     let userId = userItem ? userItem.id : 0;
     let insId = userItem ? userItem.institution.id : 0;
-    console.log(userId ,"++++++++++++++++",userItem.userType.name)
     if (userItem.userType.name != 'Institution Admin') {
-      console.log(userId ,"++++++++++++++++",userItem.userType.name)
       let data = this.repo
         .createQueryBuilder('dr')
         .leftJoinAndMapOne(
@@ -661,7 +603,6 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
         .orderBy('dr.deadline', 'DESC');
 
       let result = await paginate(data, options);
-console.log("=========11",result)
       if (result) {
         return result;
       }
@@ -773,7 +714,6 @@ console.log("=========11",result)
     type: string,
     userName: string,
   ): Promise<Pagination<any>> {
-    console.log('userName', userName);
     let userItem = await this.userService.findByUserName(userName);
     let institutionId = userItem.institution ? userItem.institution.id : 0;
 
@@ -832,9 +772,8 @@ console.log("=========11",result)
     tool: Tool
   ): Promise<Pagination<any>> {
     let userItem = await this.userService.findByUserName(userName);
-    climateActionId = Number(climateActionId)
+    climateActionId = Number(climateActionId);
     let institutionId = userItem.institution ? userItem.institution.id : 0;
-    console.log(tool, institutionId)
 
     let data = this.repo.createQueryBuilder('dr')
 
@@ -856,7 +795,6 @@ console.log("=========11",result)
     }
 
     data
-      // .leftJoinAndSelect('assessment.User', 'user', 'user.id = dr.UserDataEntryId')
       .leftJoinAndSelect('assessment.climateAction', 'climateAction', 'climateAction.id = assessment.climateAction_id')
       .where('dr.dataRequestStatus in (6,7,-6)  AND  dr.tool = :tool', {tool: tool})
 
@@ -883,45 +821,18 @@ console.log("=========11",result)
   async updateDeadlineForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    //let dataRequestItemList = new Array<ParameterRequest>();
-    console.log('updateDataRequestDto', updateDataRequestDto);
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
-      // let dataRequestItem = await this.repo.findOne({ where: { id: id } ,relations:['investmentParameter','cmAssessmentAnswer']},);
       let dataRequestItem=await this.repo
       .createQueryBuilder("dataRequestItem")
       .where("dataRequestItem.id = :id", { id:id })
       .getOne()
-      // let ss = await this.paramterRepo.findByIds([
-      //   dataRequestItem.parameter.id,
-      // ]);
-      // if (ss[0].institution != null) {
-      //   console.log('sssssss', ss);
-      //   var template =
-      //     'Dear ' +
-      //     ss[0].institution.name +
-      //     '<br/>Data request with following information has shared with you.' +
-      //   //   ' <br/> parameter name' +
-      //   //   ss[0].name +
-      //     '<br/> deadline ' +
-      //     updateDataRequestDto.deadline;
-
-      //   this.emaiService.sendMail(
-      //     ss[0].institution.email,
-      //     'Assign Deadline request',
-      //     '',
-      //     template,
-      //   );
-      // }
 
       let originalStatus = dataRequestItem.dataRequestStatus;
       dataRequestItem.deadline = updateDataRequestDto.deadline;
       dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
-      //dataRequestItemList.push(dataRequestItem);
       this.repo.save(dataRequestItem).then((res) => {
-        // console.log('res', res);
-        console.log('res id....', res.id);
         this.parameterHistoryService.SaveParameterHistory(
           res.id,
           ParameterHistoryAction.DataRequest,
@@ -939,12 +850,10 @@ console.log("=========11",result)
   async updateDataEntryDeadlineForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    //let dataRequestItemList = new Array<ParameterRequest>();
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
       let dataRequestItem = await this.repo.findOne({ where: { id: id } });
-      console.log('updateDataRequestDto', updateDataRequestDto);
       let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
 
       let originalStatus = dataRequestItem.dataRequestStatus;
@@ -958,8 +867,6 @@ console.log("=========11",result)
         ' ' +
         user[0].lastName +
         ' <br/> Data request with following information has shared with you.' +
-        // '<br/> Parameter name' +
-        // dataRequestItem.parameter.name +
         '<br/> deadline ' +
         updateDataRequestDto.deadline +
         '<br> comment' +
@@ -971,9 +878,7 @@ console.log("=========11",result)
         '',
         template,
       );
-      // dataRequestItemList.push(dataRequestItem);
       this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
         this.parameterHistoryService.SaveParameterHistory(
           res.id,
           ParameterHistoryAction.AssignDataRequest,
@@ -985,7 +890,6 @@ console.log("=========11",result)
       });
     }
 
-    //this.repo.save(dataRequestItemList);
 
     return true;
   }
@@ -993,7 +897,6 @@ console.log("=========11",result)
   async acceptReviewDataForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
     let tool = updateDataRequestDto.tool
 
     let insSec: any;
@@ -1052,7 +955,6 @@ console.log("=========11",result)
         pararesult[0].qaStatus = null;
       }
 
-      console.log("tool", tool)
       if (tool === Tool.CM_tool) inscon = pararesult[0].cmAssessmentAnswer.institution.country;
       else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) inscon = pararesult[0].investmentParameter.institution.country;
       else inscon = pararesult[0].parameter.institution.country
@@ -1062,14 +964,6 @@ console.log("=========11",result)
       else inscon = pararesult[0].parameter.institution.sector
 
       this.repo.save(pararesult[0]).then((res) => {
-        // this.parameterHistoryService.SaveParameterHistory(
-        //   res.id,
-        //   ParameterHistoryAction.EnterData,
-        //   'EnterData',
-        //   '',
-        //   res.dataRequestStatus.toString(),
-        //   originalStatus.toString(),
-        // );
       });
 
       let filter: string = '';
@@ -1102,52 +996,17 @@ console.log("=========11",result)
       }
         data.where(filter, { id });
       let result = await data.getOne();
-      // console.log("data...",result)
 
       const paraId = tool === Tool.CM_tool ? result.cmAssessmentAnswer.id:
       ((tool === Tool.Investor_tool || tool === Tool.Portfolio_tool) ? result.investmentParameter.id : result.parameter.id) ;
-      console.log('paraid', paraId);
-    //   let parameterItem = await this.paramterRepo.findOne({
-    //     where: { id: paraId },
-    //   });
-    //   if (parameterItem.isDefault == true) {
-    //     let defaultVal = parameterItem.value;
-    //     // console.log("defaultVal",defaultVal)
-    //     // let defaultValId = parameterItem.defaultValue.id;
-
-    //     let filter: string = '';
-    //     filter = `pr.id = :paraId`;
-    //     let data2 = this.defaultValRepo
-    //       .createQueryBuilder('df')
-    //       .leftJoinAndMapOne(
-    //         'df.parameter',
-    //         Parameter,
-    //         'pr',
-    //         'df.id = pr.defaultValueId',
-    //       )
-    //       .where(filter, { paraId });
-    //     let result2 = await data2.getOne();
-    //     //  console.log("result2",result2)
-
-    //     let defaultValId = result2.id;
-    //     // console.log("defaultValId",defaultValId)
-    //     let defaultValObject = await this.defaultValRepo.findOne({
-    //       where: { id: defaultValId },
-    //     });
-    //     defaultValObject.value = defaultVal;
-    //     let savedObject = await this.defaultValRepo.save(defaultValObject);
-    //     // console.log("defaultValObject...",defaultValObject)
-    //   }
+         
     }
     let user:User[];
     let ins = await this.institutionRepo.findOne({
         where: { country: inscon, sector: insSec },
-    //   where: { country: inscon, sector: insSec, type: 2 },
     });
     user= await this.userRepo.find({where:{country:inscon}})
-    // user= await this.userRepo.find({where:{country:inscon,userType:6,institution:ins}})
     user.forEach((ab)=>{
-      console.log('=========', ins);
       var template: any;
       if (updateDataRequestDto.comment != undefined) { 
         template =
@@ -1156,8 +1015,6 @@ console.log("=========11",result)
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Accepted reviw value' +
-          // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-          // '<br/> value -:' + dataRequestItem.parameter.value +
           '<br> comment -: ' +
           updateDataRequestDto.comment;
       } else {
@@ -1167,14 +1024,11 @@ console.log("=========11",result)
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Accepted reviw value ';
-        // '<br/> parameter name -: ' + dataRequestItem.parameter.name +
-        // '<br/> value -:' + dataRequestItem.parameter.value;
       }
   
       this.emaiService.sendMail(ab.email, 'Accepted parameter', '', template);
     })
     
-    // this.repo.save(dataRequestItemList);
 
     return true;
   }
@@ -1182,7 +1036,6 @@ console.log("=========11",result)
   async rejectEnterDataForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
 
     for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
       const id = updateDataRequestDto.ids[index];
@@ -1192,22 +1045,20 @@ console.log("=========11",result)
       dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
       dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
 
-      console.log(dataRequestItem)
 
       let email
       let institutionName 
       if (updateDataRequestDto.tool === Tool.CM_tool){
         email = dataRequestItem.cmAssessmentAnswer.institution.email;
-        institutionName = dataRequestItem.cmAssessmentAnswer.institution.name
+        institutionName = dataRequestItem.cmAssessmentAnswer.institution.name;
       } else if (updateDataRequestDto.tool === Tool.Investor_tool || updateDataRequestDto.tool === Tool.Portfolio_tool){
         email = dataRequestItem.investmentParameter.institution.email;
-        institutionName = dataRequestItem.investmentParameter.institution.name
+        institutionName = dataRequestItem.investmentParameter.institution.name;
       } else {
         email = dataRequestItem.parameter.institution.email;
         institutionName = dataRequestItem.parameter.institution.name
       }
 
-      // let email = dataRequestItem.parameter.institution.email;
       var template: any;
       if (updateDataRequestDto.comment != undefined) {
         template =
@@ -1216,8 +1067,6 @@ console.log("=========11",result)
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value' +
-        //   '<br/> parameter name -: ' +
-        //   dataRequestItem.parameter.name +
           '<br> comment -: ' +
           updateDataRequestDto.comment;
       } else {
@@ -1227,44 +1076,23 @@ console.log("=========11",result)
           ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Reject enterd value'
-        //    +
-        //   '<br/> parameter name -: ' +
-        //   dataRequestItem.parameter.name;
       }
 
       this.emaiService.sendMail(email, 'Reject enterd value', '', template);
 
       this.repo.save(dataRequestItem).then((res) => {
-        console.log('res', res);
-        // this.parameterHistoryService.SaveParameterHistory(
-        //   res.id,
-        //   ParameterHistoryAction.EnterData,
-        //   'EnterData',
-        //   res.noteDataRequest,
-        //   res.dataRequestStatus.toString(),
-        //   originalStatus.toString(),
-        // );
       });
-      //  dataRequestItemList.push(dataRequestItem);
     }
-
-    //this.repo.save(dataRequestItemList);
-
     return true;
   }
 
   async rejectReviewDataForIds(
     updateDataRequestDto: UpdateDeadlineDto,
   ): Promise<boolean> {
-    // let dataRequestItemList = new Array<ParameterRequest>();
-    console.log("rejectReviewDataForIds", updateDataRequestDto)
-    // try{
       for (let index = 0; index < updateDataRequestDto.ids.length; index++) {
         const id = updateDataRequestDto.ids[index];
         let dataRequestItem = await this.repo.findOne({ where: { id: id }, relations: ['cmAssessmentAnswer', 'investmentParameter'] });
-        let originalStatus = dataRequestItem.dataRequestStatus;
-        console.log("dataRequestItem", dataRequestItem)
-  
+      
   
         let user = await this.userRepo.findByIds([updateDataRequestDto.userId]);
         let template: any;
@@ -1329,27 +1157,11 @@ console.log("=========11",result)
         dataRequestItem.noteDataRequest = updateDataRequestDto.comment;
         dataRequestItem.dataRequestStatus = updateDataRequestDto.status;
         dataRequestItem.UserDataEntry = updateDataRequestDto.userId;
-        dataRequestItem.cmAssessmentAnswer = undefined
-        dataRequestItem.investmentParameter = undefined
-        console.log(dataRequestItem)
+        dataRequestItem.cmAssessmentAnswer = undefined;
+        dataRequestItem.investmentParameter = undefined;
         this.repo.save(dataRequestItem).then((res) => {
-          // console.log('res', res);
-          // this.parameterHistoryService.SaveParameterHistory(
-          //   res.id,
-          //   ParameterHistoryAction.ReviewData,
-          //   'ReviewData',
-          //   res.noteDataRequest,
-          //   res.dataRequestStatus.toString(),
-          //   originalStatus.toString(),
-            
-          // );
         });
-        //  dataRequestItemList.push(dataRequestItem);
       }
-    // } catch(error){
-    //   console.log(error)
-    //   return new InternalServerErrorException()
-    // }
    
 
     return true;
@@ -1373,7 +1185,7 @@ console.log("=========11",result)
         'para.DataRequest',
         ParameterRequest,
         'paraReq',
-        'para.id = paraReq.ParameterId', //and paraReq.dataRequestStatus = 2
+        'para.id = paraReq.ParameterId', 
       )
       .where('paraReq.dataRequestStatus = ' + 2);
 
@@ -1399,7 +1211,7 @@ console.log("=========11",result)
         'para.DataRequest',
         ParameterRequest,
         'paraReq',
-        'para.id = paraReq.ParameterId', //and paraReq.dataRequestStatus = 2
+        'para.id = paraReq.ParameterId', 
       )
       .where('paraReq.dataRequestStatus = ' + 6);
 
@@ -1413,7 +1225,6 @@ console.log("=========11",result)
     id:number
   ): Promise<any> {
     if(updateValueDto.tool==Tool.CM_tool){
-      // console.log(updateValueDto,id)
       let update = await this.cmAssessmentAnswerRepo.createQueryBuilder()
       .update(CMAssessmentAnswer)
       .set({institution:updateValueDto?.cmAssessmentAnswer?.institution})
@@ -1422,7 +1233,6 @@ console.log("=========11",result)
       return update;
     }
    else if(updateValueDto.tool==Tool.Investor_tool||Tool.Portfolio_tool){
-      console.log(updateValueDto,id)
       let update = await this.investmentRepo.createQueryBuilder()
       .update(InvestorAssessment)
       .set({institution:updateValueDto?.investmentParameter?.institution})

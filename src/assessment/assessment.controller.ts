@@ -7,9 +7,6 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
 import { getConnection } from 'typeorm';
 import { LoginRole, RoleGuard } from 'src/auth/guards/roles.guard';
-import { Assessment } from './entities/assessment.entity';
-import { AuditDto } from 'src/audit/dto/audit-dto';
-import { Crud, CrudController } from '@nestjsx/crud';
 
 @Controller('assessment')
 export class AssessmentController {
@@ -57,8 +54,6 @@ export class AssessmentController {
   ): Promise<any> {
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
-    console.log('=====================================================================',
-    );
     [countryIdFromTocken, sectorIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId, TokenReqestType.sectorId])
    
     return await this.assessmentService.assessmentYearForManageDataStatus(
@@ -76,7 +71,6 @@ export class AssessmentController {
     );
   }
 
-  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('checkAssessmentReadyForQC/getAssment/:id')
   async checkAssessmentReadyForQC(
     @Request() request,
@@ -94,13 +88,9 @@ export class AssessmentController {
     await queryRunner.startTransaction();
     try {
       let paeameter = this.assessmentService.acceptQC(updateDeadlineDto);
-      // console.log(updateDeadlineDto)
-      // await queryRunner.commitTransaction();
       return paeameter;
     }
     catch (err) {
-      console.log("worktran2")
-      console.log(err);
       await queryRunner.rollbackTransaction();
       return err;
     } finally {
@@ -133,7 +123,6 @@ export class AssessmentController {
     let userNameFromTocken: string;
     
     [countryIdFromTocken,cuserRoleFromTocken, userNameFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.role,TokenReqestType.username])
-    console.log('=====================================================================',userNameFromTocken ,cuserRoleFromTocken);
     return await this.assessmentService.assessmentInprogress(
       {
         limit: limit,

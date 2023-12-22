@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { UsersModule } from '../users/users.module';
 import { AuthService } from './service/auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -13,12 +12,10 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
-import { InstitutionModule } from 'src/institution/institution.module';
 import { User } from 'src/users/entity/user.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Audit } from 'src/audit/entity/audit.entity';
 import { AuditService } from 'src/audit/audit.service';
-import { HttpService } from '@nestjs/axios';
 import { HttpModule } from '@nestjs/axios';
 import { TokenDetails } from 'src/utills/token_details';
 @Module({

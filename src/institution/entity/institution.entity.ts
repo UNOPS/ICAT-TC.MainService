@@ -1,9 +1,6 @@
-import { type } from 'os';
 import { Country } from 'src/country/entity/country.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
-// import { Sector } from 'src/master-data/sector/sector.entity';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { MasterData } from 'src/shared/entities/master.data.entity';
 import {
   Column,
   DeleteDateColumn,
@@ -18,9 +15,7 @@ import { InstitutionType } from './institution.type.entity';
 
 @Entity()
 export class Institution extends BaseTrackingEntity {
-  /**
-   *
-   */
+
   constructor() {
     super();
     this.status = 0;
@@ -64,7 +59,7 @@ export class Institution extends BaseTrackingEntity {
   @Column({ length: 100 ,nullable: true })
   address: string;
 
-  @Column({ name: 'sectorId' })
+  @Column({ name: 'sectorId', nullable: true })
   sectorId: number;
 
   @ManyToOne((type) => Sector, { cascade: false, nullable: true ,eager:true})

@@ -1,7 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { log } from 'console';
 import { extname, join } from "path";
-const path = require('path');
 var fs = require('fs');
 
 export class FileUpload {
@@ -12,14 +10,10 @@ export class FileUpload {
     }
 
     getStaticFolderName() {
-        console.log(this.configService.get<string>('staticFolederName'));
-
         return this.configService.get<string>('staticFolederName');
     }
 
     getbaseUrl() {
-        console.log(this.configService.get<string>('baseUrl'));
-
         return this.configService.get<string>('baseUrl');
     }
 }
@@ -37,16 +31,13 @@ export const editFileName = (req, file, callback) => {
 export const statticFileLocation = "static-files";
 
 export const fileLocation = (req, file, callback) => {
-    // let dir = path.join(__dirname, `./files/${req.params.owner}/${req.params.oid}`)
     let dir = join(statticFileLocation, req.params.owner, req.params.oid);
-    // `./${statticFileLocation}/${req.params.owner}/${req.params.oid}`;
 
 
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, {
             recursive: true
         }, (e) => {
-            console.log(e);
         });
     }
     callback(null, dir);

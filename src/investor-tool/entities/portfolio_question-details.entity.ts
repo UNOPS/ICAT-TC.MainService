@@ -34,11 +34,4 @@ export class PortfolioQuestionDetails extends BaseTrackingEntity {
     @JoinColumn({ name: 'investorAssessment_id' })
     investorAssessment?: InvestorAssessment; 
 
-    // @ManyToOne((type) => InvestorTool, { cascade: false })
-    // @JoinColumn({ name: 'investorTool_id' })
-    // investorTool?: InvestorTool;
-
-    
-
-
 }
