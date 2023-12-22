@@ -117,7 +117,8 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
       CMAssessmentQuestion,
       CMAssessmentAnswer,
       SdgPriority,
-      TotalInvestment
+      TotalInvestment,
+      User
     ]), 
     UsersModule,
     CountryModule,

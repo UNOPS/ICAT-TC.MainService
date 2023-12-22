@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { TokenDetails } from 'src/utills/token_details';
 import { NdcSetController } from './ndc-set.controller';
 import { NdcSet } from './ndc-set.entity';
 import { NdcSetService } from './ndc-set.service';

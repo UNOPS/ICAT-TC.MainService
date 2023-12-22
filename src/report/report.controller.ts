@@ -72,38 +72,17 @@ export class ReportController {
     );
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post('generate-report')
-  // async generateReport(
-  //   @Body() req: CreateReportDto
-  // ): Promise<any> {
-  //   let countryIdFromTocken: number
-  //   [countryIdFromTocken] =
-  //     this.tokenDetails.getDetails([
-  //       TokenReqestType.countryId,
-  //     ]);
-  //   req.reportTitle = req.reportName
-  //   req.reportName = req.reportName + '.pdf'
-  //   const reprtDto: ReportDto = await this.reportService.genarateReportDto(
-  //     req,
-  //   );
-  //   const report = await this.reportGenarateService.reportGenarate(
-  //     reprtDto.reportName,
-  //     await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
-  //   )
-  //   const response = await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
-  //   return response
-  // }
 
   @UseGuards(JwtAuthGuard)
   @Post('generate-report')
   async generateReport(
     @Body() req: CreateReportDto
   ): Promise<any> {
-    let countryIdFromTocken: number
-    [countryIdFromTocken] =
+    let countryIdFromTocken: number;
+    let UsernnameFromTocken: string;
+    [countryIdFromTocken,UsernnameFromTocken] =
       this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
+        TokenReqestType.countryId,TokenReqestType.username
       ]);
     req.reportTitle = req.reportName
    
@@ -115,7 +94,6 @@ export class ReportController {
     req.reportName = req.reportName+ '.pdf'
    
     if(req.tool=='Carbon Market Tool'){
-      console.log('works',req)
       const reprtDto: ReportCarbonMarketDto = await this.reportService.genarateReportCarbonMarketDto(
         req,
       );
@@ -134,7 +112,7 @@ export class ReportController {
       )
     }
   
-    const response = await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,0,req.tool,req.type)
+    const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
     return response
   }
 
@@ -144,10 +122,11 @@ export class ReportController {
     @Body() req: CreateComparisonReportDto,
     @Res({ passthrough: true }) res, 
   ): Promise<any> {
-    let countryIdFromTocken: number
-    [countryIdFromTocken] =
+    let countryIdFromTocken: number;
+    let UsernnameFromTocken: string;
+    [countryIdFromTocken,UsernnameFromTocken] =
       this.tokenDetails.getDetails([
-        TokenReqestType.countryId,
+        TokenReqestType.countryId,TokenReqestType.username
       ]);
     req.reportTitle = req.reportTitle
 
@@ -155,39 +134,19 @@ export class ReportController {
     .fill(null)
     .map(() => Math.round(Math.random() * 16).toString(16))
     .join('');
-    const uniqname = req.reportName+randomName + '.pdf'
-    req.reportName = req.reportName + '.pdf'
-    // console.log("...",req)
+    const uniqname = req.reportName+randomName + '.pdf';
+    req.reportName = req.reportName + '.pdf';
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
-  //   const fs = require('fs');
-  // fs.writeFileSync('./public/test.html', ( await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto)).content);
-
-
-    // const report = await this.reportGenarateService.comparisonReportGenarate(
-    //   reprtDto.reportName,
-    //   await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
-    // )
-    //   await this.reportService.saveReport(req.reportName, reprtDto.reportName, countryIdFromTocken, req.climateAction)
-
-    //  res.set({
-    //   'Content-Type': `${doc.mimeType}`,
-    //   'Content-Disposition': `${state}; filename=${doc.fileName}`
-    // })
-
-    //   const file = createReadStream(`./static-files/${doc.relativePath}`);
-      
-    //     return new StreamableFile(file);
-    // return response
 
    const reportpdf = await this.reportGenarateService.comparisonReportGenarate(
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-    let report=  await this.reportService.saveReport(req.reportName,uniqname, countryIdFromTocken, req.climateAction,req.portfolioId,req.tool,req.type)
+    let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
    
-    return report
+    return report;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -201,7 +160,7 @@ export class ReportController {
     let countryIdFromTocken: number;
     [countryIdFromTocken] = this.tokenDetails.getDetails([TokenReqestType.countryId])
 
-    return await this.reportService.getReports(climateAction, reportName, countryIdFromTocken,type,tool)
+    return await this.reportService.getReports(climateAction, reportName, countryIdFromTocken,type,tool);
   }
 
   @Get('assessmentPDF')

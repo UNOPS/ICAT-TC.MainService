@@ -1,4 +1,3 @@
-import { count, log } from 'console';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Not, Repository } from 'typeorm';
@@ -9,9 +8,7 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { UsersController } from 'src/users/users.controller';
 import { UsersService } from 'src/users/users.service';
-import { UserType } from 'src/users/entity/user.type.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from '../entity/institution.entity';
 import { User } from 'src/users/entity/user.entity';
@@ -46,12 +43,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     sectorIdFromTocken: number,
     institutionTypeId: number,
     userTypeFromTocken: string
-    // status: number,
   ): Promise<Pagination<Institution>> {
     let arr = sectorIdFromTocken.toString();
     arr = '(' + arr + ")";
     let filter: string = '';
-    console.log('userTypeFromTocken', userTypeFromTocken)
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(ins.name LIKE :filterText OR ins.address LIKE :filterText OR cate.name LIKE :filterText OR type.name LIKE :filterText OR user.firstName LIKE :filterText OR user.lastName LIKE :filterText)';
@@ -83,7 +78,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
 
     if (userTypeFromTocken == "Technical Team") {
-      console.log('Technical')
 
       if (filter) {
         filter = `${filter}  and ins.typeId = 3`;
@@ -101,7 +95,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
 
     else if (userTypeFromTocken === "Data Collection Team") {
-      console.log("Data Collection Team")
       if (filter) {
         filter = `${filter} and user.userTypeId = 9 or user.userTypeId = 8`
       } else {
@@ -109,7 +102,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
 
-    console.log("filter", filter)
     let data = this.repo.createQueryBuilder('ins')
       .innerJoinAndMapOne('ins.category', InstitutionCategory, 'cate', 'cate.id = ins.categoryId',)
       .innerJoinAndMapOne('ins.type', InstitutionType, 'type', 'type.id = ins.typeId',)
@@ -122,11 +114,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .orderBy('ins.createdOn', 'DESC')
       .groupBy('ins.id');
 
-    console.log('query', data.getQuery());
 
     let resualt = await paginate(data, options);
     if (resualt) {
-      console.log('resula', resualt)
       return resualt;
     }
   }
@@ -141,8 +131,18 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       filter =
         '(ins.name LIKE :filterText )';
     }
-    let cou = await this.countryRepository.findOne({ where: { id: countryIdFromTocken } });
-    let num = await this.repo.find({ where: { name: filterText } })
+
+
+    let data = this.repo
+      .createQueryBuilder('ins')
+      .innerJoinAndMapOne(
+        'ins.country',
+        Country,
+        'cou',
+        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken}`,
+      )
+
+    let num = await data.getMany();
     return num;
   }
 
@@ -156,7 +156,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .select(['institution.id', 'institution.name'])
       .where('typeId=' + filterText + ' AND countryId=' + countryId)
       .getMany();
-    // console.log("22222222222222222",policies)
     return policies
   }
 
@@ -165,9 +164,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     inside: number,
     userType: number
   ): Promise<any> {
-    let filter: string = '';
-
-
     let data = this.repo
       .createQueryBuilder('ins')
       .select(['ins.id', 'user.id'])
@@ -184,7 +180,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
     let resualt = await data.getCount();
-    // console.log('resula====', resualt);
     if (resualt) {
 
       return resualt;
@@ -212,17 +207,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       )
       .where('type.id = 3')
       .orderBy('ins.name', 'ASC');
-    // .addOrderBy('ins.createdOn','DESC')
-    // console.log('data........',data)
-    // console.log('data////////',data)
-    //     let user: User = new User();
-
-    // console.log('query',data.getQuery());
 
     let resualt = await data.getMany();
 
     if (resualt) {
-      // console.log('resula',resualt)
       return resualt;
     }
   }

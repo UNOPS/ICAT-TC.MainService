@@ -35,9 +35,6 @@ var multer = require('multer');
       projectStatus: {
         eager: true,
       },
-      // sector: {
-      //   eager: true,
-      // },
       subSector: {
         eager: true,
       },
@@ -56,9 +53,6 @@ var multer = require('multer');
       assessments: {
         eager: true,
       },
-      // mappedInstitution: {
-      //   eager: true,
-      // },
       country: {
         eager: true,
       },
@@ -77,7 +71,6 @@ var multer = require('multer');
   },
 })
 @Controller('climateAction')
-// @UseGuards(LocalAuthGuard)
 export class ProjectController implements CrudController<ClimateAction> {
   constructor(
     public service: ProjectService,
@@ -98,47 +91,31 @@ export class ProjectController implements CrudController<ClimateAction> {
     return this;
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
-  // @Override()
   @Post('createOne')
   async createOne(
-    // @Request() request,
-    // @ParsedRequest() req: CrudRequest,
-    // @ParsedBody() 
     dto: ClimateAction,
   ): Promise<ClimateAction>{
     try {
-      console.log(
-        '-----------------------------------------------------------',
-      );
       dto.createdBy = '-';
       dto.editedBy = '-';
 
-      // console.log(dto);
 
       let newplData = await this.service.create(dto);
 
       return newplData;
     } catch (error) {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      console.log(error);
       throw error;
     }
-
-    // await this.service.ceateSelfConvertion(dto.unitOfMeasure);
-    // await this.service.ceateReverseConvertion(dto);
   }
   @Post('createNewCA')
   async createNewCA(@Body() req:ClimateAction):Promise<ClimateAction>{
-    // console.log("req",req)
-    return await this.service.create(req)
+    return await this.service.create(req);
   }
- // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
  @UseGuards(JwtAuthGuard)
   @Get('findAllPolicies')
 async findAllPolicies() {
   const policies = await this.service.findAllPolicies();
-  // console.log("aaaaa",policies)
   return policies;
 }
 
@@ -146,13 +123,11 @@ async findAllPolicies() {
 @Get('findAllPoliciesForReport')
 async findAllPoliciesForReport() {
 const policies = await this.service.findAllPoliciesForReport();
-// console.log("aaaaa",policies)
 return policies;
 }
 @Get('getIntervention')
 async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   let  intervention = await this.service.getIntervention(id);
-  // console.log("aaaaa",intervention)
   return intervention;
   }
 
@@ -179,8 +154,6 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
-    // console.log("heelo controler",page,limit,filterText,projectStatusId,projectApprovalStatusId,countryId,sectorId);
-
     return await this.service.getAllCAList(
       {
         limit: limit,
@@ -210,31 +183,18 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     @Req() req: CrudRequest,
     @Request() request,
 
-  ) {
-    console.log("file")
-    console.log(files)
+  ) {;
     for(let e of files){
-      this.filename = e.filename
-      this.originalname = e.originalname
+      this.filename = e.filename;
+      this.originalname = e.originalname;
 
-      this.fname.push(this.filename)
-      this.oname.push(this.originalname)
-    }
-    //this.filename = files.filename
-    //this.originalname = files.originalname
-    //console.log("xxx" + this.filename)
-
-    console.log("fname")
-    console.log(this.fname)
-    console.log("oname")
-    console.log(this.oname)
+      this.fname.push(this.filename);
+      this.oname.push(this.originalname);
+    };
+;
 
   }
 
-  
-
-
-  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
 
 
   @Get(
@@ -251,9 +211,6 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     @Query('filterText') filterText: string,
     
   ): Promise<any> {
-    // console.log(moment(editedOn).format('YYYY-MM-DD'))
-  
-    console.log("getall",page,limit,sectorId,statusId,mitigationActionTypeId,editedOn,filterText)
     return await this.service.getProjectDetails(
       {
         limit: limit,
@@ -304,7 +261,6 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     );
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
-  // @Override()
   @Patch('updateOneClimateAction')
   async updateOneClimateAction(
     @Request() request,
@@ -317,8 +273,8 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     });
 
     let updateData = await this.base.updateOneBase(req, dto);
-    const baseurl = this.configService.get<string>('ClientURl');
-    console.log(baseurl);
+    const baseurl =this.configService.get<string>('ClientURl');
+
 
     if (
       dto.projectApprovalStatus &&
@@ -391,10 +347,8 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
     }
   }
 
-  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN]))
   @Post("policybar")
   async policyBar(@Body() req:AllBarriersSelected){
-    // console.log("policyBar",req)
    return await this.service.save(req);
   }
 
@@ -405,9 +359,6 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
   }
 
   
-
-  
-  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
   @Get('allProjectApprove')
   async allProjectApprove(
     @Request() request,   
@@ -433,10 +384,9 @@ async getIntervention(@Query('id') id:number) :Promise<ClimateAction>{
 
   @Get('findPolicyBarrierData/:policyID')
   async findPolicyBarrierData(@Param('policyID') policyID: number) {
-    console.log("policyID",policyID)
     return await this.service.findPolicyBarrierData(policyID);
   }
-  // @UseGuards(JwtAuthGuard)
+
   @Get('getLastID')
   async getLastID() {
     return await this.service.getLastID();

@@ -48,20 +48,12 @@ export class SectorController implements CrudController<Sector> {
     @ParsedRequest() req: CrudRequest,
     @Request() req2,
   ): Promise<GetManyDefaultResponse<Sector> | Sector[]> {
-    console.log(req);
     try {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
       let res = await this.base.getManyBase(req);
-      // console.log('*********************************************');
-      // console.log(res);
-      // console.log('*********************************************');
-      // console.log(req);
       
       return res;
     } catch (error) {
     
-      console.log(req);
-      // console.log(error);
     }
   }
 
@@ -77,7 +69,6 @@ export class SectorController implements CrudController<Sector> {
       @Query('filterText') filterText: string,
       
     ): Promise<any> {
-      // console.log(moment(editedOn).format('YYYY-MM-DD'))
       return await this.service.getSectorDetails(
         {
           limit: limit,

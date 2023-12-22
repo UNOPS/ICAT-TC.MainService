@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { ClimateAction } from 'src/climate-action/entity//climate-action.entity';
+import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { AggregatedAction } from './entity/aggregated-action.entity';
 import { ActionArea } from '../action-area/entity/action-area.entity';
 import { Repository } from 'typeorm';
@@ -36,7 +36,6 @@ export class NdcService extends TypeOrmCrudService<AggregatedAction> {
     }
 
 if(sectorIdFromTocken){ 
-  // console.log('sectorIdFromTocken')
   if (filter) {
     filter = `${filter}  and dr.sectorId = :sectorIdFromTocken  `;
   } else {
@@ -48,10 +47,8 @@ else{
   if(sectorIds && sectorIds.length>0){
    
     if (filter) {
-      // console.log('sectorId1',sectorId)
       filter = `${filter}  and dr.sectorId  IN  (:...sectorIds) `;
     } else {
-      // console.log('sectorId2',sectorId)
       filter = `dr.sectorId IN  (:...sectorIds) `;
     }
   }
@@ -71,7 +68,6 @@ else{
 
 
     let resualt = await paginate(data, options);
-    console.log(resualt)
     if (resualt) {
       return resualt;
     }
@@ -94,7 +90,6 @@ else{
     }
 
 if(sectorIdFromTocken){ 
-  // console.log('sectorIdFromTocken')
   if (filter) {
     filter = `${filter}  and dr.sectorId = :sectorIdFromTocken  `;
   } else {
@@ -106,10 +101,8 @@ else{
   if(sectorId!=0){
    
     if (filter) {
-      // console.log('sectorId1',sectorId)
       filter = `${filter}  and dr.sectorId = :sectorId`;
     } else {
-      // console.log('sectorId2',sectorId)
       filter = `dr.sectorId = :sectorId`;
     }
   }
@@ -140,7 +133,6 @@ else{
 
 
     let resualt = await paginate(data, options);
-    console.log(resualt)
     if (resualt) {
       return resualt;
     }
@@ -187,7 +179,6 @@ else{
     }
 
 if(sectorIdFromTocken){ 
-  // console.log('sectorIdFromTocken')
   if (filter) {
     filter = `${filter}  and proj.sectorId = :sectorIdFromTocken  `;
   } else {
@@ -199,10 +190,8 @@ else{
   if(sectorId && sectorId!=0){
    
     if (filter) {
-      // console.log('sectorId1',sectorId)
       filter = `${filter}  and proj.sectorId = :sectorId`;
     } else {
-      // console.log('sectorId2',sectorId)
       filter = `proj.sectorId = :sectorId`;
     }
   }
@@ -220,24 +209,12 @@ else{
       'asseRslt.totalEmission ',
       'proj.projectApprovalStatusId'
       ])
-    // .innerJoinAndMapMany(
-    //   'ndc.assesment',
-    //   Assessment,
-    //   'asse',
-    //   'asse.ndcId = ndc.id and asse.assessmentType = "Ex-post"',
-    // )
     .innerJoinAndMapOne(
       'asse.project',
       ClimateAction,
       'proj',
       'asse.projectId = proj.id ',
     )
-    // .innerJoinAndMapMany(
-    //   'asse.assessmentResult',
-    //   AssessmentResault,
-    //   'asseRslt',
-    //   'asseRslt.assementId = asse.id ',
-    // )
     .where(filter, {
       sectorId,
       countryIdFromTocken,
@@ -247,7 +224,6 @@ else{
 
 
     let resualt = await paginate(data, options);
-    // let resualt = await data.getMany();
 
 
     if (resualt) {
@@ -258,11 +234,7 @@ else{
   
  async getSubNdc(ndcID: number) {
   let result = await this.actionAreaRepo.find({ where: { id: ndcID } });
-  console.log("#####actionArea######",result)
 
-  
-
-  // console.log('resualt', resualt);
   return result;
 
 

@@ -59,12 +59,5 @@ export class QualityCheckController implements CrudController<ParameterRequest>{
    
   ):Promise<any> {
 
-    // return this.service.UpdateQCStatus(
-    //   paramId,
-    //   assesmentYearId,
-    //   QuAlityCheckStatus[QuAlityCheckStatus[qaStatusId]],
-    //   comment,
-    //   userQc,
-    // );
   }
 }

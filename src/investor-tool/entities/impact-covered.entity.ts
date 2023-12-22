@@ -13,11 +13,5 @@ export class ImpactCovered extends BaseTrackingEntity {
     @Column({ nullable: true })
     name: string;
 
-    // @ManyToOne((type) => InvestorTool, { cascade: false })
-    // @JoinColumn({ name: 'investorTool_id' })
-    // investorTool?: InvestorTool;
-
-    
-
 
 }

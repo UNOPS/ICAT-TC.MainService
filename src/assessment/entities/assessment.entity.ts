@@ -12,10 +12,10 @@ import { InvestorTool } from "src/investor-tool/entities/investor-tool.entity";
 import { AssessmentBarriers } from "src/methodology-assessment/entities/assessmentbarriers.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 import { ApiHideProperty } from "@nestjs/swagger";
-import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 import { PolicyBarriers } from "src/climate-action/entity/policy-barriers.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { Results } from "src/methodology-assessment/entities/results.entity";
+import { AssessmentCMDetail } from "src/carbon-market/entity/assessment-cm-detail.entity";
 
 @Entity()
 export class Assessment extends BaseTrackingEntity {
@@ -157,6 +157,8 @@ export class Assessment extends BaseTrackingEntity {
   assessment_barriers: AssessmentBarriers[];
   @ApiHideProperty()
   geographical_areas_covered: GeographicalAreasCovered[];
+  @ApiHideProperty()
+  cmAssementDetails: AssessmentCMDetail;
 
 }
 

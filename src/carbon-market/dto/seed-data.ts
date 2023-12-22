@@ -92,18 +92,20 @@ export const questions = [
         order: 1,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
+        short_label: 'Regulatory additionality',
         message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         isUpdate: false
     },
     {
-        label: "Q2: Is the carbon market intervention financially additional, i.e. the revenue from the sale of ITMOs enables the intervention?",
+        label: "Q2: Does the intervention exhibit financial additionality or can it be proved that the intervention faces specified barriers to implementation (e.g. investment barriers, technological barriers, etc.)?",
         code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
+        short_label: 'Financial additionality',
         message: "The intervention cannot be considered additional, clearly not enabling transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Q3: This only applies to ITMOs: Is the envisaged carbon market intervention consistent with the host country's NDC targets and goes beyond the host country's (unconditional) NDC targets? ",
@@ -112,38 +114,66 @@ export const questions = [
         order: 3,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
+        short_label: 'For ITMOs: NDC alignment',
         message: "The envisaged Article 6 intervention might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
-        label: "Q4: Does the carbon market intervention robustly quantify and verify mitigation outcomes by disclosing underlying assumptions and considering uncertainty, by setting a realistic, credible, and conservative baseline (below BAU), by ensuring conservativeness of parameters and default values and the overall quantification methodologies and by addressing and minimising leakage?",
+        label: "Q4: Does the carbon market intervention robustly quantify and verify mitigation outcomes by disclosing underlying assumptions and considering uncertainty?",
         code: "S-2-C-1-Q-4",
         answer_type: AnswerType.SINGLE,
         order: 4,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
+        short_label: 'Robust quantification and verification of mitigation outcomes',
         message: "The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
+        related_questions: ['S-2-C-1-Q-4', 'S-2-C-1-Q-5', 'S-2-C-1-Q-6', 'S-2-C-1-Q-7'],
         isUpdate: true
     },
     {
-        label: 'Q5: This only applies to carbon market interventions that involve carbon storage (compared to the baseline): Does the carbon market intervention design aim to minimise the risk of non-permanence and does the intervention foresee the full addressing of reversals of emission reductions and removals if these occur?',
+        label: 'Q5: Does the carbon market intervention robustly quantify and verify mitigation outcomes by setting a realistic, credible, and conservative baseline (below BAU)?',
         code: 'S-2-C-1-Q-5',
         answer_type: AnswerType.SINGLE,
         order: 5,
         criteria: "S-2-CRITERIA-1",
         characteristic: '',
-        message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: true
+        short_label: '',
+        message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
+        isUpdate: false
     },
-    // {
-    //     label: 'Q6: Does the Article 6 activity feature on the host country’s positive list or has the host country stated its intention to promote the envisaged activity type?',
-    //     code: 'S-2-C-1-Q-6',
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 6,
-    //     criteria: 'S-2-CRITERIA-1',
-    //     characteristic: '',
-    //     message: 'Article 6 activity should not be implemented, as it undermines transformational change, and the host country should be reached out to for a better understanding of which activities are needed for the achievement of its (unconditional) NDC targets and should therefore not be supported by carbon finance. Therefore, such an activity does not enable transformational change.'
-    // },
+    {
+        label: 'Q6: Does the carbon market intervention robustly quantify and verify mitigation outcomes by ensuring conservativeness of parameters, default values and the overall quantification methodologies?',
+        code: 'S-2-C-1-Q-6',
+        answer_type: AnswerType.SINGLE,
+        order: 6,
+        criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
+        short_label: '',
+        message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
+        isUpdate: false
+    },
+    {
+        label: 'Q7: Does the carbon market intervention robustly quantify and verify mitigation outcomes by addressing and minimising leakage?',
+        code: 'S-2-C-1-Q-7',
+        answer_type: AnswerType.SINGLE,
+        order: 7,
+        criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
+        short_label: '',
+        message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
+        isUpdate: false
+    },
+    {
+        label: 'Q8: This only applies to carbon market interventions that involve carbon storage (compared to the baseline): Does the carbon market intervention design aim to minimise the risk of non-permanence and does the intervention foresee the full addressing of reversals of emission reductions and removals if these occur?',
+        code: 'S-2-C-1-Q-8',
+        answer_type: AnswerType.SINGLE,
+        order: 8,
+        criteria: 'S-2-CRITERIA-1',
+        characteristic: '',
+        short_label: 'Minimising non-permanance and addressing reversals in full',
+        message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
+        isUpdate: false
+    },
     {
         label: "Q1: Is the intervention type listed on any negative list of activities that could lead to lock in (e.g., developed by the host country, the Article 6.4 Supervisory Body, the Integrity Council for Voluntary Carbon Markets, the International Energy Agency etc.)? ",
         code: "S-2-C-2-Q-1",
@@ -151,6 +181,7 @@ export const questions = [
         order: 1,
         criteria: "S-2-CRITERIA-2",
         characteristic: "",
+        short_label: 'Intervention does not appear on a negative list',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         isUpdate: false
     },
@@ -161,6 +192,7 @@ export const questions = [
         order: 2,
         criteria: "S-2-CRITERIA-2",
         characteristic: "",
+        short_label: 'Alignment with long-term low-emission development strategy',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         isUpdate: false
     },
@@ -171,6 +203,7 @@ export const questions = [
         order: 1,
         criteria: "S-2-CRITERIA-3",
         characteristic: "",
+        short_label: 'Prevention/avoidance of negative environmental impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         isUpdate: false
     },
@@ -181,6 +214,7 @@ export const questions = [
         order: 2,
         criteria: "S-2-CRITERIA-3",
         characteristic: "",
+        short_label: 'Prevention/avoidance of negative social impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         isUpdate: false
     },
@@ -191,6 +225,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-1',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -201,6 +236,7 @@ export const questions = [
         order: 2,
         criteria: 'S-3-CRITERIA-1',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -211,6 +247,7 @@ export const questions = [
         order: 3,
         criteria: 'S-3-CRITERIA-1',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -221,6 +258,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-2',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -231,6 +269,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-3',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -241,6 +280,7 @@ export const questions = [
         order: 2,
         criteria: 'S-3-CRITERIA-3',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -251,6 +291,7 @@ export const questions = [
         order: 3,
         criteria: 'S-3-CRITERIA-3',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -261,6 +302,7 @@ export const questions = [
         order: 4,
         criteria: 'S-3-CRITERIA-3',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -271,6 +313,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-4',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -281,6 +324,7 @@ export const questions = [
         order: 2,
         criteria: 'S-3-CRITERIA-4',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -291,6 +335,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-5',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -301,6 +346,7 @@ export const questions = [
         order: 2,
         criteria: 'S-3-CRITERIA-5',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -311,6 +357,7 @@ export const questions = [
         order: 1,
         criteria: 'S-3-CRITERIA-6',
         characteristic: '',
+        short_label: '',
         message: '',
         isUpdate: false
     },
@@ -322,6 +369,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "R_&_D",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -332,7 +380,8 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ADOPTION",
-        isUpdate: true
+        short_label: '',
+        isUpdate: false
     },
     {
         label: "Does the intervention support mitigation options that are hard to reach as they face real barriers to adoption other than cost (high-hanging fruits)? ",
@@ -342,6 +391,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ADOPTION",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -352,7 +402,8 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "SCALE_UP",
-        isUpdate: true
+        short_label: '',
+        isUpdate: false
     },
     {
         label: "Does the intervention make use of low-cost yet robust MRV solutions, e.g. through digitalisation, with the purpose of fostering a more rapid adoption of the mitigation practice\/technology?",
@@ -362,7 +413,8 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "SCALE_UP",
-        isUpdate: true
+        short_label: '',
+        isUpdate: false
     },
     {
         label: "Does the intervention incentivize entrepreneurs, businesses and investors to catalyse transformational change (for example, by formulating new solutions or developing new technologies)?",
@@ -372,6 +424,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ENTREPRENEURS",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -382,6 +435,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "COALITION_OF_ADVOCATES",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -392,6 +446,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "BENIFICIARIES",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -402,6 +457,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ECONOMIC_NON_ECONOMIC",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -412,28 +468,9 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ECONOMIC_NON_ECONOMIC",
+        short_label: '',
         isUpdate: false
     },
-    // {
-    //     label: "Does the intervention contribute to increased ambition by charging a carbon credit issuance fee and using it to fund national mitigation action that contributes to national targets?",
-    //     code: "S-3-ECONOMIC_NON_ECONOMIC-Q-3",
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 3,
-    //     criteria: '',
-    //     message: '',
-    //     characteristic: "ECONOMIC_NON_ECONOMIC",
-    //     isUpdate: false
-    // },
-    // {
-    //     label: "Is the intervention’s crediting baseline set in an ambitious manner, i.e., below business-as-usual (BAU)?",
-    //     code: "S-3-ECONOMIC_NON_ECONOMIC-Q-4",
-    //     answer_type: AnswerType.SINGLE,
-    //     order: 4,
-    //     criteria: '',
-    //     message: '',
-    //     characteristic: "ECONOMIC_NON_ECONOMIC",
-    //     isUpdate: false
-    // },
     {
         label: "Is the intervention’s baseline emission factor reduced over time to align with the long-term temperature goal of the Paris Agreement? If the baseline does not use an emission factor, are baseline emissions declining over time?",
         code: "S-3-ECONOMIC_NON_ECONOMIC-Q-5",
@@ -442,6 +479,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "ECONOMIC_NON_ECONOMIC",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -452,6 +490,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "DISINCENTIVES",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -462,6 +501,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "INSTITUTIONAL_AND_REGULATORY",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -472,6 +512,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "AWARENESS",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -482,6 +523,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "BEHAVIOUR",
+        short_label: '',
         isUpdate: false
     },
     {
@@ -492,6 +534,7 @@ export const questions = [
         criteria: '',
         message: '',
         characteristic: "SOCIAL_NORMS",
+        short_label: '',
         isUpdate: false
     },
 
@@ -615,14 +658,6 @@ export const answers = [
         question: "S-2-C-1-Q-4",
         isUpdate: false
     },
-    // {
-    //     label: "The country does not differentiate between conditional and unconditional targets",
-    //     code: "S-2-C-1-Q-4-A-4",
-    //     weight: 0,
-    //     score_portion: 1,
-    //     isPassing: true,
-    //     question: "S-2-C-1-Q-4"
-    // },
     {
         label: "Yes",
         code: "S-2-C-1-Q-5-A-1",
@@ -642,22 +677,103 @@ export const answers = [
         isUpdate: false
     },
     {
-        label: "Not relevant",
-        code: "S-2-C-1-Q-5-A-3",
-        weight: 0,
-        score_portion: 0,
-        isPassing: true,
-        question: "S-2-C-1-Q-5",
-        isUpdate: true
-    },
-    {
         label: "Unsure",
-        code: "S-2-C-1-Q-5-A-4",
+        code: "S-2-C-1-Q-5-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-5",
-        isUpdate: true
+        isUpdate: false
+    },
+    {
+        label: "Yes",
+        code: "S-2-C-1-Q-6-A-1",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-6",
+        isUpdate: false
+    },
+    {
+        label: "No",
+        code: "S-2-C-1-Q-6-A-2",
+        weight: 0,
+        score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-6",
+        isUpdate: false
+    },
+    {
+        label: "Unsure",
+        code: "S-2-C-1-Q-6-A-3",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-6",
+        isUpdate: false
+    },
+    {
+        label: "Yes",
+        code: "S-2-C-1-Q-7-A-1",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-7",
+        isUpdate: false
+    },
+    {
+        label: "No",
+        code: "S-2-C-1-Q-7-A-2",
+        weight: 0,
+        score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-7",
+        isUpdate: false
+    },
+    {
+        label: "Unsure",
+        code: "S-2-C-1-Q-7-A-3",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-7",
+        isUpdate: false
+    },
+    {
+        label: "Yes",
+        code: "S-2-C-1-Q-8-A-1",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-8",
+        isUpdate: false
+    },
+    {
+        label: "No",
+        code: "S-2-C-1-Q-8-A-2",
+        weight: 0,
+        score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-8",
+        isUpdate: false
+    },
+    {
+        label: "Not relevant",
+        code: "S-2-C-1-Q-8-A-3",
+        weight: 0,
+        score_portion: 1,
+        isPassing: false,
+        question: "S-2-C-1-Q-8",
+        isUpdate: false
+    },
+    {
+        label: "Unsure",
+        code: "S-2-C-1-Q-8-A-4",
+        weight: 0,
+        score_portion: 1,
+        isPassing: true,
+        question: "S-2-C-1-Q-8",
+        isUpdate: false
     },
     {
         label: "Yes",
@@ -1116,7 +1232,7 @@ export const answers = [
         score_portion: 4,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-2",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "No",
@@ -1125,7 +1241,7 @@ export const answers = [
         score_portion: 0,
         isPassing: true,
         question: "S-3-SCALE_UP-Q-2",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Very strongly (upscaling is encouraged through a clearly replicable approach targeting more than five localities, introduction of a nationwide policy, or application of an approach covering a large sector)",
@@ -1482,7 +1598,7 @@ export const characteristic = [
         description: 'Technological research and development happens through support of science, specialization and learning. This includes actions such as direct investment in R&D, development of the knowledge/skill base, research networks and consortiums, capacity-building efforts, and experimentation.',
         main_question: 'Does the intervention support R&D for building technological capabilities favouring a low-carbon and/or a climate resilient economy?',
         weight: 20,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Adoption',
@@ -1491,7 +1607,7 @@ export const characteristic = [
         description: 'Adoption of new technologies can be facilitated by pilot projects, demonstrations, experimentation and publicly or privately funded trials. Through these actions, the required skills and capacities to handle new technologies can be developed, new networks of users can be built, and the potential market for a new technology can be assessed.',
         main_question: 'Does the intervention lead to early adoption of promising low-carbon and/or climate resiliency building technologies?',
         weight: 60,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Scale up',
@@ -1500,7 +1616,7 @@ export const characteristic = [
         description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectorial public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
         main_question: 'Does the intervention support the scale-up and diffusion of low-carbon and/or climate resilient innovations?',
         weight: 20,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Entrepreneurs',
@@ -1518,7 +1634,7 @@ export const characteristic = [
         description: 'The process of transformational change can benefit from the participation of a wide range of stakeholders organized in different forms (e.g., coalitions, lobbys, social movements etc) representing diverse interests and which could defend the intervention and provide counterbalance those actors opposing it. The way the intervention is planned may determined the networks that may arise around it.',
         main_question: 'Does the intervention support coalitions and networks that seek to broaden and deepen support for low-carbon and/or climate resilient development?',
         weight: 33,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Beneficiaries',
@@ -1527,7 +1643,7 @@ export const characteristic = [
         description: 'Those stakeholders who would benefit from the intervention or who would be compensated if it has adverse effects can serve as agents of change and play a role in ensuring that the intervention is durable and gets strengthened over time.',
         main_question: 'Does the policy support diverse groups of society affected by the transformational change, which subsequently support the intervention?',
         weight: 33,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Economic and non-economic',
@@ -1545,7 +1661,7 @@ export const characteristic = [
         description: 'Disincentives may include taxes on carbon-intensive produces, use of market-based instruments ausch as import duties, tariff structures that discourage investments in business-as-usual technologies, reduction or phase-out of fossil fuels subsidies, increased or new fossil fuel taxes, etc.',
         main_question: 'Does the intervention disincentivize technologies and businesses contributing to a high carbon and/or climate vulnerable economy?',
         weight: 10,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Institutional and regulatory',
@@ -1554,7 +1670,7 @@ export const characteristic = [
         description: 'An intervention may contribute to changes in the institutional and regulatory setting that facilitate/enable/promote transformational change. For instance, an intervention may lead to the creation of formal and informal institutions, new regulations or permanent budget allocation. It may also contribute to the development of intragovernmental processes for horizontal integration or multi-scale governmental processes.',
         main_question: 'Does the intervention create or reconfigure existing conditions, including availability of finance for implementation, and put in place regulation and institutions favouring low-carbon and/or climate resilient development?',
         weight: 10,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Awareness',
@@ -1563,7 +1679,7 @@ export const characteristic = [
         description: 'An intervention may include components oriented to raise awareness and increase support for low-carbon solutions that may contribute to change norms and behaviors among diverse groups of stakeholders. Such a component can take the shape of campaigns and sensitization of policymakers and consumers, information dissemination within the institutions using various means etc',
         main_question: 'Does the intervention support awareness raising and education for transition towards sustainable , low-carbon and resilient systems?',
         weight: 46,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Behavior',
@@ -1572,7 +1688,7 @@ export const characteristic = [
         description: 'In order for transformational change to happen, a shift in the lifestyle and common practices of a large majority of the population has to take place. An intervention may influence consumers\' behavior with actions such as peak energy savings, cash incentives for using alternative transport models, rewards for recycling, etc.',
         main_question: 'Does the intervention support measures that discourage high-carbon and/or climate vulnerable lifestyles and practices, and promote low-carbon and/or climate resilient solutions?',
         weight: 27,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'Social Norms',
@@ -1581,7 +1697,7 @@ export const characteristic = [
         description: 'Social norms refers to those behaviors and practices that have become widely accepted and enjoy broad and deeply entrenched support within the society. An intervention can contribute to low-carbon lifestyle and practices becoming the prevalent societal norm. Some examples of this are the willingness to pay for pollution, the valorization of natural resources, the widespread adoption of energy efficiency measures within the households, etc.',
         main_question: 'Does the intervention affect norms within society that align with and further promote low-carbon and/or climate resilient sustainable development?',
         weight: 27,
-        isUpdate: true
+        isUpdate: false
     },
     {
         name: 'International/global levell',
