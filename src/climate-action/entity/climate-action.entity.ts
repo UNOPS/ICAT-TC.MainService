@@ -39,10 +39,10 @@ export class ClimateAction extends BaseTrackingEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({length: 150})
   policyName: string; 
 
-  @Column({ default: null })
+  @Column({ default: null, type: 'varchar', length: 1500})
   description: string; 
 
   @Column({ length: 50, default: null, nullable: true })
@@ -96,7 +96,7 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column()
   proposeDateofCommence: Date; 
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ length: 1500, default: null, nullable: true, type: 'varchar' })
   objective: string; 
 
   @Column({ default: null, nullable: true })
@@ -130,7 +130,7 @@ export class ClimateAction extends BaseTrackingEntity {
   geographicCoverage: string;
   
 
-  @Column({ default: null })
+  @Column({ default: null , type: 'varchar', length: 500})
   implementingEntity: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
@@ -200,10 +200,10 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({ length: 100, default: null, nullable: true })
   location_country: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ length: 1500, type: 'varchar', default: null, nullable: true })
   related_policies: string;
 
-  @Column({ length: 500, default: null, nullable: true })
+  @Column({ length: 1500, type: 'varchar', default: null, nullable: true })
   reference: string;
 
   @Column({type: 'int', nullable: true,})
