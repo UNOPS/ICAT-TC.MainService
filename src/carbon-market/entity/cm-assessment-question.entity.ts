@@ -13,7 +13,7 @@ export class CMAssessmentQuestion extends BaseTrackingEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({nullable: true})
+  @Column({nullable: true, type: 'varchar', length: 1000})
   comment: string
 
   @ManyToOne((type) => Assessment)
