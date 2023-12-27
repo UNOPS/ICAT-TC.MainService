@@ -20,6 +20,7 @@ import {
   ReportCarbonMarketDtoContentFour,
   ReportCarbonMarketDtoContentFive,
   ReportCarbonMarketDtoCoverPage,
+  ReportContentThree,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -85,6 +86,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
       createReportDto.assessmentId,createReportDto.tool
     );
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
+      createReportDto.assessmentId,createReportDto.tool
+    );
+    reportDto.contentThree = await this.genarateReportDtoContentThree(
       createReportDto.assessmentId,createReportDto.tool
     );
     return reportDto;
@@ -316,7 +320,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
-        information: 'Level of the policy or action ',
+        information: 'Level of intervention ',
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
@@ -1359,7 +1363,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   }
 
+   async genarateReportDtoContentThree( assessmentId: number,
+    tool:string):Promise<ReportContentThree>{
+    const contentThree=new ReportContentThree()
+    // if(this.cmScores.process_score!=null ||this.cmScores.process_score!=undefined){
+    //   contentFour.processScore = this.cmScores.process_score
+    // }
+    // if(this.cmScores.outcome_score?.outcome_score!=null ||this.cmScores.outcome_score?.outcome_score!=undefined){
+    //   contentFour.outcomeScore = this.cmScores.outcome_score.outcome_score
+    // }
+    
 
+   return contentThree
+}
 
   async genarateReportCarbonMarketDto(
     createReportDto: CreateReportDto,
