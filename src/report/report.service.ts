@@ -1366,14 +1366,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
    async genarateReportDtoContentThree( assessmentId: number,
     tool:string):Promise<ReportContentThree>{
     const contentThree=new ReportContentThree()
-    // if(this.cmScores.process_score!=null ||this.cmScores.process_score!=undefined){
-    //   contentFour.processScore = this.cmScores.process_score
-    // }
-    // if(this.cmScores.outcome_score?.outcome_score!=null ||this.cmScores.outcome_score?.outcome_score!=undefined){
-    //   contentFour.outcomeScore = this.cmScores.outcome_score.outcome_score
-    // }
-    
-
+ 
    return contentThree
 }
 
