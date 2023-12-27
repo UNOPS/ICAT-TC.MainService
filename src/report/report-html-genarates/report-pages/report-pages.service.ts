@@ -1224,7 +1224,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </div>`;
     const page_6_1 = `  <div id="page_6_1" class="page text-center" >
       ${header}
-      <div class="content">
+      <div class="content same-page">
       <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
       <div class="report-table-sm">
       <table id="heatmap" class="heatmap" style="text-align: center;">
