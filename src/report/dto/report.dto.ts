@@ -6,6 +6,7 @@ export class ReportDto {
    tableOfContent:ReportTableOfContent=new ReportTableOfContent()
    contentOne:ReportContentOne=new ReportContentOne()
    contentTwo:ReportContentTwo=new ReportContentTwo()
+   contentThree:ReportContentThree=new ReportContentThree()
 
 }
 
@@ -95,7 +96,11 @@ export class ReportContentTwo {
 
 
 }
-
+export class ReportContentThree {
+    
+    processScore: number;
+    outcomeScore :number;
+ }
 
 export class ReportCarbonMarketDto {
     reportName:string='';

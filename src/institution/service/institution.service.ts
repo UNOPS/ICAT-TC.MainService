@@ -139,7 +139,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         'ins.country',
         Country,
         'cou',
-        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken}`,
+        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken} and ins.name= '` +filterText+`'`,
       )
 
     let num = await data.getMany();
