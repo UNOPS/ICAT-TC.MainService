@@ -20,6 +20,7 @@ import {
   ReportCarbonMarketDtoContentFour,
   ReportCarbonMarketDtoContentFive,
   ReportCarbonMarketDtoCoverPage,
+  ReportContentThree,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -85,6 +86,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
       createReportDto.assessmentId,createReportDto.tool
     );
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
+      createReportDto.assessmentId,createReportDto.tool
+    );
+    reportDto.contentThree = await this.genarateReportDtoContentThree(
       createReportDto.assessmentId,createReportDto.tool
     );
     return reportDto;
@@ -316,7 +320,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
-        information: 'Level of the policy or action ',
+        information: 'Level of intervention ',
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
@@ -1359,7 +1363,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   }
 
-
+   async genarateReportDtoContentThree( assessmentId: number,
+    tool:string):Promise<ReportContentThree>{
+    const contentThree=new ReportContentThree()
+ 
+   return contentThree
+}
 
   async genarateReportCarbonMarketDto(
     createReportDto: CreateReportDto,
@@ -1582,8 +1591,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
     contentTwo.safeguards=safeguardsArray
     contentTwo.prevention_ghg_emissions = preventionGHGArray;
     contentTwo.prevention_negative_environmental = preventionAvoidanceArray ;
+   
     let outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
-    contentTwo.outcomes = [...outcomes].reverse();
+
+    contentTwo.outcomes = outcomes?[...outcomes].reverse():[];
     }
 
     return contentTwo;
