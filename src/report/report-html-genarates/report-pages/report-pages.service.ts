@@ -70,11 +70,11 @@ export class ReportPagesService {
 </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+     
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -95,7 +95,7 @@ export class ReportPagesService {
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
   <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Description .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Description of the intervention .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   
@@ -136,7 +136,7 @@ export class ReportPagesService {
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Description  </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -221,13 +221,16 @@ export class ReportPagesService {
    
    <div  class="main_header_sub text-start">1.2	Understanding the intervention’s transformational vision and context  </div> 
       
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
             <tr>
-              <th scope="col">Description of the vision for desired societal, environmental and technical changes</th>
-              <th scope="col"></th>
+            <tr>
+            <th scope="col">Information</th>
+            <th scope="col">Description</th>
+            
+          </tr>
               
             </tr>
           </thead>
@@ -245,7 +248,7 @@ export class ReportPagesService {
           </tbody>
         </table>
       </div>
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
         <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -293,7 +296,7 @@ export class ReportPagesService {
 
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
   <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -354,7 +357,7 @@ export class ReportPagesService {
                </p>
            </blockquote>
 
-           <div class="report-table-sm">
+           <div class="report-table-sm same-page-table">
 
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
@@ -412,7 +415,7 @@ export class ReportPagesService {
                 </p>
             </blockquote>
  
-            <div class="report-table-sm">
+            <div class="report-table-sm same-page-table">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -477,7 +480,7 @@ export class ReportPagesService {
 
 
 
-<div class="report-table-sm">
+<div class="report-table-sm same-page-table">
 <p>
   Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
 </p>
@@ -548,7 +551,7 @@ export class ReportPagesService {
    ${header}
 
    <div class="content">
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
    <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -618,9 +621,9 @@ export class ReportPagesService {
 
  
  
- <div class="report-table-sm">
+ <div class="report-table-sm same-page-table">
 <p>
-Outcome characteristics refer to the scale and sustained nature of outcomes resulting from intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
+Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
 </p>
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -664,7 +667,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </tbody>
  </table>
  </div>
- <div class="report-table-sm">
+ <div class="report-table-sm same-page-table">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -723,7 +726,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     ${header}
     <div class="content">
  
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -767,7 +770,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </tbody>
   </table>
   </div>
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -827,7 +830,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -929,7 +932,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1032,7 +1035,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1072,7 +1075,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
 
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1138,7 +1141,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1178,7 +1181,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
 
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1226,7 +1229,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content same-page">
       <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
         <tr>
@@ -1286,7 +1289,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </blockquote>
     
     
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1366,7 +1369,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
     
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
         <tr>
@@ -1435,11 +1438,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+     
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -1526,7 +1529,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1567,7 +1570,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
  
  <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1597,7 +1600,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
 
      
-             <div class="report-table-sm">
+             <div class="report-table-sm same-page-table">
             
              <table class="table  table-bordered border-dark">
                <thead class="table-primary  border-dark">
@@ -1634,7 +1637,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <div class="content">
 
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1673,7 +1676,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
 
 
-<div class="report-table-sm">
+<div class="report-table-sm same-page-table">
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
@@ -1733,7 +1736,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
-         <div class="report-table-sm">
+         <div class="report-table-sm same-page-table">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -1788,7 +1791,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div class="content">
     
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
-           <div class="report-table-sm">
+           <div class="report-table-sm same-page-table">
           
            <table class="table  table-bordered border-dark">
              <thead class="table-primary  border-dark">
@@ -1829,7 +1832,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          </div>
 
          <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
-         <div class="report-table-sm">
+         <div class="report-table-sm same-page-table">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -1881,10 +1884,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <div class="content">
        <div  class="main_header_sub text-start">2.2 Outcomes of the preconditions assessment  </div> 
    
-            <div class="report-table-sm">
+            <div class="report-table-sm same-page-table">
            
             <table class="table  table-bordered border-dark">
-              <thead class="table-primary  border-dark">
+              <thead class="table-primary  border-dark ">
                 <tr>
                 <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
@@ -1942,7 +1945,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2056,7 +2059,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2178,7 +2181,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content">
      
-     <div class="report-table-sm">
+     <div class="report-table-sm same-page-table">
      
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -2363,7 +2366,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2484,7 +2487,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2610,7 +2613,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
 
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -2659,7 +2662,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </tbody>
    </table>
    </div>
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
     <p>Question - Is the intervention’s GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -2717,7 +2720,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content">
    
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2767,7 +2770,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </tbody>
     </table>
     </div>
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
   <p>Question - Is the intervention’s contribution to the adaptation co-benefit sustained in nature?</p>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2826,7 +2829,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
     
     
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2899,7 +2902,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
     
     
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <p>Question - Is the activity’s contribution to the selected SDG sustained in nature?</p>
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -2965,7 +2968,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <div  class="main_header_sub text-start">3.3	 Process categories assessment   </div> 
      
      
-     <div class="report-table-sm">
+     <div class="report-table-sm same-page-table">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -3004,7 +3007,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     
      <div  class="main_header_sub text-start">3.4	Outcomes categories assessment </div> 
   
-     <div class="report-table-sm">
+     <div class="report-table-sm same-page-table">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -3113,7 +3116,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
     
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
         <tr>
@@ -3170,7 +3173,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
     
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -3247,11 +3250,11 @@ PORTFOLIO TOOL
  </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+      
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -3308,7 +3311,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">1.	PORTFOLIO OF INTERVENTIONS INFORMATION </div>
  
  <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3333,7 +3336,7 @@ PORTFOLIO TOOL
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3380,7 +3383,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
  
  <div  class="main_header_sub text-start">2.1	Processes impacts comparison</div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3438,7 +3441,7 @@ PORTFOLIO TOOL
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3507,7 +3510,7 @@ PORTFOLIO TOOL
     ${header}
     <div class="content">
     
-         <div class="report-table-sm">
+         <div class="report-table-sm same-page-table">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -3568,7 +3571,7 @@ PORTFOLIO TOOL
          </table>
        </div>
  
-       <div class="report-table-sm">
+       <div class="report-table-sm same-page-table">
         
        <table class="table  table-bordered border-dark">
          <thead class="table-primary  border-dark">
@@ -3638,7 +3641,7 @@ PORTFOLIO TOOL
      ${header}
      <div class="content">
      
-          <div class="report-table-sm">
+          <div class="report-table-sm same-page-table">
          
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
@@ -3739,10 +3742,10 @@ PORTFOLIO TOOL
    
  
  <div  class="main_header_sub text-start">2.2	Outcomes impacts comparison</div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
-          <thead class="table-primary  border-dark">
+        <table class="table  table-bordered border-dark ">
+          <thead class="table-primary  border-dark ">
           <tr>
           <th colspan="4" scope="col">SCALE COMPARISON	</th>
           <th colspan="4" scope="col">OUTCOMES</th>
@@ -3801,7 +3804,7 @@ PORTFOLIO TOOL
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3879,7 +3882,7 @@ PORTFOLIO TOOL
  
     
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3940,7 +3943,7 @@ PORTFOLIO TOOL
         </tbody>
       </table>
     </div>
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
        
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -4023,7 +4026,7 @@ PORTFOLIO TOOL
         }) => `<div  class="page text-center" >
       ${header}
       <div class="content">
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
          
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -4086,7 +4089,7 @@ PORTFOLIO TOOL
     </div>
     
   
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
          
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -4164,7 +4167,7 @@ PORTFOLIO TOOL
    ${header}
    <div class="content">
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
        
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -4223,7 +4226,7 @@ PORTFOLIO TOOL
    </table>
  </div>
 
- <div class="report-table-sm">
+ <div class="report-table-sm same-page-table">
        
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -4299,7 +4302,7 @@ PORTFOLIO TOOL
     
   
  
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
        
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -4374,7 +4377,7 @@ PORTFOLIO TOOL
   
  
 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4434,7 +4437,7 @@ PORTFOLIO TOOL
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -4507,7 +4510,7 @@ PORTFOLIO TOOL
    
  
 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4605,7 +4608,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">3.	AGGREGATION </div>
  
  
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4687,9 +4690,9 @@ PORTFOLIO TOOL
      </blockquote> 
       <div class="report-all-table-sm-rotate same-page">
    
-        <div class="report-table-sm-rotate">
+        <div class=" same-page-table-rotate">
        
-          <table class="table  table-bordered border-dark">
+          <table class="table  table-bordered border-dark table-fixed-width">
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
@@ -4713,6 +4716,7 @@ PORTFOLIO TOOL
                 ${alignment_table.col_set_2
                   .map((a) => '<th scope="col">' + a.label + '</th>')
                   .join('')}
+                
               </tr>
             </thead>
             <tbody class="table-active">
@@ -4720,6 +4724,7 @@ PORTFOLIO TOOL
                     alignment_table.interventions,
                     alignment_table.col_set_2,
                   )}
+                 
             </tbody>
           </table>
         </div>
@@ -4727,8 +4732,8 @@ PORTFOLIO TOOL
         </div>
 
         <div class="report-all-table-sm-rotate same-page">
-        <div class="report-table-sm-rotate">
-        <table class="table  table-bordered border-dark">
+        <div class=" same-page-table-rotate">
+        <table class="table  table-bordered border-dark table-fixed-width">
           <thead class="table-primary  border-dark">
             <tr>
               <th colspan="4" scope="col">ALIGNMENT</th>
