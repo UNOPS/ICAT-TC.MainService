@@ -100,7 +100,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
 
   }
@@ -373,7 +373,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
     reportContentOne.understanPolicyOrActions = [
+      {
 
+        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+
+        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+
+      },
       {
 
         Time_periods: 'Long-term (≥15 years)',
@@ -1405,7 +1411,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
     coverPage.reportDate = new Date().toDateString();
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
 
 
@@ -1503,7 +1509,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     contentOne.transformational = [
     
+      {
 
+        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+
+        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+
+      },
       {
 
         information: 'Long-term (≥15 years)',
@@ -1793,7 +1805,7 @@ return contentFour
 
     coverPage.document_prepared_by = 'user';
 
-    coverPage.companyLogoLink = process.env.MAIN_URL +  '/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink = process.env.MAIN_URL +  '/report/cover/icatlogo.png';
       
 
     return coverPage;
