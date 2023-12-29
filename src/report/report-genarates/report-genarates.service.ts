@@ -13,13 +13,25 @@ constructor(){}
       format: 'A4',
       margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
        path: '/home/ubuntu/code/Main/main/public/' + fileName,
-     
+   
       printBackground: true,
       landscape:true
     };
 
     
-    return await html_to_pdf.generatePdf(file, options);
+    const puppeteer = require('puppeteer');
+  const browser = await puppeteer.launch({
+    headless: 'new'
+  });
+  const page = await browser.newPage();
+  await page.setContent(file.content, { waitUntil: 'domcontentloaded' });
+  await page.emulateMediaType('print');
+
+
+  const PDF = await page.pdf(options);
+  await browser.close();
+
+  return PDF
 }
 
 async comparisonReportGenarate(name:string,file:any):Promise<any>{
@@ -29,7 +41,7 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
     format: 'A4',
     margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
      path: '/home/ubuntu/code/Main/main/public/' + fileName,
-   
+  
     printBackground: true,
     landscape:true
   };
