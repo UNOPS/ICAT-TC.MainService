@@ -388,7 +388,7 @@ body {
   }
   .report-all-table-sm-rotate {
     /* height: 100%; */
-    text-align:end;
+    text-align:start;
     position: relative; 
     /* transform:rotate(270deg); */
     /* bottom: -60%;  */

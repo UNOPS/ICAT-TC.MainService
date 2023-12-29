@@ -95,10 +95,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
   }
 
   genarateReportDtoCoverPage(title: string,tool:string): ReportCoverPage {
+    var moment = require('moment');
     const coverPage = new ReportCoverPage();
     coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
@@ -1406,10 +1407,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
   genarateReportCarbonMarketDtoCoverPage(
     title:string
   ): ReportCarbonMarketDtoCoverPage{
+
+    var moment = require('moment');
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
@@ -1511,7 +1514,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     
       {
 
-        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+        information: 'Description of the vision for desired societal, environmental and technical changes',
 
         description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
 
@@ -1766,7 +1769,7 @@ return contentFour
     createReportDto: CreateComparisonReportDto,
 
   ): Promise<ComparisonReportDto> {
-
+    var moment = require('moment');
     const comparisonReportDto = new ComparisonReportDto();
     comparisonReportDto.reportName = createReportDto.reportName;
     comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(
@@ -1796,12 +1799,12 @@ return contentFour
 
 
   genarateComparisonReportDtoCoverPage(title: string): ReportCoverPage {
-
+    var moment = require('moment');
     const coverPage = new ComparisonReportReportCoverPage();
 
     coverPage.generateReportName = title;
 
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
 
     coverPage.document_prepared_by = 'user';
 
