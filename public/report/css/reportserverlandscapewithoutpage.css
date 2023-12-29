@@ -27,6 +27,10 @@ body {
     text-align: center;
     /* font-weight: bold; */
   }
+  #cover img {
+   width: 40%;
+   height: 100%;
+  }
   
   #cover .row .h4 {
     font-size: 16px;
@@ -375,7 +379,7 @@ body {
   
   .report-table-sm-rotate {
  
-   
+ 
     text-align:start;
   }
   
@@ -389,7 +393,12 @@ body {
     /* transform:rotate(270deg); */
     /* bottom: -60%;  */
     font-size:8px;
-    
+    /* overflow: hidden ; */
+  
+  }
+  .table-fixed-width {
+
+    word-break: break-word;
   }
   
   .bold-table-row{
@@ -430,4 +439,9 @@ body {
 
     page-break-inside: avoid;
         display: block
+  }
+  .same-page-table{
+
+    page-break-inside: avoid;
+       
   }
