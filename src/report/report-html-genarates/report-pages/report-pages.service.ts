@@ -65,7 +65,7 @@ export class ReportPagesService {
 </div>
 <div class="row ">
 <div class="col h4 d-flex justify-content-center">
-  
+${coverPage.reportDate}
 </div>
 </div>
    <div class="row ">
@@ -1433,7 +1433,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 </div>
 <div class="row ">
 <div class="col h4 d-flex justify-content-center">
-  
+${coverPage.reportDate}
 </div>
 </div>
    <div class="row ">
@@ -3242,6 +3242,7 @@ PORTFOLIO TOOL
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
+       ${coverPage.reportDate}
        </div>
    </div>
    <div class="row ">
