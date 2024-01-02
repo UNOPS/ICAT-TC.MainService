@@ -135,7 +135,7 @@ export class ClimateAction extends BaseTrackingEntity {
   })
   latitude: number;
   
-  @Column({default: null, nullable: true  })
+  @Column({default: null, nullable: true, length: 1500  })
   geographicCoverage: string;
   
 
