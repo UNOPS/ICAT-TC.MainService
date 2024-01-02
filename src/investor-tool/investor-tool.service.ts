@@ -1025,7 +1025,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         where: { intervention: { id: item.intervention } },
         relations: ['sector'],
       });
-      return policySectors.map((policySector) => ({ sector: policySector.sector.name }));
+      return policySectors.map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id }));
     });
     const sectorsArrays = await Promise.all(promises);
     const sectors = sectorsArrays.flat();
@@ -1033,20 +1033,27 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return this.countSectors(sectors)
   }
 
-  countSectors(array: any[]): { sector: string; count: number }[] {
+  countSectors(array: any[]): any[] {
     const sectorCounts: { [sector: string]: number } = {};
+    let original = [...array]
     array.reduce((accumulator, currentValue) => {
-      const sectorName = currentValue.sector;
-      if (!sectorCounts[sectorName]) {
-        sectorCounts[sectorName] = 1;
+      const sectorId = currentValue.id;
+      if (!sectorCounts[sectorId]) {
+        sectorCounts[sectorId] = 1;
       } else {
-        sectorCounts[sectorName]++;
+        sectorCounts[sectorId]++;
       }
       return accumulator;
     }, {});
 
-    const result: { sector: string; count: number }[] = Object.keys(sectorCounts).map((sector) => {
-      return { sector, count: sectorCounts[sector] };
+    const result: any[] = Object.keys(sectorCounts).map((sector) => {
+      let obj = {}
+      let sec = original.find(o => o.id === +sector)
+      obj['sector'] = sec.sector
+      obj['id'] = sec.id
+      obj['count'] = sectorCounts[sector]
+      // return { sector, count: sectorCounts[sector] };
+      return obj
     });
 
     return result;
