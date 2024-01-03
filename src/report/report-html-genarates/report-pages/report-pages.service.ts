@@ -302,7 +302,7 @@ ${coverPage.reportDate}
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Information</th>
-        <th scope="col">Description </th>
+        <th scope="col">Description</th>
       
       </tr>
     </thead>
@@ -1681,7 +1681,7 @@ ${coverPage.reportDate}
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Information</th>
-      <th scope="col">Description </th>
+      <th scope="col">Description</th>
     
     </tr>
   </thead>
@@ -3121,7 +3121,7 @@ ${coverPage.reportDate}
          <tbody>
         <tr>
             <td></td>
-            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
+            <td colspan="8">Outcome: Extent and sustained nature of transformation</td>
         </tr>
         <tr>
             <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
