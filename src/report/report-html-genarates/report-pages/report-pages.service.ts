@@ -136,7 +136,7 @@ ${coverPage.reportDate}
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Description  </div> 
-        <div class="report-table-sm same-page-table">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -221,11 +221,11 @@ ${coverPage.reportDate}
    
    <div  class="main_header_sub text-start">1.2	Understanding the intervention’s transformational vision and context  </div> 
       
-      <div class="report-table-sm same-page-table">
+      <div class="report-table-sm  ">
       <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
-            <tr>
+            
             <tr>
             <th scope="col">Information</th>
             <th scope="col">Description</th>
@@ -248,7 +248,7 @@ ${coverPage.reportDate}
           </tbody>
         </table>
       </div>
-        <div class="report-table-sm same-page-table">
+        <div class="report-table-sm ">
         <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -296,7 +296,7 @@ ${coverPage.reportDate}
 
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
-  <div class="report-table-sm same-page-table">
+  <div class="report-table-sm  ">
   <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -357,7 +357,7 @@ ${coverPage.reportDate}
                </p>
            </blockquote>
 
-           <div class="report-table-sm same-page-table">
+           <div class="report-table-sm  ">
 
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
@@ -415,7 +415,7 @@ ${coverPage.reportDate}
                 </p>
             </blockquote>
  
-            <div class="report-table-sm same-page-table">
+            <div class="report-table-sm  ">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -480,7 +480,7 @@ ${coverPage.reportDate}
 
 
 
-<div class="report-table-sm same-page-table">
+<div class="report-table-sm  ">
 <p>
   Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
 </p>
@@ -551,7 +551,7 @@ ${coverPage.reportDate}
    ${header}
 
    <div class="content">
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -621,7 +621,7 @@ ${coverPage.reportDate}
 
  
  
- <div class="report-table-sm same-page-table">
+ <div class="report-table-sm  ">
 <p>
 Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
 </p>
@@ -667,7 +667,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </tbody>
  </table>
  </div>
- <div class="report-table-sm same-page-table">
+ <div class="report-table-sm  ">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -726,7 +726,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     ${header}
     <div class="content">
  
-  <div class="report-table-sm same-page-table">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -770,7 +770,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </tbody>
   </table>
   </div>
-  <div class="report-table-sm same-page-table">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -830,7 +830,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-  <div class="report-table-sm same-page-table">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -932,7 +932,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1035,7 +1035,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1075,7 +1075,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
 
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1141,7 +1141,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1181,7 +1181,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
 
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -1289,7 +1289,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </blockquote>
     
     
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1529,7 +1529,7 @@ ${coverPage.reportDate}
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
-        <div class="report-table-sm same-page-table">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1570,7 +1570,7 @@ ${coverPage.reportDate}
   
  
  <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
-        <div class="report-table-sm same-page-table">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1600,7 +1600,7 @@ ${coverPage.reportDate}
       <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
 
      
-             <div class="report-table-sm same-page-table">
+             <div class="report-table-sm  ">
             
              <table class="table  table-bordered border-dark">
                <thead class="table-primary  border-dark">
@@ -1637,7 +1637,7 @@ ${coverPage.reportDate}
    <div class="content">
 
    
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1676,7 +1676,7 @@ ${coverPage.reportDate}
  <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
 
 
-<div class="report-table-sm same-page-table">
+<div class="report-table-sm  ">
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
@@ -1729,14 +1729,14 @@ ${coverPage.reportDate}
     let safeguards = content.safeguards;
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
-    <div class="content">
+    <div class="content ">
     <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
     <blockquote class=" paragraph blockquote text-start ">
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: Safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
-         <div class="report-table-sm same-page-table">
+         <div class="report-table-sm ">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -1791,7 +1791,7 @@ ${coverPage.reportDate}
       <div class="content">
     
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
-           <div class="report-table-sm same-page-table">
+           <div class="report-table-sm ">
           
            <table class="table  table-bordered border-dark">
              <thead class="table-primary  border-dark">
@@ -1832,7 +1832,7 @@ ${coverPage.reportDate}
          </div>
 
          <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
-         <div class="report-table-sm same-page-table">
+         <div class="report-table-sm ">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -1884,7 +1884,7 @@ ${coverPage.reportDate}
        <div class="content">
        <div  class="main_header_sub text-start">2.2 Outcomes of the preconditions assessment  </div> 
    
-            <div class="report-table-sm same-page-table">
+            <div class="report-table-sm ">
            
             <table class="table  table-bordered border-dark">
               <thead class="table-primary  border-dark ">
@@ -1945,7 +1945,7 @@ ${coverPage.reportDate}
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2059,7 +2059,7 @@ ${coverPage.reportDate}
      ${header}
      <div class="content">
     
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2181,7 +2181,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content">
      
-     <div class="report-table-sm same-page-table">
+     <div class="report-table-sm ">
      
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -2366,7 +2366,7 @@ ${coverPage.reportDate}
      ${header}
      <div class="content">
     
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2487,7 +2487,7 @@ ${coverPage.reportDate}
      ${header}
      <div class="content">
     
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2613,7 +2613,7 @@ ${coverPage.reportDate}
   
    
    
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
 
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -2662,7 +2662,7 @@ ${coverPage.reportDate}
      </tbody>
    </table>
    </div>
-   <div class="report-table-sm same-page-table">
+   <div class="report-table-sm  ">
     <p>Question - Is the intervention’s GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -2720,7 +2720,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content">
    
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2770,7 +2770,7 @@ ${coverPage.reportDate}
       </tbody>
     </table>
     </div>
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm  ">
   <p>Question - Is the intervention’s contribution to the adaptation co-benefit sustained in nature?</p>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2829,7 +2829,7 @@ ${coverPage.reportDate}
      
     
     
-    <div class="report-table-sm same-page-table">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2902,7 +2902,7 @@ ${coverPage.reportDate}
      
     
     
-      <div class="report-table-sm same-page-table">
+      <div class="report-table-sm ">
       <p>Question - Is the activity’s contribution to the selected SDG sustained in nature?</p>
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -2968,7 +2968,7 @@ ${coverPage.reportDate}
        <div  class="main_header_sub text-start">3.3	 Process categories assessment   </div> 
      
      
-     <div class="report-table-sm same-page-table">
+     <div class="report-table-sm  ">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -3007,7 +3007,7 @@ ${coverPage.reportDate}
     
      <div  class="main_header_sub text-start">3.4	Outcomes categories assessment </div> 
   
-     <div class="report-table-sm same-page-table">
+     <div class="report-table-sm  ">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -3173,7 +3173,7 @@ ${coverPage.reportDate}
      
       <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
     
-      <div class="report-table-sm same-page-table">
+      <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -3312,7 +3312,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">1.	PORTFOLIO OF INTERVENTIONS INFORMATION </div>
  
  <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
-        <div class="report-table-sm same-page-table">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3337,7 +3337,7 @@ PORTFOLIO TOOL
         </table>
       </div>
 
-      <div class="report-table-sm same-page-table">
+      <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
