@@ -219,7 +219,7 @@ ${coverPage.reportDate}
    ${header}
    <div class="content">
    
-   <div  class="main_header_sub text-start">1.2	Understanding the intervention’s transformational vision and context  </div> 
+   <div  class="main_header_sub text-start">1.2	Understanding the intervention's transformational vision and context  </div> 
       
       <div class="report-table-sm  ">
       <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
@@ -1093,17 +1093,17 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            <td>${
              a.category
                ? a.category == 'GHG Scale of the Outcome'
-                 ? 'Scale of outcome – GHGs'
+                 ? 'Scale of outcome - GHGs'
                  : a.category == 'SDG Scale of the Outcome'
-                 ? 'Scale of outcome – Sustainable Development '
+                 ? 'Scale of outcome - Sustainable Development '
                  : a.category ==
                    'GHG Time frame over which the outcome is sustained'
-                 ? 'Outcome sustained over time – GHGs '
+                 ? 'Outcome sustained over time - GHGs '
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
-                 ? 'Outcome sustained over time – Sustainable Development '
-                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome – Adaptation ':
-                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time – Adaptation ':'-'
+                 ? 'Outcome sustained over time - Sustainable Development '
+                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - Adaptation ':
+                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - Adaptation ':'-'
                : '-'
            }</td>
            <td>${
@@ -2663,7 +2663,7 @@ ${coverPage.reportDate}
    </table>
    </div>
    <div class="report-table-sm  ">
-    <p>Question - Is the intervention’s GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
+    <p>Question - Is the intervention's GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2742,7 +2742,7 @@ ${coverPage.reportDate}
             return `<tr>
               <td rowspan="${
                 scale_adaptation.length
-              }" >Scale of outcome – Adaptation cobenefits</td>
+              }" >Scale of outcome - Adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.starting_situation ? a.starting_situation : '-'}</td>
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
@@ -2771,7 +2771,7 @@ ${coverPage.reportDate}
     </table>
     </div>
     <div class="report-table-sm  ">
-  <p>Question - Is the intervention’s contribution to the adaptation co-benefit sustained in nature?</p>
+  <p>Question - Is the intervention's contribution to the adaptation co-benefit sustained in nature?</p>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -2789,7 +2789,7 @@ ${coverPage.reportDate}
             return `<tr>
               <td rowspan="${
                 sustained_adaptation.length
-              }" >Outcome sustained over time – Adaptation cobenefits</td>
+              }" >Outcome sustained over time - Adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
               <td>${a.justification ? a.justification : '-'}</td>
@@ -2903,7 +2903,7 @@ ${coverPage.reportDate}
     
     
       <div class="report-table-sm ">
-      <p>Question - Is the activity’s contribution to the selected SDG sustained in nature?</p>
+      <p>Question - Is the activity's contribution to the selected SDG sustained in nature?</p>
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
           <tr>
@@ -2922,7 +2922,7 @@ ${coverPage.reportDate}
               return `<tr>
                 <td rowspan="${
                   sustained_sd.length
-                }">Outcome sustained over time – sustainable development</td>
+                }">Outcome sustained over time - sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
@@ -3020,7 +3020,7 @@ ${coverPage.reportDate}
        </thead>
        <tbody class="table-active">
        <tr>
-         <td >Scale of outcome – GHGs</td>
+         <td >Scale of outcome - GHGs</td>
          <td >${
            content.outcomes_categories_assessment.scale_ghg_score !== null
              ? content.outcomes_categories_assessment.scale_ghg_score
@@ -3028,7 +3028,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Scale of outcome – sustainable development </td>
+         <td >Scale of outcome - sustainable development </td>
          <td >${
            content.outcomes_categories_assessment.scale_sdg_score !== null
              ? content.outcomes_categories_assessment.scale_sdg_score
@@ -3036,7 +3036,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Scale of outcome – Adaptation co-benefits </td>
+         <td >Scale of outcome - Adaptation co-benefits </td>
          <td >${
            content.outcomes_categories_assessment.scale_adaptation_score !==
            null
@@ -3045,7 +3045,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Outcome sustained over time – GHGs </td>
+         <td >Outcome sustained over time - GHGs </td>
          <td >${
            content.outcomes_categories_assessment.sustained_ghg_score !== null
              ? content.outcomes_categories_assessment.sustained_ghg_score
@@ -3053,7 +3053,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time – sustainable development</td>
+         <td >Outcome sustainable over time - sustainable development</td>
          <td >${
            content.outcomes_categories_assessment.sustained_sdg_score !== null
              ? content.outcomes_categories_assessment.sustained_sdg_score
@@ -3061,7 +3061,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time – adaptation co-benefits </td>
+         <td >Outcome sustainable over time - adaptation co-benefits </td>
          <td >${
            content.outcomes_categories_assessment.sustained_adaptation_score !==
            null
