@@ -65,12 +65,26 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
 
 export const config: ConnectionOptions = {
   type: 'mysql',
-  host: process.env.DATABASE_HOST,
-  port: process.env.DATABASE_PORT,
+  host: 'localhost',
+  port: 3306,
+ 
 
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  username: 'root',
+ password: 'pradeep123#',
+
+/* username: 'sqluser',
+password: 'password',
+ database: 'tc-main-new3', */   
+//  username: 'sqluser',
+//  password: '1997',
+  database: 'tc-main',
+  // type: 'mysql',
+  // host: process.env.DATABASE_HOST,
+  // port: process.env.DATABASE_PORT,
+
+  // username: process.env.DATABASE_USERNAME,
+  // password: process.env.DATABASE_PASSWORD,
+  // database: process.env.DATABASE_NAME,
 
   autoLoadEntities: true,
   entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, countryStatus, DataRequestStatus, ParameterRequest, DefaultValue,
