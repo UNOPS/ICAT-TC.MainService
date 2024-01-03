@@ -40,7 +40,7 @@ export class ReportPagesService {
     { label: 'Unlikely', value: 1 },
     { label: 'Very Unlikely', value: 0 },
   ];
-  fileServerURL = process.env.MAIN_URL + '/uploads/';
+  fileServerURL = process.env.REPORT_URL + '/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
