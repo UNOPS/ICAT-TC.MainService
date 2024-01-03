@@ -932,6 +932,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let result = await data
       .leftJoinAndSelect('investorSector.sector', 'sector')
       .select('sector.name', 'sector')
+      .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
       .having('sector IS NOT NULL')
@@ -973,6 +974,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let result = await data
       .leftJoinAndSelect('investorSector.sector', 'sector')
       .select('sector.name', 'sector')
+      .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
       .having('sector IS NOT NULL')
