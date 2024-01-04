@@ -89,29 +89,29 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       investor.subnational_region = createInvestorToolDto.investortool?.subnational_region;
       investor.investment_type = createInvestorToolDto.investortool?.investment_type;
       investor.total_investment = createInvestorToolDto.investortool?.total_investment
-      let result = await this.repo.save(investor)
+      let result = await this.repo.save(investor);
       if (createInvestorToolDto)
         for await (let sector of createInvestorToolDto.sectors) {
           let investorSector = new InvestorSector();
           investorSector.investorTool = result;
           investorSector.assessment = assessment;
-          investorSector.sector = sector
-          let a = await this.investorSectorRepo.save(investorSector)
+          investorSector.sector = sector;
+          let a = await this.investorSectorRepo.save(investorSector);
         }
       for await (let impacts of createInvestorToolDto.impacts) {
         let investorImpacts = new InvestorImpacts();
         investorImpacts.investorTool = result;
         investorImpacts.assessment = assessment;
         investorImpacts.name = impacts.name;
-        let a = await this.investorImpactRepo.save(investorImpacts)
+        let a = await this.investorImpactRepo.save(investorImpacts);
       }
       for await (let area of createInvestorToolDto.geographicalAreas) {
-        let _area = new GeographicalAreasCovered()
-        _area.assessment = assessment
-        _area.investorTool = result
-        _area.name = area.name
-        _area.code = area.code
-        let areas = await this.geographicalAreaRepo.save(_area)
+        let _area = new GeographicalAreasCovered();
+        _area.assessment = assessment;
+        _area.investorTool = result;
+        _area.name = area.name;
+        _area.code = area.code;
+        let areas = await this.geographicalAreaRepo.save(_area);
       }
       return result;
     }
@@ -121,11 +121,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
   }
   async findAllImpactCovered(): Promise<ImpactCovered[]> {
-    return this.impactCoveredRepo.find()
+    return this.impactCoveredRepo.find();
   }
 
   async findAllSDGs(): Promise<PortfolioSdg[]> {
-    return this.portfolioSDgsRepo.find()
+    return this.portfolioSDgsRepo.find();
   }
 
   async getResultByAssessment(assessmentId: number) {
@@ -173,21 +173,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     async createFinalAssessment(request2: FinalInvestorAssessmentDto[]): Promise<any> {
      let data2: any = request2;
      let request = data2.finalArray;
-     let assessment = request[0].data[0].assessment
+     let assessment = request[0].data[0].assessment;
      for (let req of request) {
-       let vvv : InvestorAssessment[] = req.data
+       let vvv : InvestorAssessment[] = req.data;
        for (let assess of vvv) { 
          let iassess = new InvestorAssessment();
-        iassess.assessment = request[0].data[0].assessment
+        iassess.assessment = request[0].data[0].assessment;
  
          let category = new Category();
-         category.id =  req.categoryID
+         category.id =  req.categoryID;
          iassess.type = req.type;
          iassess.category = category;
          iassess.characteristics = assess.characteristics;
  
-         let port = new PortfolioSdg()
-         port.id = assess.portfolioSdg?.id
+         let port = new PortfolioSdg();
+         port.id = assess.portfolioSdg?.id;
  
          iassess.description = assess?.description;
          iassess.starting_situation = assess.starting_situation;
@@ -207,7 +207,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
          iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
  
          let institution = new Institution();
-         institution.id = 1
+         institution.id = 1;
          iassess.institution = assess.institution;
          iassess.institutionDescription = assess.institutionDescription;
          iassess.parameter_value = assess.parameter_value;
@@ -385,7 +385,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       data.averageProcess = results?.processScore;
       await this.resultRepository.save(data);
        if (data2.isDraft==false && data2.isEdit==true) {
-         assessment.isDraft = data2.isDraft
+         assessment.isDraft = data2.isDraft;
          await this.assessmentRepo.save(assessment);
          }
       return 0;
@@ -1049,12 +1049,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }, {});
 
     const result: any[] = Object.keys(sectorCounts).map((sector) => {
-      let obj = {}
-      let sec = original.find(o => o.id === +sector)
-      obj['sector'] = sec.sector
-      obj['id'] = sec.id
-      obj['count'] = sectorCounts[sector]
-      // return { sector, count: sectorCounts[sector] };
+      let obj = {};
+      let sec = original.find(o => o.id === +sector);
+      obj['sector'] = sec.sector;
+      obj['id'] = sec.id;
+      obj['count'] = sectorCounts[sector];
       return obj
     });
 

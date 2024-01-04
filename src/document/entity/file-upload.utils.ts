@@ -3,9 +3,7 @@ import { extname, join } from "path";
 var fs = require('fs');
 
 export class FileUpload {
-    /**
-     *
-     */
+   
     constructor(private configService: ConfigService) {
     }
 
