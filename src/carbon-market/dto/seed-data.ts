@@ -1587,9 +1587,6 @@ export const answers = [
     }
 ]
 
-/**
- * Don't update name and codes for specific tool
- */
 export const characteristic = [ 
     {
         name: 'Research and Development',
