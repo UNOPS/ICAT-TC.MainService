@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, Param, Patch, Post, Query, Req, Request, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -23,6 +23,7 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { PolicySector } from './entity/policy-sectors.entity';
 import { AllBarriersSelected, AllPolicySectors } from './dto/selected-barriers.dto';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 const fs = require('fs');
 var multer = require('multer');
 
@@ -79,6 +80,7 @@ export class ProjectController implements CrudController<ClimateAction> {
     private readonly projectRepository: Repository<ClimateAction>,
     public configService: ConfigService,
     private readonly tokenDetails: TokenDetails,
+    private auditDetailService: AuditDetailService
   ) {}
 
   filename: any = [];
@@ -90,23 +92,48 @@ export class ProjectController implements CrudController<ClimateAction> {
   get base(): CrudController<ClimateAction> {
     return this;
   }
+
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
-  @Post('createOne')
+  @Override()
   async createOne(
-    dto: ClimateAction,
-  ): Promise<ClimateAction>{
-    try {
-      dto.createdBy = '-';
-      dto.editedBy = '-';
-
-
-      let newplData = await this.service.create(dto);
-
-      return newplData;
-    } catch (error) {
-      throw error;
+    @Request() request,
+    @ParsedRequest() req: CrudRequest,
+    @ParsedBody() dto: ClimateAction,
+  ): Promise<ClimateAction> {
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Propose Intervention"
     }
+    let body = { ...details, ...obj }
+    try {
+      let ca = await this.base.createOneBase(req, dto);
+      body = { ...body, ...{ actionStatus: "Intervention proposed successfully", } }
+      this.auditDetailService.log(body)
+      return ca;
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to propose intervention", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
+   
   }
+
+  // @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.MRV_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.EXTERNAL_USER]))
+  // @Post('createOne')
+  // async createOne(
+  //   dto: ClimateAction,
+  // ): Promise<ClimateAction>{
+  //   try {
+  //     dto.createdBy = '-';
+  //     dto.editedBy = '-';
+
+  //     let newplData = await this.service.create(dto);
+
+  //     return newplData;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
   @Post('createNewCA')
   async createNewCA(@Body() req:ClimateAction):Promise<ClimateAction>{
     return await this.service.create(req);

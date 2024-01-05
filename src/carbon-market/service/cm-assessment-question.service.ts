@@ -51,126 +51,129 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean,name:string,type:string, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
     let savedSdgs = []
     let exists = []
     let results = []
-      results = [...result]
-    
-    for await (let res of results) {
-      if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
-        let exist = await this.sdgAssessmentRepo.find({where: {sdg: {id: res.selectedSdg.id}, assessment: {id: assessment.id}}})
-        if (exist.length === 0) {
-          let obj = new SdgAssessment()
-          obj.assessment = assessment
-          obj.sdg = res.selectedSdg
-          savedSdgs.push(res.selectedSdg.id)
-          selectedSdgs.push(obj)
-        } else exists.push(res.selectedSdg.id)
+    results = [...result]
+
+    try {
+      for await (let res of results) {
+        if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
+          let exist = await this.sdgAssessmentRepo.find({ where: { sdg: { id: res.selectedSdg.id }, assessment: { id: assessment.id } } })
+          if (exist.length === 0) {
+            let obj = new SdgAssessment()
+            obj.assessment = assessment
+            obj.sdg = res.selectedSdg
+            savedSdgs.push(res.selectedSdg.id)
+            selectedSdgs.push(obj)
+          } else exists.push(res.selectedSdg.id)
+        }
       }
-    }  
-    if (isDraft) {
-      assessment.isDraft = isDraft;
-      assessment.lastDraftLocation =type;
-      if(type =="prose"){
-        assessment.processDraftLocation=name;
-      }else if (type=="out"){
-        assessment.outcomeDraftLocation=name;
+      if (isDraft) {
+        assessment.isDraft = isDraft;
+        assessment.lastDraftLocation = type;
+        if (type == "prose") {
+          assessment.processDraftLocation = name;
+        } else if (type == "out") {
+          assessment.outcomeDraftLocation = name;
+        }
+        this.assessmentRepo.save(assessment)
       }
-      this.assessmentRepo.save(assessment)
-    }
-    for await (let res of results) {
-      let ass_question = new CMAssessmentQuestion()
-      ass_question.assessment = assessment;
-      ass_question.comment = res.comment;
-      ass_question.question = res.question;
-      if (res.question?.id === undefined) ass_question.question = undefined
-      ass_question.characteristic = res.characteristic;
-      if (res.characteristic?.id === undefined) ass_question.characteristic = undefined
-      ass_question.sdgIndicator = res.sdgIndicator;
-      ass_question.startingSituation = res.startingSituation;
-      ass_question.expectedImpact = res.expectedImpact;
-      if (res.selectedSdg.id) ass_question.selectedSdg = res.selectedSdg;
-      ass_question.uploadedDocumentPath = res.filePath;
-      ass_question.relevance = res.relevance;
-      ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
-      if (res.assessmentQuestionId) ass_question.id = res.assessmentQuestionId
-      if (ass_question.relevance === 0 ) {
-        ass_question.question = undefined
-        ass_question.comment = undefined
+      for await (let res of results) {
+        let ass_question = new CMAssessmentQuestion()
+        ass_question.assessment = assessment;
+        ass_question.comment = res.comment;
+        ass_question.question = res.question;
+        if (res.question?.id === undefined) ass_question.question = undefined
+        ass_question.characteristic = res.characteristic;
+        if (res.characteristic?.id === undefined) ass_question.characteristic = undefined
+        ass_question.sdgIndicator = res.sdgIndicator;
+        ass_question.startingSituation = res.startingSituation;
+        ass_question.expectedImpact = res.expectedImpact;
+        if (res.selectedSdg.id) ass_question.selectedSdg = res.selectedSdg;
+        ass_question.uploadedDocumentPath = res.filePath;
+        ass_question.relevance = res.relevance;
+        ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
+        if (res.assessmentQuestionId) ass_question.id = res.assessmentQuestionId
+        if (ass_question.relevance === 0) {
+          ass_question.question = undefined
+          ass_question.comment = undefined
+        }
+        let q_res
+        try {
+          q_res = await this.repo.save(ass_question)
+        } catch (err) {
+          return new InternalServerErrorException()
+        }
+
+        if (res.type === 'INDIRECT') {
+          let ass_answer = new CMAssessmentAnswer()
+          ass_answer.institution = res.institution
+          ass_answer.assessment_question = q_res
+          ass_answer.approach = Approach.INDIRECT
+          _answers.push(ass_answer)
+        } else {
+          let ass_answer = new CMAssessmentAnswer()
+          ass_answer.institution = undefined
+          if (res.answer && res.answer.id !== undefined) {
+            ass_answer.answer = res.answer
+            ass_answer.score = res.answer.score_portion * res.answer.weight / 100
+          }
+          if (res.selectedScore && res.selectedScore.value) {
+            if (res.isGHG || res.isAdaptation) {
+              ass_answer.score = (res.selectedScore.value / 6)
+            }
+            if (res.isSDG) {
+              ass_answer.score = (res.selectedScore.value / ((selectedSdgs.length + exists.length) * 3))
+            }
+          }
+          ass_answer.assessment_question = q_res
+          ass_answer.selectedScore = res.selectedScore?.code
+          ass_answer.approach = Approach.DIRECT
+          if (res.assessmentAnswerId) {
+            ass_answer.id = res.assessmentAnswerId
+            if (ass_question.relevance === 0) {
+              this.assessmentAnswerRepo.delete(ass_answer.id)
+            }
+          }
+
+          if (ass_question.relevance !== 0) {
+            _answers.push(ass_answer)
+          }
+        }
       }
-      let q_res
       try {
-        q_res = await this.repo.save(ass_question)
+        if (selectedSdgs.length > 0) {
+          let res = await this.sdgAssessmentRepo.save(selectedSdgs)
+        }
+        a_ans = await this.assessmentAnswerRepo.save(_answers)
       } catch (err) {
         return new InternalServerErrorException()
       }
+      await this.saveDataRequests(_answers);
 
-      if (res.type === 'INDIRECT') {
-        let ass_answer = new CMAssessmentAnswer()
-        ass_answer.institution = res.institution
-        ass_answer.assessment_question = q_res
-        ass_answer.approach = Approach.INDIRECT
-        _answers.push(ass_answer)
-      } else {
-        let ass_answer = new CMAssessmentAnswer()
-        ass_answer.institution = undefined
-        if (res.answer && res.answer.id !== undefined) {
-          ass_answer.answer = res.answer
-          ass_answer.score = res.answer.score_portion * res.answer.weight / 100
-        }
-        if (res.selectedScore && res.selectedScore.value) {
-          if (res.isGHG || res.isAdaptation) {
-            ass_answer.score = (res.selectedScore.value / 6)
-          }
-          if (res.isSDG) {
-            ass_answer.score = (res.selectedScore.value / ((selectedSdgs.length + exists.length )* 3))
-          }
-        }
-        ass_answer.assessment_question = q_res
-        ass_answer.selectedScore = res.selectedScore?.code
-        ass_answer.approach = Approach.DIRECT
-        if (res.assessmentAnswerId) {
-          ass_answer.id = res.assessmentAnswerId
-          if (ass_question.relevance === 0 ) {
-            this.assessmentAnswerRepo.delete(ass_answer.id)
-          }
-        }
+      if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
+        assessment.isDraft = isDraft;
+        this.assessmentRepo.save(assessment);
+        let resultObj = new Results();
+        let res = await this.calculateResult(assessment.id);
+        resultObj.assessment = assessment;
+        resultObj.averageProcess = res.process_score;
+        resultObj.averageOutcome = res.outcome_score?.outcome_score;
+        await this.resultsRepo.save(resultObj);
 
-        if (ass_question.relevance !== 0 ) {
-          _answers.push(ass_answer)
-        }
+        this.saveTcValue(assessment.id, res);
       }
-    }
-    try {
-      if (selectedSdgs.length > 0) {
-        let res = await this.sdgAssessmentRepo.save(selectedSdgs)
-      }
-      a_ans = await this.assessmentAnswerRepo.save(_answers)
-    } catch (err) {
-      return new InternalServerErrorException()
-    }
-    await this.saveDataRequests(_answers);
-
-    if (assessment.assessment_approach === 'DIRECT' && !isDraft) {
-      assessment.isDraft = isDraft;
-      this.assessmentRepo.save(assessment);
-      let resultObj = new Results();
-      let res = await this.calculateResult(assessment.id);
-      resultObj.assessment = assessment;
-      resultObj.averageProcess = res.process_score;
-      resultObj.averageOutcome = res.outcome_score?.outcome_score;
-      await this.resultsRepo.save(resultObj);
-
-      this.saveTcValue(assessment.id, res);
+      return a_ans
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
 
 
-
-    return a_ans
   }
 
 

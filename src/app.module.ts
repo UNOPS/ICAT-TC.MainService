@@ -92,6 +92,8 @@ import { PortfolioQuestionDetails } from './investor-tool/entities/portfolio_que
 import { MasterDataService } from './shared/entities/master-data.service';
 import { SystemStatusModule } from './system-status/system-status.module';
 import { SystemStatus } from './system-status/entities/system-status.entity';
+import { HttpModule } from '@nestjs/axios';
+import { AuditDetailService } from './utills/audit_detail.service';
 
 @Module({
   imports: [
@@ -195,6 +197,7 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
     CarbonMarketModule,
     InvestorToolModule,
     PortfolioModule,
+    HttpModule
 
   ],
   controllers: [
@@ -209,6 +212,6 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
     DefaultValueController,
   ],
   providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
-     ParameterHistoryService, DefaultValueService, MasterDataService],
+     ParameterHistoryService, DefaultValueService, MasterDataService, AuditDetailService],
 })
 export class AppModule { }
