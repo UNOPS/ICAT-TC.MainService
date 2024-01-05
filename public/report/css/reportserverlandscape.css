@@ -6,15 +6,12 @@ body {
   }
   
   #cover {
-    /* background-color: green; */
     color: black;
     height: 747px;
     margin-top: 100px;
-    /* background-color: aqua; */
   }
   
   #cover .row {
-    /* margin-left: 100px; */
     margin-left: 0px !important;
     margin-bottom: 10px;
     margin-right: 0px;
@@ -24,21 +21,17 @@ body {
   #cover .row .h2 {
     font-size: 40px;
     text-align: center;
-    /* font-weight: bold; */
   }
   
   #cover .row .h4 {
     font-size: 16px;
-    /* font-weight: bold; */
   }
   #cover .col {
     color: #082160;
-    /* font-weight: bold; */
     padding: 0px;
   }
   .header {
     height: 100px;
-    /* background-color: #404ad5; */
   }
   
   .header .row {
@@ -66,7 +59,6 @@ body {
     font-size: 32px;
     width: 800px;
     min-height: 70px;
-    /* height: 70px; */
     margin: 0px 0px 15px 75px;
     padding-top: 25px;
     color: #2f5496;
@@ -75,7 +67,6 @@ body {
   .main_header_sub {
     width: 800px;
     font-size: 24px;
-    /* height: 50px; */
     margin: 0px 0px 10px 75px;
     padding-top: 10px;
     color: #2f5496;
@@ -85,7 +76,6 @@ body {
     width: 800px;
     text-align: center;
     font-size: 20px;
-    /* height: 50px; */
     margin: 0px 0px 10px 75px;
     padding-top: 15px;
     color: #2f5496;
@@ -97,7 +87,6 @@ body {
     width: 800px;
     text-align: start;
     font-size: 20px;
-    /* height: 50px; */
     margin: 0px 0px 10px 75px;
     padding-top: 15px;
     color: black;
@@ -116,18 +105,15 @@ body {
     margin-right: 75px;
     text-align: start;
     text-align: justify;
-    /* width: 790; */
   }
   .list-main {
     margin-left: 75px;
     margin-right: 75px;
     text-align: start;
     text-align: justify;
-    /* width: 790; */
   }
   .list-main ul {
     padding-left: 20px;
-    /* width: 790; */
   }
   .image-medium {
     margin-left: 75px;
@@ -137,7 +123,6 @@ body {
   .image-medium img {
     border: 1px solid #a9a9a9;
     border-radius: 10px;
-    /* margin-top: 20px; */
   
     height: 300px;
     width: 500px;
@@ -150,7 +135,6 @@ body {
     border: 1px solid #a9a9a9;
     border-radius: 10px;
     margin-top: 20px;
-    /* margin-left: 50px;  */
     height: 500px;
     width: 800px;
   }
@@ -163,7 +147,6 @@ body {
   .image-set img{
    width: 100%;
    height: auto;
-   /* position: relative; */
   }
   .image-pie {
     margin-left: 75px;
@@ -173,7 +156,6 @@ body {
   .image-pie img {
     border: 1px solid #a9a9a9;
     border-radius: 10px;
-    /* margin-top: 20px; */
   
     height: 400px;
     width: 800px;
@@ -186,7 +168,6 @@ body {
     border: 1px solid #a9a9a9;
     border-radius: 10px;
     margin-top: 20px;
-    /* margin-left: 50px;  */
     height: 550px;
     width: 800px;
   }
@@ -210,8 +191,6 @@ body {
     padding-bottom: 10px;
     padding-top: 10px;
     height: 50px;
-    /* margin-left: 20px; */
-    /* justify-items: center; */
   }
   .table-of-content-header-item div {
     display: inline-block;
@@ -304,7 +283,6 @@ body {
   .table-header {
     width: 800px;
     font-size: 24px;
-    /* height: 70px; */
     margin: 0px 0px 10px 75px;
     padding-top: 20px;
     color: black;
@@ -343,7 +321,6 @@ body {
   
   .footer {
     height: 100px;
-    /* background-color: orange; */
   }
   .footer .row {
     margin-left: 50px;
@@ -356,11 +333,9 @@ body {
     margin-top: 5px;
     margin-bottom: 10px;
     height: 80px;
-    /* background-color: green; */
   }
   
   .page {
-    /* background-color: yellow; */
     color: black;
     padding: 0px;
   }
@@ -375,7 +350,6 @@ body {
     word-break: break-word;
   }
   .report-all-table-sm-rotate {
-    /* height: 100%; */
     
     position: absolute; 
     transform:rotate(270deg);
@@ -389,7 +363,6 @@ body {
   }
   
   .charttd {
-    /* border: 1px solid black; */
     width: 125px;
     height: 70px;
   }
@@ -406,10 +379,7 @@ body {
   .vertical-text-chrome {
     writing-mode: vertical-rl;
     transform: rotate(270deg);
-    /* display: inline-block; */
     text-orientation: upright
-    /* text-align: center; */
-    /* white-space: nowrap; */
   }
   .vertical-text-safari {
     writing-mode: vertical-rl;
