@@ -10,6 +10,8 @@ export class FinalInvestorAssessmentDto {
     type: string;
     CategoryName: string;
     categoryID: number;
+    isDraft: boolean
+    isEdit: boolean
     data: InvestorAssessment[]
     
 }
