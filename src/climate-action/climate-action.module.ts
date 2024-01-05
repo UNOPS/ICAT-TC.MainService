@@ -17,11 +17,13 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { BarrierCategory } from './entity/barrier-category.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { Report } from 'src/report/entities/report.entity';
+import { HttpModule } from '@nestjs/axios';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report])],
+  imports: [TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report]), HttpModule],
   controllers: [ProjectController],
-  providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService,BarrierCategory],
+  providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService,BarrierCategory, AuditDetailService],
   exports: [ProjectService],
 })
 export class ProjectModule {}

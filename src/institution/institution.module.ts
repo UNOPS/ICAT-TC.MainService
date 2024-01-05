@@ -14,10 +14,13 @@ import { InstitutionTypeController } from './controller/institution-type.control
 import { InstitutionController } from './controller/institution.controller';
 import { InstitutionCategoryController } from './controller/institution-category.controller';
 import { InstitutionService } from './service/institution.service';
+import { HttpModule } from '@nestjs/axios';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Institution, User,InstitutionType, InstitutionCategory,Audit,Country])],
-  providers: [InstitutionService, InstitutionTypeService, InstitutionCategoryService,AuditService,TokenDetails],
+  imports: [TypeOrmModule.forFeature([Institution, User,InstitutionType, InstitutionCategory,Audit,Country]), HttpModule, UsersModule],
+  providers: [InstitutionService, InstitutionTypeService, InstitutionCategoryService,AuditService,TokenDetails, AuditDetailService],
   controllers: [InstitutionController, InstitutionTypeController, InstitutionCategoryController],
   exports: [InstitutionService, InstitutionTypeService, InstitutionCategoryService,AuditService],
 })
