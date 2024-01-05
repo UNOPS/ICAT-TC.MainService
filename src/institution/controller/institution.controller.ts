@@ -27,6 +27,7 @@ import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InstitutionCategory } from '../entity/institution.category.entity';
 import { InstitutionType } from '../entity/institution.type.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 @Crud({
   model: {
@@ -72,6 +73,7 @@ export class InstitutionController implements CrudController<Institution> {
     private readonly repo: Repository<Institution>,
     private readonly auditService: AuditService,
     private readonly tokenDetails: TokenDetails,
+    private auditDetailService: AuditDetailService
   ) { }
 
   get base(): CrudController<Institution> {
@@ -218,6 +220,11 @@ export class InstitutionController implements CrudController<Institution> {
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Institution,
   ): Promise<Institution> {
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Create Institution"
+    }
+    let body = { ...details, ...obj }
     try {
       dto.createdBy = '-';
       dto.editedBy = '-';
@@ -231,9 +238,13 @@ export class InstitutionController implements CrudController<Institution> {
       }
 
       let newInstitution = await this.service.creteNew(dto);
+      body = { ...body, ...{ actionStatus: "Created successfully", } }
+      this.auditDetailService.log(body)
       return newInstitution;
     }
     catch (err) {
+      body = { ...body, ...{ actionStatus: "Failed to create", } }
+      this.auditDetailService.log(body)
       return err;
     } finally {
     }

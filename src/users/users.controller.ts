@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -32,6 +33,7 @@ import { UserType } from './entity/user.type.entity';
 import { UsersService } from './users.service';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Country } from 'src/country/entity/country.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 @Crud({
   model: {
@@ -62,20 +64,29 @@ export class UsersController implements CrudController<User> {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Institution)
     private readonly institutionRepository: Repository<Institution>,
-
+    private auditDetailService: AuditDetailService,
     private readonly auditService: AuditService,
   ) {}
 
   @Post('createUser')
-  create(@Body() createUserDto: User): Promise<User> {
-
-    let audit: AuditDto = new AuditDto();
-    audit.action = createUserDto.firstName +' User Created';
-    audit.comment = "User Created";
-    audit.actionStatus = 'Created';
-    audit.userName = 'created';
-
-    return this.service.create(createUserDto);
+  @UseGuards(JwtAuthGuard)
+  async create(@Body() createUserDto: User): Promise<User> {
+    console.log('create user')
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Create user"
+    }
+    let body = { ...details, ...obj }
+    try {
+      let user = await this.service.create(createUserDto);
+      body = { ...body, ...{ actionStatus: "Created successfully", } }
+      this.auditDetailService.log(body)
+      return user 
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to create", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
 
   }
   @Post('createExternalUser')
