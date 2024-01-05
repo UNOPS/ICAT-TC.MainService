@@ -253,13 +253,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
   async calculateProcessResult(questions: CMAssessmentQuestion[]) {
 
-    /**
-     * if relevant -> score * weight
-     * if partially relevant -> score * weight/2
-     * if not relevant -> score * 0
-     * category score -> sum of characteristic scores
-     * process score -> same as characteristic calculation
-     */
 
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
     let obj = {}

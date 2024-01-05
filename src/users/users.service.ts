@@ -62,12 +62,6 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     newUser.firstName = createUserDto.firstName;
     newUser.lastName = createUserDto.lastName;
-    // if (createUserDto.username) {
-    //   newUser.username = createUserDto.username;
-    // }
-    // else {
-    //   newUser.username = newUser.firstName + (newUser.lastName ? ' ' + newUser.lastName : '');
-    // }
     newUser.email = createUserDto.email;
     newUser.username=createUserDto.email;
     newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';

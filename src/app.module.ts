@@ -169,18 +169,18 @@ import { AuditDetailService } from './utills/audit_detail.service';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.office365.com',
+        host:process.env.EMAIL_HOST,
         port: 587,
         secure: false,
 
         auth: {
-          user: "no-reply-icat-ca-tool@climatesi.com",
-          pass: "ICAT2022tool",
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD,
 
         },
       },
       defaults: {
-        from: '"Admin" <no-reply-icat-ca-tool@climatesi.com>',
+        from: '"Admin"' + process.env.EMAIL,
       },
     }),
     ServeStaticModule.forRoot({

@@ -9,11 +9,6 @@ import { Assessment } from "src/assessment/entities/assessment.entity";
 @Entity({ name: 'barrier-category' })
 export class BarrierCategory extends BaseTrackingEntity {
 
- /*    constructor() {
-        super();
-        this.createdBy = '';
-        this.editedBy = '';
-      } */
 
     @PrimaryGeneratedColumn()
     id: number;
