@@ -21,15 +21,26 @@ export class AuditDetailService {
 
     async getAuditDetails() {
         let [userName] = this.tokenDetails.getDetails([TokenReqestType.username])
+        console.log("user name by token ", userName)
         let user = await this.usersService.findByUserName(userName)
+        console.log('found user ', user.id)
         let userType: string
 
         let type = this.UserTypes.find(o => o.name === user.userType.name)
+        console.log("filtered user type ", type)
         if (type) {
             userType = type.code
         } else {
             userType = user.userType.name
         }
+
+        console.log("result obj", {
+            userName: user.username,
+            userType: userType,
+            uuId: user.id,
+            institutionId: user.institution.id,
+            countryId: user.country.id
+        })
 
         return {
             userName: user.username,
@@ -42,9 +53,11 @@ export class AuditDetailService {
 
     log(body: any) {
         try {
+            console.log("Requested to log")
             this.httpService.post(this.auditlogURL, body).subscribe(rr => { }, er => console.log("log failed 1"))
+            console.log("Request done")
         } catch (err) {
-            console.log("log failed ")
+            console.log("log failed ", err)
         }
     }
 }
