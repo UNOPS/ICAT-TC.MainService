@@ -252,7 +252,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
          isUserInternal =  x.portfolio?.user?.userType?.name !== 'External';
         }        
       }
-  console.log(isUserExternal,isSameUser)
+
       if ((isUserExternal && isSameUser) ||(!isUserExternal && isMatchingCountry && isUserInternal)) {
         reportList.push(x);
       }
