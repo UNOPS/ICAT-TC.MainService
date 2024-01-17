@@ -65,12 +65,12 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
 
 export const config: ConnectionOptions = {
   type: 'mysql',
-  host: process.env.DATABASE_HOST,
+  host: "localhost",
   port: process.env.DATABASE_PORT,
 
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  username:"root" ,
+  password: "7860150" ,
+  database: "tc-main-dump",
 
   autoLoadEntities: true,
   entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, countryStatus, DataRequestStatus, ParameterRequest, DefaultValue,
@@ -80,7 +80,7 @@ export const config: ConnectionOptions = {
     ParameterHistory, Report, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
     PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus],
 
-  synchronize: true,
+  synchronize: false,
   migrationsRun: true,
   logging: true,
   logger: 'file',

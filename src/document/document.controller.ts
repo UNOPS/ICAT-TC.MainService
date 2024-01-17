@@ -1,13 +1,15 @@
 import { DocumentOwner } from './entity/document-owner.entity';
-import { editFileName, fileLocation } from './entity/file-upload.utils';
+import { editFileName, editFileNameForStorage, fileLocation, fileLocationForStorage } from './entity/file-upload.utils';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
 import { Crud, CrudController, ParsedRequest, CrudRequest } from '@nestjsx/crud';
 import { Documents } from './entity/document.entity';
-import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 import { DocOwnerUpdateDto } from './entity/doc-owner-update.dto';
+import { StorageService } from 'src/storage/storage.service';
+import { StorageFile } from 'src/storage/storage-file';
 var multer = require('multer')
 const restrictedFileExtentions = ["exe", "dll", "com", "bat", "sql","php","js.","ts"];
 const allowedFileExtentions = ["xls","xlsx","doc","docx","ppt","pptx","txt","pdf","png","jpeg","gif","jpg","avi","mp3","mp4"];
@@ -20,7 +22,7 @@ const allowedFileExtentions = ["xls","xlsx","doc","docx","ppt","pptx","txt","pdf
 
 @Controller('document')
 export class DocumentController implements CrudController<Documents> {
-    constructor(public service: DocumentService) {
+    constructor(public service: DocumentService,    private storageService: StorageService) {
     }
 
     @Post('upload')
@@ -29,10 +31,10 @@ export class DocumentController implements CrudController<Documents> {
 
     @Post('upload2/:oid/:owner')
     @UseInterceptors(FileInterceptor("file", {
-        storage: multer.diskStorage({
-            destination: fileLocation,
-            filename: editFileName,
-        })
+        // storage: multer.diskStorage({
+        //     destination: fileLocation,
+        //     filename: editFileName,
+        // })
 
     }))
     async uploadFile2(@UploadedFile() file, @Req() req: CrudRequest, @Param("oid") oid, @Param("owner") owner) {
@@ -58,14 +60,32 @@ export class DocumentController implements CrudController<Documents> {
             }
         }
 
+        const fileName=editFileNameForStorage(file);
+        const location=fileLocationForStorage(owner,oid)
+        try {
+            await this.storageService.save(
+              location + fileName,
+              file.mimetype,
+              file.buffer,
+              [{ mediaId: fileName }]
+            );
+          } catch (e) {
+            if (e.message.toString().includes("No such object")) {
+              throw new NotFoundException("file not found");
+            } else {
+              throw new ServiceUnavailableException("internal error");
+            }
+          }
+      
+
         var docowner: DocumentOwner = (<any>DocumentOwner)[owner];
-        let path = join(owner, oid, file.filename)
+        // let path = join(owner, oid, file.filename)
         let doc = new Documents();
         doc.documentOwnerId = oid;
         doc.documentOwner = docowner;
         doc.fileName = file.originalname;
         doc.mimeType = file.mimetype;
-        doc.relativePath = path;
+        doc.relativePath = location + fileName;;
 
 
 
@@ -91,17 +111,25 @@ export class DocumentController implements CrudController<Documents> {
     @Get('downloadDocument/:state/:did')
     async downloadDocuments(@Res({ passthrough: true }) res,  @Param("did") did: number,@Param("state") state: string ) :Promise<StreamableFile>  {
       let doc:Documents =await this.service.getDocument(did);
-
-
-
+      
+      let storageFile: StorageFile;
+      try {
+        storageFile = await this.storageService.get(doc.relativePath);
+      } catch (e) {
+        console.log(e.message)
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("image not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
       res.set({
         'Content-Type': `${doc.mimeType}`,
-        'Content-Disposition': `${state}; filename=${doc.fileName}`
+        'Content-Disposition': `${state}; filename=${doc.fileName}`,
       });
-
-        const file = createReadStream(`./static-files/${doc.relativePath}`);
-        
-          return new StreamableFile(file);
+  
+  
+      return new StreamableFile(storageFile.buffer);
     }
    
     @Post('updateDocOwner')
