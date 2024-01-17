@@ -12,8 +12,8 @@ constructor(){}
     let options = {
       format: 'A4',
       margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
-      //  path: '/home/ubuntu/code/Main/main/public/' + fileName,
-      path:  './public/' + fileName,
+       path: '/home/ubuntu/code/Main/main/public/' + fileName,
+    
       printBackground: true,
       landscape:true
     };
