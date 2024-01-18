@@ -35,6 +35,7 @@ export class StorageService {
       });
     });
     stream.end(media);
+    return true;
   }
 
   async delete(path: string) {

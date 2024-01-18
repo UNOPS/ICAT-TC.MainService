@@ -1,10 +1,10 @@
 import { DocumentOwner } from './entity/document-owner.entity';
 import { editFileName, editFileNameForStorage, fileLocation, fileLocationForStorage } from './entity/file-upload.utils';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
 import { Crud, CrudController, ParsedRequest, CrudRequest } from '@nestjsx/crud';
 import { Documents } from './entity/document.entity';
-import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus, NotFoundException, ServiceUnavailableException, UploadedFiles } from '@nestjs/common';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 import { DocOwnerUpdateDto } from './entity/doc-owner-update.dto';
@@ -30,13 +30,15 @@ export class DocumentController implements CrudController<Documents> {
     }
 
     @Post('upload2/:oid/:owner')
-    @UseInterceptors(FileInterceptor("file", {
-        // storage: multer.diskStorage({
-        //     destination: fileLocation,
-        //     filename: editFileName,
-        // })
+    @UseInterceptors(FileInterceptor("file",
+    //  {
+    //     storage: multer.diskStorage({
+    //         destination: fileLocation,
+    //         filename: editFileName,
+    //     })
 
-    }))
+    // }
+    ))
     async uploadFile2(@UploadedFile() file, @Req() req: CrudRequest, @Param("oid") oid, @Param("owner") owner) {
 
         let fileExtentionTemp = ("" + file.originalname).split(".");
@@ -99,6 +101,17 @@ export class DocumentController implements CrudController<Documents> {
 
     @Post('delete/:docId')
     async deleteDoc(@Param("docId") docId: number) {
+
+      const doc = await this.service.findOne({where:{id:docId}})
+      try {
+        await this.storageService.delete(doc.relativePath);
+     } catch (e) {
+       if (e.message.toString().includes("No such object")) {
+         throw new NotFoundException("image not found");
+       } else {
+         throw new ServiceUnavailableException("internal error");
+       }
+     }
         return await this.service.deleteDocument(docId);
     }
 
@@ -138,7 +151,53 @@ export class DocumentController implements CrudController<Documents> {
   }
   
 
+  @Get('downloadDocumentsFromFileName/:filepath/:filename')
+    async downloadDocumentsFromFileName(@Res({ passthrough: true }) res,  @Param("filepath") filepath: string,@Param("filename") filename: string) :Promise<StreamableFile>  {
+   
+     
+      let storageFile: StorageFile;
+      try {
+        storageFile = await this.storageService.get(filepath+'/'+filename);
+       
+      } catch (e) {
+      
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("Documnet not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
 
+  
+    
+  
+      return new StreamableFile(storageFile.buffer);
+    }
 
+    @Post('upload-file-by-name')
+    @UseInterceptors( FilesInterceptor('files',20, ),)
+    async uploadFileByName(@UploadedFiles() files: Array<Express.Multer.File>
+    ) {
+   
+      const location='uploads/'
 
+       
+        try {
+            await this.storageService.save(
+              location + files[0].originalname,
+              files[0].mimetype,
+              files[0].buffer,
+              [{ mediaId: files[0].originalname }]
+            );
+          } catch (e) {
+            if (e.message.toString().includes("No such object")) {
+              throw new NotFoundException("file not found");
+            } else {
+              throw new ServiceUnavailableException("internal error");
+            }
+          }
+     
+      
+      return {fileName: files[0].originalname};
+    }
 }

@@ -1,5 +1,5 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Param, Post, Query, Res, ServiceUnavailableException, StreamableFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
 import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
@@ -12,6 +12,9 @@ import { editFileName } from "src/utills/file-upload.utils";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { editFileNameForStorage } from "src/document/entity/file-upload.utils";
+import { StorageService } from "src/storage/storage.service";
+import { StorageFile } from "src/storage/storage-file";
 
 
 @Crud({
@@ -38,7 +41,8 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   constructor(
     public service: CMAssessmentQuestionService,
     @InjectRepository(CMAssessmentQuestion)
-    public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>
+    public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    private storageService: StorageService
   ) { }
 
   get base(): CrudController<CMAssessmentQuestion> {
@@ -71,11 +75,33 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20 ))
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
-    return {fileName: files[0].filename};
+ 
+    const location='uploads/'
+console.log(files)
+     
+      try {
+          await this.storageService.save(
+            location + files[0].originalname,
+            files[0].mimetype,
+            files[0].buffer,
+            [{ mediaId: files[0].originalname }]
+          );
+        } catch (e) {
+          if (e.message.toString().includes("No such object")) {
+            throw new NotFoundException("file not found");
+          } else {
+            throw new ServiceUnavailableException("internal error");
+          }
+        }
+   
+    
+    return {fileName: files[0].originalname};
   }
+
+
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(

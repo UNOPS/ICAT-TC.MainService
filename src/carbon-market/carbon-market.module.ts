@@ -32,6 +32,7 @@ import { EmailNotificationService } from "src/notifications/email.notification.s
 import { TokenDetails } from "src/utills/token_details";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { StorageService } from "src/storage/storage.service";
 
 
 @Module({
@@ -68,7 +69,7 @@ import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity"
     CMSeedService,
     TokenDetails, EmailNotificationService,
     UsersService,
-    MasterDataService
+    MasterDataService,StorageService
   ],
   exports: [CMAssessmentQuestionService],
 })

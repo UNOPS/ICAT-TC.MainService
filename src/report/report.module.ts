@@ -67,6 +67,7 @@ import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-que
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
+import { StorageService } from 'src/storage/storage.service';
 
 
 @Module({
@@ -127,7 +128,7 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
     PortfolioModule
   ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,],
+  providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}

@@ -131,7 +131,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    report.savedLocation = './public/' + fileName;
+    report.savedLocation = 'reports/' + fileName;
     report.tool = tool;
     report.type = type;
     if(portfolioid&&portfolioid!=0){
