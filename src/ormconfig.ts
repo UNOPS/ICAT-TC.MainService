@@ -71,31 +71,6 @@ export const config: ConnectionOptions = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
 
-<<<<<<< HEAD
-  username: 'root',
- password: 'pradeep123#',
-// password: 'password',
- database: 'tc-main',    
-
-// username: 'root',
-// password: '1997',
-//  database: 'tc-main',    
-  
-  autoLoadEntities: true, 
-  // entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  entities: [Assessment,Audit,Auth,ClimateAction,PolicyBarriers,Country,CountrySector,countryStatus,DataRequestStatus, ParameterRequest,DefaultValue,
-    Documents,DocumentOwner, InstitutionType,Institution,InstitutionCategory, LearningMaterial,LearningMaterialUserType,AggregatedAction,ActionArea,
-ClimateChangeDataCategory,FinancingScheme,ProjectApprovalStatus,ProjectOwner,ProjectStatus,Sector,UserType,AssessmentBarriers,AssessmentCharacteristics,
-Characteristics,Barriers,BarriersCategory,Category,Indicators,MethodologyAssessmentParameters,Methodology,MethodologyIndicators,ParameterStatus,
-ParameterHistory,Report,BaseTrackingEntity,MasterData,User,MethodologyParameters,CalcParameters,ImpactCovered,InvestorTool,InvestorSector,InvestorImpacts,InvestorAssessment,Notification,
-PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,BarrierCategory,PortfolioQuestions,PortfolioQuestionDetails,GeographicalAreasCovered,SystemStatus],
-
-  // We are using migrations, synchronize should be set to false.
-  synchronize: true, 
-
-  // Run migrations automatically,
-  // you can disable this if you prefer running migration manually.
-=======
   autoLoadEntities: true,
   entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, countryStatus, DataRequestStatus, ParameterRequest, DefaultValue,
     Documents, DocumentOwner, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, AggregatedAction, ActionArea,
@@ -105,7 +80,6 @@ PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,Barri
     PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus],
 
   synchronize: true,
->>>>>>> 48a72f0b7393e7c069ed0e0d0036b6f33b31062b
   migrationsRun: true,
   logging: true,
   logger: 'file',
