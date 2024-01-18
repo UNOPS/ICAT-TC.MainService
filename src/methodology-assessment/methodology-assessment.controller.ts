@@ -1,22 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req, Res } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
-import { CreateMethodologyAssessmentDto } from './dto/create-methodology-assessment.dto';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
-import { Methodology } from './entities/methodology.entity';
-import { Crud, CrudController, CrudRequest } from '@nestjsx/crud';
-import { Category } from './entities/category.entity';
+import { CrudRequest } from '@nestjsx/crud';
 import { ApiTags } from '@nestjs/swagger';
 import { MethodologyAssessmentParameters } from './entities/methodology-assessment-parameters.entity';
 import axios from 'axios';
-import { ProjectService } from 'src/climate-action/climate-action.service';
 import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileName, fileLocation } from './entities/file-upload.utils';
-import { Response } from 'express';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
-import { RequestDto } from './dto/request.dto';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Results } from './entities/results.entity';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
@@ -43,7 +37,6 @@ export class MethodologyAssessmentController {
 
 
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
-    // private readonly climateService: ProjectService,
     private readonly tokenDetails: TokenDetails,
     private readonly userService : UsersService,
     private masterDataService: MasterDataService
@@ -52,22 +45,14 @@ export class MethodologyAssessmentController {
 
   res2: number;
   resData: any;
-
-  /*  @Post()
-   create(@Body() createMethodologyAssessmentDto: CreateMethodologyAssessmentDto) {
-     return this.methodologyAssessmentService.create(createMethodologyAssessmentDto);
-   } */
-
    @UseGuards(JwtAuthGuard)
   @Post('methAssignDataSave')
   async methAssignDataSave(@Body() MethAssignParam: MethodologyAssessmentParameters): Promise<any> {
     this.res2 = 0
     this.resData = ''
 
-    let newData : any = MethAssignParam
-    console.log("MethAssignParam", MethAssignParam)
+    let newData : any = MethAssignParam;
     const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
-    // console.log("resss", response.data)
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
 
@@ -84,12 +69,11 @@ export class MethodologyAssessmentController {
         assessment_id :this.res2
       }
   
-      await this.methodologyAssessmentService.createResults(result)
+      await this.methodologyAssessmentService.createResults(result);
     }
   
     if(this.res2){
-      let user =  this.userService.userDetailsForAudit()
-      console.log("ppppuserr :",(await user).userType )
+      let user =  this.userService.userDetailsForAudit();
       let audit2 = {
         description: (await user).userName + " Create Assessment in " + this.masterDataService.getToolName('PORTFOLIO'),
         userName: (await user).userName,
@@ -98,18 +82,15 @@ export class MethodologyAssessmentController {
         uuId: (await user).uuId,
         institutionId: (await user).institutionId,
     }
-      console.log("userrrr",audit2)
      
       try {
         const response = axios.post(auditlogURL + '/createCountry' , audit2); 
     } catch (error) {
-        console.log('Error while sending audit log:', error);
     }
     }
     
-    console.log("resData", this.resData)
 
-    return this.resData
+    return this.resData;
 
   }
   
@@ -119,28 +100,22 @@ export class MethodologyAssessmentController {
   async barrierCharacteristics(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
     this.resData = ''
 
-    let methdata : any = BarrierCharData
-
-    console.log("methdata : ", methdata)
+    let methdata : any = BarrierCharData;
 
     if(methdata.alldata.assessment_approach === 'Direct'){
 
       const response = await axios.post(MainMethURL + '/assessmentDataTrack3', BarrierCharData);
-    console.log("reeesssaa", response.data)
 
-    let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
+    let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData);
 
-    console.log("resbb", res)
     this.resData = {
       result: response.data,
       assesId: res
     }
-    //console.log("resData", this.resData)
   
 
      if(res){
-      let user =  this.userService.userDetailsForAudit()
-      console.log("ppppuserr :",(await user).userType )
+      let user =  this.userService.userDetailsForAudit();
       let audit2 = {
         description: (await user).userName + " Create Assessment in "+ this.masterDataService.getToolName('PORTFOLIO') + " track 2",
         userName: (await user).userName,
@@ -149,12 +124,10 @@ export class MethodologyAssessmentController {
         uuId: (await user).uuId,
         institutionId: (await user).institutionId,
     }
-      console.log("userrrr",audit2)
      
       try {
         const response = axios.post(auditlogURL + '/createCountry' , audit2); 
     } catch (error) {
-        console.log('Error while sending audit log:', error);
     }
     } 
 
@@ -165,8 +138,6 @@ export class MethodologyAssessmentController {
       assessment_id :  res
     }
 
-    console.log("resulttt", result)
-    console.log("resData", this.resData)
      this.methodologyAssessmentService.assessCategory(this.resData)
 
     await this.methodologyAssessmentService.createResults(result)
@@ -175,8 +146,7 @@ export class MethodologyAssessmentController {
     }
 
     if(methdata.alldata.assessment_approach === 'Indirect'){
-      let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData)
-      console.log("resssID : ", res)
+      let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData);
       return res
     }
     
@@ -186,7 +156,7 @@ export class MethodologyAssessmentController {
   @Post('barrierCharSave')
   async barrierCharSave(@Body() BarrierCharData: AssessmentCharacteristics): Promise<any> {
 
-    let res = await this.methodologyAssessmentService.barrierCharSave(BarrierCharData)
+    let res = await this.methodologyAssessmentService.barrierCharSave(BarrierCharData);
 
     return res
 
@@ -197,42 +167,16 @@ export class MethodologyAssessmentController {
   updateInstitution(
     @Body() updateValueDto: UpdateValueEnterData,
   ): Promise<boolean> {
-    console.log("++++++++++++++++++++++++++++++++++++",updateValueDto)
     return this.methodologyAssessmentService.updateInstitution(updateValueDto);
   }
 
   @Post('AssessCharacteristicsDataSave')
   async AssessCharacteristicsDataSave(@Body() AssessCharData: AssessmentCharacteristics): Promise<any> {
- console.log("AssessCharData", AssessCharData)
-    let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData)
+    let newRes = await this.methodologyAssessmentService.createAssessCharacteristics(AssessCharData);
 
-    return newRes
+    return newRes;
 
   }
-  // @Post('assessParameterSave')
-  // async assessParameterSave(@Body() assesParameterData: AssessmentCharacteristics): Promise<any> {
-  //   console.log("assesParameterData",assesParameterData)
-  //   let meth = await this.findMethbyName(assesParameterData.selectedMethodology)
-  //   let request= new RequestDto();
-  //   request.equation =meth?.meth_code;
-  //   let params = this.toObject(assesParameterData.parameters)
-  //   const obj = { ...assesParameterData.parameters }
-    
-  //   console.log("before",assesParameterData.parameters, "after",obj)
-
-  //   // request.data = 
-  //   const response = await axios.post(MainCalURL + '/calculate',request);
-
-  //   return response
-
-  // }
-
-  // toObject(arr) {
-  //   var rv = {};
-  //   for (var i = 0; i < arr.length; ++i)
-  //     rv[i] = arr[i];
-  //   return rv;
-  // }
 
   
   @Get('findParam/:assessId')
@@ -256,11 +200,6 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.getAssessCategory(assessId);
   }
 
-
-  /*   @Get()
-    findAll() {
-      return this.methodologyAssessmentService.findAll();
-    } */
 
   @Get()
   findAllMethodologies() {
@@ -291,26 +230,6 @@ export class MethodologyAssessmentController {
   @Get('results')
   async results() {
 
-    //for audit log
-   /*  let user =  this.userService.userDetailsForAudit()
-    console.log("ppppuserr :",(await user).userType )
-    let audit2 = {
-      description: (await user).userName + " Is View Results",
-      userName: (await user).userName,
-      actionStatus: "View Results",
-      userType: (await user).userType,
-      uuId: (await user).uuId,
-      institutionId: (await user).institutionId,
-  }
-    console.log("userrrr",audit2)
-   
-    try {
-      // const response = axios.post(auditlogURL + '/createCountry' , audit2); 
-  } catch (error) {
-      console.log('Error while sending audit log:', error);
-  } */
-  //end of the data for audit log
-
     return await this.methodologyAssessmentService.results();
   }
 
@@ -321,7 +240,7 @@ export class MethodologyAssessmentController {
 
   @Get('get-assessments-by-climate-action')
   async getAssessmentByClimateAction(@Query('climateActionId') climateActionId: number){
-    return await this.methodologyAssessmentService.getAssessmentsByClimateAction(climateActionId)
+    return await this.methodologyAssessmentService.getAssessmentsByClimateAction(climateActionId);
   }
 
 
@@ -332,12 +251,11 @@ export class MethodologyAssessmentController {
 
   @Get('findAssessmentParameters/:assessmentId')
   async findAssessmentParameters(@Param('assessmentId') assessmentId: number){
-    return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId)
+    return await this.methodologyAssessmentService.findAssessmentParameters(assessmentId);
   }
 
   @Get('findMethbyName')
   async findMethbyName(@Param('methName') methName: string) {
-    // console.log("methName",methName)
     return await this.methodologyAssessmentService.findMethbyName(methName);
   }
 
@@ -357,11 +275,8 @@ async uploadFile2(
   @Req() req: CrudRequest,
   @Request() request,
 ) {
-  console.log("file")
-  console.log(file)
-  this.filename = file.filename
-  console.log("xxx" + this.filename)
-  return { location: `${this.filename}` }
+  this.filename = file.filename;
+  return { location: `${this.filename}` };
 }
 
 
@@ -405,12 +320,6 @@ async uploadFile2(
     return this.methodologyAssessmentService.findAllCharacteristics();
   }
 
-/*   @Get('findAllBarrierData')
-  findAllBarrierData() {
-    return this.methodologyAssessmentService.findAllBarrierData();
-  } */
-
-  //ppppppppppppppppppppppppppp
   @Get('findAllBarrierData/:assessId')
   async findAllBarrierData(@Param('assessId') assessId: number) {
     return await this.methodologyAssessmentService.findAllBarrierData(assessId);
@@ -431,8 +340,6 @@ async uploadFile2(
     return await this.methodologyAssessmentService.barriesByassessId(assessId);
   }
 
-
-  //pppppppppppppppppp
   @Get('findAllIndicators')
   findAllIndicators() {
     return this.methodologyAssessmentService.findAllIndicators();
@@ -462,7 +369,7 @@ async uploadFile2(
     let countryIdFromTocken: number;
     let sectorIdFromTocken: number;
     let userTypeFromTocken: string;
-    let institutionTypeId: number; //instypeId
+    let institutionTypeId: number;
 
     [countryIdFromTocken, sectorIdFromTocken, userTypeFromTocken] =
       this.tokenDetails.getDetails([
@@ -470,8 +377,6 @@ async uploadFile2(
         TokenReqestType.sectorId,
         TokenReqestType.role,
       ]);
-
-      console.log("ammmm :", countryIdFromTocken)
  
      return countryIdFromTocken
    } 
@@ -497,13 +402,6 @@ async uploadFile2(
   updateDeadline(
     @Body() updateValueDto: UpdateValueEnterData,
   ): Promise<boolean> {
-    // let audit: AuditDto = new AuditDto();
-    // audit.action = 'Review Data Updated';
-    // audit.comment = updateValueDto.value + ' Updated';
-    // audit.actionStatus = 'Updated';
-
-    // this.auditService.create(audit);
-    console.log(updateValueDto);
     return this.methodologyAssessmentService.updateEnterDataValue(updateValueDto);
   }
 
@@ -532,7 +430,6 @@ async uploadFile2(
     @Query('statusId') statusId: number,
     @Query('filterText') filterText: string,
   ): Promise<any> {
-    console.log("getAssessmentForAssignVerifier")
 
     let countryIdFromTocken: number;
     [countryIdFromTocken, ] = this.tokenDetails.getDetails([TokenReqestType.countryId])
@@ -566,40 +463,18 @@ async uploadFile2(
   async updateAssignVerifiers(
     @Body() updateDeadlineDto: DataVerifierDto,
   ): Promise<boolean> {
-
-    // const queryRunner = getConnection().createQueryRunner();
-    // await queryRunner.startTransaction();
-    // try {
       let audit: AuditDto = new AuditDto();
       let paeameter = this.methodologyAssessmentService.acceptDataVerifiersForIds(updateDeadlineDto);
-      // console.log(updateDeadlineDto)
-      // audit.action = 'Verifier Deadline Created';
-      // audit.comment = 'Verifier Deadline Created';
-      // audit.actionStatus = 'Created'
-      // // this.auditService.create(audit);
-      // await queryRunner.commitTransaction();
       return paeameter;
-    // }
-    // catch (err) {
-    //   console.log("worktran2")
-    //   console.log(err);
-    //   await queryRunner.rollbackTransaction();
-    //   return err;
-    // } finally {
-    //   await queryRunner.release();
-    // }
 
   }
   
   @Post('updateIndicatorValue')
   async updateIndicatorValue(@Body() data: UpdateIndicatorDto): Promise<any> {
-    // console.log("data1",data)
 
-    let result:any
-    //const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
-    // console.log("resss", response.data)
+    let result:any;
     if(data){
-      result = await this.methodologyAssessmentService.updateIndicatorValue(data)
+      result = await this.methodologyAssessmentService.updateIndicatorValue(data);
 
       return result;
 

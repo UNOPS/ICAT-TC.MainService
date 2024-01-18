@@ -1,19 +1,16 @@
-import { Controller, Get, Inject, Query } from '@nestjs/common';
+import { Controller, Get,  Query } from '@nestjs/common';
 import { AggregatedAction } from './entity/aggregated-action.entity';
 import { NdcService } from './aggregated-action.service';
-import { Request, Post, UseGuards } from '@nestjs/common';
+import { Request, UseGuards } from '@nestjs/common';
 import {
   Crud,
   CrudController,
   Override,
-  ParsedBody,
   ParsedRequest,
   CrudRequest,
   GetManyDefaultResponse,
 } from '@nestjsx/crud';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { REQUEST } from '@nestjs/core';
-//import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 
 @Crud({
   model: {
@@ -45,7 +42,6 @@ import { REQUEST } from '@nestjs/core';
 @Controller('ndc')
 export class NdcController implements CrudController<AggregatedAction> {
   constructor(public service: NdcService,
-    //private readonly tokenDetails:TokenDetails,
     ) {}
 
   get base(): CrudController<AggregatedAction> {
@@ -59,15 +55,8 @@ export class NdcController implements CrudController<AggregatedAction> {
   ): Promise<GetManyDefaultResponse<AggregatedAction> | AggregatedAction[]> {
     try {
       let res = await this.base.getManyBase(req);
-      // console.log("getManyBasendc",res)
-      console.log('*********************************************');
-      console.log("res",res);
-      console.log('*********************************************');
-      console.log("req",req);
       return res;
     } catch (error) {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      console.log(error);
     }
    }
    @UseGuards(JwtAuthGuard)
@@ -80,16 +69,8 @@ export class NdcController implements CrudController<AggregatedAction> {
   
    ): Promise<any> {
 
-
-   console.log('sectorIds',sectorIds)
     let countryIdFromTocken:number;
     let sectorIdFromTocken:number ;
-   
-
-  
-
-   //[countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
-    
 
      return await this.service.ndcSectorDetails(
        {
@@ -113,17 +94,9 @@ export class NdcController implements CrudController<AggregatedAction> {
   
    ): Promise<any> {
 
-
-  //  console.log('sectorIds',sectorIds)
     let countryIdFromTocken:number;
     let sectorIdFromTocken:number ;
-   
-
   
-
-   //[countryIdFromTocken,sectorIdFromTocken]=    this.tokenDetails.getDetails([TokenReqestType.countryId,TokenReqestType.sectorId])
-    
-
      return await this.service.ndcSectorDetailsDashboard(
        {
          limit: limit,

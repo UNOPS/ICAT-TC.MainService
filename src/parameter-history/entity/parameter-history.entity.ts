@@ -43,7 +43,6 @@ import { ParameterHistoryAction } from './parameter-history-action-history.entit
     @Column({ nullable: true })
     parameterStatusPrevious: string;
   
-    //new cols
     @Column({ nullable: true })
     deoAssumption: string;
   

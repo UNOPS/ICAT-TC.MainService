@@ -39,7 +39,7 @@ export class AssessmentPagesService {
  </div>
  </div>
  <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
-       <img  style="padding: 0px;" src="http://localhost:7080/report/cover/icatlogo.jpg" > 
+       <img  style="padding: 0px;" src="${process.env.MAIN_URL}+/report/cover/icatlogo.jpg" > 
  </div>
     </div>`;
 
@@ -81,7 +81,7 @@ export class AssessmentPagesService {
   <div class="content">
   <div  class="main_header text-start">1.	OVERVIEW OF THE METHODOLOGY </div>
   <div style="margin-top: 50px;" class="image-larg "><figure class="figure ">
-  <img src="http://localhost:7080/report/Picture1.jpg" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+  <img src=" ${ process.env.MAIN_URL}/report/Picture1.jpg" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
   <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
 </figure></div>
 
@@ -388,7 +388,7 @@ export class AssessmentPagesService {
      </p>
    </blockquote>
    <div style="margin-top: 50px;" class="image-larg "><figure class="figure ">
-   <img src="http://localhost:7080/report/Picture3.png" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+   <img src="${ process.env.MAIN_URL}/report/Picture3.png" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
    <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
  </figure></div>     
      
@@ -1826,7 +1826,7 @@ export class AssessmentPagesService {
            <div class="content">
            <div  class="main_header text-start"></div>
            <div style="margin-top: 50px;" class="image-larg "><figure class="figure ">
-           <img src="http://localhost:7080/report/Picture2.png" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+           <img src="${ process.env.MAIN_URL}/report/Picture2.png" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
            <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
          </figure></div>
 
@@ -1834,19 +1834,19 @@ export class AssessmentPagesService {
          <div style="margin-top: 50px;" class="image-set  row">
                   
          <div class="col-4"><figure class="figure ">
-           <img src=""http://localhost:7080/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+           <img src=""${ process.env.MAIN_URL}/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
            <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
          </figure></div>
          <div class="col-4"><figure class="figure ">
-           <img src=""http://localhost:7080/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+           <img src=""${ process.env.MAIN_URL}/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
            <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
          </figure></div>
          <div class="col-4"><figure class="figure ">
-           <img src=""http://localhost:7080/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+           <img src=""${ process.env.MAIN_URL}/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
            <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
          </figure></div>
          <div class="col-4"><figure class="figure ">
-           <img src=""http://localhost:7080/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
+           <img src=""${ process.env.MAIN_URL}/report/Picture3.png"" class="figure-img" alt="A generic square placeholder image with rounded corners in a figure.">
            <figcaption class="figure-caption">Figure 2: GHG emissions by source for the inventory year 2020</figcaption>
          </figure></div>
        </div>

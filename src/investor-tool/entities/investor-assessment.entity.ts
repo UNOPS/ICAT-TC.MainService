@@ -24,9 +24,6 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     type: string;
 
-    // @Column({ nullable: true })
-    // Category: string;
-
     @ManyToOne((type) => Category, { cascade: false })
     @JoinColumn({ name: 'category_id' })
     category: Category;
@@ -50,13 +47,13 @@ export class InvestorAssessment extends BaseTrackingEntity {
     @Column({ nullable: true })
     relavance: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'varchar', length: 1000 })
     justification: string;
 
     @Column({ nullable: true })
     likelihood: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'varchar', length: 1000 })
     likelihood_justification: string;
 
     @Column({ type: 'double', nullable: true })
@@ -66,7 +63,7 @@ export class InvestorAssessment extends BaseTrackingEntity {
     likelihood_weight: number;
 
     @Column({ nullable: true })
-    score: number; // outcome- sustained GHGs
+    score: number; 
 
 
      @ManyToOne((type) => InvestorTool, { cascade: false })
