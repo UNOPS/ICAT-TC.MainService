@@ -9,14 +9,11 @@ import { InstitutionType } from '../entity/institution.type.entity';
 @Injectable()
 export class InstitutionTypeService extends TypeOrmCrudService<InstitutionType>{
         constructor(@InjectRepository(InstitutionType) repo,
-        // @InjectRepository(InstitutionType)
-        // private readonly instututionTypeRepository: Repository<InstitutionType>,
         ) {
             super(repo);
         }
 
         async getInstitutionTypesByUser(
-            // filterText: string,
             userId: number,
           ): Promise<any>{
             let filter: string = '';      
@@ -37,18 +34,10 @@ export class InstitutionTypeService extends TypeOrmCrudService<InstitutionType>{
                 
         
                 .where(filter, {
-                //   filterText: `%${filterText}%`,
                   userId,
                 })
                 .orderBy('ins.createdOn', 'DESC');
 
-                console.log('typequery', data.getQuery());
-        
-                // if(data){
-                //   // console.log('resula',data)
-               
-                // }
-                console.log("rrrrr",data)
                 return data;
 
                 }

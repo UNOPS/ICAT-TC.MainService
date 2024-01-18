@@ -20,6 +20,7 @@ import {
   ReportCarbonMarketDtoContentFour,
   ReportCarbonMarketDtoContentFive,
   ReportCarbonMarketDtoCoverPage,
+  ReportContentThree,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -36,13 +37,15 @@ import { Portfolio, } from 'src/portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
-import { CMScoreDto, CalculateDto } from 'src/carbon-market/dto/cm-result.dto';
+import { CMScoreDto } from 'src/carbon-market/dto/cm-result.dto';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
     @InjectRepository(Report) repo,
     @InjectRepository(Country) private countryRepo: Repository<Country>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Portfolio) private portfolioRepo: Repository<Portfolio>,
     @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,
     private usersService: UsersService,
@@ -85,17 +88,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportDto.contentTwo = await this.genarateReportDtoContentTwo(
       createReportDto.assessmentId,createReportDto.tool
     );
+    reportDto.contentThree = await this.genarateReportDtoContentThree(
+      createReportDto.assessmentId,createReportDto.tool
+    );
     return reportDto;
   }
 
   genarateReportDtoCoverPage(title: string,tool:string): ReportCoverPage {
+    var moment = require('moment');
     const coverPage = new ReportCoverPage();
     coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =
-      'http://localhost:7080/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
 
   }
@@ -103,16 +109,25 @@ export class ReportService extends TypeOrmCrudService<Report> {
   async saveReport(
     name: string,
     fileName: string,
-    countryId: number,
+    UsernnameFromTocken: string,
     climateAction: ClimateAction,
     portfolioid:number,
     tool:string,
     type:string
   ) {
-    let country = await this.countryRepo
-      .createQueryBuilder('country')
-      .where('id = :id', { id: countryId })
-      .getOne();
+   let res1 = await this.userRepo.findOne({
+      where: {
+        email: UsernnameFromTocken ,
+      },
+      relations: ['country'],
+    });
+    let country = new Country()
+    if(res1 .userType.name =="External"){
+      country.id=0;
+    }
+    else if(res1 .userType.name !="External"){
+      country.id= res1.country.id;
+    }
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
@@ -124,8 +139,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
       portfolio.id=portfolioid
       report.portfolio = portfolio;
     }
-    
-    // report.savedLocation = '/home/ubuntu/code/Main/main/public/' + fileName;
     report.thumbnail =
       'https://act.campaign.gov.uk/wp-content/uploads/sites/25/2017/02/form_icon-1.jpg';
     report.country = country;
@@ -205,7 +218,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
           where: {
             country: { id: countryIdFromTocken },
           },
-          relations: ['climateAction'],
+          relations: ['climateAction','portfolio','country'],
         });
       } else {
         res = await this.repo.find({
@@ -221,20 +234,29 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     let reportList: Report[] = [];
     const isUserExternal = currentUser?.userType?.name === 'External';
-    for (const x of await res) {
-      const isSameUser = x.climateAction?.user?.id === currentUser?.id;
-      const isMatchingCountry =
-        x.climateAction?.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal =
-        x.climateAction?.user?.userType?.name !== 'External';
-      if (
-        (isUserExternal && isSameUser) ||
-        (!isUserExternal && isMatchingCountry && isUserInternal)
-      ) {
+    for await  (const x of await res) {
+      let isSameUser:boolean;
+      let isMatchingCountry :boolean;
+      let isUserInternal :boolean;
+      if(x.climateAction !=null || x.climateAction != undefined){
+        if(x.climateAction?.user !=null || x.climateAction?.user != undefined){
+          isSameUser = x.climateAction?.user?.id === currentUser?.id;
+          isMatchingCountry = x.climateAction?.country?.id === currentUser?.country?.id;
+         isUserInternal =  x.climateAction?.user?.userType?.name !== 'External';
+        }        
+      }
+      else if(x.portfolio !=null || x.portfolio != undefined){
+        if(x.portfolio?.user !=null || x.portfolio?.user != undefined){
+          isSameUser = x.portfolio?.user?.id === currentUser?.id;
+          isMatchingCountry = x.country?.id === currentUser?.country?.id;
+         isUserInternal =  x.portfolio?.user?.userType?.name !== 'External';
+        }        
+      }
+      if ((isUserExternal && isSameUser) ||(!isUserExternal && isMatchingCountry && isUserInternal)) {
         reportList.push(x);
       }
     }
-    return res;
+    return reportList;
   }
 
   async genarateReportDtoContentOne(
@@ -245,25 +267,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let investorTool = new InvestorTool();
     let isInvestment:boolean = false;
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
-    console.log("assessmentId", assessmentId)
     if(tool=='Investment'){
   
       investorTool = await this.investorToolService.getResultByAssessment(assessmentId)
       isInvestment = true;
-      // console.log("investorTool", investorTool,isInvestment)
     }
    
-    // reportContentOne.policyName = asse.climateAction.policyName;
-    // reportContentOne.assesmentPersonOrOrganization = asse.person;
-    // reportContentOne.assessmentYear = asse.year;
-    // reportContentOne.intendedAudience = asse.audience;
     reportContentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
-    // reportContentOne.objectives = await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
     reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
     reportContentOne.principles = asse.principles ? asse.principles : 'N/A';
-    // reportContentOne.assessmentBoundary = asse.assessBoundry;
-
-    // reportContentOne.impactCoverd = asse.impactsCovered;
     reportContentOne.sectorCoverd = asse.investor_sector && asse.investor_sector.length ? asse.investor_sector
       ?.map((a) => a.sector.name)
       .join(',') : 'N/A';
@@ -275,10 +287,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Title of the intervention',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
-      // {
-      //   information: 'Type',
-      //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
-      // },
       {
         information: 'Description of the intervention',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
@@ -312,7 +320,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         description: asse.climateAction.objective ? asse.climateAction.objective : 'N/A',
       },
       {
-        information: 'Level of the policy or action ',
+        information: 'Level of intervention ',
         description: asse.climateAction.levelofImplemenation ? asse.climateAction.levelofImplemenation : 'N/A',
       },
       {
@@ -365,14 +373,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
     reportContentOne.understanPolicyOrActions = [
-      // {
+      {
 
-      //   Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
+        Time_periods: 'Description of the vision for desired societal, environmental and technical changes',
 
-      //   description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
 
-      // },
-
+      },
       {
 
         Time_periods: 'Long-term (≥15 years)',
@@ -408,48 +415,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
     ];
 
 
-
-
-
-    // reportContentOne.barriers = [
-
-    //   {
-
-    //     barrier: 'test barrier',
-
-    //     explanation: 'test explanation',
-
-    //     characteristics_affected: 'test characteristics_affected',
-
-    //     barrier_directly_targeted: 'test barrier_directly_targeted',
-
-    //   },
-
-    //   {
-
-    //     barrier: 'test barrier',
-
-    //     explanation: 'test explanation',
-
-    //     characteristics_affected: 'test characteristics_affected',
-
-    //     barrier_directly_targeted: 'test barrier_directly_targeted',
-
-    //   },
-
-    //   {
-
-    //     barrier: 'test barrier',
-
-    //     explanation: 'test explanation',
-
-    //     characteristics_affected: 'test characteristics_affected',
-
-    //     barrier_directly_targeted: 'test barrier_directly_targeted',
-
-    //   },
-
-    // ];
 
     reportContentOne.barriers = []
 
@@ -827,12 +792,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             : 'YES'),
 
-              // invesass.score == null || invesass.score == undefined
-
-              //   ? 'NO'
-
-              //   : 'YES',
-
             score: invesass.score != null && invesass.score != undefined
 
               ? this.getScore(invesass.score)
@@ -869,12 +828,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
                 invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
             : 'YES'),
-
-                  // invesass.score == null || invesass.score == undefined
-
-                  //   ? 'NO'
-
-                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -943,11 +896,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             : 'YES'),
 
-              // invesass.score == null || invesass.score == undefined
-
-              //   ? 'NO'
-
-              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -986,11 +934,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             : 'YES'),
 
-                  // invesass.score == null || invesass.score == undefined
-
-                  //   ? 'NO'
-
-                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1062,11 +1005,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
             invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
             : 'YES'),
-              // invesass.score == null || invesass.score == undefined
-
-              //   ? 'NO'
-
-              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1105,11 +1043,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 : 'YES'),
 
-                  // invesass.score == null || invesass.score == undefined
-
-                  //   ? 'NO'
-
-                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1170,10 +1103,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
     if (asssCharacteristicasscalesd) {
-console.log(asssCharacteristicasscalesd)
       scale_sd.name = 'SDG Scale of the Outcome';
-      // reportContentTwo.processScore = asssCharacteristicasscalesd.process_score;
-      // reportContentTwo.outcomeScore = asssCharacteristicasscalesd.outcome_score;
 
       const filterinsass = asssCharacteristicasscalesd.investor_assessment.filter(a => a.portfolioSdg);
 
@@ -1205,12 +1135,6 @@ console.log(asssCharacteristicasscalesd)
             invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
             : 'YES'),
-
-              // invesass.score == null || invesass.score == undefined
-
-              //   ? 'NO'
-
-              //   : 'YES',
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1251,11 +1175,6 @@ console.log(asssCharacteristicasscalesd)
 
                 : 'YES'),
 
-                  // invesass.score == null || invesass.score == undefined
-
-                  //   ? 'NO'
-
-                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1349,12 +1268,6 @@ console.log(asssCharacteristicasscalesd)
 
             : 'YES'),
 
-              // invesass.score == null || invesass.score == undefined
-
-              //   ? 'NO'
-
-              //   : 'YES',
-
             score: invesass.score != null && invesass.score != undefined
 
               ? this.getScore(invesass.score)
@@ -1393,12 +1306,6 @@ console.log(asssCharacteristicasscalesd)
                 invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
 
                 : 'YES'),
-
-                  // invesass.score == null || invesass.score == undefined
-
-                  //   ? 'NO'
-
-                  //   : 'YES',
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1442,274 +1349,32 @@ console.log(asssCharacteristicasscalesd)
 
 
     let res = await this.investorToolService.calculateNewAssessmentResults(assessmentId);
-    // console.log("=============",res.processData)
-    // console.log("=============================")
 
     reportContentTwo.process_categories_assessment = res.processData;
    
     reportContentTwo.outcomes_categories_assessment = res.outcomeData;
     reportContentTwo.processScore = res.processScore;
     reportContentTwo.outcomeScore = res.outcomeScore;
-    // console.log("processScore",reportContentTwo.processScore,"outcomeScore",reportContentTwo.outcomeScore)
+    
 
-
-    // let asssIndicatorOutcome =
-
-    //   await this.assessmentService.getCharacteristicasforReport(
-
-    //     assessmentId,
-
-    //     'outcome',
-
-    //     '',
-
-    //   );
-
-    // let catagoryOutcome = [];
-
-    // let catagoryOutcomeExAnteAssesment = [];
-
-    // if (asssIndicatorsProcess) {
-
-    //   for (let parameter of asssIndicatorOutcome.parameters) {
-
-    //     let cat = catagoryOutcome.find(
-
-    //       (a) => a.name == parameter.category.name,
-
-    //     );
-
-    //     if (cat) {
-
-    //       cat.characteristics.push({
-
-    //         name: parameter.characteristics.name,
-
-    //         indicator: parameter.indicator ? parameter.indicator.name : '-',
-
-    //       });
-
-    //       cat.rows = cat.characteristics.length;
-
-    //     } else {
-
-    //       catagoryOutcome.push({
-
-    //         rows: 1,
-
-    //         name: parameter.category.name,
-
-    //         characteristics: [
-
-    //           {
-
-    //             name: parameter.characteristics.name,
-
-    //             indicator: parameter.indicator ? parameter.indicator.name : '-',
-
-    //           },
-
-    //         ],
-
-    //       });
-
-    //     }
-
-    //   }
-
-
-
-    //   for (let parameter of asssIndicatorOutcome.parameters) {
-
-    //     let cat = catagoryOutcomeExAnteAssesment.find(
-
-    //       (a) => a.name == parameter.category.name,
-
-    //     );
-
-    //     if (cat) {
-
-    //       cat.characteristics.push({
-
-    //         name: parameter.characteristics.name,
-
-    //         score: parameter.score,
-
-    //         justifying_score: parameter.scoreOrInstitutionJusti,
-
-    //         indicator: parameter.indicator ? parameter.indicator.name : '-',
-
-    //         indicator_starting_value: '-',
-
-    //         indicator_value: parameter.indicatorValue,
-
-    //       });
-
-    //       cat.rows = cat.characteristics.length;
-
-    //     } else {
-
-    //       catagoryOutcomeExAnteAssesment.push({
-
-    //         rows: 1,
-
-    //         name: parameter.category.name,
-
-    //         characteristics: [
-
-    //           {
-
-    //             name: parameter.characteristics.name,
-
-    //             score: parameter.score,
-
-    //             justifying_score: parameter.scoreOrInstitutionJusti,
-
-    //             indicator: parameter.indicator ? parameter.indicator.name : '-',
-
-    //             indicator_value: parameter.indicatorValue,
-
-    //           },
-
-    //         ],
-
-    //       });
-
-    //     }
-
-    //   }
-
-    // }
 
 
 
     reportContentTwo.prossesAssesmentStartingSituation1 = catagoryProcess.slice(0,catagoryProcess.length/2);
     reportContentTwo.prossesAssesmentStartingSituation2 = catagoryProcess.slice(catagoryProcess.length/2,catagoryProcess.length);
-    // reportContentTwo.outcomeAssesmentStartingSituation = catagoryOutcome;
 
     reportContentTwo.prossesExAnteAssesment = catagoryProcessExAnteAssesment;
-
-    // reportContentTwo.outcomeExAnteAssesment = catagoryOutcomeExAnteAssesment;
-
-
-
-    // let asssResulrProcess =
-
-    //   await this.assessmentService.getCharacteristicasforReport(
-
-    //     assessmentId,
-
-    //     'process',
-
-    //     '',
-
-    //   );
-
-    // let prossesDescribeResult = [];
-
-    // if (asssResulrProcess) {
-
-    //   for (let parameter of asssResulrProcess.parameters) {
-
-    //     let cat = prossesDescribeResult.find(
-
-    //       (a) => a.name == parameter.category.name,
-
-    //     );
-
-    //     if (cat) {
-
-    //       (cat.score = parameter.score),
-
-    //         (cat.justifying_score = parameter.scoreOrInstitutionJusti),
-
-    //         (cat.relative_importance = '');
-
-    //     } else {
-
-    //       prossesDescribeResult.push({
-
-    //         name: parameter.category.name,
-
-    //         score: parameter.score,
-
-    //         justifying_score: parameter.scoreOrInstitutionJusti,
-
-    //         relative_importance: '',
-
-    //       });
-
-    //     }
-
-    //   }
-
-    // }
-
-
-
-    // let asssResultOutcome = await this.assessmentService.getResultforReport(
-
-    //   assessmentId,
-
-    //   'outcome',
-
-    //   '',
-
-    // );
-
-    // let outcomeDescribeResult = [];
-
-    // if (asssResultOutcome) {
-
-    //   for (let parameter of asssResultOutcome.parameters) {
-
-    //     console.log(parameter);
-
-    //     let cat = outcomeDescribeResult.find(
-
-    //       (a) => a.name == parameter.category.name,
-
-    //     );
-
-    //     if (cat) {
-
-    //       (cat.score = parameter.score),
-
-    //         (cat.justifying_score = parameter.scoreOrInstitutionJusti),
-
-    //         (cat.relative_importance = '');
-
-    //     } else {
-
-    //       outcomeDescribeResult.push({
-
-    //         name: parameter.category.name,
-
-    //         score: parameter.score,
-
-    //         justifying_score: parameter.scoreOrInstitutionJusti,
-
-    //         relative_importance: '',
-
-    //       });
-
-    //     }
-
-    //   }
-
-    // }
-
-
-
-    // reportContentTwo.prossesDescribeResult = prossesDescribeResult;
-
-    // reportContentTwo.outcomeDescribeResult = outcomeDescribeResult;
 
     return reportContentTwo;
 
   }
 
-
+   async genarateReportDtoContentThree( assessmentId: number,
+    tool:string):Promise<ReportContentThree>{
+    const contentThree=new ReportContentThree()
+ 
+   return contentThree
+}
 
   async genarateReportCarbonMarketDto(
     createReportDto: CreateReportDto,
@@ -1741,14 +1406,14 @@ console.log(asssCharacteristicasscalesd)
   genarateReportCarbonMarketDtoCoverPage(
     title:string
   ): ReportCarbonMarketDtoCoverPage{
+
+    var moment = require('moment');
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
-    // coverPage.generateReportName = title;
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =
-      'http://localhost:7080/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
 
 
@@ -1758,40 +1423,16 @@ console.log(asssCharacteristicasscalesd)
   ):Promise<ReportCarbonMarketDtoContentOne>{
     const contentOne=new ReportCarbonMarketDtoContentOne()
     let asse = await this.assessmentService.findbyIDforCarbonMarketReport(assessmentId);
-    console.log("assessmentId", assessmentId)
-   
-    // contentOne.opportunities = asse.opportunities ? asse.opportunities : 'N/A';
-    // // reportContentOne.objectives = await this.assessmentService.getAssessmentObjectiveforReport(assessmentId);
-    // reportContentOne.assessmetType = asse.assessmentType ? asse.assessmentType : 'N/A';
-    // reportContentOne.principles = asse.principles ? asse.principles : 'N/A';
-    // // reportContentOne.assessmentBoundary = asse.assessBoundry;
-// console.log("sectors",asse.climateAction.policy_sector)
-    // reportContentOne.impactCoverd = asse.impactsCovered;
-    // reportContentOne.sectorCoverd = asse.investor_sector && asse.investor_sector.length ? asse.investor_sector
-    //   ?.map((a) => a.sector.name)
-    //   .join(',') : 'N/A';
-    // reportContentOne.geograpycalCover = asse.geographical_areas_covered && asse.geographical_areas_covered.length ? asse.geographical_areas_covered
-    //   ?.map((a) => a.name)
-    //   .join(',') : 'N/A';;
+    
     contentOne.policyOrActionsDetails = [
       {
         information: 'Title of the intervention',
         description: asse.climateAction.policyName ? asse.climateAction.policyName : 'N/A',
       },
-      // {
-      //   information: 'Type',
-      //   description: asse.climateAction.typeofAction ? asse.climateAction.typeofAction : 'N/A',
-      // },
       {
         information: 'Description of the intervention',
         description: asse.climateAction.description ? asse.climateAction.description : 'N/A',
       },
-      // {
-      //   information: 'Status',
-      //   description: asse.climateAction.projectStatus
-      //     ? asse.climateAction.projectStatus.name
-      //     : 'N/A'
-      // },
       {
         information: 'Date of implementation',
         description: asse.climateAction.dateOfImplementation
@@ -1870,7 +1511,13 @@ console.log(asssCharacteristicasscalesd)
 
     contentOne.transformational = [
     
+      {
 
+        information: 'Description of the vision for desired societal, environmental and technical changes',
+
+        description: asse.envisioned_change ? asse.envisioned_change : 'N/A',
+
+      },
       {
 
         information: 'Long-term (≥15 years)',
@@ -1922,7 +1569,6 @@ console.log(asssCharacteristicasscalesd)
     //table 1.4
     contentOne.assessmetType = asse.assessmentType;
     contentOne.geograpycalCover = asse.geographical_areas_covered.map(a=>a.name).join('')
-    // console.log("asse.investor_sector",asse.investor_sector)
     contentOne.sectorCoverd = asse.investor_sector.map(a=>a.sector.name).join('')
 
     return contentOne
@@ -1932,20 +1578,17 @@ console.log(asssCharacteristicasscalesd)
   ):Promise<ReportCarbonMarketDtoContentTwo>{
     const contentTwo=new ReportCarbonMarketDtoContentTwo()
     this.cmResult = await this.cmAssessmentQuestionService.getResults(assessmentId)
-    // console.log("cmResult",cmResult.result)
     let safeguardsArray = new Array();
     let preventionGHGArray = new Array();
     let preventionAvoidanceArray = new Array();
     let questions:any[] = this.cmResult.questions
 
     if(questions)
-    // console.log("questions",questions)
     {
       questions.sort((a, b) => {
         const questionNumberA = parseInt(a.question.label.match(/\d+/)[0])
         const questionNumberB = parseInt(b.question.label.match(/\d+/)[0])
     
-        // Compare the question numbers
         return questionNumberA - questionNumberB;
         });
       for  (const res of questions) {
@@ -1960,14 +1603,15 @@ console.log(asssCharacteristicasscalesd)
         }
       }
     contentTwo.safeguards=safeguardsArray
-    contentTwo.prevention_ghg_emissions = preventionGHGArray
-    contentTwo.prevention_negative_environmental = preventionAvoidanceArray 
+    contentTwo.prevention_ghg_emissions = preventionGHGArray;
+    contentTwo.prevention_negative_environmental = preventionAvoidanceArray ;
+   
     let outcomes = this.cmResult.result['Section 2: Environmental and social integrity preconditions']
-    contentTwo.outcomes = [...outcomes].reverse();
-    // console.log("outcomes",contentTwo.outcomes)
+
+    contentTwo.outcomes = outcomes?[...outcomes].reverse():[];
     }
 
-    return contentTwo
+    return contentTwo;
   }
   async genarateReportCarbonMarketDtoContentThree(
     assessmentId:number
@@ -1979,7 +1623,6 @@ console.log(asssCharacteristicasscalesd)
       contentThree.outcomes_categories_assessment = this.cmScores.outcome_score;
       contentThree.outcomeScore = this.cmScores.outcome_score.outcome_score;
       contentThree.processScore = this.cmScores.process_score;
-      // console.log(contentThree.outcomes_categories_assessment)
     }
     if(processData?.data.length>0){
       contentThree.process_categories_assessment = processData.data;
@@ -1998,9 +1641,8 @@ console.log(asssCharacteristicasscalesd)
         
         category.rows = rows;
         if(category.name=='Technology'){
-          // console.log("category",category)
          category.characteristics.map(char=>char.raw_questions.map(raw_question=>
-            { //console.log("raw_question",raw_question)
+            { 
             if(raw_question.label!=null ||raw_question.label!=undefined){
               raw_question.label=raw_question.label.replace(/\([^)]*\)/, '').trim()
             }
@@ -2010,7 +1652,6 @@ console.log(asssCharacteristicasscalesd)
             ))
           };
         if(category.name=='Incentives'){
-          // console.log("called Incentives",category.characteristics)
           let cat1 =  { ...category, characteristics: [category.characteristics[0]] }
           cat1.rows = 3
           let cat2 = { 
@@ -2020,8 +1661,7 @@ console.log(asssCharacteristicasscalesd)
               category.characteristics[2],
             ],
           };
-          cat2.rows = category.rows -cat1.rows
-          // console.log("cat1",cat1,"cat2",cat2)
+          cat2.rows = category.rows -cat1.rows;
           categoryarray.push(cat1)
           contentThree.prossesAssesmentStartingSituation.push(categoryarray)
           categoryarray=[]
@@ -2034,9 +1674,7 @@ console.log(asssCharacteristicasscalesd)
         }
         
       }
-      // console.log("categories",contentThree.prossesAssesmentStartingSituation)
     }
-    // console.log("ghg scale" ,this.cmResult?.scale_GHGs,this.cmResult?.scale_GHGs.length)
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
         a.characteristic=this.mapCharacteristicsnames(a.characteristic);
@@ -2074,7 +1712,6 @@ console.log(asssCharacteristicasscalesd)
         return a
       })
     }
-    // console.log("contentThree.scale_sd ",contentThree.scale_sd)
     return contentThree
   }
   async genarateReportCarbonMarketDtoContentFour(
@@ -2095,8 +1732,7 @@ return contentFour
     assessmentId:number
   ):Promise<ReportCarbonMarketDtoContentFive>{
     const contentFive=new ReportCarbonMarketDtoContentFive()
-    contentFive.annex = await this.cmAssessmentQuestionService.getDocumentListForReport(assessmentId)
-    // console.log("resultdsssss",contentFive)
+    contentFive.annex = await this.cmAssessmentQuestionService.getDocumentListForReport(assessmentId);
     return contentFive
   }
 
@@ -2132,7 +1768,7 @@ return contentFour
     createReportDto: CreateComparisonReportDto,
 
   ): Promise<ComparisonReportDto> {
-
+    var moment = require('moment');
     const comparisonReportDto = new ComparisonReportDto();
     comparisonReportDto.reportName = createReportDto.reportName;
     comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(
@@ -2162,18 +1798,16 @@ return contentFour
 
 
   genarateComparisonReportDtoCoverPage(title: string): ReportCoverPage {
-
+    var moment = require('moment');
     const coverPage = new ComparisonReportReportCoverPage();
 
     coverPage.generateReportName = title;
 
-    coverPage.reportDate = new Date().toDateString();
+    coverPage.reportDate = moment().format("YYYY-MM-DD");
 
     coverPage.document_prepared_by = 'user';
 
-    coverPage.companyLogoLink =
-
-      'http://localhost:7080/report/cover/icatlogo.jpg';
+    coverPage.companyLogoLink = process.env.MAIN_URL +  '/report/cover/icatlogo.png';
       
 
     return coverPage;
@@ -2247,9 +1881,6 @@ return contentFour
 
       if (tech) {
         contentTwo.prosses_tech = tech.interventions;
-        // tech.interventions.forEach(a=>{
-        //   contentTwo.prosses_tech.push({ id:a.id,name:a.name,type:a.type,status:a.status,randd:a['R_&_D'],adoptation:a.ADOPTION,scaleup:a.SCALE_UP,score:a.category_score})
-        // })
 
       }
 
@@ -2257,9 +1888,6 @@ return contentFour
 
       if (agent) {
         contentTwo.prosses_agent = agent.interventions;
-        //   agent.interventions.forEach(a=>{
-        //   contentTwo.prosses_agent.push({ id:a.id,name:a.name,type:a.type,status:a.status,entrepreneurs:a.ENTREPRENEURS,coalition :a.COALITION_OF_ADVOCATES,beneficiaries:a.BENIFICIARIES,score:a.category_score})
-        // })
 
       }
       const incen = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - INCENTIVES'));
@@ -2267,36 +1895,24 @@ return contentFour
       if (incen) {
         contentTwo.prosses_incentive = incen.interventions;
     
-        //   incen.interventions.forEach(a=>{
-        //   contentTwo.prosses_incentive.push({ id:a.id,name:a.name,type:a.type,status:a.status,economic :a.ECONOMIC_NON_ECONOMIC,disincentives:a.DISINCENTIVES,institutional :a.INSTITUTIONAL_AND_REGULATORY,score:a.category_score})
-        // })
 
       }
       const norm = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - NORMS AND BEHAVIORAL CHANGE'));
 
       if (norm) {
         contentTwo.prosses_norms = norm.interventions;
-        //   norm.interventions.forEach(a=>{
-        //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
-        // })
-
       }
 
       const process_score = process_data.find(a => a.col_set_1.length > 2);
 
       if (process_score) {
-        contentTwo.process_score = process_score.interventions
-        //   norm.interventions.forEach(a=>{
-        //   contentTwo.prosses_norms.push({ id:a.id,name:a.name,type:a.type,status:a.status,awareness:a.AWARENESS,behavior:a.BEHAVIOUR,norms:a.SOCIAL_NORMS,score:a.category_score})
-        // })
+        contentTwo.process_score = process_score.interventions;
 
       }
 
 
-      // outcome_data.forEach(a=>console.log(a.interventions))
       const ghg_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG') && a.comparison_type == 'SCALE COMPARISON');
       if (ghg_scale) {
-        // console.log(ghg_scale)
         contentTwo.ghg_scale = ghg_scale.interventions;
       }
 
@@ -2309,7 +1925,6 @@ return contentFour
       if (ghg_scale_sustaind_comparison) {
 
         contentTwo.ghg_scale_sustaind_comparison = ghg_scale_sustaind_comparison.interventions;
-        // console.log(contentTwo.ghg_scale_sustaind_comparison)
       }
 
       const adaptation_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'ADAPTATION') && a.comparison_type == 'SCALE COMPARISON');
@@ -2329,7 +1944,6 @@ return contentFour
 
       outcome_data.filter(a => a.col_set_1.some(b => b.label.includes('SDG')) && a.col_set_1.length < 3).forEach(c => {
 
-        // console.log('outcome_data',c)
         let sdg = contentTwo.allsdg.find(d => d.sdg_name == c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim());
 
         if (sdg) {
@@ -2369,21 +1983,17 @@ return contentFour
 
       const sacle_comparison = outcome_data.find(a => a.col_set_1.length > 2 && a.comparison_type == 'SCALE COMPARISON');
       if (sacle_comparison) {
-        // console.log(sacle_comparison)
         contentTwo.sacle_comparison = sacle_comparison.interventions;
       }
       const sustaind_comparison = outcome_data.find(a => a.comparison_type == 'SUSTAINED COMPARISON' && a.col_set_1.length > 2);
       if (sustaind_comparison) {
-        // console.log(sustaind_comparison)
         contentTwo.sustaind_comparison = sustaind_comparison.interventions;
       }
       const outcome_level = outcome_data.find(a => a.comparison_type == 'OUTCOME LEVEL COMPARISON');
       if (outcome_level) {
-        console.log('outcome_level',outcome_level.interventions)
         contentTwo.outcome_level = outcome_level.interventions;
       }
 
-      //  console.log(contentTwo)
 
 
       return contentTwo;
@@ -2398,8 +2008,7 @@ return contentFour
     }
     genarateComparisonReportDtoContentFour(alignment_data: ComparisonDto): ComparisonReportReportContentFour {
       const contentOne = new ComparisonReportReportContentFour();
-      contentOne.alignment_table = alignment_data
-      // console.log(alignment_data)
+      contentOne.alignment_table = alignment_data;
       return contentOne;
 
     }
@@ -2408,13 +2017,12 @@ return contentFour
         case 0:
           return 'Not relevant';
         case 1:
-          return 'Possibly relvant';
+          return 'Possibly relevant';
         case 2:
           return 'Relevant';
       }
     }
     mapCharacteristicsnames(name: string) {
-      // console.log(name)
       if(name=='International/global level'){
         return 'Macro level'
       }

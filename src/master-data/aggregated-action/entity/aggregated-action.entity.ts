@@ -34,7 +34,6 @@ export class AggregatedAction extends BaseTrackingEntity{
   
 
   @ManyToOne((type) => NdcSet, { cascade: false })
-  // @JoinColumn()
   set: NdcSet;
 
   @ManyToOne((type) => Country, { cascade: false })

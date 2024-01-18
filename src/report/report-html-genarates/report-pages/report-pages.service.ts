@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import {
   ComparisonReportReportContentFour,
@@ -15,6 +14,7 @@ import {
   ReportCarbonMarketDtoCoverPage,
   ReportCarbonMarketDtoTableOfContent,
   ReportContentOne,
+  ReportContentThree,
   ReportContentTwo,
   ReportCoverPage,
   ReportTableOfContent,
@@ -22,27 +22,26 @@ import {
 
 @Injectable()
 export class ReportPagesService {
-  constructor() { }
-xData = [
-    {label: 'Major', value: 3},
-    {label: 'Moderate', value: 2},
-    {label: 'Minor', value: 1},
-    {label: 'None', value: 0},
-    {label: 'Minor Negative', value: -1},
-    {label: 'Moderate Negative', value: -2},
-    {label: 'Major Negative', value: -3}
-  ]
+  constructor() {}
+  xData = [
+    { label: 'Major', value: 3 },
+    { label: 'Moderate', value: 2 },
+    { label: 'Minor', value: 1 },
+    { label: 'None', value: 0 },
+    { label: 'Minor Negative', value: -1 },
+    { label: 'Moderate Negative', value: -2 },
+    { label: 'Major Negative', value: -3 },
+  ];
 
   yData = [
-    {label: 'Very likely', value: 4},
-    {label: 'Likely', value: 3},
-    {label: 'Possible', value: 2},
-    {label: 'Unlikely', value: 1},
-    {label: 'Very Unlikely', value: 0}
-  ]
-  fileServerURL = 'https://icat-tc-tool.climatesi.com/web-api/uploads/'
+    { label: 'Very likely', value: 4 },
+    { label: 'Likely', value: 3 },
+    { label: 'Possible', value: 2 },
+    { label: 'Unlikely', value: 1 },
+    { label: 'Very Unlikely', value: 0 },
+  ];
+  fileServerURL = process.env.REPORT_URL + '/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
-    // console.log("coverpage tool",coverPage.tool)
     const cover = `<div id="cover">
     <div  style="height: 250px;">
     <!-- <div  class="row ">
@@ -53,7 +52,11 @@ xData = [
   
 
     
-          ${coverPage.tool=='Investment'?' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   ':' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'}
+          ${
+            coverPage.tool == 'Investment'
+              ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   '
+              : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
+          }
 
    <div class="row ">
    <div class="col h4 d-flex justify-content-center">
@@ -62,16 +65,16 @@ xData = [
 </div>
 <div class="row ">
 <div class="col h4 d-flex justify-content-center">
-  
+${coverPage.reportDate}
 </div>
 </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+     
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -83,17 +86,16 @@ xData = [
     header: string,
     footer: string,
     tableOfContent: ReportTableOfContent,
-    tool:string,
+    tool: string,
   ): string {
     let pageNumber = 1;
-//  console.log("tableOfContent",tool)
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
-  <div class="content">
+  <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
   <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Description of the intervention .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   
@@ -102,8 +104,12 @@ xData = [
     <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
-    ${tool=='Investment'?'<div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>':''}
+    <div class="table-of-content-sub-header-item"><div >2.4	Outcome categories assessment  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
+    ${
+      tool == 'Investment'
+        ? '<div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>'
+        : ''
+    }
     </div>
 
   
@@ -124,15 +130,13 @@ xData = [
     let pageNumber = 2;
     const policyOrActionsDetails = contentOne.policyOrActionsDetails;
 
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
-
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
- <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
-        <div class="report-table-sm">
+ <div  class="main_header_sub text-start">1.1 Description  </div> 
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -144,42 +148,61 @@ xData = [
           </thead>
           <tbody class="table-active ">
           ${policyOrActionsDetails
-        .map(
-          (a: { information: string; description: any; isInvestment: boolean }) => {
-            if (a.isInvestment == undefined) {
-              // console.log("Investment instrument(s) used",a.isInvestment)
-              return '<tr><td>' +
-                a.information +
-                '</td><td colspan="3">' +
-                a.description +
-                '</td></tr>'
-            }
-            else if (a.isInvestment && (a.information == 'Total investment (in USD)')) {
-              // console.log("Total investment (in USD)",a.isInvestment)
-              return '<tr><td>' +
-                a.information +
-                '</td><td colspan="3">' +
-                a.description +
-                '</td></tr>'
-            } else if (a.isInvestment && (a.information == 'Investment instrument(s) used')) {
-              // console.log("Investment instrument(s) used",a.description.map(inv=>'<td>'+inv.instrument_name+'</td>').join(''))
-              return '<tr><td>' +
-                a.information +
-                '</td>' +
-                a.description.map(inv => '<td>' + inv.instrument_name + '</td>').join('') +
-                '</tr>'
-            }
-            else if (a.isInvestment && (a.information == 'Proportion of total investment')) {
-              // console.log("Proportion of total investment",a.description.map(inv => '<td>' + inv.propotion + '</td>').join('') )
-              return '<tr><td>' +
-                a.information +
-                '</td>' +
-                a.description.map(inv => '<td>' + inv.propotion + '</td>').join('') +
-                '</tr>'
-            }
-          }
-        )
-        .join('')}
+            .map(
+              (a: {
+                information: string;
+                description: any;
+                isInvestment: boolean;
+              }) => {
+                if (a.isInvestment == undefined) {
+                  return (
+                    '<tr><td>' +
+                    a.information +
+                    '</td><td colspan="3">' +
+                    a.description +
+                    '</td></tr>'
+                  );
+                } else if (
+                  a.isInvestment &&
+                  a.information == 'Total investment (in USD)'
+                ) {
+                  return (
+                    '<tr><td>' +
+                    a.information +
+                    '</td><td colspan="3">' +
+                    a.description +
+                    '</td></tr>'
+                  );
+                } else if (
+                  a.isInvestment &&
+                  a.information == 'Investment instrument(s) used'
+                ) {
+                  return (
+                    '<tr><td>' +
+                    a.information +
+                    '</td>' +
+                    a.description
+                      .map((inv) => '<td>' + inv.instrument_name + '</td>')
+                      .join('') +
+                    '</tr>'
+                  );
+                } else if (
+                  a.isInvestment &&
+                  a.information == 'Proportion of total investment'
+                ) {
+                  return (
+                    '<tr><td>' +
+                    a.information +
+                    '</td>' +
+                    a.description
+                      .map((inv) => '<td>' + inv.propotion + '</td>')
+                      .join('') +
+                    '</tr>'
+                  );
+                }
+              },
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
@@ -196,33 +219,36 @@ xData = [
    ${header}
    <div class="content">
    
-   <div  class="main_header_sub text-start">1.2	Understanding the transformational vision of the intervention and its context  </div> 
+   <div  class="main_header_sub text-start">1.2	Understanding the intervention's transformational vision and context  </div> 
       
-      <div class="report-table-sm">
+      <div class="report-table-sm  ">
       <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
+            
             <tr>
-              <th scope="col">Description of the vision for desired societal, environmental and technical changes</th>
-              <th scope="col"></th>
+            <th scope="col">Information</th>
+            <th scope="col">Description</th>
+            
+          </tr>
               
             </tr>
           </thead>
           <tbody class="table-active">
           ${understanPolicyOrActions
-        .map(
-          (a: { Time_periods: string; description: string }) =>
-            '<tr><td>' +
-            a.Time_periods +
-            '</td><td>' +
-            a.description +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: { Time_periods: string; description: string }) =>
+                '<tr><td>' +
+                a.Time_periods +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
-        <div class="report-table-sm">
+        <div class="report-table-sm ">
         <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -230,29 +256,29 @@ xData = [
               <th scope="col">Barriers</th>
               <th scope="col">Explanation</th>
               <th scope="col">Characteristics affected</th>
-              <th scope="col">Barrier directly targeted by the policy or action</th>
+              <th scope="col">Barrier directly targeted by intervention</th>
             </tr>
           </thead>
           <tbody class="table-active">
           ${barriers
-        .map(
-          (a: {
-            barrier: string;
-            explanation: string;
-            characteristics_affected: string;
-            barrier_directly_targeted: string;
-          }) =>
-            '<tr><td>' +
-            a.barrier +
-            '</td><td>' +
-            a.explanation +
-            '</td><td>' +
-            a.characteristics_affected +
-            '</td><td>' +
-            a.barrier_directly_targeted +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: {
+                barrier: string;
+                explanation: string;
+                characteristics_affected: string;
+                barrier_directly_targeted: string;
+              }) =>
+                '<tr><td>' +
+                a.barrier +
+                '</td><td>' +
+                a.explanation +
+                '</td><td>' +
+                a.characteristics_affected +
+                '</td><td>' +
+                a.barrier_directly_targeted +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
@@ -270,13 +296,13 @@ xData = [
 
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
-  <div class="report-table-sm">
-  <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the policy.</p>
+  <div class="report-table-sm  ">
+  <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Information</th>
-        <th scope="col">Description </th>
+        <th scope="col">Description</th>
       
       </tr>
     </thead>
@@ -331,7 +357,7 @@ xData = [
                </p>
            </blockquote>
 
-           <div class="report-table-sm">
+           <div class="report-table-sm  ">
 
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
@@ -344,27 +370,27 @@ xData = [
   </thead>
   <tbody class="table-active">
   ${catagory_out
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+    .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      a.characteristics
+        .map((b, index) => {
+          if (!index) {
+            return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.comment ? b.comment : '-'}</td>
       <td>${b.relevance ? b.relevance : '-'}</td>
      </tr>`;
-              } else {
-                return `<tr>
+          } else {
+            return `<tr>
             <td>${b.name ? b.name : '-'}</td>
             <td>${b.comment ? b.comment : '-'}</td>
             <td>${b.relevance ? b.relevance : '-'}</td>
             </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+          }
+        })
+        .join(''),
+    )
+    .join('')}
   
 
   </tbody>
@@ -389,7 +415,7 @@ xData = [
                 </p>
             </blockquote>
  
-            <div class="report-table-sm">
+            <div class="report-table-sm  ">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -402,27 +428,27 @@ xData = [
    </thead>
    <tbody class="table-active">
    ${catagory_process
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.comment ? b.comment : '-'}</td>
        <td>${b.relevance ? b.relevance : '-'}</td>
       </tr>`;
-              } else {
-                return `<tr>
+           } else {
+             return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.comment ? b.comment : '-'}</td>
              <td>${b.relevance ? b.relevance : '-'}</td>
              </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+           }
+         })
+         .join(''),
+     )
+     .join('')}
    
  
    </tbody>
@@ -444,7 +470,7 @@ xData = [
     let pageNumber = 5;
     const prossesAssesmentStartingSituation1 =
       contentTwo.prossesAssesmentStartingSituation1;
-      const prossesAssesmentStartingSituation2 =
+    const prossesAssesmentStartingSituation2 =
       contentTwo.prossesAssesmentStartingSituation2;
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
@@ -454,7 +480,7 @@ xData = [
 
 
 
-<div class="report-table-sm">
+<div class="report-table-sm  ">
 <p>
   Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
 </p>
@@ -483,25 +509,27 @@ xData = [
       <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
-      <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
-                  }</td>
+      <td>${
+        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+      }</td>
     
      </tr>`;
-              } else {
-                return `<tr>
+          } else {
+            return `<tr>
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.question ? b.question : '-'}</td>
       <td>${b.likelihoodscore}</td>
       <td>${b.rationalejustifying ? b.rationalejustifying : '-'}</td>
-      <td>${b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
-                  }</td>
+      <td>${
+        b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
+      }</td>
             </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+          }
+        })
+        .join(''),
+    )
+    .join('')}
   
 
   </tbody>
@@ -519,11 +547,11 @@ xData = [
   
    </div>`;
 
-   const page_1_1 = `  <div id="page_5" class="page text-center" >
+    const page_1_1 = `  <div id="page_5" class="page text-center" >
    ${header}
 
    <div class="content">
-   <div class="report-table-sm">
+   <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
      <tr>
@@ -593,9 +621,9 @@ xData = [
 
  
  
- <div class="report-table-sm">
+ <div class="report-table-sm  ">
 <p>
-Outcome characteristics refer to the scale and sustained nature of outcomes resulting from a policy. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the policy on GHGs, Adaptation and sustainable development. 
+Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
 </p>
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -609,11 +637,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </thead>
    <tbody class="table-active">
    ${scale_ghg
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -622,24 +650,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     
      </tr>`;
-              } else {
-                return `<tr>
+           } else {
+             return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+           }
+         })
+         .join(''),
+     )
+     .join('')}
  
  
    </tbody>
  </table>
  </div>
- <div class="report-table-sm">
+ <div class="report-table-sm  ">
 
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -653,11 +681,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </thead>
    <tbody class="table-active">
    ${sustained_ghg
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+     .map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+         .map((b, index) => {
+           if (!index) {
+             return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -666,18 +694,18 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     
      </tr>`;
-              } else {
-                return `<tr>
+           } else {
+             return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+           }
+         })
+         .join(''),
+     )
+     .join('')}
  
  
    </tbody>
@@ -698,7 +726,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     ${header}
     <div class="content">
  
-  <div class="report-table-sm">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -712,11 +740,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </thead>
     <tbody class="table-active">
     ${scale_adaptation
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+      .map((a: { rows: number; name: string; characteristics: any[] }) =>
+        a.characteristics
+          .map((b, index) => {
+            if (!index) {
+              return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -725,24 +753,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
      
       </tr>`;
-              } else {
-                return `<tr>
+            } else {
+              return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+            }
+          })
+          .join(''),
+      )
+      .join('')}
   
   
     </tbody>
   </table>
   </div>
-  <div class="report-table-sm">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -756,11 +784,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </thead>
     <tbody class="table-active">
     ${sustained_adaptation
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              if (!index) {
-                return `<tr>
+      .map((a: { rows: number; name: string; characteristics: any[] }) =>
+        a.characteristics
+          .map((b, index) => {
+            if (!index) {
+              return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -769,18 +797,18 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
      
       </tr>`;
-              } else {
-                return `<tr>
+            } else {
+              return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+            }
+          })
+          .join(''),
+      )
+      .join('')}
   
   
     </tbody>
@@ -802,7 +830,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-  <div class="report-table-sm">
+  <div class="report-table-sm  ">
 
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -819,21 +847,21 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     <tbody class="table-active">
     
     ${scale_sd.sdg
-        .map(
-          (
-            a: {
-              rows: number;
-              name: string;
-              impact: string;
-              characteristics: any[];
-            },
-            index,
-          ) => {
-            if (!index) {
-              return a.characteristics
-                .map((b, index) => {
-                  if (!index) {
-                    return `<tr>
+      .map(
+        (
+          a: {
+            rows: number;
+            name: string;
+            impact: string;
+            characteristics: any[];
+          },
+          index,
+        ) => {
+          if (!index) {
+            return a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
       <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td rowspan="${a.rows}" >${a.impact}</td>
@@ -843,21 +871,21 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <td>${b.ustifying ? b.ustifying : '-'}</td>
     
      </tr>`;
-                  } else {
-                    return `<tr>
+                } else {
+                  return `<tr>
             <td>${b.name ? b.name : '-'}</td>
     <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
     <td>${b.score ? b.score : '-'}</td>
     <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-                  }
-                })
-                .join('');
-            } else {
-              return a.characteristics
-                .map((b, index) => {
-                  if (!index) {
-                    return `<tr>
+                }
+              })
+              .join('');
+          } else {
+            return a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
 <td rowspan="${a.rows}" >${a.name}</td>
 <td rowspan="${a.rows}" >${a.impact}</td>
 <td>${b.name ? b.name : '-'}</td>
@@ -866,20 +894,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 <td>${b.ustifying ? b.ustifying : '-'}</td>
 
 </tr>`;
-                  } else {
-                    return `<tr>
+                } else {
+                  return `<tr>
    <td>${b.name ? b.name : '-'}</td>
 <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
 <td>${b.score ? b.score : '-'}</td>
 <td>${b.ustifying ? b.ustifying : '-'}</td>
    </tr>`;
-                  }
-                })
-                .join('');
-            }
-          },
-        )
-        .join('')}
+                }
+              })
+              .join('');
+          }
+        },
+      )
+      .join('')}
   
   
     </tbody>
@@ -904,7 +932,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
   
   
-    <div class="report-table-sm">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1007,34 +1035,37 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
    
    
-   <div class="report-table-sm">
+   <div class="report-table-sm  ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggrgated Score</th>
+         <th scope="col">Aggregated Score</th>
       
          
        </tr>
      </thead>
      <tbody class="table-active">
      ${process_categories_assessment
-        .map((a: { category: any; category_score: any }) => {
-          return `<tr>
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
            <td>${a.category ? a.category : '-'}</td>
-           <td>${a.category_score.value != null &&
-              a.category_score.value != undefined
-              ? a.category_score.value
-              : '-'
-            }</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
              
               </tr>`;
-        })
-        .join('')}
+       })
+       .join('')}
         <tr>
           <td class="bold-table-row">Process score</td>
-          <td class="bold-table-row">${contentTwo.processScore!==null ? contentTwo.processScore : '-'}</td>
+          <td class="bold-table-row">${
+            contentTwo.processScore !== null ? contentTwo.processScore : '-'
+          }</td>
         </tr>
        
    
@@ -1042,36 +1073,54 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </table>
    </div>
   
-   <div  class="main_header_sub text-start">2.4	Outcomes categories assessment </div> 
+   <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
 
-   <div class="report-table-sm">
+   <div class="report-table-sm  ">
   
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggrgated Score</th>
+         <th scope="col">Aggregated Score</th>
       
          
        </tr>
      </thead>
      <tbody class="table-active">
      ${outcomes_categories_assessment
-        .map((a: { category: any; category_score: any }) => {
-          return `<tr>
-           <td>${a.category ? a.category : '-'}</td>
-           <td>${a.category_score.value != null &&
-              a.category_score.value != undefined
-              ? a.category_score.value
-              : '-'
-            }</td>
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
+           <td>${
+             a.category
+               ? a.category == 'GHG Scale of the Outcome'
+                 ? 'Scale of outcome - GHGs'
+                 : a.category == 'SDG Scale of the Outcome'
+                 ? 'Scale of outcome - Sustainable Development '
+                 : a.category ==
+                   'GHG Time frame over which the outcome is sustained'
+                 ? 'Outcome sustained over time - GHGs '
+                 : a.category ==
+                   'SDG Time frame over which the outcome is sustained'
+                 ? 'Outcome sustained over time - Sustainable Development '
+                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - Adaptation ':
+                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - Adaptation ':'-'
+               : '-'
+           }</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
              
               </tr>`;
-        })
-        .join('')}
+       })
+       .join('')}
          <tr>
           <td class="bold-table-row">Outcomes score </td>
-          <td class="bold-table-row">${contentTwo.outcomeScore!==null?contentTwo.outcomeScore:'-'}</td>
+          <td class="bold-table-row">${
+            contentTwo.outcomeScore !== null ? contentTwo.outcomeScore : '-'
+          }</td>
         </tr>
     
    
@@ -1085,11 +1134,102 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
-      const page_6_1 = `  <div id="page_6_1" class="page text-center" >
+
+    const page_6_old = `  <div id="page_5" class="page text-center" >
+     ${header}
+     <div class="content">
+     <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
+   
+   
+   <div class="report-table-sm  ">
+  
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Aggregated Score</th>
+      
+         
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${process_categories_assessment
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
+           <td>${a.category ? a.category : '-'}</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
+             
+              </tr>`;
+       })
+       .join('')}
+        <tr>
+          <td class="bold-table-row">Process score</td>
+          <td class="bold-table-row">${
+            contentTwo.processScore !== null ? contentTwo.processScore : '-'
+          }</td>
+        </tr>
+       
+   
+     </tbody>
+   </table>
+   </div>
+  
+   <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
+
+   <div class="report-table-sm ">
+  
+   <table class="table  table-bordered border-dark">
+     <thead class="table-primary  border-dark">
+       <tr>
+         <th scope="col">Category</th>
+         <th scope="col">Aggregated Score</th>
+      
+         
+       </tr>
+     </thead>
+     <tbody class="table-active">
+     ${outcomes_categories_assessment
+       .map((a: { category: any; category_score: any }) => {
+         return `<tr>
+           <td>${a.category ? a.category : '-'}</td>
+           <td>${
+             a.category_score.value != null &&
+             a.category_score.value != undefined
+               ? a.category_score.value
+               : '-'
+           }</td>
+             
+              </tr>`;
+       })
+       .join('')}
+         <tr>
+          <td class="bold-table-row">Outcomes score </td>
+          <td class="bold-table-row">${
+            contentTwo.outcomeScore !== null ? contentTwo.outcomeScore : '-'
+          }</td>
+        </tr>
+    
+   
+     </tbody>
+   </table>
+   </div>
+    
+   
+     </div>
+     
+     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+     
+      </div>`;
+    const page_6_1 = `  <div id="page_6_1" class="page text-center" >
       ${header}
-      <div class="content">
+      <div class="content same-page">
       <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
         <tr>
@@ -1114,7 +1254,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
              <tr > 
               <td >${y.label}</td> 
               
-              ${this.generateHeatMapforinvestment(y.value,contentTwo)}
+              ${this.generateHeatMapforinvestment(y.value, contentTwo)}
             </tr> `;
           })
           .join('')}
@@ -1149,7 +1289,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </blockquote>
     
     
-    <div class="report-table-sm">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -1163,22 +1303,22 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   </thead>
   <tbody class="table-active">
   ${outcomeDescribeResult
-        .map(
-          (a: {
-            relative_importance: any;
-            score: any;
-            justifying_score: any;
-            name: string;
-          }) => {
-            return `<tr>
+    .map(
+      (a: {
+        relative_importance: any;
+        score: any;
+        justifying_score: any;
+        name: string;
+      }) => {
+        return `<tr>
             <td>${a.name ? a.name : '-'}</td>
             <td>${a.score ? a.score : '-'}</td>
            <td>${a.justifying_score ? a.justifying_score : '-'}</td>
           
             </tr>`;
-          },
-        )
-        .join('')}
+      },
+    )
+    .join('')}
  
     
       </tbody>
@@ -1193,506 +1333,86 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
        </div>`;
 
-    const page_8 = `  <div id="page_5" class="page text-center" >
-       ${header}
-       <div class="content">
-       <div  class="main_header_sub text-start">2.3	Ex-post assessment </div> 
-       <blockquote class=" paragraph blockquote text-start ">
-       <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-         </p>
-     </blockquote>
+    if (contentTwo.tool == 'Investment') {
+      return (
+        page_1 +
+        page_1_1 +
+        page_2 +
+        page_3 +
+        page_4 +
+        page_5 +
+        page_6 +
+        page_6_1
+      );
+    } else {
+      return (
+        page_1 +
+        page_1_1 +
+        page_2 +
+        page_3 +
+        page_4 +
+        page_5 +
+        page_6 +
+        page_6_1
+      );
+    }
+  }
+  contentThree(
+    header: string,
+    footer: string,
+    content: ReportContentTwo,
+  ): string {
+    let pageNumber = 5;
+    const page_1 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content same-page">
      
-     
-     <div class="report-table-sm">
-   
-     <table class="table  table-bordered border-dark">
-       <thead class="table-primary  border-dark">
-         <tr>
-           <th scope="col">Category</th>
-           <th scope="col">Process Characteristic</th>
-           <th scope="col">Score</th>
-           <th scope="col">Rationale justifying the score </th>
-           <th scope="col">Indicator value at starting situation</th>
-           <th scope="col">Indicator value observed </th>
-         </tr>
-       </thead>
-       <tbody class="table-active">
-        <tr>
-         <td rowspan="3" >Technology</td>
-         <td>Research and development</td>
-         <td>test value</td>
-         <td>test value</td>
-         <td>test value</td>
-         <td>test value</td>
-         
-        
-         
-       </tr>
-       <tr>
-       <td>Adoption</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       </tr>
-        <tr>
-       <td>Scale up</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       </tr>
-     
-     
-       <tr>
-     
-       <td rowspan="3" >Agents  </td>
-       <td>Entrepreneurs</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-      </tr>
-     <tr>
-     <td>Coalition of advocates </td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-      <tr>
-     <td>Beneficiaries</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     
-     <td rowspan="3" >Incentives </td>
-     <td>Economic and non-economic incentives</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Disincentives</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Institutions and regulations</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     
-     <td rowspan="3" >Norms </td>
-     <td>Awareness</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Behavior</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Social norms</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     
-     
-       </tbody>
-     </table>
-     </div>
+      <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
     
-     
-     
-       </div>
-       
-       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-       
-        </div>`;
-    const page_9 = `  <div id="page_5" class="page text-center" >
-       ${header}
-       <div class="content">
-      
-     
-       <blockquote class=" paragraph blockquote text-start ">
-       <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-         </p>
-     </blockquote>
-     
-     
-     <div class="report-table-sm">
-     
-     <table class="table  table-bordered border-dark">
-       <thead class="table-primary  border-dark">
-         <tr>
-           <th scope="col">Category</th>
-           <th scope="col">Outcome Characteristic</th>
-           <th scope="col">Score</th>
-           <th scope="col">Rationale justifying the score </th>
-           <th scope="col">Indicator value at starting situation </th>
-           <th scope="col">Indicator value observed </th>
-         </tr>
-       </thead>
-       <tbody class="table-active">
+      <div class="report-table-sm same-page-table">
+      <table id="heatmap" class="heatmap" style="text-align: center;">
+         <tbody>
         <tr>
-         <td rowspan="3" >Scale of outcome - GHGs </td>
-         <td>Macro level</td>
-         <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-        
-         
-       </tr>
-       <tr>
-       <td>Adoption</td>
-       <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-       </tr>
-        <tr>
-       <td>Scale up</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       <td>test value</td>
-       </tr>
-     
-     
-       <tr>
-     
-       <td rowspan="3" >Agents  </td>
-       <td>Entrepreneurs</td>
-       <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-      </tr>
-     <tr>
-     <td>Coalition of advocates </td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-      <tr>
-     <td>Beneficiaries</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     
-     <td rowspan="3" >Incentives </td>
-     <td>Economic and non-economic incentives</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Disincentives</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Institutions and regulations</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     
-     <td rowspan="3" >Norms </td>
-     <td>Awareness</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Behavior</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     <tr>
-     <td>Social norms</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     <td>test value</td>
-     </tr>
-     
-     
-       </tbody>
-     </table>
-     </div>
-    
-     
-     
-       </div>
-       
-       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-       
-        </div>`;
-    const page_10 = `  <div id="page_5" class="page text-center" >
-        ${header}
-        <div class="content">
-       
-      
-        <blockquote class=" paragraph blockquote text-start ">
-        <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-          took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-          </p>
-      </blockquote>
-      
-      
-      <div class="report-table-sm">
-
-      <table class="table  table-bordered border-dark">
-        <thead class="table-primary  border-dark">
-          <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Score</th>
-            <th scope="col">Rationale for scoring </th>
-            <th scope="col">Relative importance of category including rationale</th>
-            
-          </tr>
-        </thead>
-        <tbody class="table-active">
-         <tr>
-          <td   >Technology</td>
-      <td>test value</td>
-      <td>test value</td>
-      <td>test value</td> 
+            <td></td>
+            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
         </tr>
         <tr>
-        <td   >Agents</td>
-    <td>test value</td>
-    <td>test value</td>
-    <td>test value</td> 
-      </tr>
-      <tr>
-      <td   >Incentives</td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td> 
-    </tr>
-    <tr>
-    <td   >Norms </td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td> 
-   </tr>
+            <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
+            <td></td>
+           
+            ${this.xData
+              .map((x) => {
+                return `
+                 <td  >${x.label}</td> `;
+              })
+              .join('')}
+        </tr>
+
+        ${this.yData
+          .map((y) => {
+            return `
+             <tr > 
+              <td >${y.label}</td> 
+              
+              ${this.generateHeatMapforinvestment(y.value, content)}
+            </tr> `;
+          })
+          .join('')}
+        
        
-      
         </tbody>
       </table>
       </div>
      
+    
+      </div>
       
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
-        </div>
-        
-        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-        
-         </div>`;
+       </div>`;
 
-    const page_11 = `  <div id="page_5" class="page text-center" >
-         ${header}
-         <div class="content">
-        
-       
-         <blockquote class=" paragraph blockquote text-start ">
-         <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-           </p>
-       </blockquote>
-       
-       
-       <div class="report-table-sm">
-    
-       <table class="table  table-bordered border-dark">
-         <thead class="table-primary  border-dark">
-         <tr>
-         <th scope="col">Category</th>
-         <th scope="col">Score</th>
-         <th scope="col">Rationale for scoring </th>
-         
-         
-       </tr>
-     </thead>
-     <tbody class="table-active">
-      <tr>
-       <td   >Scale of outcome-GHGs</td>
-   <td>test value</td>
-   <td>test value</td>
-    
-     </tr>
-     <tr>
-     <td   >Scale of outcome – sustainable development</td>
-   <td>test value</td>
-   <td>test value</td>
-    
-   </tr>
-   <tr>
-   <td   >Outcome sustained over time – GHGs</td>
-   <td>test value</td>
-   <td>test value</td>
-    
-   </tr>
-   <tr>
-   <td   >Outcome sustainable over time – sustainable development </td>
-   <td>test value</td>
-   <td>test value</td>
-    
-   </tr>
-    
-       
-         </tbody>
-       </table>
-       </div>
-      
-       
-       
-         </div>
-         
-         ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-         
-          </div>`;
-
-    const page_12 = `  <div id="page_5" class="page text-center" >
-         ${header}
-         <div class="content">
-         <div  class="main_header_sub text-start">2.4	Monitoring (Part IV)</div> 
-       
-         <blockquote class=" paragraph blockquote text-start ">
-         <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-           </p>
-       </blockquote>
-       
-       
-       <div class="report-table-sm">
-     
-       <table class="table  table-bordered border-dark">
-         <thead class="table-primary  border-dark">
-         <tr>
-         <th scope="col">Indicator</th>
-         <th scope="col">Type of data (quantitative/ qualitative)</th>
-         <th scope="col">Monitoring frequency and date of collection</th>
-         <th scope="col">Data source/ collection method </th>
-         <th scope="col">Responsible entity </th>
-         <th scope="col">Observed data (unit)</th>
-         
-         
-       </tr>
-     </thead>
-     <tbody class="table-active">
-      <tr>
-      <td>test value</td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td>
-   <td>test value</td>
-    
-     </tr>
-     <tr>
-     <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-  <td>test value</td>
-   
-    </tr>
-    <tr>
-    <td>test value</td>
- <td>test value</td>
- <td>test value</td>
- <td>test value</td>
- <td>test value</td>
- <td>test value</td>
-  
-   </tr>
-   <tr>
-   <td>test value</td>
-<td>test value</td>
-<td>test value</td>
-<td>test value</td>
-<td>test value</td>
-<td>test value</td>
- 
-  </tr>
-    
-    
-       
-         </tbody>
-       </table>
-       </div>
-      
-       <div  class="main_header_sub text-start">2.5	Decision making and using results (Part V) </div> 
-       
-         <blockquote class=" paragraph blockquote text-start ">
-         <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-           </p>
-       </blockquote>  
-       
-         </div>
-         
-         ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-         
-          </div>`;
-
-    
-    if(contentTwo.tool=='Investment'){
-  
-      return (
-        page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6 +page_6_1
-      );
-    }
-    else{
-      return (
-        page_1 +page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6
-      );
-    }
-     
+    return page_1;
   }
-
   coverCarbonMarketPage(coverPage: ReportCarbonMarketDtoCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -1713,16 +1433,16 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 </div>
 <div class="row ">
 <div class="col h4 d-flex justify-content-center">
-  
+${coverPage.reportDate}
 </div>
 </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+     
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -1739,35 +1459,26 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
-  <div class="content">
+  <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.4	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1.	Single Intervention Information .................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity ...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the transformational vision of the intervention and its context ...............................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.4	Assessment information .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   
 
-  <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-  <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................2</bdi></div> </div>
-  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards on environmental integrity ........................................................................................................................................................................</div><div ><bdi>................</bdi></div></div></div>
-  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention on GHG emissions lock-in	 ........................................................................................................................................................................</div><div ><bdi>...............</bdi></div></div></div>
-  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts ........................................................................................................................................................................</div><div ><bdi>..................</bdi></div></div></div>
+  <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment.................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards on environmental integrity .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>................</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention on GHG emissions lock-in	 .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...............</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>..................</bdi></div></div></div>
 
-  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
 
 
-    <div class="table-of-content-header-item"><div >3. Impact Assessment .................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >3.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >3.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >3.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >3.4	Outcomes categories assessment  ....................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
- 
-    <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix .................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification .................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
-
- 
+   
  
     </div>
 
@@ -1777,16 +1488,40 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
   
    </div>`;
+    const page_two = `  <div id="page_5" class="page text-center" >
+   ${header}
+   <div class="content tableofcontentpage">
+   <div class="table-of-content ">
 
-    return page_one;
+  
+     <div class="table-of-content-header-item"><div >3. Impact Assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.1	Process characteristics assessment  .............................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.2	Outcomes characteristics assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.3	Process categories assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.4	Outcomes categories assessment  .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+  
+     <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+     <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+ 
+  
+  
+     </div>
+ 
+   
+   </div>
+   
+   ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+   
+    </div>`;
+    return page_one + page_two;
   }
-  CarbonMarketcontentOne(header: string,
+  CarbonMarketcontentOne(
+    header: string,
     footer: string,
-   content: ReportCarbonMarketDtoContentOne,): string {
+    content: ReportCarbonMarketDtoContentOne,
+  ): string {
     let pageNumber = 2;
     const policyOrActionsDetails = content.policyOrActionsDetails;
-
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -1794,7 +1529,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <div  class="main_header text-start">1 Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1828,7 +1563,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
     const characteristics = content.characteristics;
     const transformational = content.transformational;
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_2 = `  <div id="page_9" class="page text-center" >
    ${header}
@@ -1836,7 +1570,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
  
  <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -1866,7 +1600,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
 
      
-             <div class="report-table-sm">
+             <div class="report-table-sm  ">
             
              <table class="table  table-bordered border-dark">
                <thead class="table-primary  border-dark">
@@ -1895,16 +1629,15 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    ${footer.replace('#pageNumber#', (pageNumber++).toString())}
    
     </div>`;
-   
+
     const barriers = content.barriers;
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
 
     const page_3 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
 
    
-   <div class="report-table-sm">
+   <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1943,12 +1676,12 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
 
 
-<div class="report-table-sm">
+<div class="report-table-sm  ">
 <table class="table  table-bordered border-dark">
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Information</th>
-      <th scope="col">Description </th>
+      <th scope="col">Description</th>
     
     </tr>
   </thead>
@@ -1985,24 +1718,25 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
     </div>`;
 
-    return page_1+page_2+page_3;
+    return page_1 + page_2 + page_3;
   }
-  CarbonMarketcontentTwo(header: string,
+  CarbonMarketcontentTwo(
+    header: string,
     footer: string,
-    content: ReportCarbonMarketDtoContentTwo,): string {
-      let pageNumber = 3;
-     let safeguards=content.safeguards
-    //  console.log("safeguards",safeguards)
+    content: ReportCarbonMarketDtoContentTwo,
+  ): string {
+    let pageNumber = 3;
+    let safeguards = content.safeguards;
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
-    <div class="content">
+    <div class="content ">
     <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
     <blockquote class=" paragraph blockquote text-start ">
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: Safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
-         <div class="report-table-sm">
+         <div class="report-table-sm ">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -2018,16 +1752,23 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            ${safeguards
              .map(
                (a: {
-                 document: string; question:any,answer:string,comment :string,
-}) =>
+                 document: string;
+                 question: any;
+                 answer: string;
+                 comment: string;
+               }) =>
                  '<tr><td>' +
                  a.question.label +
                  '</td><td>' +
                  a.answer +
                  '</td><td>' +
-                 ((a.comment==null||a.comment==undefined)?'-':a.comment) +
+                 (a.comment == null || a.comment == undefined
+                   ? '-'
+                   : a.comment) +
                  '</td><td>' +
-                 ((a.document==null|| a.document==undefined)?'No':'Yes') +
+                 (a.document == null || a.document == undefined
+                   ? 'No'
+                   : 'Yes') +
                  '</td></tr>',
              )
              .join('')}
@@ -2042,59 +1783,15 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     
      </div>`;
 
-    //  const page_1_2 =safeguards.length<2?'': `  <div id="page_9" class="page text-center" >
-    //  ${header}
-    //  <div class="content">
-    
-    //       <div class="report-table-sm">
-         
-    //       <table class="table  table-bordered border-dark">
-    //         <thead class="table-primary  border-dark">
-    //           <tr>
-    //           <th scope="col">Question </th>
-    //            <th scope="col">Answer </th>
-    //            <th scope="col">Justification </th>
-    //            <th scope="col">Supporting information uploaded </th>
-                
-    //           </tr>
-    //         </thead>
-    //         <tbody class="table-active ">
-    //         ${safeguards
-    //           .map(
-    //             (a: {
-    //               document: string;comment: string; question:string,answer:string
-    //               }) =>
-    //               '<tr><td>' +
-    //               a.question +
-    //               '</td><td>' +
-    //               a.answer +
-    //               '</td><td>' +
-    //               a.comment +
-    //               '</td><td>' +
-    //               a.document +
-    //               '</td></tr>',
-    //           )
-    //           .join('')}
-    //         </tbody>
-    //       </table>
-    //     </div>
-   
-     
-    //  </div>
-     
-    //  ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-     
-    //   </div>`;
-
-
-      let prevention_ghg_emissions=content.prevention_ghg_emissions
-      let prevention_negative_environmental=content.prevention_negative_environmental
-      const page_2 = `  <div id="page_9" class="page text-center" >
+    let prevention_ghg_emissions = content.prevention_ghg_emissions;
+    let prevention_negative_environmental =
+      content.prevention_negative_environmental;
+    const page_2 = `  <div id="page_9" class="page text-center" >
       ${header}
       <div class="content">
     
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
-           <div class="report-table-sm">
+           <div class="report-table-sm ">
           
            <table class="table  table-bordered border-dark">
              <thead class="table-primary  border-dark">
@@ -2110,17 +1807,23 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
              ${prevention_ghg_emissions
                .map(
                  (a: {
-                   comment: string,document: string, question:any, answer:string,
-                   
-}) =>
+                   comment: string;
+                   document: string;
+                   question: any;
+                   answer: string;
+                 }) =>
                    '<tr><td>' +
                    a.question.label +
                    '</td><td>' +
                    a.answer +
                    '</td><td>' +
-                   ((a.comment==null||a.comment==undefined)?'-':a.comment) +
+                   (a.comment == null || a.comment == undefined
+                     ? '-'
+                     : a.comment) +
                    '</td><td>' +
-                   ((a.document==null|| a.document==undefined)?'No':'Yes') +
+                   (a.document == null || a.document == undefined
+                     ? 'No'
+                     : 'Yes') +
                    '</td></tr>',
                )
                .join('')}
@@ -2129,7 +1832,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          </div>
 
          <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
-         <div class="report-table-sm">
+         <div class="report-table-sm ">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -2144,15 +1847,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            <tbody class="table-active ">
            ${prevention_negative_environmental
              .map(
-               (a: { question:any,answer:string,comment :string,document :string }) =>
+               (a: {
+                 question: any;
+                 answer: string;
+                 comment: string;
+                 document: string;
+               }) =>
                  '<tr><td>' +
                  a.question.label +
                  '</td><td>' +
                  a.answer +
                  '</td><td>' +
-                 ((a.comment==null||a.comment==undefined)?'-':a.comment) +
+                 (a.comment == null || a.comment == undefined
+                   ? '-'
+                   : a.comment) +
                  '</td><td>' +
-                 ((a.document==null|| a.document==undefined)?'No':'Yes') +
+                 (a.document == null || a.document == undefined
+                   ? 'No'
+                   : 'Yes') +
                  '</td></tr>',
              )
              .join('')}
@@ -2166,16 +1878,16 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
        </div>`;
-       let outcomes=content.outcomes;
-       const page_3 = `  <div id="page_9" class="page text-center" >
+    let outcomes = content.outcomes;
+    const page_3 = `  <div id="page_9" class="page text-center" >
        ${header}
        <div class="content">
        <div  class="main_header_sub text-start">2.2 Outcomes of the preconditions assessment  </div> 
    
-            <div class="report-table-sm">
+            <div class="report-table-sm ">
            
             <table class="table  table-bordered border-dark">
-              <thead class="table-primary  border-dark">
+              <thead class="table-primary  border-dark ">
                 <tr>
                 <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
@@ -2187,13 +1899,17 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
               <tbody class="table-active ">
               ${outcomes
                 .map(
-                  (a: { short_label:any,isPassing:boolean,hasEvidence:string  }) =>
+                  (a: {
+                    short_label: any;
+                    isPassing: boolean;
+                    hasEvidence: string;
+                  }) =>
                     '<tr><td>' +
                     a.short_label +
                     '</td><td>' +
-                    ((a.isPassing) ? 'Yes' : 'No') +
+                    (a.isPassing ? 'Yes' : 'No') +
                     '</td><td>' +
-                    (a.hasEvidence) +
+                    a.hasEvidence +
                     '</td></tr>',
                 )
                 .join('')}
@@ -2209,23 +1925,27 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-    // return page_1+page_1_2+page_2+page_3;
-    return page_1+page_2+page_3;
+    return page_1 + page_2 + page_3;
   }
-  CarbonMarketcontentThree(header: string,
+  CarbonMarketcontentThree(
+    header: string,
     footer: string,
-    content: ReportCarbonMarketDtoContentThree,): string {
-
-      let pageNumber = 4;
-     let prossesAssesmentStartingSituation=content.prossesAssesmentStartingSituation
-    const page_1 = prossesAssesmentStartingSituation.length==0?'':`  <div id="page_9" class="page text-center" >
+    content: ReportCarbonMarketDtoContentThree,
+  ): string {
+    let pageNumber = 4;
+    let prossesAssesmentStartingSituation =
+      content.prossesAssesmentStartingSituation;
+    const page_1 =
+      prossesAssesmentStartingSituation.length == 0
+        ? ''
+        : `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
     <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
-   <div class="report-table-sm">
+   <div class="report-table-sm ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2240,39 +1960,88 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </thead>
      <tbody class="table-active">
      ${prossesAssesmentStartingSituation[0]
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            const questionsLength = b.raw_questions.length;
-    
-            if (!index) {
-              return `<tr>
+       .map((a: { rows: number; name: string; characteristics: any[] }) =>
+         a.characteristics
+           .map((b, index) => {
+             const questionsLength = b.raw_questions.length;
+
+             if (!index) {
+               return `<tr>
                 <td rowspan="${a.rows}" >${a.name}</td>
                 <td rowspan="${questionsLength}">${b.name}</td>
-                <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
-                <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
-                <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                <td rowspan="${questionsLength}">${
+                 b.relevance ? b.relevance : '-'
+               }</td>
+                <td>${
+                  questionsLength > 0 &&
+                  b.raw_questions[0].question != null &&
+                  b.raw_questions[0].question != undefined
+                    ? b.raw_questions[0].question
+                    : '-'
+                }</td>
+                <td>${
+                  questionsLength > 0 &&
+                  b.raw_questions[0].score != null &&
+                  b.raw_questions[0].score != undefined
+                    ? b.raw_questions[0].score + '-' + b.raw_questions[0].label
+                    : '-'
+                }</td>
+                <td>${
+                  questionsLength > 0 &&
+                  b.raw_questions[0].justification != null &&
+                  b.raw_questions[0].justification != undefined
+                    ? b.raw_questions[0].justification
+                    : '-'
+                }</td>
+                <td>${
+                  questionsLength > 0 && b.raw_questions[0].document == null
+                    ? 'No'
+                    : 'Yes'
+                }</td>
               </tr>`;
-            } else {
-              return b.raw_questions
-                .map((question, questionIndex) => `
+             } else {
+               return b.raw_questions
+                 .map(
+                   (question, questionIndex) => `
                   <tr>
                     <td>${b.name}</td>
                     <td>${b.relevance ? b.relevance : '-'}</td>
-                    <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
-                    <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
-                    <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                    <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                    <td>${
+                      questionsLength > questionIndex &&
+                      question.question != null &&
+                      question.question != undefined
+                        ? question.question
+                        : '-'
+                    }</td>
+                    <td>${
+                      questionsLength > questionIndex &&
+                      question.score != null &&
+                      question.score != undefined
+                        ? question.score + '-' + question.label
+                        : '-'
+                    }</td>
+                    <td>${
+                      questionsLength > questionIndex &&
+                      question.justification != null &&
+                      question.justification != undefined
+                        ? question.justification
+                        : '-'
+                    }</td>
+                    <td>${
+                      questionsLength > questionIndex &&
+                      question.document == null
+                        ? 'No'
+                        : 'Yes'
+                    }</td>
                   </tr>
-                `)
-                .join('');
-            }
-          })
-          .join(''),
-      )
-      .join('')}
+                `,
+                 )
+                 .join('');
+             }
+           })
+           .join(''),
+       )
+       .join('')}
      </tbody>
    </table>
    </div>
@@ -2283,11 +2052,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-     const page_1_1 =prossesAssesmentStartingSituation.length<2?'': `  <div id="page_9" class="page text-center" >
+    const page_1_1 =
+      prossesAssesmentStartingSituation.length < 2
+        ? ''
+        : `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2307,29 +2079,80 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           a.characteristics
             .map((b, index) => {
               const questionsLength = b.raw_questions.length;
-      
+
               if (!index) {
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
-                  <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                  <td rowspan="${questionsLength}">${
+                  b.relevance ? b.relevance : '-'
+                }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].question != null &&
+                    b.raw_questions[0].question != undefined
+                      ? b.raw_questions[0].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].score != null &&
+                    b.raw_questions[0].score != undefined
+                      ? b.raw_questions[0].score +
+                        '-' +
+                        b.raw_questions[0].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].justification != null &&
+                    b.raw_questions[0].justification != undefined
+                      ? b.raw_questions[0].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[0].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>`;
               } else {
                 return b.raw_questions
-                  .map((question, questionIndex) => `
+                  .map(
+                    (question, questionIndex) => `
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
-                      <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                      <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.question != null &&
+                        question.question != undefined
+                          ? question.question
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.score != null &&
+                        question.score != undefined
+                          ? question.score + '-' + question.label
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.justification != null &&
+                        question.justification != undefined
+                          ? question.justification
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.document == null
+                          ? 'No'
+                          : 'Yes'
+                      }</td>
                     </tr>
-                  `)
+                  `,
+                  )
                   .join('');
               }
             })
@@ -2351,11 +2174,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
-      const page_1_2 =prossesAssesmentStartingSituation.length<2?'': `  <div id="page_9" class="page text-center" >
+    const page_1_2 =
+      prossesAssesmentStartingSituation.length < 2
+        ? ''
+        : `  <div id="page_9" class="page text-center" >
       ${header}
       <div class="content">
      
-     <div class="report-table-sm">
+     <div class="report-table-sm ">
      
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
@@ -2371,58 +2197,153 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </thead>
        <tbody class="table-active">
        ${prossesAssesmentStartingSituation[2]
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              const questionsLength = b.raw_questions.length;
-      
-              if (!index) {
-                // console.log("not index.........",b,index)
-                return `<tr>
+         .map((a: { rows: number; name: string; characteristics: any[] }) =>
+           a.characteristics
+             .map((b, index) => {
+               const questionsLength = b.raw_questions.length;
+
+               if (!index) {
+                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].question != null &&
+                    b.raw_questions[0].question != undefined
+                      ? b.raw_questions[0].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].score != null &&
+                    b.raw_questions[0].score != undefined
+                      ? b.raw_questions[0].score +
+                        '-' +
+                        b.raw_questions[0].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].justification != null &&
+                    b.raw_questions[0].justification != undefined
+                      ? b.raw_questions[0].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[0].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>
                 <tr>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[1].question!=null &&  b.raw_questions[1].question!= undefined)? b.raw_questions[1].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[1].score!=null &&  b.raw_questions[1].score!= undefined)? (b.raw_questions[1].score+'-'+b.raw_questions[1].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[1].justification!=null && b.raw_questions[1].justification!=undefined? b.raw_questions[1].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[1].document == null ? 'No' : 'Yes'}</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[1].question != null &&
+                    b.raw_questions[1].question != undefined
+                      ? b.raw_questions[1].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[1].score != null &&
+                    b.raw_questions[1].score != undefined
+                      ? b.raw_questions[1].score +
+                        '-' +
+                        b.raw_questions[1].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[1].justification != null &&
+                    b.raw_questions[1].justification != undefined
+                      ? b.raw_questions[1].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[1].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>
                 <tr>
                   <td>${b.name}</td>
                   <td>${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[2].question!=null &&  b.raw_questions[2].question!= undefined)? b.raw_questions[2].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[2].score!=null &&  b.raw_questions[2].score!= undefined)? (b.raw_questions[2].score+'-'+b.raw_questions[2].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[2].justification!=null && b.raw_questions[2].justification!=undefined? b.raw_questions[2].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[2].document == null ? 'No' : 'Yes'}</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[2].question != null &&
+                    b.raw_questions[2].question != undefined
+                      ? b.raw_questions[2].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[2].score != null &&
+                    b.raw_questions[2].score != undefined
+                      ? b.raw_questions[2].score +
+                        '-' +
+                        b.raw_questions[2].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[2].justification != null &&
+                    b.raw_questions[2].justification != undefined
+                      ? b.raw_questions[2].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[2].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>
                `;
-              } else {
-                // console.log("index.........",b,index)
-                return b.raw_questions
-                  .map((question, questionIndex) => `
+               } else {
+                 return b.raw_questions
+                   .map(
+                     (question, questionIndex) => `
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
-                      <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                      <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.question != null &&
+                        question.question != undefined
+                          ? question.question
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.score != null &&
+                        question.score != undefined
+                          ? question.score + '-' + question.label
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.justification != null &&
+                        question.justification != undefined
+                          ? question.justification
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.document == null
+                          ? 'No'
+                          : 'Yes'
+                      }</td>
                     </tr>
-                  `)
-                  .join('');
-              }
-            })
-            .join(''),
-        )
-        .join('')}
+                  `,
+                   )
+                   .join('');
+               }
+             })
+             .join(''),
+         )
+         .join('')}
      
        </tbody>
      
@@ -2438,11 +2359,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
        </div>`;
 
-       const page_1_3 =prossesAssesmentStartingSituation.length<2?'': `  <div id="page_9" class="page text-center" >
+    const page_1_3 =
+      prossesAssesmentStartingSituation.length < 2
+        ? ''
+        : `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2462,30 +2386,80 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           a.characteristics
             .map((b, index) => {
               const questionsLength = b.raw_questions.length;
-      
+
               if (!index) {
-              
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
-                  <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                  <td rowspan="${questionsLength}">${
+                  b.relevance ? b.relevance : '-'
+                }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].question != null &&
+                    b.raw_questions[0].question != undefined
+                      ? b.raw_questions[0].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].score != null &&
+                    b.raw_questions[0].score != undefined
+                      ? b.raw_questions[0].score +
+                        '-' +
+                        b.raw_questions[0].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].justification != null &&
+                    b.raw_questions[0].justification != undefined
+                      ? b.raw_questions[0].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[0].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>`;
               } else {
                 return b.raw_questions
-                  .map((question, questionIndex) => `
+                  .map(
+                    (question, questionIndex) => `
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
-                      <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                      <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.question != null &&
+                        question.question != undefined
+                          ? question.question
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.score != null &&
+                        question.score != undefined
+                          ? question.score + '-' + question.label
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.justification != null &&
+                        question.justification != undefined
+                          ? question.justification
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.document == null
+                          ? 'No'
+                          : 'Yes'
+                      }</td>
                     </tr>
-                  `)
+                  `,
+                  )
                   .join('');
               }
             })
@@ -2506,11 +2480,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
-      const page_1_4 =prossesAssesmentStartingSituation.length<2?'': `  <div id="page_9" class="page text-center" >
+    const page_1_4 =
+      prossesAssesmentStartingSituation.length < 2
+        ? ''
+        : `  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
     
-    <div class="report-table-sm">
+    <div class="report-table-sm ">
     
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2530,29 +2507,80 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
           a.characteristics
             .map((b, index) => {
               const questionsLength = b.raw_questions.length;
-      
+
               if (!index) {
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
                   <td rowspan="${questionsLength}">${b.name}</td>
-                  <td rowspan="${questionsLength}">${b.relevance ? b.relevance : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].question!=null &&  b.raw_questions[0].question!= undefined)? b.raw_questions[0].question : '-'}</td>
-                  <td>${(questionsLength > 0 && b.raw_questions[0].score!=null &&  b.raw_questions[0].score!= undefined)? (b.raw_questions[0].score+'-'+b.raw_questions[0].label) : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].justification!=null && b.raw_questions[0].justification!=undefined? b.raw_questions[0].justification : '-'}</td>
-                  <td>${questionsLength > 0 && b.raw_questions[0].document == null ? 'No' : 'Yes'}</td>
+                  <td rowspan="${questionsLength}">${
+                  b.relevance ? b.relevance : '-'
+                }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].question != null &&
+                    b.raw_questions[0].question != undefined
+                      ? b.raw_questions[0].question
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].score != null &&
+                    b.raw_questions[0].score != undefined
+                      ? b.raw_questions[0].score +
+                        '-' +
+                        b.raw_questions[0].label
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 &&
+                    b.raw_questions[0].justification != null &&
+                    b.raw_questions[0].justification != undefined
+                      ? b.raw_questions[0].justification
+                      : '-'
+                  }</td>
+                  <td>${
+                    questionsLength > 0 && b.raw_questions[0].document == null
+                      ? 'No'
+                      : 'Yes'
+                  }</td>
                 </tr>`;
               } else {
                 return b.raw_questions
-                  .map((question, questionIndex) => `
+                  .map(
+                    (question, questionIndex) => `
                     <tr>
                       <td>${b.name}</td>
                       <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.question!=null && question.question!=undefined)? question.question : '-'}</td>
-                      <td>${questionsLength > questionIndex && (question.score!=null && question.score!=undefined)? (question.score+'-'+question.label ): '-'}</td>
-                      <td>${questionsLength > questionIndex && question.justification!=null && question.justification!=undefined? question.justification : '-'}</td>
-                      <td>${questionsLength > questionIndex && question.document == null ? 'No' : 'Yes'}</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.question != null &&
+                        question.question != undefined
+                          ? question.question
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.score != null &&
+                        question.score != undefined
+                          ? question.score + '-' + question.label
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.justification != null &&
+                        question.justification != undefined
+                          ? question.justification
+                          : '-'
+                      }</td>
+                      <td>${
+                        questionsLength > questionIndex &&
+                        question.document == null
+                          ? 'No'
+                          : 'Yes'
+                      }</td>
                     </tr>
-                  `)
+                  `,
+                  )
                   .join('');
               }
             })
@@ -2575,10 +2603,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       </div>`;
 
-
-      const scale_ghg = content.scale_ghg;
-      const sustained_ghg = content.sustained_ghg;
-      const page_2 = `  <div id="page_5" class="page text-center" >
+    const scale_ghg = content.scale_ghg;
+    const sustained_ghg = content.sustained_ghg;
+    const page_2 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
      <div  class="main_header_sub text-start">3.2	Outcomes characteristics assessment  </div> 
@@ -2586,7 +2613,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
    
    
-   <div class="report-table-sm">
+   <div class="report-table-sm  ">
 
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -2603,39 +2630,40 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </thead>
      <tbody class="table-active">
      ${scale_ghg
-          .map((a: any,index) =>{
-            // console.log(index)
-            if (!index) {
-              return `<tr>
+       .map((a: any, index) => {
+         if (!index) {
+           return `<tr>
                 <td rowspan="${scale_ghg.length}" >Scale of outcome - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
-                <td>${a.starting_situation  ? a.starting_situation : '-'}</td>
+                <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
             </tr>`;
-            }
-            else {
-              return `<tr>
+         } else {
+           return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
-                <td>${a.starting_situation  ? a.starting_situation : '-'}</td>
+                <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
               </tr>`;
-            }
-          }).join('')
-            
-          }
+         }
+       })
+       .join('')}
    
    
      </tbody>
    </table>
    </div>
-   <div class="report-table-sm">
-    <p>Question - Is the intervention’s GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
+   <div class="report-table-sm  ">
+    <p>Question - Is the intervention's GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2648,29 +2676,31 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </thead>
      <tbody class="table-active">
      ${sustained_ghg
-          .map((a: any,index) =>{
-            // console.log(index)
-            if (!index) {
-              return `<tr>
-                <td rowspan="${sustained_ghg.length}" >Outcome sustained over time - GHGs</td>
+       .map((a: any, index) => {
+         if (!index) {
+           return `<tr>
+                <td rowspan="${
+                  sustained_ghg.length
+                }" >Outcome sustained over time - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
             </tr>`;
-            }
-            else {
-              // console.log("obj",a)
-              return `<tr>
+         } else {
+           return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
               </tr>`;
-            }
-          }).join('')
-            
-          }
+         }
+       })
+       .join('')}
    
    
      </tbody>
@@ -2683,14 +2713,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
       </div>`;
-      const scale_adaptation = content.scale_adaptation;
-      const sustained_adaptation = content.sustained_adaptation;
-  
-      const page_3 = `  <div id="page_5" class="page text-center" >
+    const scale_adaptation = content.scale_adaptation;
+    const sustained_adaptation = content.sustained_adaptation;
+
+    const page_3 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
    
-    <div class="report-table-sm">
+    <div class="report-table-sm ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2707,39 +2737,41 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </thead>
       <tbody class="table-active">
       ${scale_adaptation
-        .map((a: any,index) =>{
-          // console.log(index)
+        .map((a: any, index) => {
           if (!index) {
             return `<tr>
-              <td rowspan="${scale_adaptation.length}" >Scale of outcome – Adaptation cobenefits</td>
+              <td rowspan="${
+                scale_adaptation.length
+              }" >Scale of outcome - Adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
-              <td>${a.starting_situation  ? a.starting_situation : '-'}</td>
+              <td>${a.starting_situation ? a.starting_situation : '-'}</td>
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
               <td>${a.justification ? a.justification : '-'}</td>
-              <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+              <td>${
+                a.document == null || a.document == undefined ? 'No' : 'Yes'
+              }</td>
           </tr>`;
-          }
-          else {
-            // console.log("obj",a)
+          } else {
             return `<tr>
             <td>${a.characteristic ? a.characteristic : '-'}</td>
-            <td>${a.starting_situation  ? a.starting_situation : '-'}</td>
+            <td>${a.starting_situation ? a.starting_situation : '-'}</td>
             <td>${a.expected_impact ? a.expected_impact : '-'}</td>
             <td>${a.outcome_score ? a.outcome_score : '-'}</td>
             <td>${a.justification ? a.justification : '-'}</td>
-            <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+            <td>${
+              a.document == null || a.document == undefined ? 'No' : 'Yes'
+            }</td>
             </tr>`;
           }
-        }).join('')
-          
-        }
+        })
+        .join('')}
     
       </tbody>
     </table>
     </div>
-    <div class="report-table-sm">
-  <p>Question - Is the intervention’s contribution to the adaptation co-benefit sustained in nature?</p>
+    <div class="report-table-sm  ">
+  <p>Question - Is the intervention's contribution to the adaptation co-benefit sustained in nature?</p>
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
@@ -2752,29 +2784,31 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </thead>
       <tbody class="table-active">
       ${sustained_adaptation
-        .map((a: any,index) =>{
-          // console.log(index)
+        .map((a: any, index) => {
           if (!index) {
             return `<tr>
-              <td rowspan="${sustained_adaptation.length}" >Outcome sustained over time – Adaptation cobenefits</td>
+              <td rowspan="${
+                sustained_adaptation.length
+              }" >Outcome sustained over time - Adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
               <td>${a.justification ? a.justification : '-'}</td>
-              <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+              <td>${
+                a.document == null || a.document == undefined ? 'No' : 'Yes'
+              }</td>
           </tr>`;
-          }
-          else {
-            // console.log("obj",a)
+          } else {
             return `<tr>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
               <td>${a.justification ? a.justification : '-'}</td>
-              <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+              <td>${
+                a.document == null || a.document == undefined ? 'No' : 'Yes'
+              }</td>
             </tr>`;
           }
-        }).join('')
-          
-        }
+        })
+        .join('')}
     
       </tbody>
     </table>
@@ -2786,16 +2820,16 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
        </div>`;
-  
-      const scale_sd = content.scale_sd;
-  
-      const page_4 = `  <div id="page_5" class="page text-center" >
+
+    const scale_sd = content.scale_sd;
+
+    const page_4 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
      
     
     
-    <div class="report-table-sm">
+    <div class="report-table-sm  ">
   
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -2813,23 +2847,23 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tbody class="table-active">
       
           ${scale_sd
-            .map((a: any,index) =>{
-              
+            .map((a: any, index) => {
               if (!index) {
-                // console.log(a.characteristic,"==========",index)
                 return `<tr>
-                  <td rowspan="${scale_sd.length}">Scale of outcome - sustainable development </td>
+                  <td rowspan="${
+                    scale_sd.length
+                  }">Scale of outcome - sustainable development </td>
                   <td>${a.SDG ? a.SDG : '-'}</td>
                   <td>${a.characteristic ? a.characteristic : '-'}</td>
                   <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                   <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                   <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                   <td>${a.justification ? a.justification : '-'}</td>
-                  <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                  <td>${
+                    a.document == null || a.document == undefined ? 'No' : 'Yes'
+                  }</td>
               </tr>`;
-              }
-              else {
-                // console.log("obj",a)
+              } else {
                 return `<tr>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
@@ -2837,12 +2871,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
                 </tr>`;
               }
-            }).join('')
-              
-            }
+            })
+            .join('')}
     
     
       </tbody>
@@ -2856,10 +2891,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
        </div>`;
-  
-      const sustained_sd = content.sustained_sd;
-  
-      const page_5 = `  <div id="page_5" class="page text-center" >
+
+    const sustained_sd = content.sustained_sd;
+
+    const page_5 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
      
@@ -2867,8 +2902,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
     
     
-      <div class="report-table-sm">
-      <p>Question - Is the activity’s contribution to the selected SDG sustained in nature?</p>
+      <div class="report-table-sm ">
+      <p>Question - Is the activity's contribution to the selected SDG sustained in nature?</p>
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
           <tr>
@@ -2882,32 +2917,33 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         </thead>
         <tbody class="table-active">
         ${sustained_sd
-          .map((a: any,index) =>{
-            
+          .map((a: any, index) => {
             if (!index) {
-              // console.log(a.characteristic,"==========",index)
               return `<tr>
-                <td rowspan="${sustained_sd.length}">Outcome sustained over time – sustainable development</td>
+                <td rowspan="${
+                  sustained_sd.length
+                }">Outcome sustained over time - sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 <td>${a.justification ? a.justification : '-'}</td>
-                <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+                <td>${
+                  a.document == null || a.document == undefined ? 'No' : 'Yes'
+                }</td>
             </tr>`;
-            }
-            else {
-              // console.log("obj",a)
+            } else {
               return `<tr>
               <td>${a.SDG ? a.SDG : '-'}</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
               <td>${a.justification ? a.justification : '-'}</td>
-              <td>${a.document==null||a.document==undefined ? 'No':'Yes'}</td>
+              <td>${
+                a.document == null || a.document == undefined ? 'No' : 'Yes'
+              }</td>
               </tr>`;
             }
-          }).join('')
-            
-          }
+          })
+          .join('')}
         
       
       
@@ -2922,46 +2958,46 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
       
        </div>`;
-  
-      let process_categories_assessment =
-      content.process_categories_assessment;
-      let outcomes_categories_assessment =
-      content.outcomes_categories_assessment;
-  
-      const page_6 = `  <div id="page_5" class="page text-center" >
+
+    let process_categories_assessment = content.process_categories_assessment;
+    let outcomes_categories_assessment = content.outcomes_categories_assessment;
+
+    const page_6 = `  <div id="page_5" class="page text-center" >
        ${header}
        <div class="content">
-       <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
+       <div  class="main_header_sub text-start">3.3	 Process categories assessment   </div> 
      
      
-     <div class="report-table-sm">
+     <div class="report-table-sm  ">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggrgated Score</th>
+           <th scope="col">Aggregated Score</th>
         
            
          </tr>
        </thead>
        <tbody class="table-active">
        ${process_categories_assessment
-          .map((a: { name: string; cat_score: number }) => {
-            return `<tr>
+         .map((a: { name: string; cat_score: number }) => {
+           return `<tr>
              <td>${a.name ? a.name : '-'}</td>
-             <td>${a.cat_score != null &&
-                a.cat_score != undefined
-                ? a.cat_score
-                : '-'
-              }</td>
+             <td>${
+               a.cat_score != null && a.cat_score != undefined
+                 ? a.cat_score
+                 : '-'
+             }</td>
                
                 </tr>`;
-          })
-          .join('')}
+         })
+         .join('')}
           <tr>
             <td class="bold-table-row">Process score</td>
-            <td class="bold-table-row">${content.processScore!==null ? content.processScore : '-'}</td>
+            <td class="bold-table-row">${
+              content.processScore !== null ? content.processScore : '-'
+            }</td>
           </tr>
          
      
@@ -2969,47 +3005,75 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </table>
      </div>
     
-     <div  class="main_header_sub text-start">2.4	Outcomes categories assessment </div> 
+     <div  class="main_header_sub text-start">3.4	Outcomes categories assessment </div> 
   
-     <div class="report-table-sm">
+     <div class="report-table-sm  ">
     
      <table class="table  table-bordered border-dark">
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggrgated Score</th>
+           <th scope="col">Aggregated Score</th>
         
            
          </tr>
        </thead>
        <tbody class="table-active">
        <tr>
-         <td >Scale of outcome – GHGs</td>
-         <td >${content.outcomes_categories_assessment.scale_ghg_score!==null ? content.outcomes_categories_assessment.scale_ghg_score : '-'}</td>
+         <td >Scale of outcome - GHGs</td>
+         <td >${
+           content.outcomes_categories_assessment.scale_ghg_score !== null
+             ? content.outcomes_categories_assessment.scale_ghg_score
+             : '-'
+         }</td>
        </tr>
        <tr>
-         <td >Scale of outcome – sustainable development </td>
-         <td >${content.outcomes_categories_assessment.scale_sdg_score!==null ? content.outcomes_categories_assessment.scale_sdg_score : '-'}</td>
+         <td >Scale of outcome - sustainable development </td>
+         <td >${
+           content.outcomes_categories_assessment.scale_sdg_score !== null
+             ? content.outcomes_categories_assessment.scale_sdg_score
+             : '-'
+         }</td>
        </tr>
        <tr>
-         <td >Scale of outcome – Adaptation co-benefits </td>
-         <td >${content.outcomes_categories_assessment.scale_adaptation_score!==null ? content.outcomes_categories_assessment.scale_adaptation_score : '-'}</td>
+         <td >Scale of outcome - Adaptation co-benefits </td>
+         <td >${
+           content.outcomes_categories_assessment.scale_adaptation_score !==
+           null
+             ? content.outcomes_categories_assessment.scale_adaptation_score
+             : '-'
+         }</td>
        </tr>
        <tr>
-         <td >Outcome sustained over time – GHGs </td>
-         <td >${content.outcomes_categories_assessment.sustained_ghg_score!==null ? content.outcomes_categories_assessment.sustained_ghg_score : '-'}</td>
+         <td >Outcome sustained over time - GHGs </td>
+         <td >${
+           content.outcomes_categories_assessment.sustained_ghg_score !== null
+             ? content.outcomes_categories_assessment.sustained_ghg_score
+             : '-'
+         }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time – sustainable development</td>
-         <td >${content.outcomes_categories_assessment.sustained_sdg_score!==null ? content.outcomes_categories_assessment.sustained_sdg_score : '-'}</td>
+         <td >Outcome sustainable over time - sustainable development</td>
+         <td >${
+           content.outcomes_categories_assessment.sustained_sdg_score !== null
+             ? content.outcomes_categories_assessment.sustained_sdg_score
+             : '-'
+         }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time – adaptation co-benefits </td>
-         <td >${content.outcomes_categories_assessment.sustained_adaptation_score!==null ? content.outcomes_categories_assessment.sustained_adaptation_score : '-'}</td>
+         <td >Outcome sustainable over time - adaptation co-benefits </td>
+         <td >${
+           content.outcomes_categories_assessment.sustained_adaptation_score !==
+           null
+             ? content.outcomes_categories_assessment.sustained_adaptation_score
+             : '-'
+         }</td>
        </tr>
        <tr>
          <td class="bold-table-row"> Outcomes score </td>
-         <td class="bold-table-row">${content.outcomeScore!==null ? content.outcomeScore : '-'}</td>
+         <td class="bold-table-row">${
+           content.outcomeScore !== null ? content.outcomeScore : '-'
+         }</td>
        </tr>
       
   
@@ -3023,31 +3087,41 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        ${footer.replace('#pageNumber#', (pageNumber++).toString())}
        
         </div>`;
-        if(prossesAssesmentStartingSituation.length==0){
-          return page_1
-        }
-        else{
-          return page_1+page_1_1+page_1_2+page_1_3+page_1_4+page_2+page_4+page_5+page_3+page_6;
-        }
-
-    
+    if (prossesAssesmentStartingSituation.length == 0) {
+      return page_1;
+    } else {
+      return (
+        page_1 +
+        page_1_1 +
+        page_1_2 +
+        page_1_3 +
+        page_1_4 +
+        page_2 +
+        page_4 +
+        page_5 +
+        page_3 +
+        page_6
+      );
+    }
   }
-  CarbonMarketcontentFour(header: string,
+  CarbonMarketcontentFour(
+    header: string,
     footer: string,
-    content: ReportCarbonMarketDtoContentFour,): string {
-      let pageNumber = 5;
-      const page_1 = `  <div id="page_5" class="page text-center" >
+    content: ReportCarbonMarketDtoContentFour,
+  ): string {
+    let pageNumber = 5;
+    const page_1 = `  <div id="page_5" class="page text-center" >
       ${header}
-      <div class="content">
+      <div class="content same-page">
      
       <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
     
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
         <tr>
             <td></td>
-            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
+            <td colspan="8">Outcome: Extent and sustained nature of transformation</td>
         </tr>
         <tr>
             <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
@@ -3067,7 +3141,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
              <tr > 
               <td >${y.label}</td> 
               
-              ${this.generateHeatMapforinvestment(y.value,content)}
+              ${this.generateHeatMapforinvestment(y.value, content)}
             </tr> `;
           })
           .join('')}
@@ -3084,21 +3158,22 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
        </div>`;
 
-
     return page_1;
   }
-  CarbonMarketcontentFive(header: string,
+  CarbonMarketcontentFive(
+    header: string,
     footer: string,
-    content: ReportCarbonMarketDtoContentFive,): string {
-      let pageNumber = 5;
-      let annex= content.annex;
-      const page_1 = `  <div id="page_5" class="page text-center" >
+    content: ReportCarbonMarketDtoContentFive,
+  ): string {
+    let pageNumber = 5;
+    let annex = content.annex;
+    const page_1 = `  <div id="page_5" class="page text-center" >
       ${header}
       <div class="content">
      
       <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
     
-      <div class="report-table-sm">
+      <div class="report-table-sm  ">
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -3116,10 +3191,16 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            uploadedDocumentPath: string;
          }) =>
            '<tr><td>' +
-           ((a.characteristic?.category)?a.characteristic.category.name:'-') +
+           (a.characteristic?.category ? a.characteristic.category.name : '-') +
            '</td><td>' +
-           ((a.characteristic)?a.characteristic.name:'-') +
-           '</td><td>' + '<a href="'+ this.fileServerURL+a.uploadedDocumentPath +'">'+a.uploadedDocumentPath+'</a>'+
+           (a.characteristic ? a.characteristic.name : '-') +
+           '</td><td>' +
+           '<a href="' +
+           this.fileServerURL +
+           a.uploadedDocumentPath +
+           '">' +
+           a.uploadedDocumentPath +
+           '</a>' +
            '</td></tr>',
        )
        .join('')}
@@ -3136,9 +3217,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     return page_1;
   }
 
-
- 
-
   comparisonCoverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -3149,14 +3227,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </div> -->
    <div class="row ">
     <div class="col h2 d-flex justify-content-center">
-    TRANSFORMATIONAL CHANGE 
+    TRANSFORMATIONAL CHANGE   ASSESSMENT REPORT 
     </div>                
   </div>
-  <div class="row ">
-  <div class="col h2 d-flex justify-content-center">
-  ASSESSMENT REPORT 
-  </div>                
-</div>
 <div class="row ">
 <div class="col h2 d-flex justify-content-center">
 PORTFOLIO TOOL
@@ -3169,6 +3242,7 @@ PORTFOLIO TOOL
    </div>
    <div class="row ">
        <div class="col h4 d-flex justify-content-center">
+       ${coverPage.reportDate}
        </div>
    </div>
    <div class="row ">
@@ -3177,11 +3251,11 @@ PORTFOLIO TOOL
  </div>
    <div class="row ">
      <div class="col h4 d-flex justify-content-center">
-       Report Date:${coverPage.reportDate}
+      
      </div>
  </div>
  </div>
- <div class="  d-flex justify-content-center" style="height: 100px;margin-top: 200px;margin-bottom: 0px;" >
+ <div class="  d-flex justify-content-center" style="margin-top: 200px;margin-bottom: 0px;" >
        <img  style="padding: 0px;" src="${coverPage.companyLogoLink}" > 
  </div>
     </div>`;
@@ -3198,7 +3272,7 @@ PORTFOLIO TOOL
 
     const page_one = `  <div id="page_5" class="page text-center" >
   ${header}
-  <div class="content">
+  <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
   <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
@@ -3232,15 +3306,13 @@ PORTFOLIO TOOL
     const portfolio_details = contentOne.portfolio_details;
     const intervation_details = contentOne.intervation_details;
 
-    // <figcaption class="figure-caption-table figure-caption text-start">table 1</figcaption>
-
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
    <div  class="main_header text-start">1.	PORTFOLIO OF INTERVENTIONS INFORMATION </div>
  
  <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3252,20 +3324,20 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${portfolio_details
-        .map(
-          (a: { information: string; description: string }) =>
-            '<tr><td>' +
-            a.information +
-            '</td><td>' +
-            a.description +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: { information: string; description: string }) =>
+                '<tr><td>' +
+                a.information +
+                '</td><td>' +
+                a.description +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm  ">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3277,11 +3349,11 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${intervation_details
-        .map(
-          (a: { id: string; name: string }) =>
-            '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: { id: string; name: string }) =>
+                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
@@ -3312,7 +3384,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
  
  <div  class="main_header_sub text-start">2.1	Processes impacts comparison</div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -3335,40 +3407,42 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${prosses_tech
-        .map(
-          (a: {
-            category_score: string;
-            SCALE_UP: string;
-            ADOPTION: string;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a['R_&_D'] ? a['R_&_D'] : '-') +
-            '</td><td>' +
-            (a.ADOPTION ? a.ADOPTION : '-') +
-            '</td><td>' +
-            (a.SCALE_UP ? a.SCALE_UP : '-') +
-            '</td><td>' +
-            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: {
+                category_score: string;
+                SCALE_UP: string;
+                ADOPTION: string;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a['R_&_D'] ? a['R_&_D'] : '-') +
+                '</td><td>' +
+                (a.ADOPTION ? a.ADOPTION : '-') +
+                '</td><td>' +
+                (a.SCALE_UP ? a.SCALE_UP : '-') +
+                '</td><td>' +
+                (a.category_score != undefined || a.category_score != null
+                  ? a.category_score
+                  : '-') +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3391,36 +3465,38 @@ PORTFOLIO TOOL
         </thead>
         <tbody class="table-active ">
         ${prosses_agent
-        .map(
-          (a: {
-            category_score: string;
-            ENTREPRENEURS: string;
-            COALITION_OF_ADVOCATES: string;
-            BENIFICIARIES: string;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
-            '</td><td>' +
-            (a.COALITION_OF_ADVOCATES ? a.COALITION_OF_ADVOCATES : '-') +
-            '</td><td>' +
-            (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
-            '</td><td>' +
-            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+          .map(
+            (a: {
+              category_score: string;
+              ENTREPRENEURS: string;
+              COALITION_OF_ADVOCATES: string;
+              BENIFICIARIES: string;
+              id: number;
+              name: string;
+              tool: string;
+              status: string;
+            }) =>
+              '<tr><td>' +
+              (a.id ? a.id : '-') +
+              '</td><td>' +
+              (a.name ? a.name : '-') +
+              '</td><td>' +
+              (a.tool ? a.tool : '-') +
+              '</td><td>' +
+              (a.status ? a.status : '-') +
+              '</td><td>' +
+              (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
+              '</td><td>' +
+              (a.COALITION_OF_ADVOCATES ? a.COALITION_OF_ADVOCATES : '-') +
+              '</td><td>' +
+              (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
+              '</td><td>' +
+              (a.category_score != undefined || a.category_score != null
+                ? a.category_score
+                : '-') +
+              '</td></tr>',
+          )
+          .join('')}
         </tbody>
       </table>
     </div>
@@ -3435,7 +3511,7 @@ PORTFOLIO TOOL
     ${header}
     <div class="content">
     
-         <div class="report-table-sm">
+         <div class="report-table-sm same-page-table">
         
          <table class="table  table-bordered border-dark">
            <thead class="table-primary  border-dark">
@@ -3458,41 +3534,45 @@ PORTFOLIO TOOL
            </thead>
            <tbody class="table-active ">
            ${prosses_incentive
-        .map(
-          (a: {
-            category_score: string;
-            ECONOMIC_NON_ECONOMIC: string;
-            DISINCENTIVES: string;
-            INSTITUTIONAL_AND_REGULATORY: string;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.ECONOMIC_NON_ECONOMIC ? a.ECONOMIC_NON_ECONOMIC : '-') +
-            '</td><td>' +
-            (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
-            '</td><td>' +
-            (a.INSTITUTIONAL_AND_REGULATORY ? a.INSTITUTIONAL_AND_REGULATORY : '-') +
-            '</td><td>' +
-            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+             .map(
+               (a: {
+                 category_score: string;
+                 ECONOMIC_NON_ECONOMIC: string;
+                 DISINCENTIVES: string;
+                 INSTITUTIONAL_AND_REGULATORY: string;
+                 id: number;
+                 name: string;
+                 tool: string;
+                 status: string;
+               }) =>
+                 '<tr><td>' +
+                 (a.id ? a.id : '-') +
+                 '</td><td>' +
+                 (a.name ? a.name : '-') +
+                 '</td><td>' +
+                 (a.tool ? a.tool : '-') +
+                 '</td><td>' +
+                 (a.status ? a.status : '-') +
+                 '</td><td>' +
+                 (a.ECONOMIC_NON_ECONOMIC ? a.ECONOMIC_NON_ECONOMIC : '-') +
+                 '</td><td>' +
+                 (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
+                 '</td><td>' +
+                 (a.INSTITUTIONAL_AND_REGULATORY
+                   ? a.INSTITUTIONAL_AND_REGULATORY
+                   : '-') +
+                 '</td><td>' +
+                 (a.category_score != undefined || a.category_score != null
+                   ? a.category_score
+                   : '-') +
+                 '</td></tr>',
+             )
+             .join('')}
            </tbody>
          </table>
        </div>
  
-       <div class="report-table-sm">
+       <div class="report-table-sm same-page-table">
         
        <table class="table  table-bordered border-dark">
          <thead class="table-primary  border-dark">
@@ -3515,36 +3595,38 @@ PORTFOLIO TOOL
          </thead>
          <tbody class="table-active ">
          ${prosses_norms
-        .map(
-          (a: {
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-            AWARENESS: string;
-            BEHAVIOUR: string;
-            SOCIAL_NORMS: string;
-            category_score: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.AWARENESS ? a.AWARENESS : '-') +
-            '</td><td>' +
-            (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
-            '</td><td>' +
-            (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
-            '</td><td>' +
-            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+           .map(
+             (a: {
+               id: number;
+               name: string;
+               tool: string;
+               status: string;
+               AWARENESS: string;
+               BEHAVIOUR: string;
+               SOCIAL_NORMS: string;
+               category_score: string;
+             }) =>
+               '<tr><td>' +
+               (a.id ? a.id : '-') +
+               '</td><td>' +
+               (a.name ? a.name : '-') +
+               '</td><td>' +
+               (a.tool ? a.tool : '-') +
+               '</td><td>' +
+               (a.status ? a.status : '-') +
+               '</td><td>' +
+               (a.AWARENESS ? a.AWARENESS : '-') +
+               '</td><td>' +
+               (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
+               '</td><td>' +
+               (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
+               '</td><td>' +
+               (a.category_score != undefined || a.category_score != null
+                 ? a.category_score
+                 : '-') +
+               '</td></tr>',
+           )
+           .join('')}
          </tbody>
        </table>
      </div>
@@ -3560,7 +3642,7 @@ PORTFOLIO TOOL
      ${header}
      <div class="content">
      
-          <div class="report-table-sm">
+          <div class="report-table-sm same-page-table">
          
           <table class="table  table-bordered border-dark">
             <thead class="table-primary  border-dark">
@@ -3585,39 +3667,48 @@ PORTFOLIO TOOL
             </thead>
             <tbody class="table-active ">
             ${process_score
-        .map(
-          (a: {
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-            Technology: string;
-            Agents: string;
-            Incentives: string;
-            norms: string;
-            category_score: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.Technology !=undefined || a.Technology != null? a.Technology : '-') +
-            '</td><td>' +
-            (a.Agents !=undefined || a.Agents !=null ? a.Agents : '-') +
-            '</td><td>' +
-            (a.Incentives !=undefined || a.Incentives !=null ? a.Incentives : '-') +
-            '</td><td>' +
-            (a['Norms and behavioral change'] != undefined ||  a['Norms and behavioral change'] !=null ? a['Norms and behavioral change'] : '-') +
-            '</td><td>' +
-            (a.category_score != undefined || a.category_score != null ? a.category_score : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+              .map(
+                (a: {
+                  id: number;
+                  name: string;
+                  tool: string;
+                  status: string;
+                  Technology: string;
+                  Agents: string;
+                  Incentives: string;
+                  norms: string;
+                  category_score: string;
+                }) =>
+                  '<tr><td>' +
+                  (a.id ? a.id : '-') +
+                  '</td><td>' +
+                  (a.name ? a.name : '-') +
+                  '</td><td>' +
+                  (a.tool ? a.tool : '-') +
+                  '</td><td>' +
+                  (a.status ? a.status : '-') +
+                  '</td><td>' +
+                  (a.Technology != undefined || a.Technology != null
+                    ? a.Technology
+                    : '-') +
+                  '</td><td>' +
+                  (a.Agents != undefined || a.Agents != null ? a.Agents : '-') +
+                  '</td><td>' +
+                  (a.Incentives != undefined || a.Incentives != null
+                    ? a.Incentives
+                    : '-') +
+                  '</td><td>' +
+                  (a['Norms and behavioral change'] != undefined ||
+                  a['Norms and behavioral change'] != null
+                    ? a['Norms and behavioral change']
+                    : '-') +
+                  '</td><td>' +
+                  (a.category_score != undefined || a.category_score != null
+                    ? a.category_score
+                    : '-') +
+                  '</td></tr>',
+              )
+              .join('')}
             </tbody>
           </table>
         </div>
@@ -3635,8 +3726,6 @@ PORTFOLIO TOOL
     const ghg_scale_sustaind_comparison = content.ghg_scale_sustaind_comparison;
 
     const allsdg = content.allsdg;
-    // const sdg_scale = content.sdg_scale;
-    // const sdg_sustaind = content.sdg_sustaind;
     const sdg_scale_sustaind_comparison = content.sdg_scale_sustaind_comparison;
 
     const adaptation_scale = content.adaptation_scale;
@@ -3654,10 +3743,10 @@ PORTFOLIO TOOL
    
  
  <div  class="main_header_sub text-start">2.2	Outcomes impacts comparison</div> 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
-          <thead class="table-primary  border-dark">
+        <table class="table  table-bordered border-dark ">
+          <thead class="table-primary  border-dark ">
           <tr>
           <th colspan="4" scope="col">SCALE COMPARISON	</th>
           <th colspan="4" scope="col">OUTCOMES</th>
@@ -3682,41 +3771,41 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${ghg_scale
-        .map(
-          (a: {
-            international: any;
-            national: any;
-            subnational: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.international.name ? a.international.name : '-') +
-            '</td><td>' +
-            (a.national.name ? a.national.name : '-') +
-            '</td><td>' +
-            (a.subnational.name ? a.subnational.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: {
+                international: any;
+                national: any;
+                subnational: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.international.name ? a.international.name : '-') +
+                '</td><td>' +
+                (a.national.name ? a.national.name : '-') +
+                '</td><td>' +
+                (a.subnational.name ? a.subnational.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3745,36 +3834,36 @@ PORTFOLIO TOOL
         </thead>
         <tbody class="table-active ">
         ${ghg_sustaind
-        .map(
-          (a: {
-            long_term: any;
-            medium_term: any;
-            short_term: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.long_term.name ? a.long_term.name : '-') +
-            '</td><td>' +
-            (a.medium_term.name ? a.medium_term.name : '-') +
-            '</td><td>' +
-            (a.short_term.name ? a.short_term.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+          .map(
+            (a: {
+              long_term: any;
+              medium_term: any;
+              short_term: any;
+              category_score: any;
+              id: number;
+              name: string;
+              tool: string;
+              status: string;
+            }) =>
+              '<tr><td>' +
+              (a.id ? a.id : '-') +
+              '</td><td>' +
+              (a.name ? a.name : '-') +
+              '</td><td>' +
+              (a.tool ? a.tool : '-') +
+              '</td><td>' +
+              (a.status ? a.status : '-') +
+              '</td><td>' +
+              (a.long_term.name ? a.long_term.name : '-') +
+              '</td><td>' +
+              (a.medium_term.name ? a.medium_term.name : '-') +
+              '</td><td>' +
+              (a.short_term.name ? a.short_term.name : '-') +
+              '</td><td>' +
+              (a.category_score.name ? a.category_score.name : '-') +
+              '</td></tr>',
+          )
+          .join('')}
         </tbody>
       </table>
     </div>
@@ -3794,7 +3883,7 @@ PORTFOLIO TOOL
  
     
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3822,40 +3911,40 @@ PORTFOLIO TOOL
         </thead>
         <tbody class="table-active ">
         ${adaptation_scale
-        .map(
-          (a: {
-            international: any;
-            national: any;
-            subnational: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.international.name ? a.international.name : '-') +
-            '</td><td>' +
-            (a.national.name ? a.national.name : '-') +
-            '</td><td>' +
-            (a.subnational.name ? a.subnational.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+          .map(
+            (a: {
+              international: any;
+              national: any;
+              subnational: any;
+              category_score: any;
+              id: number;
+              name: string;
+              tool: string;
+              status: string;
+            }) =>
+              '<tr><td>' +
+              (a.id ? a.id : '-') +
+              '</td><td>' +
+              (a.name ? a.name : '-') +
+              '</td><td>' +
+              (a.tool ? a.tool : '-') +
+              '</td><td>' +
+              (a.status ? a.status : '-') +
+              '</td><td>' +
+              (a.international.name ? a.international.name : '-') +
+              '</td><td>' +
+              (a.national.name ? a.national.name : '-') +
+              '</td><td>' +
+              (a.subnational.name ? a.subnational.name : '-') +
+              '</td><td>' +
+              (a.category_score.name ? a.category_score.name : '-') +
+              '</td></tr>',
+          )
+          .join('')}
         </tbody>
       </table>
     </div>
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
        
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -3928,7 +4017,6 @@ PORTFOLIO TOOL
    
     </div>`;
 
-
     const sdg_pages = allsdg
       .map(
         (a: {
@@ -3939,7 +4027,7 @@ PORTFOLIO TOOL
         }) => `<div  class="page text-center" >
       ${header}
       <div class="content">
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
          
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -3967,42 +4055,42 @@ PORTFOLIO TOOL
         </thead>
         <tbody class="table-active ">
         ${a.sdg_scale
-            .map(
-              (a: {
-                international: any;
-                national: any;
-                subnational: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.international.name ? a.international.name : '-') +
-                '</td><td>' +
-                (a.national.name ? a.national.name : '-') +
-                '</td><td>' +
-                (a.subnational.name ? a.subnational.name : '-') +
-                '</td><td>' +
-                (a.category_score.name ? a.category_score.name : '-') +
-                '</td></tr>',
-            )
-            .join('')}
+          .map(
+            (a: {
+              international: any;
+              national: any;
+              subnational: any;
+              category_score: any;
+              id: number;
+              name: string;
+              tool: string;
+              status: string;
+            }) =>
+              '<tr><td>' +
+              (a.id ? a.id : '-') +
+              '</td><td>' +
+              (a.name ? a.name : '-') +
+              '</td><td>' +
+              (a.tool ? a.tool : '-') +
+              '</td><td>' +
+              (a.status ? a.status : '-') +
+              '</td><td>' +
+              (a.international.name ? a.international.name : '-') +
+              '</td><td>' +
+              (a.national.name ? a.national.name : '-') +
+              '</td><td>' +
+              (a.subnational.name ? a.subnational.name : '-') +
+              '</td><td>' +
+              (a.category_score.name ? a.category_score.name : '-') +
+              '</td></tr>',
+          )
+          .join('')}
         </tbody>
       </table>
     </div>
     
   
-    <div class="report-table-sm">
+    <div class="report-table-sm same-page-table">
          
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
@@ -4031,39 +4119,36 @@ PORTFOLIO TOOL
       </thead>
       <tbody class="table-active ">
       ${a.sdg_sustaind
-            .map(
-              (a: {
-                long_term: any;
-                medium_term: any;
-                short_term: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.long_term.name ? a.long_term.name : '-') +
-                '</td><td>' +
-                (a.medium_term.name ? a.medium_term.name : '-') +
-                '</td><td>' +
-                (a.short_term.name ? a.short_term.name : '-') +
-                '</td><td>' +
-                (a.category_score.name ? a.category_score.name : '-') +
-                '</td></tr>'
-
-
-            )
-            .join('')}
+        .map(
+          (a: {
+            long_term: any;
+            medium_term: any;
+            short_term: any;
+            category_score: any;
+            id: number;
+            name: string;
+            tool: string;
+            status: string;
+          }) =>
+            '<tr><td>' +
+            (a.id ? a.id : '-') +
+            '</td><td>' +
+            (a.name ? a.name : '-') +
+            '</td><td>' +
+            (a.tool ? a.tool : '-') +
+            '</td><td>' +
+            (a.status ? a.status : '-') +
+            '</td><td>' +
+            (a.long_term.name ? a.long_term.name : '-') +
+            '</td><td>' +
+            (a.medium_term.name ? a.medium_term.name : '-') +
+            '</td><td>' +
+            (a.short_term.name ? a.short_term.name : '-') +
+            '</td><td>' +
+            (a.category_score.name ? a.category_score.name : '-') +
+            '</td></tr>',
+        )
+        .join('')}
       </tbody>
     </table>
   </div>
@@ -4083,7 +4168,7 @@ PORTFOLIO TOOL
    ${header}
    <div class="content">
    
-   <div class="report-table-sm">
+   <div class="report-table-sm same-page-table">
        
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
@@ -4110,39 +4195,39 @@ PORTFOLIO TOOL
      </thead>
      <tbody  class="table-active ">
      ${ghg_scale_sustaind_comparison
-        .map(
-          (a: {
-            scale_score: any;
-            sustained_score: any;
+       .map(
+         (a: {
+           scale_score: any;
+           sustained_score: any;
 
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.scale_score.name ? a.scale_score.name : '-') +
-            '</td><td>' +
-            (a.sustained_score.name ? a.sustained_score.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>'
-        )
-        .join('')}
+           category_score: any;
+           id: number;
+           name: string;
+           tool: string;
+           status: string;
+         }) =>
+           '<tr><td>' +
+           (a.id ? a.id : '-') +
+           '</td><td>' +
+           (a.name ? a.name : '-') +
+           '</td><td>' +
+           (a.tool ? a.tool : '-') +
+           '</td><td>' +
+           (a.status ? a.status : '-') +
+           '</td><td>' +
+           (a.scale_score.name ? a.scale_score.name : '-') +
+           '</td><td>' +
+           (a.sustained_score.name ? a.sustained_score.name : '-') +
+           '</td><td>' +
+           (a.category_score.name ? a.category_score.name : '-') +
+           '</td></tr>',
+       )
+       .join('')}
      </tbody>
    </table>
  </div>
 
- <div class="report-table-sm">
+ <div class="report-table-sm same-page-table">
        
  <table class="table  table-bordered border-dark">
    <thead class="table-primary  border-dark">
@@ -4169,34 +4254,34 @@ PORTFOLIO TOOL
    </thead>
    <tbody class="table-active ">
    ${adaptation_scale_sustaind_comparison
-        .map(
-          (a: {
-            scale_score: any;
-            sustained_score: any;
+     .map(
+       (a: {
+         scale_score: any;
+         sustained_score: any;
 
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.scale_score.name ? a.scale_score.name : '-') +
-            '</td><td>' +
-            (a.sustained_score.name ? a.sustained_score.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+         category_score: any;
+         id: number;
+         name: string;
+         tool: string;
+         status: string;
+       }) =>
+         '<tr><td>' +
+         (a.id ? a.id : '-') +
+         '</td><td>' +
+         (a.name ? a.name : '-') +
+         '</td><td>' +
+         (a.tool ? a.tool : '-') +
+         '</td><td>' +
+         (a.status ? a.status : '-') +
+         '</td><td>' +
+         (a.scale_score.name ? a.scale_score.name : '-') +
+         '</td><td>' +
+         (a.sustained_score.name ? a.sustained_score.name : '-') +
+         '</td><td>' +
+         (a.category_score.name ? a.category_score.name : '-') +
+         '</td></tr>',
+     )
+     .join('')}
    </tbody>
  </table>
 </div>    
@@ -4218,7 +4303,7 @@ PORTFOLIO TOOL
     
   
  
-  <div class="report-table-sm">
+  <div class="report-table-sm same-page-table">
        
   <table class="table  table-bordered border-dark">
     <thead class="table-primary  border-dark">
@@ -4245,33 +4330,33 @@ PORTFOLIO TOOL
     </thead>
     <tbody class="table-active ">
     ${b.data
-            .map(
-              (a: {
-                scale_score: any;
-                sustained_score: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.scale_score.name ? a.scale_score.name : '-') +
-                '</td><td>' +
-                (a.sustained_score.name ? a.sustained_score.name : '-') +
-                '</td><td>' +
-                (a.category_score.name ? a.category_score.name : '-') +
-                '</td></tr>',
-            )
-            .join('')}
+      .map(
+        (a: {
+          scale_score: any;
+          sustained_score: any;
+          category_score: any;
+          id: number;
+          name: string;
+          tool: string;
+          status: string;
+        }) =>
+          '<tr><td>' +
+          (a.id ? a.id : '-') +
+          '</td><td>' +
+          (a.name ? a.name : '-') +
+          '</td><td>' +
+          (a.tool ? a.tool : '-') +
+          '</td><td>' +
+          (a.status ? a.status : '-') +
+          '</td><td>' +
+          (a.scale_score.name ? a.scale_score.name : '-') +
+          '</td><td>' +
+          (a.sustained_score.name ? a.sustained_score.name : '-') +
+          '</td><td>' +
+          (a.category_score.name ? a.category_score.name : '-') +
+          '</td></tr>',
+      )
+      .join('')}
     </tbody>
   </table>
   </div>
@@ -4293,7 +4378,7 @@ PORTFOLIO TOOL
   
  
 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4321,39 +4406,39 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${sacle_comparison
-        .map(
-          (a: {
-            ghg_score: any;
-            adaptation_score: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.ghg_score.name ? a.ghg_score.name : '-') +
-            '</td><td>' +
-            '</td><td>' +
-            (a.adaptation_score.name ? a.adaptation_score.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: {
+                ghg_score: any;
+                adaptation_score: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.ghg_score.name ? a.ghg_score.name : '-') +
+                '</td><td>' +
+                '</td><td>' +
+                (a.adaptation_score.name ? a.adaptation_score.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
 
-      <div class="report-table-sm">
+      <div class="report-table-sm same-page-table">
        
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
@@ -4381,34 +4466,34 @@ PORTFOLIO TOOL
         </thead>
         <tbody class="table-active ">
         ${sustaind_comparison
-        .map(
-          (a: {
-            ghg_score: any;
-            adaptation_score: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.ghg_score.name ? a.ghg_score.name : '-') +
-            '</td><td>' +
-            '</td><td>' +
-            (a.adaptation_score.name ? a.adaptation_score.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join('')}
+          .map(
+            (a: {
+              ghg_score: any;
+              adaptation_score: any;
+              category_score: any;
+              id: number;
+              name: string;
+              tool: string;
+              status: string;
+            }) =>
+              '<tr><td>' +
+              (a.id ? a.id : '-') +
+              '</td><td>' +
+              (a.name ? a.name : '-') +
+              '</td><td>' +
+              (a.tool ? a.tool : '-') +
+              '</td><td>' +
+              (a.status ? a.status : '-') +
+              '</td><td>' +
+              (a.ghg_score.name ? a.ghg_score.name : '-') +
+              '</td><td>' +
+              '</td><td>' +
+              (a.adaptation_score.name ? a.adaptation_score.name : '-') +
+              '</td><td>' +
+              (a.category_score.name ? a.category_score.name : '-') +
+              '</td></tr>',
+          )
+          .join('')}
         </tbody>
       </table>
     </div>
@@ -4426,7 +4511,7 @@ PORTFOLIO TOOL
    
  
 
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4454,33 +4539,37 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${outcome_level
-        .map(
-          (a: {
-            scale_cat_score: any;
-            sustained_cat_score: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
-            '</td><td>' +
-            (a.sustained_cat_score.name ? a.sustained_cat_score.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : a.category_score) +
-            '</td></tr>',
-        )
-        .join('')}
+            .map(
+              (a: {
+                scale_cat_score: any;
+                sustained_cat_score: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
+                '</td><td>' +
+                (a.sustained_cat_score.name
+                  ? a.sustained_cat_score.name
+                  : '-') +
+                '</td><td>' +
+                (a.category_score.name
+                  ? a.category_score.name
+                  : a.category_score) +
+                '</td></tr>',
+            )
+            .join('')}
           </tbody>
         </table>
       </div>
@@ -4504,9 +4593,7 @@ PORTFOLIO TOOL
       page_7 +
       sdg_scale_sustaind_comparison_all +
       page_10
-      // page_9 +
     );
-    // return page_1 +page_2+page_3+page_4+page_5+sdg_pages+page_7+page_9+page_10;
   }
   comparisonContentThree(
     header: string,
@@ -4522,7 +4609,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">3.	AGGREGATION </div>
  
  
-        <div class="report-table-sm">
+        <div class="report-table-sm same-page-table">
        
         <table class="table  table-bordered border-dark">
           <thead class="table-primary  border-dark">
@@ -4548,27 +4635,27 @@ PORTFOLIO TOOL
           </thead>
           <tbody class="table-active ">
           ${aggregation.data
-        .map(
-          (a: {
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-            mitigation: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            a.mitigation +
-            '</td></tr>'
-        )
-        .join('')}
+            .map(
+              (a: {
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+                mitigation: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                a.mitigation +
+                '</td></tr>',
+            )
+            .join('')}
             <tr><td colspan="4" > Total
             </td><td> ${aggregation.total}
                 </td></tr>
@@ -4597,90 +4684,95 @@ PORTFOLIO TOOL
 
     const page_1 = `  <div  class="page text-center" >
    ${header}
-    <div class="content">
+    <div class="content" style=" height:1000px">
       <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
-
-      <div class="report-all-table-sm-rotate">
-
-        <div class="report-table-sm-rotate">
-        <br><br>
-        <lablel text-align: left;>The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation. </lablel>
-
-        <br><br>
-          <table class="table  table-bordered border-dark">
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation.   </p>
+     </blockquote> 
+      <div class="report-all-table-sm-rotate same-page">
+   
+        <div class=" same-page-table-rotate">
+       
+          <table class="table  table-bordered border-dark table-fixed-width">
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
-                <th colspan="${alignment_table.sdg_count
-      }">SUSTAINABLE DEVELOPMENT</th>
+                <th colspan="${
+                  alignment_table.sdg_count
+                }">SUSTAINABLE DEVELOPMENT</th>
               </tr>
               <tr>
                 ${alignment_table.col_set_1
-        .map(
-          (a) =>
-            '<th scope="col" colspan="' +
-            a.colspan +
-            '">' +
-            a.label +
-            '</th>',
-        )
-        .join('')}
+                  .map(
+                    (a) =>
+                      '<th scope="col" colspan="' +
+                      a.colspan +
+                      '">' +
+                      a.label +
+                      '</th>',
+                  )
+                  .join('')}
               </tr>
               <tr>
                 ${alignment_table.col_set_2
-        .map((a) => '<th scope="col">' + a.label + '</th>')
-        .join('')}
+                  .map((a) => '<th scope="col">' + a.label + '</th>')
+                  .join('')}
+                
               </tr>
             </thead>
             <tbody class="table-active">
                   ${this.generateAlignmentBody(
-          alignment_table.interventions,
-          alignment_table.col_set_2,
-        )}
+                    alignment_table.interventions,
+                    alignment_table.col_set_2,
+                  )}
+                 
             </tbody>
           </table>
         </div>
-        <div class="report-table-sm-rotate">
-          <table class="table  table-bordered border-dark">
-            <thead class="table-primary  border-dark">
-              <tr>
-                <th colspan="4" scope="col">ALIGNMENT</th>
-                <th colspan="${alignment_table.sdg_count
-      }">SUSTAINABLE DEVELOPMENT</th>
-              </tr>
-              <tr>
-                ${alignment_table.col_set_1
-        .map(
-          (a) =>
-            '<th scope="col" colspan="' +
-            a.colspan +
-            '">' +
-            a.label +
-            '</th>',
-        )
-        .join('')}
-              </tr>
-              <tr>
-                ${alignment_table.col_set_2
-        .map((a) => '<th scope="col">' + a.label + '</th>')
-        .join('')}
-              </tr>
-            </thead>
-            <tbody class="table-active">
-                  ${this.generateHeatMapBody(
-          alignment_table.interventions,
-          alignment_table.col_set_2,
-        )}
-            </tbody>
-          </table>
+      
         </div>
+
+        <div class="report-all-table-sm-rotate same-page">
+        <div class=" same-page-table-rotate">
+        <table class="table  table-bordered border-dark table-fixed-width">
+          <thead class="table-primary  border-dark">
+            <tr>
+              <th colspan="4" scope="col">ALIGNMENT</th>
+              <th colspan="${
+                alignment_table.sdg_count
+              }">SUSTAINABLE DEVELOPMENT</th>
+            </tr>
+            <tr>
+              ${alignment_table.col_set_1
+                .map(
+                  (a) =>
+                    '<th scope="col" colspan="' +
+                    a.colspan +
+                    '">' +
+                    a.label +
+                    '</th>',
+                )
+                .join('')}
+            </tr>
+            <tr>
+              ${alignment_table.col_set_2
+                .map((a) => '<th scope="col">' + a.label + '</th>')
+                .join('')}
+            </tr>
+          </thead>
+          <tbody class="table-active">
+                ${this.generateHeatMapBody(
+                  alignment_table.interventions,
+                  alignment_table.col_set_2,
+                )}
+          </tbody>
+        </table>
+      </div>
         </div>
       </div>
       ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     </div>`;
 
-    // console.log("page", page_1)
-    // return page_2 + page_3;
     return page_1;
   }
 
@@ -4713,17 +4805,25 @@ PORTFOLIO TOOL
     }
     return body;
   }
-  generateHeatMapforinvestment(y:number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
+  generateHeatMapforinvestment(
+    y: number,
+    contentTwo: ReportContentTwo | ReportCarbonMarketDtoContentFour,
+  ) {
     let body = '';
     for (let x of this.xData) {
-        body =
-          body +
-          '<td  class="charttd" style="background-color:' +
-          this.getBackgroundColorInvestmentHeatmap(x.value, y) +
-          '; color:' + ((this.getIntervention(x.value, y,contentTwo))?'blue':this.getBackgroundColorInvestmentHeatmap(x.value, y))+ ';">' +
-          '<span class="'+ (this.getIntervention(x.value, y,contentTwo)? 'intervention':'')+'">1</span>'+
-                        
-          '</td>';
+      body =
+        body +
+        '<td  class="charttd" style="background-color:' +
+        this.getBackgroundColorInvestmentHeatmap(x.value, y) +
+        '; color:' +
+        (this.getIntervention(x.value, y, contentTwo)
+          ? 'blue'
+          : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
+        ';">' +
+        '<span class="' +
+        (this.getIntervention(x.value, y, contentTwo) ? 'intervention' : '') +
+        '">1</span>' +
+        '</td>';
     }
     return body;
   }
@@ -4769,10 +4869,15 @@ PORTFOLIO TOOL
     }
   }
   getBackgroundColorInvestmentHeatmap(x: number, y: number): string {
-    if ((x <= -1) || (x === 1 && y === 0) || (x === 0 && y === 1) || (x === 0 && y === 0)) {
-      return '#ec6665'
+    if (
+      x <= -1 ||
+      (x === 1 && y === 0) ||
+      (x === 0 && y === 1) ||
+      (x === 0 && y === 0)
+    ) {
+      return '#ec6665';
     } else {
-      let value = x + y
+      let value = x + y;
       switch (value) {
         case -3:
           return '#ec6665';
@@ -4801,8 +4906,11 @@ PORTFOLIO TOOL
       }
     }
   }
-  getIntervention(x: number, y: number,contentTwo:ReportContentTwo|ReportCarbonMarketDtoContentFour) {
-    // console.log(contentTwo.processScore,contentTwo.outcomeScore,x,y)
-    return (contentTwo.processScore === y && contentTwo.outcomeScore === x);
+  getIntervention(
+    x: number,
+    y: number,
+    contentTwo: ReportContentTwo | ReportCarbonMarketDtoContentFour,
+  ) {
+    return contentTwo.processScore === y && contentTwo.outcomeScore === x;
   }
 }

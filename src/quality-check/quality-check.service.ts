@@ -6,7 +6,6 @@ import {
     paginate,
     Pagination,
   } from 'nestjs-typeorm-paginate';
-import { AssessmentService } from 'src/assessment/assessment.service';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
@@ -50,37 +49,19 @@ export class QualityCheckService extends TypeOrmCrudService<ParameterRequest>{
         }
         if (ctAction != null && ctAction != undefined && ctAction != '') {
           filter = `${filter}  and p.policyName = '${ctAction}'`;
-          console.log("+++++++++++++" ,filter)
       }
-        // if (NDCId != 0) {
-        //   filter = `${filter}  and as.ndcId = :NDCId`;
-        // }
-        // if (SubNdcId != 0) {
-        //   filter = `${filter}  and as.subNdcId = :SubNdcId`;
-        // }
-    console.log("+++++++++++++" ,ctAction)
         
     
         let data = this.assessmentRepo
           .createQueryBuilder('as')
-        //   .innerJoinAndMapOne(
-        //     'ae.assessment',
-        //     Assessment,
-        //     'as',
-        //     'ae.assessmentId = as.id',  //`a.projectId = p.id and p.countryId = ${countryIdFromTocken}`
-        //   )
           .innerJoinAndMapOne('as.climateAction', ClimateAction, 'p', `as.climateAction_id = p.id and p.countryId = ${countryIdFromTocken} ` )
     
           .where(filter, {
             filterText: `%${filterText}%`,
             QAstatusId,
-            // NDCId,
-            // SubNdcId,
           });
-        //   .orderBy( 'DESC');
     
         let resualt = await paginate(data, options);
-          console.log("PPP",resualt)
         if (resualt) {
           return resualt;
         }

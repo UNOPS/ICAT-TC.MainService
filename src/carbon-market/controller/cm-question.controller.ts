@@ -34,37 +34,35 @@ export class CMQuestionController implements CrudController<CMQuestion>
   @UseGuards(JwtAuthGuard)
   @Get('get-all-section')
   async getAllSection(){
-    return await this.service.getAllSection()
+    return await this.service.getAllSection();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('get-criteria-by-section')
   async getCriteriaBySectionId(@Query('sectionId') sectionId: number){
-    return await this.service.getCriteriaBySectionId(sectionId)
+    return await this.service.getCriteriaBySectionId(sectionId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('get-question-by-criteria')
   async getQuestionsByCriteria(@Query('criteriaId') criteriaId: number){
-    return await this.service.getQuestionsByCriteria(criteriaId)
+    return await this.service.getQuestionsByCriteria(criteriaId);
   }
   
   @UseGuards(JwtAuthGuard)
   @Get('get-answers-by-question')
   async getAnswersByQuestion(@Query('questionId') questionId: number){
-    return await this.service.getAnswersByQuestion(questionId)
+    return await this.service.getAnswersByQuestion(questionId);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('get-unique-characteristics')
   async getUniqueCharacterisctics():Promise<UniqueCategories>{
-    return await this.service.getUniqueCharacterisctics()
+    return await this.service.getUniqueCharacterisctics();
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('get-questions-by-characteristic')
   async getQuestionsByCharacteristic(@Query('characteristicId') characteristicId: number[]):Promise<any>{
-    return await this.service.getQuestionsByCharacteristicId(characteristicId)
+    return await this.service.getQuestionsByCharacteristicId(characteristicId);
   }
 
 }

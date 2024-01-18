@@ -36,7 +36,6 @@ import { MethodologyAssessmentParameters } from './methodology-assessment/entiti
 import { Methodology } from './methodology-assessment/entities/methodology.entity';
 import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
 import { ParameterStatus } from './methodology-assessment/entities/parameterStatus.entity';
-import { ParameterHistoryAction } from './parameter-history/entity/parameter-history-action-history.entity';
 import { ParameterHistory } from './parameter-history/entity/parameter-history.entity';
 
 import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
@@ -44,7 +43,6 @@ import { MasterData } from './shared/entities/master.data.entity';
 import { User } from './users/entity/user.entity';
 import { UserType } from './users/entity/user.type.entity';
 import { Notification } from './notification/notification.entity';
-import { Objectives } from './methodology-assessment/entities/objectives.entity';
 import { Report } from './report/entities/report.entity';
 import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
 import { CalcParameters } from './methodology-assessment/entities/calcParameters.entity';
@@ -66,12 +64,14 @@ import { SystemStatus } from './system-status/entities/system-status.entity';
 
 
 export const config: ConnectionOptions = {
-  // name: 'Real',
   type: 'mysql',
-  host: 'localhost',
-  port: 3306,
- 
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
+  username: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
 
+<<<<<<< HEAD
   username: 'root',
  password: 'pradeep123#',
 // password: 'password',
@@ -95,17 +95,23 @@ PolicySector,InvestorQuestions,IndicatorDetails,PortfolioSdg,SdgAssessment,Barri
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
+=======
+  autoLoadEntities: true,
+  entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, countryStatus, DataRequestStatus, ParameterRequest, DefaultValue,
+    Documents, DocumentOwner, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, AggregatedAction, ActionArea,
+    ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,
+    Characteristics, Barriers, BarriersCategory, Category, Indicators, MethodologyAssessmentParameters, Methodology, MethodologyIndicators, ParameterStatus,
+    ParameterHistory, Report, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
+    PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus],
+
+  synchronize: true,
+>>>>>>> 48a72f0b7393e7c069ed0e0d0036b6f33b31062b
   migrationsRun: true,
   logging: true,
   logger: 'file',
 
-  // Allow both start:prod and start:dev to use migrations
-  // __dirname is either dist or src folder, meaning either
-  // the compiled js in prod or the ts in dev.
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   cli: {
-    // Location of migration should be inside src folder
-    // to be compiled into dist/ folder.
     migrationsDir: 'src/migrations',
   },
 };

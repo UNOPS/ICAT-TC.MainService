@@ -53,6 +53,8 @@ import { CalculationResults } from 'src/methodology-assessment/entities/calculat
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   controllers: [PortfolioController],
@@ -64,7 +66,8 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
     CMAssessmentQuestionService, 
     MasterDataService,
     InvestorToolService,
-    MethodologyAssessmentService
+    MethodologyAssessmentService,
+    AuditDetailService
   ],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
@@ -77,7 +80,9 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
     CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment
 
-  ])],
+  ]),
+    HttpModule
+  ],
   exports: [
     PortfolioService
   ]

@@ -67,6 +67,8 @@ import { CMAssessmentQuestion } from 'src/carbon-market/entity/cm-assessment-que
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
+import { HttpModule } from '@nestjs/axios';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 
 @Module({
@@ -117,16 +119,19 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
       CMAssessmentQuestion,
       CMAssessmentAnswer,
       SdgPriority,
-      TotalInvestment
+      TotalInvestment,
+      User
     ]), 
     UsersModule,
     CountryModule,
     InvestorToolModule,
     MethodologyAssessmentModule,
-    PortfolioModule
+    PortfolioModule,
+    HttpModule
   ],
   controllers: [ReportController],
-  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,],
+  providers: [ReportService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, 
+    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}

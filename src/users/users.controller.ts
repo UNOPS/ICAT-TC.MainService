@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -17,12 +18,9 @@ import {
   Crud,
   CrudController,
   CrudRequest,
-  GetManyDefaultResponse,
   Override,
   ParsedRequest,
-  ParsedBody,
 } from '@nestjsx/crud';
-import { request } from 'http';
 import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -35,6 +33,7 @@ import { UserType } from './entity/user.type.entity';
 import { UsersService } from './users.service';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Country } from 'src/country/entity/country.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 @Crud({
   model: {
@@ -54,12 +53,6 @@ import { Country } from 'src/country/entity/country.entity';
       
     },
 
-    // this works
-    // filter: {
-    //   id: {
-    //     $eq: 1,
-    //   }
-    // }
   },
 })
 @ApiTags('Users')
@@ -71,23 +64,29 @@ export class UsersController implements CrudController<User> {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Institution)
     private readonly institutionRepository: Repository<Institution>,
-
+    private auditDetailService: AuditDetailService,
     private readonly auditService: AuditService,
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
   @Post('createUser')
-  create(@Body() createUserDto: User): Promise<User> {
-
-    let audit: AuditDto = new AuditDto();
-    audit.action = createUserDto.firstName +' User Created';
-    audit.comment = "User Created";
-    audit.actionStatus = 'Created';
-    audit.userName = 'created'
-    //this.auditService.create(audit);
-    console.log("audit.......",audit);
-
-    return this.service.create(createUserDto);
+  @UseGuards(JwtAuthGuard)
+  async create(@Body() createUserDto: User): Promise<User> {
+    console.log('create user')
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Create user"
+    }
+    let body = { ...details, ...obj }
+    try {
+      let user = await this.service.create(createUserDto);
+      body = { ...body, ...{ actionStatus: "Created successfully", } }
+      this.auditDetailService.log(body)
+      return user 
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to create", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
 
   }
   @Post('createExternalUser')
@@ -97,12 +96,9 @@ export class UsersController implements CrudController<User> {
     audit.action = createUserDto.firstName +' User Created';
     audit.comment = "User Created";
     audit.actionStatus = 'Created';
-    audit.userName = 'created'
-    //this.auditService.create(audit);
-    console.log("audit.......",audit);
+    audit.userName = 'created';
     createUserDto.userType = new UserType()
-    createUserDto.userType.id = 12 // external user
-    console.log("external user",createUserDto);
+    createUserDto.userType.id = 12;
     let userCountry =new Country();
     userCountry.id=0
     let userIns =new Institution();
@@ -127,43 +123,36 @@ export class UsersController implements CrudController<User> {
         u.username =dto.email;
         u.mobile='0114455125'
           await this.service.adduser(u);
-        return "Master admin is saved"
+        return "Master admin is saved";
       }      
       else{
         const u = users[0];
         u.email = dto.email;
         u.firstName = "Master";
         u.lastName = "Admin";
-        u.loginProfile = dto.loginProfile;
-        // u.telephone="";
+        u.loginProfile = dto.loginProfile;;
         await this.service.updateuser(u);
         return "Master admin is updated";
       }      
-    }catch(err){
-      console.log(err)
+    }catch(err){;
       return "Failed to add master admin";
     }
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.INSTITUTION_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.TECNICAL_TEAM]))
   @Patch('changeStatus')
-  changeStatus( @Query('id') id:number, @Query('status') status:number): Promise<User> {
-   console.log('status',status)
+  changeStatus( @Query('id') id:number, @Query('status') status:number): Promise<User> {;
    
     return this.service.chnageStatus(id,status);
   }
 
   @Get('findUserBy')
-  async findUserByUserType(@Request() request): Promise<any> {
-    
-
-    // console.log('test', this.service.findByUserName(userName));
+  async findUserByUserType(@Request() request): Promise<any> {;
     return await this.service.findUserByUserType();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<User> {
-  let x = await this.service.findOne({where:{id:id} });
-  console.log("xxxxxxxxxxxx=====",x)
+  let x = await this.service.findOne({where:{id:id} });;
     return this.service.findOne({where:{id:id} });
   }
 
@@ -174,10 +163,7 @@ export class UsersController implements CrudController<User> {
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.COUNTRY_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.DATA_COLLECTION_TEAM,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM,LoginRole.INSTITUTION_ADMIN]))
 
   @Get('findUserByUserName/:userName')
-  async findUserByUserName(@Param('userName') userName: string): Promise<any> {
-    // console.log(userName);
-
-    // console.log('test',await this.service.findByUserName(userName));
+  async findUserByUserName(@Param('userName') userName: string): Promise<any> {;
     return await this.service.findUserByUserName(userName);
   }
 
@@ -210,13 +196,9 @@ export class UsersController implements CrudController<User> {
   }
 
   @Override()
-  async getMany(@ParsedRequest() req: CrudRequest, @Request() req2) {
-    
-    console.log("======",req)
-    console.log(req.parsed.filter.length, req.parsed.search['$and'][0]);
+  async getMany(@ParsedRequest() req: CrudRequest, @Request() req2) {;
 
-    let userList = await this.base.getManyBase(req);
-    console.log('yyyyyyyyyyyyyyyyyyyyyyyy',userList);
+    let userList = await this.base.getManyBase(req);;
 
     return userList;
   }
@@ -234,8 +216,7 @@ export class UsersController implements CrudController<User> {
     @Query('limit') limit: number,
     @Query('filterText') filterText: string,
     @Query('userTypeId') userTypeId: number,
-  ): Promise<any>{
-    console.log('incontroler...aaa')
+  ): Promise<any>{;
     return await this.service
     .getUserDetails(
       {
@@ -258,8 +239,7 @@ export class UsersController implements CrudController<User> {
     @Query('filterText') filterText: string,
     @Query('userTypeId') userTypeId: number,
     @Query('userName') userName: string,
-  ): Promise<any> {
-    console.log('incontroler...');
+  ): Promise<any> {;
     return await this.service.getUserDetailsByInstitution(
       {
         limit: limit,
