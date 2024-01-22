@@ -1,6 +1,5 @@
 
-import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Portfolio } from "./portfolio.entity";
 

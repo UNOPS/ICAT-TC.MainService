@@ -1,5 +1,5 @@
 
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Objectives } from "./objectives.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 

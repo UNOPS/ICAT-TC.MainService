@@ -8,7 +8,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './auth.controller';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UsersService } from 'src/users/users.service';
-import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
@@ -34,7 +33,6 @@ import { TokenDetails } from 'src/utills/token_details';
     JwtStrategy,
     EmailNotificationService,
     UsersService,
-    ConfigService,
     AuditService,
     TokenDetails
   ],

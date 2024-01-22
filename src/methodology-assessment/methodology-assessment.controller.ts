@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { CrudRequest } from '@nestjsx/crud';
@@ -17,8 +17,7 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { UsersService } from 'src/users/users.service';
 var multer = require('multer');
 
-const MainMethURL = 'http://localhost:7100/methodology';
-const auditlogURL = 'http://localhost:7000/audit';
+const auditlogURL = process.env.AUDIT_URL+ '/audit';
 import { DataVerifierDto } from 'src/assessment/dto/dataVerifier.dto';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
@@ -52,7 +51,8 @@ export class MethodologyAssessmentController {
     this.resData = ''
 
     let newData : any = MethAssignParam;
-    const response = await axios.post(MainMethURL + '/assessmentData', MethAssignParam);
+    //Todo
+    const response = await axios.post( '/assessmentData', MethAssignParam);
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
 
@@ -103,8 +103,8 @@ export class MethodologyAssessmentController {
     let methdata : any = BarrierCharData;
 
     if(methdata.alldata.assessment_approach === 'Direct'){
-
-      const response = await axios.post(MainMethURL + '/assessmentDataTrack3', BarrierCharData);
+ //Todo
+      const response = await axios.post( '/assessmentDataTrack3', BarrierCharData);
 
     let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData);
 

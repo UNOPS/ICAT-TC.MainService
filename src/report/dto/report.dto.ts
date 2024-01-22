@@ -75,14 +75,14 @@ export class ReportContentTwo {
     process_categories_assessment:object[]=[];
     outcomes_categories_assessment:object[]=[];
 
-    prossesExAnteAssesment:object[]=[];
-    outcomeExAnteAssesment:object[]=[];
+    prossesExAnteAssessment:object[]=[];
+    outcomeExAnteAssessment:object[]=[];
     prossesExAnteAnalysis:object[]=[]; 
     outcomeExAnteAnalysis:object[]=[];
 
 //2.3
-    prossesExPostAssesment:object[]=[];
-    outcomeExPostAssesment:object[]=[];
+    prossesExPostAssessment:object[]=[];
+    outcomeExPostAssessment:object[]=[];
     prossesExPostAnalysis:object[]=[]; 
     outcomeExPostAnalysis:object[]=[];
     
@@ -144,7 +144,7 @@ export class ReportCarbonMarketDto {
     sectorCoverd:string="";
     geograpycalCover:string="";
     
-    assesment :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
+    assessment :object[]=[{information:'teat1',description:'test11'   },{information:'teat2',description:'test22'   }];
     barriers:object[]=[{  barrier: 'aaa',
         explanation: 'sss',
         characteristics_affected: 'ddd',

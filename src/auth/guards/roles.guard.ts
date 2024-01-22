@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Type } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Type } from '@nestjs/common';
 
 
 export enum LoginRole {
@@ -36,8 +36,7 @@ export function RoleGuard(roles?: LoginRole[]): Type<CanActivate>{
           return false;
         }
      
-      return user.user.role.code
-      return  user.user.role.some(r=> roles.includes(r)) ;
+      return user.user.role.code;
     }
   }
 

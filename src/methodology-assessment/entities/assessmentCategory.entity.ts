@@ -1,7 +1,6 @@
 
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
-import { Barriers } from "./barriers.entity";
 import { Category } from "./category.entity";
 
 @Entity()

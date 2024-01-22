@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,  Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';

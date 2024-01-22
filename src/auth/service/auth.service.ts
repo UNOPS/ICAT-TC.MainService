@@ -1,17 +1,13 @@
-import { Injectable, Body, UseGuards } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import { AuditService } from 'src/audit/audit.service';
 import { HttpService } from '@nestjs/axios';
 
 
-const AUTH_URL = process.env.AUTH_URL || 'http://localhost:7090'
+const AUTH_URL = process.env.AUTH_URL
 @Injectable()
 export class  AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
-    private readonly auditService: AuditService,
     private  httpService: HttpService,
 
   ) {}

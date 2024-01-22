@@ -1,6 +1,6 @@
 
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CMAssessmentQuestion } from './cm-assessment-question.entity';
 import { CMAnswer } from './cm-answer.entity';
 import { Institution } from 'src/institution/entity/institution.entity';

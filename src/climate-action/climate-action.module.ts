@@ -7,7 +7,6 @@ import { ProjectService } from './climate-action.service';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { TokenDetails } from 'src/utills/token_details';
 import { PolicySector } from './entity/policy-sectors.entity';
-import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { UsersService } from 'src/users/users.service';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { User } from 'src/users/entity/user.entity';

@@ -2,7 +2,7 @@ import { DocumentOwner } from './entity/document-owner.entity';
 import { editFileName, fileLocation } from './entity/file-upload.utils';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
-import { Crud, CrudController, ParsedRequest, CrudRequest } from '@nestjsx/crud';
+import { Crud, CrudController, CrudRequest } from '@nestjsx/crud';
 import { Documents } from './entity/document.entity';
 import { Controller, Post, UploadedFile, UseInterceptors, Body, Param, Req, Get, StreamableFile, Res, HttpException, HttpStatus } from '@nestjs/common';
 import { join } from 'path';

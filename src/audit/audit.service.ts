@@ -1,18 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CrudRequest, GetManyDefaultResponse, Override } from '@nestjsx/crud';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import {
   IPaginationOptions,
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { User } from 'src/users/entity/user.entity';
-import { Repository } from 'typeorm';
-import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
 
 @Injectable()
@@ -20,9 +15,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   contextUser: any;
   constructor(
     @InjectRepository(Audit) repo,
-    @InjectRepository(User)
-    private readonly userRepo : Repository<User>,
-     @Inject(REQUEST) private request,
  
 
   ) {
@@ -90,10 +82,10 @@ export class AuditService extends TypeOrmCrudService<Audit> {
         institutionId
       })
       .orderBy('dr.createdOn', 'DESC');
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 }

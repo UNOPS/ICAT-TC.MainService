@@ -38,7 +38,6 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
 import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
 import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
-import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { BarriersCategory } from 'src/methodology-assessment/entities/barrierscategory.entity';
 import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
