@@ -1,6 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -28,11 +27,7 @@ import { UserTypeModule } from './master-data/user-type/user-type.module';
 import { ReportController } from './report/report.controller';
 
 import { UsersModule } from './users/users.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { Institution } from './institution/entity/institution.entity';
-import { MulterModule } from '@nestjs/platform-express';
-import { config } from './ormconfig';
 import { User } from './users/entity/user.entity';
 import { TokenDetails } from './utills/token_details';
 import { Category } from './methodology-assessment/entities/category.entity';
@@ -49,7 +44,7 @@ import { PolicyBarriers } from './climate-action/entity/policy-barriers.entity';
 import { Indicators } from './methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from './methodology-assessment/entities/assessmentcharacteristics.entity';
 import { MethodologyIndicators } from './methodology-assessment/entities/methodologyindicators.entity';
-import {ParameterRequestController as DataRequestController } from './data-request/data-request.controller';
+import { ParameterRequestController as DataRequestController } from './data-request/data-request.controller';
 import { ParameterRequestModule } from './data-request/data-request.module';
 import { QualityCheckService } from './quality-check/quality-check.service';
 import { QualityCheckController } from './quality-check/quality-check.controller';
@@ -94,33 +89,77 @@ import { SystemStatusModule } from './system-status/system-status.module';
 import { SystemStatus } from './system-status/entities/system-status.entity';
 import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from './utills/audit_detail.service';
+import { Auth } from './auth/entities/auth.entity';
+import { CountrySector } from './country/entity/country-sector.entity';
+import { LearningMaterialUserType } from './learning-material/entity/learning-material-usertype.entity';
+import { LearningMaterial } from './learning-material/entity/learning-material.entity';
+import { Documents } from './document/entity/document.entity';
+import { PolicySector } from './climate-action/entity/policy-sectors.entity';
+import { BaseTrackingEntity } from './shared/entities/base.tracking.entity';
+import { MasterData } from './shared/entities/master.data.entity';
+import { MethodologyParameters } from './methodology-assessment/entities/methodologyParameters.entity';
+import { CalcParameters } from './methodology-assessment/entities/calcParameters.entity';
+import { ParameterStatus } from './methodology-assessment/entities/parameterStatus.entity';
+import { GeographicalAreasCovered } from './investor-tool/entities/geographical-areas-covered.entity';
+import { InvestorSector } from './investor-tool/entities/investor-sector.entity';
+import { ActionArea } from './master-data/action-area/entity/action-area.entity';
+import { Sector } from './master-data/sector/entity/sector.entity';
+import { InstitutionCategory } from './institution/entity/institution.category.entity';
+import { InstitutionType } from './institution/entity/institution.type.entity';
+import { FinancingScheme } from './master-data/financing-scheme/financing-scheme.entity';
+import { ProjectApprovalStatus } from './master-data/project-approval-status/project-approval-status.entity';
+import { InvestorImpacts } from './investor-tool/entities/investor-impact.entity';
+import { ImpactCovered } from './investor-tool/entities/impact-covered.entity';
+import { Notification } from './notification/notification.entity';
+import { NdcSet } from './master-data/aggregated-action/ndc-set.entity';
+import { TotalInvestment } from './investor-tool/entities/total-investment.entity';
+import { AssessmentCMDetail } from './carbon-market/entity/assessment-cm-detail.entity';
+import { CMAssessmentQuestion } from './carbon-market/entity/cm-assessment-question.entity';
+import { CMQuestion } from './carbon-market/entity/cm-question.entity';
+import { Criteria } from './carbon-market/entity/criteria.entity';
+import { Section } from './carbon-market/entity/section.entity';
+import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
 
 @Module({
   imports: [
     AuditModule,
-    TypeOrmModule.forRoot(config),
-    MulterModule.register({
-      dest: './uploads',
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+
+      host: 'localhost',
+      port: 3306,
+      username: "root",
+      password: 'pradeep123#',
+      database: 'tc-main-1',
+      // host: process.env.DATABASE_HOST,
+      // port: parseInt(process.env.DATABASE_PORT),
+      // username: process.env.DATABASE_USERNAME,
+      // password: process.env.DATABASE_PASSWORD,
+      // database: process.env.DATABASE_NAME,
+
+      entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, ParameterRequest, DefaultValue, CMAssessmentAnswer, CMAssessmentQuestion,
+        Documents, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, NdcSet, TotalInvestment, AssessmentCMDetail, CMQuestion,
+        ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,
+        Characteristics, Barriers, BarriersCategory, Category, Indicators, MethodologyAssessmentParameters, Methodology, MethodologyIndicators, ParameterStatus, AggregatedAction, ActionArea,
+        ParameterHistory, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
+        PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
+        Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives],
+
+      synchronize: true,
+      migrationsRun: false,
+      logging: true,
+      logger: 'file',
+
+      migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+
     }),
     TypeOrmModule.forFeature([
       User,
-      Audit,
-      ProjectStatus,
-      ProjectOwner,
-      ClimateChangeDataCategory,
       Country,
       ClimateAction,
       AggregatedAction,
       Institution,
-      Methodology,
-      Category,
-      Characteristics,
       MethodologyAssessmentParameters,
-      Barriers,
-      AssessmentBarriers,
-      BarriersCategory,
-      PolicyBarriers,
-      Indicators,
       AssessmentCharacteristics,
       ParameterRequest,
       DefaultValue,
@@ -143,7 +182,7 @@ import { AuditDetailService } from './utills/audit_detail.service';
       BarrierCategory,
       PortfolioQuestions,
       PortfolioQuestionDetails,
-      SystemStatus
+      SystemStatus,
     ]),
     UsersModule,
     UserTypeModule,
@@ -164,12 +203,9 @@ import { AuditDetailService } from './utills/audit_detail.service';
     AssessmentModule,
     InstitutionModule,
     SystemStatusModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     MailerModule.forRoot({
       transport: {
-        host:process.env.EMAIL_HOST,
+        host: process.env.EMAIL_HOST,
         port: 587,
         secure: false,
 
@@ -183,10 +219,6 @@ import { AuditDetailService } from './utills/audit_detail.service';
         from: '"Admin"' + process.env.EMAIL,
       },
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
-    MulterModule.register({dest: './public'}),
     ParameterRequestModule,
     QualityCheckModule,
     ParameterHistoryModule,
@@ -211,7 +243,7 @@ import { AuditDetailService } from './utills/audit_detail.service';
     ParameterHistoryController,
     DefaultValueController,
   ],
-  providers: [AppService,TokenDetails, ParameterRequestService, QualityCheckService,UsersService,
-     ParameterHistoryService, DefaultValueService, MasterDataService, AuditDetailService],
+  providers: [AppService, TokenDetails, ParameterRequestService, QualityCheckService, UsersService,
+    ParameterHistoryService, DefaultValueService, MasterDataService, AuditDetailService],
 })
 export class AppModule { }

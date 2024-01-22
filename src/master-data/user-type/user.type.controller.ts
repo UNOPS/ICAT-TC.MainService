@@ -2,10 +2,6 @@ import { Controller } from '@nestjs/common';
 import {
   Crud,
   CrudController,
-  CrudRequest,
-  GetManyDefaultResponse,
-  Override,
-  ParsedRequest,
 } from '@nestjsx/crud';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { UserTypeService } from './user.type.service';

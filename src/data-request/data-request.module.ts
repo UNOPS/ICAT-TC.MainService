@@ -1,5 +1,4 @@
 import { UsersModule } from './../users/users.module';
-import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
 import { Module } from '@nestjs/common';
 import { ParameterRequestService } from './data-request.service';
@@ -18,8 +17,6 @@ import { ParameterRequestController as DataRequestController } from './data-requ
 import { DefaultValueModule } from 'src/default-value/default-value.module';
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
-import { AppModule } from 'src/app.module';
-import { InvestorToolModule } from 'src/investor-tool/investor-tool.module';
 
 @Module({
   imports: [

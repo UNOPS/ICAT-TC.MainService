@@ -37,10 +37,10 @@ export class SectorService extends TypeOrmCrudService<Sector> {
       })
       .orderBy('sr.createdOn', 'DESC');;
 
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -50,16 +50,16 @@ export class SectorService extends TypeOrmCrudService<Sector> {
   }
 
   async getCountrySector(countryId: number):Promise<Sector[]> {
-    let resualt = new Array()
+    let result = new Array()
     let ids = await this.CountrySectorRepo.find({ where: { country:{id:countryId}} ,relations: ['country','sector'] });
 
     for await (let a of ids) {
       let sector = await this.repo.findOne({ where: { id: a.sector.id },
        });
-      resualt.push(sector);
+       result.push(sector);
     }
 
-    return resualt;
+    return result;
 
 
 

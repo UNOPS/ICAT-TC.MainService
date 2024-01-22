@@ -1,18 +1,14 @@
-import { ConfigService } from '@nestjs/config';
 import { extname, join } from "path";
-const path = require('path');
 var fs = require('fs');
 
 export class FileUpload {
-    constructor(private configService: ConfigService) {
+    constructor(
+        ) {
     }
 
-    getStaticFolderName() {
-        return this.configService.get<string>('staticFolederName');
-    }
 
     getbaseUrl() {
-        return this.configService.get<string>('baseUrl');
+        return process.env.ClientURl;
     }
 }
 

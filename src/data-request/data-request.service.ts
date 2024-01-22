@@ -1,6 +1,6 @@
 import { User } from 'src/users/entity/user.entity';
 import { DataRequestStatus } from './entity/data-request-status.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ParameterRequest } from './entity/data-request.entity';

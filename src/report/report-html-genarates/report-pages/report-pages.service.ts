@@ -308,7 +308,7 @@ ${coverPage.reportDate}
     </thead>
     <tbody class="table-active">
     <tr><td>
-    Assesment type
+    Assessment type
     </td><td> 
     ${contentOne.assessmetType ? contentOne.assessmetType : 'N/A'}
     </td></tr>
@@ -1687,7 +1687,7 @@ ${coverPage.reportDate}
   </thead>
   <tbody class="table-active">
   <tr><td>
-  Assesment type
+  Assessment type
   </td><td> 
   ${content.assessmetType ? content.assessmetType : 'N/A'}
   </td></tr>

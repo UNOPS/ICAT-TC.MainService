@@ -21,11 +21,9 @@ import {
   Override,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Institution } from 'src/institution/entity/institution.entity';
-import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
@@ -61,11 +59,7 @@ export class UsersController implements CrudController<User> {
   constructor(
     public service: UsersService,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Institution)
-    private readonly institutionRepository: Repository<Institution>,
     private auditDetailService: AuditDetailService,
-    private readonly auditService: AuditService,
   ) {}
 
   @Post('createUser')

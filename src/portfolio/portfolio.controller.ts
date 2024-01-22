@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query, InternalServerErrorException } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from './entities/portfolio.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';

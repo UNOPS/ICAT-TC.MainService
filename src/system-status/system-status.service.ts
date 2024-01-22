@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSystemStatusDto } from './dto/create-system-status.dto';
-import { UpdateSystemStatusDto } from './dto/update-system-status.dto';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { SystemStatus } from './entities/system-status.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class SystemStatusService extends TypeOrmCrudService<SystemStatus> {
