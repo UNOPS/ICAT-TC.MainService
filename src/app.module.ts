@@ -126,16 +126,11 @@ import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
     TypeOrmModule.forRoot({
       type: 'mysql',
 
-      host: 'localhost',
-      port: 3306,
-      username: "root",
-      password: 'pradeep123#',
-      database: 'tc-main-1',
-      // host: process.env.DATABASE_HOST,
-      // port: parseInt(process.env.DATABASE_PORT),
-      // username: process.env.DATABASE_USERNAME,
-      // password: process.env.DATABASE_PASSWORD,
-      // database: process.env.DATABASE_NAME,
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
 
       entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, ParameterRequest, DefaultValue, CMAssessmentAnswer, CMAssessmentQuestion,
         Documents, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, NdcSet, TotalInvestment, AssessmentCMDetail, CMQuestion,
