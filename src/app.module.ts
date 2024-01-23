@@ -119,9 +119,13 @@ import { CMQuestion } from './carbon-market/entity/cm-question.entity';
 import { Criteria } from './carbon-market/entity/criteria.entity';
 import { Section } from './carbon-market/entity/section.entity';
 import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     AuditModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -140,7 +144,7 @@ import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
         Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives],
 
-      synchronize: true,
+      synchronize: false,
       migrationsRun: false,
       logging: true,
       logger: 'file',
