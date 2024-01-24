@@ -69,10 +69,14 @@ import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     TypeOrmModule.forFeature([
       Report,
       Assessment,
