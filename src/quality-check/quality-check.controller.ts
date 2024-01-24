@@ -48,11 +48,11 @@ export class QualityCheckController implements CrudController<ParameterRequest>{
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN,LoginRole.SECTOR_ADMIN,LoginRole.MRV_ADMIN,LoginRole.TECNICAL_TEAM]))
 
   @Post(
-    'quality-check/UpdateQCStatus/:paramId/:assesmentYearId/:qaStatusId/:comment/:userQc',
+    'quality-check/UpdateQCStatus/:paramId/:assessmentYearId/:qaStatusId/:comment/:userQc',
   )
   async UpdateQCStatus(
     @Query('paramId') paramId: number,
-    @Query('assesmentYearId') assesmentYearId: number,
+    @Query('assessmentYearId') assessmentYearId: number,
     @Query('qaStatusId') qaStatusId: number,
     @Query('comment') comment: string,
     @Query('userQc') userQc: string,

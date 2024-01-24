@@ -1,17 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query, InternalServerErrorException } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from './entities/portfolio.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 
 @Controller('portfolio')
 export class PortfolioController {
-  constructor(private readonly portfolioService: PortfolioService) {}
+  constructor(
+    private readonly portfolioService: PortfolioService,
+    private auditDetailService: AuditDetailService
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(@Body() createPortfolioDto: Portfolio): Promise<any> {
-    return await this.portfolioService.create(createPortfolioDto);
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: 'Create portfolio'
+    }
+    let body = { ...details, ...obj }
+    try {
+      body = { ...body, ...{ actionStatus: 'Created successfully'} }
+      this.auditDetailService.log(body)
+      return await this.portfolioService.create(createPortfolioDto);
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: 'Failed to create portfolio' } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
   }
 
   @UseGuards(JwtAuthGuard)

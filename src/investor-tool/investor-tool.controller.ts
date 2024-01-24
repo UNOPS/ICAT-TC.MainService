@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,  Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -10,11 +10,17 @@ import { diskStorage } from 'multer';
 import { editFileName, excelFileFilter } from 'src/utills/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PortfolioQuestions } from './entities/portfolio-questions.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
 
 ApiTags('investor-tool')
 @Controller('investor-tool')
 export class InvestorToolController {
-  constructor(private readonly investorToolService: InvestorToolService) {}
+  constructor(
+    private readonly investorToolService: InvestorToolService,
+    private auditDetailService: AuditDetailService,
+    private masterDataService: MasterDataService
+  ) { }
 
   @Get('get-results-by-assessment/:assessmentId')
   async getResultByAssessment(@Param('assessmentId') assessmentId: number) {
@@ -46,15 +52,44 @@ export class InvestorToolController {
     return await this.investorToolService.createinvestorToolAssessment(createInvestorToolDto);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Post('createFinalAssessment')
-  async createFinalAssessment(@Body() req: FinalInvestorAssessmentDto[]) {
-      return await this.investorToolService.createFinalAssessment(req);    
+  async createFinalAssessment(@Body() req: FinalInvestorAssessmentDto) {
+    let details = await this.auditDetailService.getAuditDetails()
+    let tool = this.masterDataService.getToolName('INVESTOR')
+    let obj = {
+      description: req.isEdit ? 'Edit assessment: ' + tool : (req.isDraft ? 'Save draft : ' + tool : 'Create assessment : ' + tool)
+    }
+    let body = { ...details, ...obj }
+    try {
+      body = { ...body, ...{ actionStatus: req.isEdit ? 'Edited successfully' : (req.isDraft ? 'Saved draft successfully' : 'Created assessment successfully') } }
+      this.auditDetailService.log(body)
+      return await this.investorToolService.createFinalAssessment(req);  
+    } catch(error) {
+      body = { ...body, ...{ actionStatus: req.isEdit ? 'Failed to edit' : (req.isDraft ? 'Failed to saved draft' : 'Failed to created assessment') } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException()
+    } 
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('createFinalAssessment2')
-  async createFinalAssessment2(@Body() req: FinalInvestorAssessmentDto[]) {
-      return await this.investorToolService.createFinalAssessment2(req);
+  async createFinalAssessment2(@Body() req: FinalInvestorAssessmentDto) {
+    let details = await this.auditDetailService.getAuditDetails()
+    let tool = this.masterDataService.getToolName('PORTFOLIO')
+    let obj = {
+      description: req.isEdit ? 'Edit assessment: ' + tool : (req.isDraft ? 'Save draft : ' + tool : 'Create assessment : ' + tool)
+    }
+    let body = { ...details, ...obj }
+    try {
+      body = { ...body, ...{ actionStatus: req.isEdit ? 'Edited successfully' : (req.isDraft ? 'Saved draft successfully' : 'Created assessment successfully') } }
+      this.auditDetailService.log(body)
+      return await this.investorToolService.createFinalAssessment2(req);  
+    } catch(error) {
+      body = { ...body, ...{ actionStatus: req.isEdit ? 'Failed to edit' : (req.isDraft ? 'Failed to saved draft' : 'Failed to created assessment') } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException()
+    } 
   }
 
   @Post('createFinalAssessmentIndirect')
@@ -205,9 +240,24 @@ export class InvestorToolController {
     },);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('save-sdg-priorities')
-  async saveSdgPriorities(@Body() req: SdgPriorityDto){
-    return await this.investorToolService.saveSdgPriorities(req.priorities)
+  async saveSdgPriorities(@Body() req: SdgPriorityDto) {
+
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Save SDG priorities"
+    }
+    let body = { ...details, ...obj }
+    try {
+      body = { ...body, ...{ actionStatus: "Saved SDG Priorities", } }
+      this.auditDetailService.log(body)
+      return await this.investorToolService.saveSdgPriorities(req.priorities)
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to save SDG Priorities", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
   }
 
   @Get('get-priorities-by-country/:id')
@@ -261,6 +311,8 @@ export class InvestorToolController {
   async saveTotalInvestments(@Body() req: TotalInvestmentDto){
     return await this.investorToolService.saveTotalInvestments(req.totalInvestements)
   }
+
+  
 
 
 }

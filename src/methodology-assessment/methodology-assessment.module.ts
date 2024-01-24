@@ -34,6 +34,7 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
@@ -46,7 +47,11 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
     EmailNotificationService,
     MasterDataService
   ],
-  imports: [TypeOrmModule.forFeature([
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
+    TypeOrmModule.forFeature([
     Methodology,
     Category,
     Characteristics,

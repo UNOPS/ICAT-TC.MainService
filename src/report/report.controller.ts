@@ -12,6 +12,7 @@ import {
   Res,
   NotFoundException,
   ServiceUnavailableException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
@@ -26,6 +27,9 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { StorageService } from 'src/storage/storage.service';
 import { promises as fsPromises } from 'fs';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { MasterDataService } from 'src/shared/entities/master-data.service';
+
 @Controller('report')
 @ApiTags('report')
 export class ReportController {
@@ -35,7 +39,9 @@ export class ReportController {
     private readonly reportHtmlGenarateService: ReportHtmlGenaratesService,
     private readonly assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private auditDetailService: AuditDetailService,
+    private masterDataService: MasterDataService
   ) { }
 
   @Post()
@@ -82,61 +88,77 @@ export class ReportController {
   async generateReport(
     @Body() req: CreateReportDto
   ): Promise<any> {
-    let countryIdFromTocken: number;
-    let UsernnameFromTocken: string;
-    [countryIdFromTocken,UsernnameFromTocken] =
-      this.tokenDetails.getDetails([
-        TokenReqestType.countryId,TokenReqestType.username
-      ]);
-    req.reportTitle = req.reportName
-   
-    const randomName = Array(8)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
-    const uniqname = req.reportName+randomName + '.pdf'
-    req.reportName = req.reportName+ '.pdf'
-   
-    if(req.tool=='Carbon Market Tool'){
-      const reprtDto: ReportCarbonMarketDto = await this.reportService.genarateReportCarbonMarketDto(
-        req,
-      );
-      const report = await this.reportGenarateService.reportGenarate(
-        uniqname,
-        await this.reportHtmlGenarateService.reportCarbonMarketHtmlGenarate(reprtDto),
-      )
-
-    }else{
-      const reprtDto: ReportDto = await this.reportService.genarateReportDto(
-        req,
-      );
-      const report = await this.reportGenarateService.reportGenarate(
-        uniqname,
-        await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
-      )
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Generate report for " + req.tool
     }
-    const filePath = `./public/${uniqname}`;
+    let body = { ...details, ...obj }
+    try {
+      let countryIdFromTocken: number;
+      let UsernnameFromTocken: string;
+      [countryIdFromTocken, UsernnameFromTocken] =
+        this.tokenDetails.getDetails([
+          TokenReqestType.countryId, TokenReqestType.username
+        ]);
+      req.reportTitle = req.reportName
+
+      const randomName = Array(8)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 16).toString(16))
+        .join('');
+      const uniqname = req.reportName + randomName + '.pdf'
+      req.reportName = req.reportName + '.pdf'
+
+      if (req.tool == this.masterDataService.getToolName('CARBON_MARKET')) {
+        const reprtDto: ReportCarbonMarketDto = await this.reportService.genarateReportCarbonMarketDto(
+          req,
+        );
+        const report = await this.reportGenarateService.reportGenarate(
+          uniqname,
+          await this.reportHtmlGenarateService.reportCarbonMarketHtmlGenarate(reprtDto),
+        )
+
+      } else {
+        const reprtDto: ReportDto = await this.reportService.genarateReportDto(
+          req,
+        );
+        const report = await this.reportGenarateService.reportGenarate(
+          uniqname,
+          await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
+        )
+      }
+
+      const filePath = `./public/${uniqname}`;
       
        
-    try {
-    const fileContent =await fsPromises.readFile(filePath);
-   
-      await this.storageService.save(
-        'reports/' + uniqname,
-        'application/pdf',
-        fileContent,
-        [{ mediaId: uniqname }]
-      );
-    } catch (e) {
-      if (e.message.toString().includes("No such object")) {
-        throw new NotFoundException("file not found");
-      } else {
-        throw new ServiceUnavailableException("internal error");
+      try {
+      const fileContent =await fsPromises.readFile(filePath);
+     
+        await this.storageService.save(
+          'reports/' + uniqname,
+          'application/pdf',
+          fileContent,
+          [{ mediaId: uniqname }]
+        );
+      } catch (e) {
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("file not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
       }
+    
+      const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
+     
+      body = { ...body, ...{ actionStatus: "Report generated successfully", } }
+      this.auditDetailService.log(body)
+      return response
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to generate report", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
     }
   
-    const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
-    return response
   }
 
   @UseGuards(JwtAuthGuard)

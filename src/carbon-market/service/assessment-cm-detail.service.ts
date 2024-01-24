@@ -4,13 +4,11 @@ import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { Repository } from "typeorm";
-import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { UsersService } from "src/users/users.service";
 import { User } from "src/users/entity/user.entity";
 import { Country } from "src/country/entity/country.entity";
 import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
-import { CMAnswer } from "../entity/cm-answer.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 
@@ -22,7 +20,6 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   constructor(
     @InjectRepository(AssessmentCMDetail) repo,
     @InjectRepository(CMAssessmentAnswer) private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
-    @InjectRepository(CMAssessmentQuestion) private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
     @InjectRepository(AssessmentCMDetail) private assessmentCMDetailsRepo: Repository<AssessmentCMDetail>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,

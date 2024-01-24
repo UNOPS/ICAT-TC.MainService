@@ -73,11 +73,11 @@ export class VerificationController
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.SECTOR_ADMIN, LoginRole.VERIFIER]))
-  @Get('getVerificationDetails/:assesmentId')
+  @Get('getVerificationDetails/:assessmentId')
   async getVerificationDetails(
-    @Param('assesmentId') assesmentId: number,
+    @Param('assessmentId') assessmentId: number,
   ): Promise<VerificationDetail[]> {
-    return await this.service.getVerificationDetails(assesmentId);
+    return await this.service.getVerificationDetails(assessmentId);
   }
 
   @Put('saveVerificationDetails')

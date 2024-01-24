@@ -252,7 +252,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
          isUserInternal =  x.portfolio?.user?.userType?.name !== 'External';
         }        
       }
-
       if ((isUserExternal && isSameUser) ||(!isUserExternal && isMatchingCountry && isUserInternal)) {
         reportList.push(x);
       }
@@ -549,11 +548,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     let catagoryProcess = [];
 
-    let catagoryProcessExAnteAssesment = [];
+    let catagoryProcessExAnteAssessment = [];
 
     if (asssIndicatorsProcess) {
 
-      reportContentTwo.assesmentType = asssIndicatorsProcess.assessmentType;
+      reportContentTwo.assessmentType = asssIndicatorsProcess.assessmentType;
 
 
 
@@ -1364,7 +1363,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentTwo.prossesAssesmentStartingSituation1 = catagoryProcess.slice(0,catagoryProcess.length/2);
     reportContentTwo.prossesAssesmentStartingSituation2 = catagoryProcess.slice(catagoryProcess.length/2,catagoryProcess.length);
 
-    reportContentTwo.prossesExAnteAssesment = catagoryProcessExAnteAssesment;
+    reportContentTwo.prossesExAnteAssessment = catagoryProcessExAnteAssessment;
 
     return reportContentTwo;
 
@@ -1494,19 +1493,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Scale of the activity',
-        description: asse.cmAssementDetails.scale
+        description: asse.cmAssessmentDetails.scale
       },
       {
         information: 'Assessment boundaries',
-        description: asse.cmAssementDetails.boundraries
+        description: asse.cmAssessmentDetails.boundraries
       },
       {
         information: 'International carbon market approach used ',
-        description: asse.cmAssementDetails.intCMApproach
+        description: asse.cmAssessmentDetails.intCMApproach
       },
       {
         information: 'Baseline and monitoring methodology applied by the activity ',
-        description: asse.cmAssementDetails.appliedMethodology
+        description: asse.cmAssessmentDetails.appliedMethodology
       },
     ]
 
@@ -1817,21 +1816,21 @@ return contentFour
 
   async genarateComparisonReportDtoContentOne(portfolioId: number): Promise<ComparisonReportReportContentOne> {
     let portfolio = new Portfolio();
-    let assesment: PortfolioAssessment[] = []
+    let assessment: PortfolioAssessment[] = []
     portfolio = await this.portfolioRepo.findOne({ where: { id: portfolioId } });
-    assesment = await this.portfolioAssessRepo.find({
+    assessment = await this.portfolioAssessRepo.find({
       relations: ['assessment'], where: { portfolio: { id: portfolioId } },
     });
     const contentOne = new ComparisonReportReportContentOne();
 
-    for (let ass of assesment) {
+    for (let ass of assessment) {
      contentOne.intervation_details.push(
       {
         id: ass.assessment.climateAction.intervention_id,
         name: ass.assessment.climateAction.policyName,
-        assesmentType: ass.assessment.assessmentType,
-        assesmentPeriodfrom: ass.assessment.from,
-        assesmentPeriodto: ass.assessment.to,
+        assessmentType: ass.assessment.assessmentType,
+        assessmentPeriodfrom: ass.assessment.from,
+        assessmentPeriodto: ass.assessment.to,
       }
      ) 
     }

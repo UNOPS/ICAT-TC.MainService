@@ -49,6 +49,8 @@ import { GeographicalAreasCovered } from './entities/geographical-areas-covered.
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { TotalInvestment } from './entities/total-investment.entity';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -57,7 +59,7 @@ import { TotalInvestment } from './entities/total-investment.entity';
     InvestorTool,
     InvestorSector,
     InvestorImpacts,
-    InvestorAssessment, 
+    InvestorAssessment,
     Results,
     InvestorQuestions,
     IndicatorDetails,
@@ -67,7 +69,7 @@ import { TotalInvestment } from './entities/total-investment.entity';
     SdgAssessment,
     PortfolioSdg,
     PolicySector,
-    User, UserType, Institution, Country,Audit,
+    User, UserType, Institution, Country, Audit,
     Methodology,
     Characteristics,
     MethodologyAssessmentParameters,
@@ -91,11 +93,12 @@ import { TotalInvestment } from './entities/total-investment.entity';
     GeographicalAreasCovered,
     SdgPriority,
     TotalInvestment
-    
-  ])],
+  ]),
+    HttpModule
+  ],
   controllers: [InvestorToolController],
   providers: [InvestorToolService, TokenDetails, EmailNotificationService,
-    UsersService,MethodologyAssessmentService, 
-    MasterDataService]
+    UsersService, MethodologyAssessmentService,
+    AuditDetailService, MasterDataService]
 })
-export class InvestorToolModule {}
+export class InvestorToolModule { }

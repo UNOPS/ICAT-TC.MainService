@@ -68,10 +68,16 @@ import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answe
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import { StorageService } from 'src/storage/storage.service';
+import { HttpModule } from '@nestjs/axios';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     TypeOrmModule.forFeature([
       Report,
       Assessment,
@@ -125,10 +131,12 @@ import { StorageService } from 'src/storage/storage.service';
     CountryModule,
     InvestorToolModule,
     MethodologyAssessmentModule,
-    PortfolioModule
+    PortfolioModule,
+    HttpModule
   ],
   controllers: [ReportController],
-  providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,],
+  providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService,
+     TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}
