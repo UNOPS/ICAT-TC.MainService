@@ -1,5 +1,5 @@
 export const jwtConstants = {
-  secret: 'secretKeydsn2020',
+  secret: process.env.JWT_expiresIn,
   JWT_expiresIn: process.env.JWT_expiresIn || '3600s',
 };
 

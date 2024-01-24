@@ -7,7 +7,8 @@ import { InvestorTool } from './entities/investor-tool.entity';
 import { Repository } from 'typeorm';
 import { InvestorSector } from './entities/investor-sector.entity';
 import { InvestorImpacts } from './entities/investor-impact.entity';
-import { error } from 'console';import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { error } from 'console';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InvestorAssessment } from './entities/investor-assessment.entity';
 import { FinalInvestorAssessmentDto, ToolsMultiselectDto } from './dto/final-investor-assessment.dto';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
@@ -1085,7 +1086,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .orderBy('assessment.id', 'DESC')
       .getMany();
     let finalDataArray: {
-      assesment: Assessment,
+      assessment: Assessment,
       likelihood: number,
       relevance: number
       scaleScore: number,
@@ -1213,7 +1214,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
       });
       finalDataArray.push({
-        assesment: obj,
+        assessment: obj,
         likelihood: Math.round(finalLikelihood / 4),
         relevance: Math.round(finalrelevance / 4),
         scaleScore: Math.round(scaleScoreTotal / 2),
@@ -1230,9 +1231,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let finalDataArray2 = [];
 
     for (const x of await finalDataArray) {
-      const isSameUser = x.assesment?.user?.id === currentUser?.id;
-      const isMatchingCountry = x.assesment?.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.assesment?.user?.userType?.name !== 'External';
+      const isSameUser = x.assessment?.user?.id === currentUser?.id;
+      const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.assessment?.user?.userType?.name !== 'External';
 
       if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
         finalDataArray2.push(x);
@@ -1659,7 +1660,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async sdgSumCalculate(tool: string): Promise<any[]> {
 
-    let filter = 'assesment.tool= :tool ';
+    let filter = 'assessment.tool= :tool ';
 
 
     let user = this.userService.currentUser();
@@ -1672,14 +1673,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     .leftJoinAndMapOne(
       'result.assessment',
       Assessment,
-      'assesment',
-      `result.assessment_id = assesment.id`,
+      'assessment',
+      `result.assessment_id = assessment.id`,
     )
     .leftJoinAndMapMany(
-      'assesment.sdgasses',
+      'assessment.sdgasses',
       SdgAssessment,
       'sdgasses',
-      `assesment.id = sdgasses.assessmentId`,
+      `assessment.id = sdgasses.assessmentId`,
     )
     .leftJoinAndMapOne(
       'sdgasses.sdg',
@@ -1688,16 +1689,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       `sdgasses.sdgId = sdg.id`,
     )
     if (currentUser?.userType?.name === 'External') {
-      filter = filter + ' and assesment.user_id=:userId '
+      filter = filter + ' and assessment.user_id=:userId '
 
     }
     else {
       filter = filter + ' and country.id=:userCountryId '
       sectorSum.leftJoinAndMapOne(
-        'assesment.climateAction',
+        'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assesment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1712,7 +1713,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     sectorSum.where(filter,{tool: tool, userId: userId, userCountryId: userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('sdg.number', 'number')
-      .addSelect('count(DISTINCT concat(assesment.id, sdg.id))', 'count')
+      .addSelect('count(DISTINCT concat(assessment.id, sdg.id))', 'count')
       .groupBy('sdg.name')
       .having('sdg IS NOT NULL')
       ;
@@ -1768,12 +1769,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let userCountryId = currentUser.country?.id;
 
     const sectorSum = this.assessmentRepo
-    .createQueryBuilder('assesment')
+    .createQueryBuilder('assessment')
     .leftJoinAndMapMany(
-      'assesment.sdgasses',
+      'assessment.sdgasses',
       SdgAssessment,
       'sdgasses',
-      `assesment.id = sdgasses.assessmentId`,
+      `assessment.id = sdgasses.assessmentId`,
     )
     .leftJoinAndMapOne(
       'sdgasses.sdg',
@@ -1782,16 +1783,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       `sdgasses.sdgId = sdg.id`,
     )
     if (currentUser?.userType?.name === 'External') {
-      filter = filter + ' assesment.user_id=:userId '
+      filter = filter + ' assessment.user_id=:userId '
 
     }
     else {
       filter = filter + ' country.id=:userCountryId '
       sectorSum.leftJoinAndMapOne(
-        'assesment.climateAction',
+        'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assesment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id'
       )
       .leftJoinAndMapOne(
         'climateAction.country',

@@ -1,13 +1,10 @@
 
-import { Query } from "@nestjs/common";
-import { Sector } from "src/master-data/sector/entity/sector.entity";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { InvestorTool } from "./investor-tool.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
-import { InvestorQuestions } from "./investor-questions.entity";
 import { IndicatorDetails } from "./indicator-details.entity";
 import { Institution } from "src/institution/entity/institution.entity";
 import { PortfolioSdg } from "./portfolio-sdg.entity";

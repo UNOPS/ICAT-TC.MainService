@@ -1,9 +1,6 @@
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Section } from './section.entity';
 import { Criteria } from './criteria.entity';
-import { CMAnswer } from './cm-answer.entity';
-import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 
 

@@ -3,7 +3,6 @@ import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { AssessmentCMDetailService } from "../service/assessment-cm-detail.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 
 
 @Crud({

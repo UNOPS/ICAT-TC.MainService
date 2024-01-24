@@ -32,7 +32,6 @@ import { UsersService } from 'src/users/users.service';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { ParameterRequestDto } from './dto/parameter-request.dto';
-const MainCalURL =   'http://localhost:7100/indicator_calculation';
 import axios from 'axios';
 import { CalculationResults } from './entities/calculationResults.entity';
 import { OutcomeCategory } from './dto/outcome-category.dto';
@@ -1108,7 +1107,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         let request = new ParameterRequestDto()
         request.equation =meth.meth_code;
         request.data = x.parameters;
-        let response = await axios.post(MainCalURL + '/calculate', request);
+        let response = await axios.post('/calculate', request);
         let indicatorValue:number = response.data.result;
         for (let paramData of x.parameters) {
           let  paramResult = new CalculationResults ();

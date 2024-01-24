@@ -10,6 +10,8 @@ import {
   Query,
   UseGuards,
   Res,
+  NotFoundException,
+  ServiceUnavailableException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
@@ -23,6 +25,8 @@ import { AssessmentDto } from './dto/assessment.dto';
 import { AssessmentService } from 'src/assessment/assessment.service';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { StorageService } from 'src/storage/storage.service';
+import { promises as fsPromises } from 'fs';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 
@@ -35,6 +39,7 @@ export class ReportController {
     private readonly reportHtmlGenarateService: ReportHtmlGenaratesService,
     private readonly assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails,
+    private storageService: StorageService,
     private auditDetailService: AuditDetailService,
     private masterDataService: MasterDataService
   ) { }
@@ -123,7 +128,28 @@ export class ReportController {
         )
       }
 
-      const response = await this.reportService.saveReport(req.reportName, uniqname, UsernnameFromTocken, req.climateAction, 0, req.tool, req.type)
+      const filePath = `./public/${uniqname}`;
+      
+       
+      try {
+      const fileContent =await fsPromises.readFile(filePath);
+     
+        await this.storageService.save(
+          'reports/' + uniqname,
+          'application/pdf',
+          fileContent,
+          [{ mediaId: uniqname }]
+        );
+      } catch (e) {
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("file not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
+    
+      const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
+     
       body = { ...body, ...{ actionStatus: "Report generated successfully", } }
       this.auditDetailService.log(body)
       return response
@@ -132,6 +158,7 @@ export class ReportController {
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }
+  
   }
 
   @UseGuards(JwtAuthGuard)

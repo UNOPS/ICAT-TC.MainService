@@ -1,8 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { json, urlencoded, NextFunction, Response } from 'express';
+import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
-import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule , { cors: true });
@@ -28,9 +27,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
-  // await app.listen(parseInt(process.env.PORT));
-  await app.listen(7080);
+  await app.listen(parseInt(process.env.PORT));
  
 }
 bootstrap();
