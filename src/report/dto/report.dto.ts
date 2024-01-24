@@ -37,7 +37,7 @@ export class ReportContentOne {
    
     //genaral data
     policyName:string="";
-    assesmentPersonOrOrganization:string="";
+    assessmentPersonOrOrganization:string="";
     assessmentYear:string="";
     objectives:any[]=[];
     intendedAudience:string="";
@@ -58,7 +58,7 @@ export class ReportContentOne {
 
 }
 export class ReportContentTwo {
-    assesmentType:string;
+    assessmentType:string;
 //    2.1
     prossesAssesmentStartingSituation1:object[]=[];
     prossesAssesmentStartingSituation2:object[]=[];
