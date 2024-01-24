@@ -4,7 +4,7 @@ Main service used to handle all country services in TC tool - TC-Tool.
 
 Supported by [Initiative for Climate Action Transparency - ICAT](https://climateactiontransparency.org/).
 
-Built using [Node.js 16](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
+Built using [Node.js 20.9.0](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
 
 ## Database Configuration
 
