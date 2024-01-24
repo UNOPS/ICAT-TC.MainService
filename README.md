@@ -79,23 +79,25 @@ $ npm run start
 
 The environment variables should be declared as follow:
 
-| Variable name         | Description                                    |
-| --------------------- | ---------------------------------------------- |
-| `PORT`                | Application Port(*)                            |
-| `DATABASE_HOST`       | Database Host(*)                               |
-| `SOCKET_PATH`         | Database Socket Path(*)                        |
-| `DATABASE_PORT`       | Database Port(*)                               |
-| `DATABASE_USER`       | Database Socket User(*)                        |
-| `DATABASE_PASSWORD`   | Database Password(*)                           |
-| `DATABASE_NAME`       | Database Name(*)                               |
-| `MAIN_URL`            | Main service url(*)                            |
-| `AUTH_URL`            | Auth service url(*)                            |
-| `AUDIT_URL`           | Audit service url(*)                           |
-| `ClientURl`           | Country application url(*)                     |
-| `EMAIL`               | email for email service(*)                     |
-| `EMAIL_PASSWORD`      | email password(*)                              |
-| `EMAIL_HOST`          | email host(*)                                  |
-| `KEY`                 | system security key(*)                         |
+| Variable name                    | Description                                    |
+| -------------------------------- | ---------------------------------------------- |
+| `PORT`                           | Application Port(*)                            |
+| `DATABASE_HOST`                  | Database Host(*)                               |
+| `SOCKET_PATH`                    | Database Socket Path(*)                        |
+| `DATABASE_PORT`                  | Database Port(*)                               |
+| `DATABASE_USER`                  | Database Socket User(*)                        |
+| `DATABASE_PASSWORD`              | Database Password(*)                           |
+| `DATABASE_NAME`                  | Database Name(*)                               |
+| `MAIN_URL`                       | Main service url(*)                            |
+| `AUTH_URL`                       | Auth service url(*)                            |
+| `AUDIT_URL`                      | Audit service url(*)                           |
+| `ClientURl`                      | Country application url(*)                     |
+| `EMAIL`                          | email for email service(*)                     |
+| `EMAIL_PASSWORD`                 | email password(*)                              |
+| `EMAIL_HOST`                     | email host(*)                                  |
+| `KEY`                            | system security key(*)                         |
+| `JWT_expiresIn`                  |jwt verification token expiration tome(*)       |
+| `JWT_VERIFICATION_TOKEN_SECRET`  | jwt verification token(*)                      |
 
 
 > (*) Can be used the Database Host or the Database Socket Path depending of the database configuration
