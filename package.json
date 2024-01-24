@@ -40,6 +40,7 @@
     "moment": "^2.29.4",
     "mysql2": "^3.6.0",
     "nestjs-typeorm-paginate": "^4.0.4",
+    "npm-check-updates": "^16.14.12",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "read-excel-file": "^5.6.1",
