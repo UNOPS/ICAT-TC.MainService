@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -7,7 +7,6 @@ import { Assessment } from './entities/assessment.entity';
 import {
   IPaginationOptions,
   paginate,
-  Pagination,
 } from 'nestjs-typeorm-paginate';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
@@ -16,21 +15,15 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
-import { User } from 'src/users/entity/user.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
-import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
-import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 import { Repository } from 'typeorm';
 import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
-import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
-import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
-import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
 import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
@@ -188,9 +181,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         sectorIdFromTocken,
       })
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -241,9 +234,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         filterText: `%${filterText}%`,
       })
       .orderBy('asse.id', 'ASC');
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
     let newarray = new Array();
-    for (let asse of resualt.items) {
+    for (let asse of result.items) {
       newarray.push(asse.id)
     }
 
@@ -463,10 +456,10 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'policy_barrier',
         `policy_barrier.assessmentId = asse.id`,
       ).leftJoinAndMapOne(
-        'asse.cmAssementDetails',
+        'asse.cmAssessmentDetails',
         AssessmentCMDetail,
-        'cmAssementDetails',
-        `cmAssementDetails.cmassessmentId = asse.id`,
+        'cmAssessmentDetails',
+        `cmAssessmentDetails.cmassessmentId = asse.id`,
       )
       .leftJoinAndMapMany(
         'policy_barrier.barrierCategory',

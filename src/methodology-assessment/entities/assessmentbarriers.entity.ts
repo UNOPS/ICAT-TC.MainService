@@ -1,8 +1,6 @@
 
 import { Assessment } from "src/assessment/entities/assessment.entity";
-import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
-import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Barriers } from "./barriers.entity";
 
 @Entity()

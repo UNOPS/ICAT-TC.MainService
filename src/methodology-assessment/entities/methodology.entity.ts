@@ -1,6 +1,5 @@
-import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Category } from "./category.entity";
+
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Methodology {

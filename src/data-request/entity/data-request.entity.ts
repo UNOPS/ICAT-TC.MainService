@@ -6,16 +6,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DataRequestStatus } from './data-request-status.entity';
 import { CMAssessmentAnswer } from 'src/carbon-market/entity/cm-assessment-answer.entity';
 import { Tool } from '../enum/tool.enum';
-import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 
 @Entity({ name: 'datarequest' })

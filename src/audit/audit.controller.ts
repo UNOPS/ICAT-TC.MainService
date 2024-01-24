@@ -1,8 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crud, CrudController } from '@nestjsx/crud';
-import * as moment from 'moment';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuditService } from './audit.service';
 import { AuditDto } from './dto/audit-dto';
@@ -30,7 +28,7 @@ import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 export class AuditController implements CrudController<Audit> {
     constructor(public service: AuditService,
       @InjectRepository(Audit)
-      public configService: ConfigService, private readonly tokenDetails: TokenDetails,) {}
+       private readonly tokenDetails: TokenDetails,) {}
 
     get base(): CrudController<Audit> {
         return this;

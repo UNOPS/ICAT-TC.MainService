@@ -1,18 +1,15 @@
-import { ConfigService } from '@nestjs/config';
 import { extname, join } from "path";
 var fs = require('fs');
 
 export class FileUpload {
    
-    constructor(private configService: ConfigService) {
+    constructor(
+        ) {
     }
 
-    getStaticFolderName() {
-        return this.configService.get<string>('staticFolederName');
-    }
 
     getbaseUrl() {
-        return this.configService.get<string>('baseUrl');
+        return process.env.ClientURl;
     }
 }
 
@@ -40,3 +37,17 @@ export const fileLocation = (req, file, callback) => {
     }
     callback(null, dir);
 }
+
+export const editFileNameForStorage = (file) => {
+    const name = file.originalname.split('.')[0];
+    const fileExtName = extname(file.originalname);
+    const randomName = Array(8)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+   return `${name}${randomName}${fileExtName}`;
+  };
+  
+  export const fileLocationForStorage = (owner,oid) => {
+    return statticFileLocation+"/" + owner+"/"+oid;
+  };

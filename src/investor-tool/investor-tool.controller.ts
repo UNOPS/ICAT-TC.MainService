@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,  Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -187,14 +187,14 @@ export class InvestorToolController {
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20))
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
   }
 
   @Post('upload-file-investment')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20))
   async uploadJustificationInvestment(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}

@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not, Repository } from 'typeorm';
+import {  Repository } from 'typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 
 import {
@@ -22,10 +22,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     @InjectRepository(Institution) repo,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(User)
-    private readonly userService: UsersService,
-    @InjectRepository(Country)
-    private readonly countryRepository: Repository<Country>,
   ) {
     super(repo);
   }
@@ -115,9 +111,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .groupBy('ins.id');
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -179,10 +175,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
 
-    let resualt = await data.getCount();
-    if (resualt) {
+    let result = await data.getCount();
+    if (result) {
 
-      return resualt;
+      return result;
     }
   }
 
@@ -208,10 +204,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .where('type.id = 3')
       .orderBy('ins.name', 'ASC');
 
-    let resualt = await data.getMany();
+    let result = await data.getMany();
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -240,10 +236,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .where('type.id = 3' + (sectorIdFromTocken != 0 ? ` and ins.sectorId in ${arr}` : ''))
       .orderBy('ins.name', 'ASC');
 
-    let resualt = await data.getMany();
+    let result = await data.getMany();
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -343,9 +339,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
 
   }

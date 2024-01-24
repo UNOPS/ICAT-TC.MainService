@@ -22,7 +22,6 @@ export class CMSeedService {
         @InjectRepository(Characteristics) private characRepo: Repository<Characteristics>,
         @InjectRepository(Category) private catRepo: Repository<Category>,
         @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
-        private questionService: CMQuestionService
     ){}
 
     async sectionSeed(){

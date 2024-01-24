@@ -8,7 +8,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './auth.controller';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { UsersService } from 'src/users/users.service';
-import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { UserType } from 'src/users/entity/user.type.entity';
@@ -18,8 +17,12 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { AuditService } from 'src/audit/audit.service';
 import { HttpModule } from '@nestjs/axios';
 import { TokenDetails } from 'src/utills/token_details';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     HttpModule,
     PassportModule,
     JwtModule.register({
@@ -34,7 +37,6 @@ import { TokenDetails } from 'src/utills/token_details';
     JwtStrategy,
     EmailNotificationService,
     UsersService,
-    ConfigService,
     AuditService,
     TokenDetails
   ],

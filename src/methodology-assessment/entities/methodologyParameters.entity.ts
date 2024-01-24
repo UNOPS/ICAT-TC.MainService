@@ -1,6 +1,5 @@
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { CalcParameters } from "./calcParameters.entity";
 import { MethodologyIndicators } from "./methodologyindicators.entity";
 
 @Entity()
