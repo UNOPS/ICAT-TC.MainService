@@ -12,7 +12,6 @@ import { editFileName } from "src/utills/file-upload.utils";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { editFileNameForStorage } from "src/document/entity/file-upload.utils";
 import { StorageService } from "src/storage/storage.service";
 import { StorageFile } from "src/storage/storage-file";
 import { AuditDetailService } from "src/utills/audit_detail.service";
@@ -93,33 +92,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20 ))
+  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
- 
-    const location='uploads/'
-console.log(files)
-     
-      try {
-          await this.storageService.save(
-            location + files[0].originalname,
-            files[0].mimetype,
-            files[0].buffer,
-            [{ mediaId: files[0].originalname }]
-          );
-        } catch (e) {
-          if (e.message.toString().includes("No such object")) {
-            throw new NotFoundException("file not found");
-          } else {
-            throw new ServiceUnavailableException("internal error");
-          }
-        }
-   
-    
-    return {fileName: files[0].originalname};
+    return {fileName: files[0].filename};
   }
-
-
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(
