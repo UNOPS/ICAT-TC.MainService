@@ -135,8 +135,9 @@ import { ConfigModule } from '@nestjs/config';
     HttpModule
   ],
   controllers: [ReportController],
-  providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService,
-     TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
+
+  providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, 
+    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}
