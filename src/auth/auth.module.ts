@@ -17,8 +17,12 @@ import { Audit } from 'src/audit/entity/audit.entity';
 import { AuditService } from 'src/audit/audit.service';
 import { HttpModule } from '@nestjs/axios';
 import { TokenDetails } from 'src/utills/token_details';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     HttpModule,
     PassportModule,
     JwtModule.register({

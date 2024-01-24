@@ -119,7 +119,7 @@ import { CMQuestion } from './carbon-market/entity/cm-question.entity';
 import { Criteria } from './carbon-market/entity/criteria.entity';
 import { Section } from './carbon-market/entity/section.entity';
 import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
