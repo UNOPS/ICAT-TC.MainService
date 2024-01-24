@@ -12,7 +12,7 @@ This application uses a [MySQL Database](https://www.mysql.com/). The `Main.sql`
 
 ## Manual Installation
 
-1. Download and install the [Node.js 16 LTS version](https://nodejs.org/en/download/releases) for your operational system.
+1. Download and install the [Node.js 20.9.0 LTS version](https://nodejs.org/en/download/releases) for your operational system.
 
 2. Download or clone this repository.
 
