@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { ClimateAction } from './entity/climate-action.entity';
 import {
@@ -11,7 +11,6 @@ import { ProjectStatus } from 'src/master-data/project-status/project-status.ent
 import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/project-approval-status.entity';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { Repository } from 'typeorm';
-import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { PolicySector } from './entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
@@ -100,11 +99,11 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
         editedOn,
       })
       .orderBy('dr.createdOn', 'DESC');
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
     
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 async save(req:AllBarriersSelected){
@@ -524,10 +523,10 @@ async allProject(
         sectorId,
       })
       .orderBy('dr.createdOn', 'DESC'); 
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 

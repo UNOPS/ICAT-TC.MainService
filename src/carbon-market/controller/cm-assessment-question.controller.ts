@@ -1,5 +1,5 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, Res, ServiceUnavailableException, StreamableFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException,InternalServerErrorException, Param, Post, Query, Res, ServiceUnavailableException, StreamableFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
 import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
@@ -15,6 +15,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { editFileNameForStorage } from "src/document/entity/file-upload.utils";
 import { StorageService } from "src/storage/storage.service";
 import { StorageFile } from "src/storage/storage-file";
+import { AuditDetailService } from "src/utills/audit_detail.service";
+import { MasterDataService } from "src/shared/entities/master-data.service";
 
 
 @Crud({
@@ -42,7 +44,9 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     public service: CMAssessmentQuestionService,
     @InjectRepository(CMAssessmentQuestion)
     public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private auditDetailService: AuditDetailService,
+    private masterDataService: MasterDataService
   ) { }
 
   get base(): CrudController<CMAssessmentQuestion> {
@@ -57,8 +61,22 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
   @UseGuards(JwtAuthGuard)
   @Post('save-result')
-  async saveResult(@Body() req: SaveCMResultDto){
-    return await this.service.saveResult(req.result, req.assessment, req.isDraft,req.name,req.type)
+  async saveResult(@Body() req: SaveCMResultDto) {
+    let details = await this.auditDetailService.getAuditDetails()
+    let tool = this.masterDataService.getToolName('CARBON_MARKET')
+    let obj = {
+      description: req.isDraft ? 'Save draft assessment : ' + tool : 'Create assessment : ' + tool
+    }
+    let body = { ...details, ...obj }
+    try {
+      body = { ...body, ...{ actionStatus:req.isDraft ? 'Saved draft successfully' : 'Created assessment successfully', } }
+      this.auditDetailService.log(body)
+      return await this.service.saveResult(req.result, req.assessment, req.isDraft, req.name, req.type)
+    } catch (error) {
+      body = { ...body, ...{ actionStatus:req.isDraft ? 'Failed to save draft' : 'Failed to create assessment', } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
   }
 
   @UseGuards(JwtAuthGuard)

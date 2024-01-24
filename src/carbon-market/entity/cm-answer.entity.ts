@@ -1,5 +1,5 @@
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CMQuestion } from './cm-question.entity';
 
 

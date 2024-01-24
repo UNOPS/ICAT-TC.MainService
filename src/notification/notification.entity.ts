@@ -1,5 +1,4 @@
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { MasterData } from "src/shared/entities/master.data.entity";
 import { User } from "src/users/entity/user.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 

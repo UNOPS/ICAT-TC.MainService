@@ -19,11 +19,6 @@ export class Report extends BaseTrackingEntity{
     @ManyToOne(() => ClimateAction, { cascade:false })
     climateAction: ClimateAction;
 
-
-   
-
-
-
     @Column()
     generateReportName: string;
 

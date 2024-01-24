@@ -1,10 +1,7 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
-import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
-import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
+import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { CMAssessmentAnswerService } from "../service/cm-assessment-answer.service";
-import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { editFileName, excelFileFilter } from "src/utills/file-upload.utils";

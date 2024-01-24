@@ -11,8 +11,6 @@ import { Institution } from 'src/institution/entity/institution.entity';
 import { User } from 'src/users/entity/user.entity';
 import { AssessmentModule } from 'src/assessment/assessment.module';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
-import { AssessmentService } from 'src/assessment/assessment.service';
-import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [

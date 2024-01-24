@@ -38,7 +38,6 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
 import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
 import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
-import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { BarriersCategory } from 'src/methodology-assessment/entities/barrierscategory.entity';
 import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
 import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
@@ -53,6 +52,8 @@ import { CalculationResults } from 'src/methodology-assessment/entities/calculat
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
+import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   controllers: [PortfolioController],
@@ -64,7 +65,8 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
     CMAssessmentQuestionService, 
     MasterDataService,
     InvestorToolService,
-    MethodologyAssessmentService
+    MethodologyAssessmentService,
+    AuditDetailService
   ],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
@@ -77,7 +79,9 @@ import { TotalInvestment } from 'src/investor-tool/entities/total-investment.ent
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
     CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment
 
-  ])],
+  ]),
+    HttpModule
+  ],
   exports: [
     PortfolioService
   ]
