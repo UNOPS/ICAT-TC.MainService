@@ -51,7 +51,6 @@ export class MethodologyAssessmentController {
     this.resData = ''
 
     let newData : any = MethAssignParam;
-    //Todo
     const response = await axios.post( '/assessmentData', MethAssignParam);
 
     this.res2 = await this.methodologyAssessmentService.create(MethAssignParam)
@@ -103,7 +102,6 @@ export class MethodologyAssessmentController {
     let methdata : any = BarrierCharData;
 
     if(methdata.alldata.assessment_approach === 'Direct'){
- //Todo
       const response = await axios.post( '/assessmentDataTrack3', BarrierCharData);
 
     let res = await this.methodologyAssessmentService.barrierCharacteristics(BarrierCharData);

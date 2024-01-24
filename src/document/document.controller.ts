@@ -31,13 +31,6 @@ export class DocumentController implements CrudController<Documents> {
 
     @Post('upload2/:oid/:owner')
     @UseInterceptors(FileInterceptor("file",
-    //  {
-    //     storage: multer.diskStorage({
-    //         destination: fileLocation,
-    //         filename: editFileName,
-    //     })
-
-    // }
     ))
     async uploadFile2(@UploadedFile() file, @Req() req: CrudRequest, @Param("oid") oid, @Param("owner") owner) {
 
@@ -81,7 +74,6 @@ export class DocumentController implements CrudController<Documents> {
       
 
         var docowner: DocumentOwner = (<any>DocumentOwner)[owner];
-        // let path = join(owner, oid, file.filename)
         let doc = new Documents();
         doc.documentOwnerId = oid;
         doc.documentOwner = docowner;
@@ -129,7 +121,6 @@ export class DocumentController implements CrudController<Documents> {
       try {
         storageFile = await this.storageService.get(doc.relativePath);
       } catch (e) {
-        console.log(e.message)
         if (e.message.toString().includes("No such object")) {
           throw new NotFoundException("image not found");
         } else {
