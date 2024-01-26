@@ -26,7 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     HttpModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: '7AnEd5epXmdaJfUrokkQ',
       signOptions: { expiresIn: jwtConstants.JWT_expiresIn },
     }),
     TypeOrmModule.forFeature([Institution, UserType, User, Country,Audit]),
