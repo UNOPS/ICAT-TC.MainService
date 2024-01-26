@@ -4,7 +4,7 @@ Main service used to handle all country services in TC tool - TC-Tool.
 
 Supported by [Initiative for Climate Action Transparency - ICAT](https://climateactiontransparency.org/).
 
-Built using [Node.js 16](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
+Built using [Node.js 20.9.0](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
 
 ## Database Configuration
 
@@ -12,7 +12,7 @@ This application uses a [MySQL Database](https://www.mysql.com/). The `Main.sql`
 
 ## Manual Installation
 
-1. Download and install the [Node.js 16 LTS version](https://nodejs.org/en/download/releases) for your operational system.
+1. Download and install the [Node.js 20.9.0 LTS version](https://nodejs.org/en/download/releases) for your operational system.
 
 2. Download or clone this repository.
 
@@ -79,23 +79,29 @@ $ npm run start
 
 The environment variables should be declared as follow:
 
-| Variable name         | Description                                    |
-| --------------------- | ---------------------------------------------- |
-| `PORT`                | Application Port(*)                            |
-| `DATABASE_HOST`       | Database Host(*)                               |
-| `SOCKET_PATH`         | Database Socket Path(*)                        |
-| `DATABASE_PORT`       | Database Port(*)                               |
-| `DATABASE_USER`       | Database Socket User(*)                        |
-| `DATABASE_PASSWORD`   | Database Password(*)                           |
-| `DATABASE_NAME`       | Database Name(*)                               |
-| `MAIN_URL`            | Main service url(*)                            |
-| `AUTH_URL`            | Auth service url(*)                            |
-| `AUDIT_URL`           | Audit service url(*)                           |
-| `ClientURl`           | Country application url(*)                     |
-| `EMAIL`               | email for email service(*)                     |
-| `EMAIL_PASSWORD`      | email password(*)                              |
-| `EMAIL_HOST`          | email host(*)                                  |
-| `KEY`                 | system security key(*)                         |
+| Variable name                    | Description                                    |
+| -------------------------------- | ---------------------------------------------- |
+| `PORT`                           | Application Port(*)                            |
+| `DATABASE_HOST`                  | Database Host(*)                               |
+| `SOCKET_PATH`                    | Database Socket Path(*)                        |
+| `DATABASE_PORT`                  | Database Port(*)                               |
+| `DATABASE_USER`                  | Database Socket User(*)                        |
+| `DATABASE_PASSWORD`              | Database Password(*)                           |
+| `DATABASE_NAME`                  | Database Name(*)                               |
+| `MAIN_URL`                       | Main service url(*)                            |
+| `AUTH_URL`                       | Auth service url(*)                            |
+| `AUDIT_URL`                      | Audit service url(*)                           |
+| `ClientURl`                      | Country application url(*)                     |
+| `EMAIL`                          | email for email service(*)                     |
+| `EMAIL_PASSWORD`                 | email password(*)                              |
+| `EMAIL_HOST`                     | email host(*)                                  |
+| `KEY`                            | system security key(*)                         |
+| `JWT_expiresIn`                  |jwt verification token expiration tome(*)       |
+| `JWT_VERIFICATION_TOKEN_SECRET`  | jwt verification token(*)                      |
+| `PROJECT_ID`                     | Google clud project id(*)                      |
+| `PRIVATE_KEY`                    | Service account privat key(*)                  |
+| `CLIENT_EMAIL`                   |service aacount clien email(*)                  |
+| `STORAGE_MEDIA_BUCKET`           |Cloud Bucket name(*)                            |
 
 
 > (*) Can be used the Database Host or the Database Socket Path depending of the database configuration

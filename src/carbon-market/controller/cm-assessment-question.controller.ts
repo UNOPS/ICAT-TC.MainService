@@ -1,5 +1,5 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, InternalServerErrorException, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException,InternalServerErrorException, Param, Post, Query, Res, ServiceUnavailableException, StreamableFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
 import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
@@ -12,6 +12,8 @@ import { editFileName } from "src/utills/file-upload.utils";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { StorageService } from "src/storage/storage.service";
+import { StorageFile } from "src/storage/storage-file";
 import { AuditDetailService } from "src/utills/audit_detail.service";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 
@@ -41,6 +43,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     public service: CMAssessmentQuestionService,
     @InjectRepository(CMAssessmentQuestion)
     public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    private storageService: StorageService,
     private auditDetailService: AuditDetailService,
     private masterDataService: MasterDataService
   ) { }
@@ -89,7 +92,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20, ),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename};
