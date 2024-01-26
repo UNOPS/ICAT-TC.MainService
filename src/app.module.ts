@@ -120,6 +120,9 @@ import { Criteria } from './carbon-market/entity/criteria.entity';
 import { Section } from './carbon-market/entity/section.entity';
 import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Portfolio } from './portfolio/entities/portfolio.entity';
+import { PortfolioAssessment } from './portfolio/entities/portfolioAssessment.entity';
+import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
 
 @Module({
   imports: [
@@ -142,7 +145,7 @@ import { ConfigModule } from '@nestjs/config';
         Characteristics, Barriers, BarriersCategory, Category, Indicators, MethodologyAssessmentParameters, Methodology, MethodologyIndicators, ParameterStatus, AggregatedAction, ActionArea,
         ParameterHistory, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
-        Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives],
+        Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives, Portfolio, PortfolioAssessment, SdgPriority],
 
       synchronize: false,
       migrationsRun: false,

@@ -15,8 +15,7 @@ import { InvestorSector } from "src/investor-tool/entities/investor-sector.entit
 
 @Injectable()
 export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDetail> {
-
-
+  
   constructor(
     @InjectRepository(AssessmentCMDetail) repo,
     @InjectRepository(CMAssessmentAnswer) private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
@@ -138,6 +137,10 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
       .having('average_tc_value IS NOT NULL')
       .getRawMany();
     return result
+  }
+
+  save(dto: AssessmentCMDetail) {
+    return this.repo.save(dto);
   }
 }
 
