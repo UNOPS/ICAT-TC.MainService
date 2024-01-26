@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import {
   Crud,
   CrudController,
@@ -17,10 +17,15 @@ import { ProjectStatusService } from './project-status.service';
 })
 @Controller('project-status')
 export class ProjectStatusController implements CrudController<ProjectStatus> {
-  constructor(public service: ProjectStatusService) {}
+  constructor(public service: ProjectStatusService) { }
 
   get base(): CrudController<ProjectStatus> {
     return this;
+  }
+
+  @Get('get-all-project-status')
+  async getAllProjectStatus(): Promise<ProjectStatus[]> {
+    return await this.service.getAllProjectStatus();
   }
 
 }
