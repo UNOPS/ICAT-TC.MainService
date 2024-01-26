@@ -65,7 +65,6 @@ export class UsersController implements CrudController<User> {
   @Post('createUser')
   @UseGuards(JwtAuthGuard)
   async create(@Body() createUserDto: User): Promise<User> {
-    console.log('create user')
     let details = await this.auditDetailService.getAuditDetails()
     let obj = {
       description: "Create user"
