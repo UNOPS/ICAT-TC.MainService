@@ -80,6 +80,38 @@ export class UsersService extends TypeOrmCrudService<User> {
     return newUserDb;
   }
 
+  async update(createUserDto: User): Promise<User> {
+  
+
+    let newUser =await  this.repo.findOne({where:{id:createUserDto.id}})
+
+    newUser.firstName = createUserDto.firstName;
+    newUser.lastName = createUserDto.lastName;
+    newUser.email = createUserDto.email;
+    newUser.username=createUserDto.email;
+    newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
+    newUser.status = RecordStatus.Active;
+    newUser.landline = createUserDto.landline ? createUserDto.landline : '';
+    newUser.userType = createUserDto.userType;
+    newUser.country = createUserDto.country;
+    newUser.institution = createUserDto.institution;
+    newUser.loginProfile = createUserDto.loginProfile;
+    newUser.admin = ''
+    let newUUID = uuidv4();
+    newUser.resetToken = '';
+    var newUserDb = await this.repo.save(newUser);
+    let systemLoginUrl = '';
+    if (newUser.userType.id == 2) {
+      let url =   process.env.ClientURl;
+      systemLoginUrl = url;
+    }
+    else {
+      let url =  process.env.ClientURl;
+      systemLoginUrl = url;
+    }
+
+    return newUserDb;
+  }
 
   async chnageStatus(userId: number, status: number): Promise<User> {
     let user = await this.repo.findOne({ where: { id: userId } });
