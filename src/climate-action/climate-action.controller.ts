@@ -176,13 +176,7 @@ export class ProjectController implements CrudController<ClimateAction> {
 
   @Post('uploadFiles')
   @UseInterceptors(
-    FilesInterceptor('files', 5,
-      {
-        storage: multer.diskStorage({
-          destination: fileLocation,
-          filename: editFileName,
-        }),
-      }),
+    FilesInterceptor('files',5)
   )
   async uploadFile2(
     @UploadedFiles() files,
