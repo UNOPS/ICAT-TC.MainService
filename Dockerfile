@@ -3,8 +3,9 @@
 ###################
 
 
-FROM public.ecr.aws/docker/library/node:20.0.0-alpine As development
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+FROM node:20-alpine As development
+# FROM public.ecr.aws/docker/library/node:20.0.0-alpine As development
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Create app directory
 WORKDIR /usr/src/app
 ENTRYPOINT echo $DATABASE_HOST
@@ -28,7 +29,8 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM public.ecr.aws/docker/library/node:20.0.0-alpine As build
+FROM node:20-alpine As build
+# FROM public.ecr.aws/docker/library/node:20.0.0-alpine As build
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 WORKDIR /usr/src/app
@@ -55,7 +57,8 @@ USER node
 # PRODUCTION
 ###################
 
-FROM public.ecr.aws/docker/library/node:20.0.0-alpine As production
+# FROM public.ecr.aws/docker/library/node:20.0.0-alpine As production
+FROM node:20-alpine As production
 
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
