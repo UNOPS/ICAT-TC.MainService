@@ -82,6 +82,17 @@ export class UsersController implements CrudController<User> {
     }
 
   }
+  @Post('updateUser')
+  @UseGuards(JwtAuthGuard)
+  async Update(@Body() createUserDto: User): Promise<User> {
+    try {
+      let user = await this.service.update(createUserDto);
+      return user 
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   @Post('createExternalUser')
   createExternalUser(@Body() createUserDto: User): Promise<User> {
 
