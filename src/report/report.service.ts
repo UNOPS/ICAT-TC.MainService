@@ -131,7 +131,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    report.savedLocation = './public/' + fileName;
+    report.savedLocation = 'reports/' + fileName;
     report.tool = tool;
     report.type = type;
     if(portfolioid&&portfolioid!=0){
@@ -552,7 +552,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     if (asssIndicatorsProcess) {
 
-      reportContentTwo.assesmentType = asssIndicatorsProcess.assessmentType;
+      reportContentTwo.assessmentType = asssIndicatorsProcess.assessmentType;
 
 
 
@@ -1828,9 +1828,9 @@ return contentFour
       {
         id: ass.assessment.climateAction.intervention_id,
         name: ass.assessment.climateAction.policyName,
-        assesmentType: ass.assessment.assessmentType,
-        assesmentPeriodfrom: ass.assessment.from,
-        assesmentPeriodto: ass.assessment.to,
+        assessmentType: ass.assessment.assessmentType,
+        assessmentPeriodfrom: ass.assessment.from,
+        assessmentPeriodto: ass.assessment.to,
       }
      ) 
     }
