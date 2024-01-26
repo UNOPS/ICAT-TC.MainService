@@ -189,6 +189,26 @@ export class ReportController {
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
+
+    const filePath = `./public/${uniqname}`;
+      
+       
+    try {
+    const fileContent =await fsPromises.readFile(filePath);
+   
+      await this.storageService.save(
+        'reports/' + uniqname,
+        'application/pdf',
+        fileContent,
+        [{ mediaId: uniqname }]
+      );
+    } catch (e) {
+      if (e.message.toString().includes("No such object")) {
+        throw new NotFoundException("file not found");
+      } else {
+        throw new ServiceUnavailableException("internal error");
+      }
+    }
     let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
    
     return report;
