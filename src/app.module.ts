@@ -151,7 +151,6 @@ import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
       migrationsRun: false,
       logging: true,
       logger: 'file',
-
       migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 
     }),
