@@ -1523,7 +1523,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     let aggre_Score =0;
     let sdg_count_aggre =0;
-    let final_aggre_score =0;
     for (let category of sdgArray){
         aggre_Score += category.category_score.value
         sdg_count_aggre++;
@@ -1531,7 +1530,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     if(sdg_count_aggre!=0){
       finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/2);
       finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre));
-      total_outcome_cat_weight += 50*final_aggre_score;
+      total_outcome_cat_weight += 50*(finalProcessDataArray.aggregatedScore.value);
     }
     else{
       finalProcessDataArray.aggregatedScore.value = null;
