@@ -123,6 +123,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Portfolio } from './portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from './portfolio/entities/portfolioAssessment.entity';
 import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
+import { Report } from './report/entities/report.entity';
 
 @Module({
   imports: [
@@ -141,7 +142,7 @@ import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
 
       entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, ParameterRequest, DefaultValue, CMAssessmentAnswer, CMAssessmentQuestion,
         Documents, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, NdcSet, TotalInvestment, AssessmentCMDetail, CMQuestion,
-        ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,
+        ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,Report,
         Characteristics, Barriers, BarriersCategory, Category, Indicators, MethodologyAssessmentParameters, Methodology, MethodologyIndicators, ParameterStatus, AggregatedAction, ActionArea,
         ParameterHistory, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
