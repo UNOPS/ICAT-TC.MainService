@@ -185,6 +185,7 @@ import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
       PortfolioQuestions,
       PortfolioQuestionDetails,
       SystemStatus,
+      Portfolio,
     ]),
     UsersModule,
     UserTypeModule,
