@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
 
 import {
   Crud,
@@ -57,8 +56,7 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 @Controller('users')
 export class UsersController implements CrudController<User> {
   constructor(
-    public service: UsersService,
-    @InjectRepository(User)
+    public service: UsersService,    
     private auditDetailService: AuditDetailService,
   ) {}
 
