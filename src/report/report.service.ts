@@ -477,19 +477,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     switch (number) {
 
-      case -3: {
+      case 3: {
 
         return 'Major';
 
       }
 
-      case -2: {
+      case 2: {
 
         return 'Moderate';
 
       }
 
-      case -1: {
+      case 1: {
 
         return 'Minor';
 
@@ -501,19 +501,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       }
 
-      case 1: {
+      case -1: {
 
         return 'Minor Negative';
 
       }
 
-      case 2: {
+      case -2: {
 
         return 'Moderate Negative';
 
       }
 
-      case 3: {
+      case -3: {
 
         return 'Major Negative';
 
