@@ -123,6 +123,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Portfolio } from './portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from './portfolio/entities/portfolioAssessment.entity';
 import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
+import { Report } from './report/entities/report.entity';
 
 @Module({
   imports: [
