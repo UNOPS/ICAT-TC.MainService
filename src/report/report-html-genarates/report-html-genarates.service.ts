@@ -220,7 +220,7 @@ let comparisonContentFour=this.reportPagesService.comparisonContentFour('','',re
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="${ process.env.MAIN_URL}//report/css/reportserver.css">
+    <link rel="stylesheet" href="${ process.env.MAIN_URL}/report/css/reportserver.css">
         </head>
 
 
