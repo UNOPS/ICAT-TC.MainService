@@ -2,12 +2,10 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:12-alpine As development
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+FROM public.ecr.aws/docker/library/node:20.9.0-alpine As development
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Create app directory
 WORKDIR /usr/src/app
-ENTRYPOINT echo $DATABASE_HOST
-
 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
@@ -27,8 +25,8 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:12-alpine As build
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+FROM public.ecr.aws/docker/library/node:20.9.0-alpine  As build
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 WORKDIR /usr/src/app
 
@@ -54,29 +52,26 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:12-alpine As production
+FROM public.ecr.aws/docker/library/node:20.9.0-alpine As production
 
-# Installs latest Chromium (100) package.
-# RUN apk add --no-cache \
-#     chromium \
-#     nss \
-#     freetype \
-#     harfbuzz \
-#     ca-certificates \
-#     ttf-freefont
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Puppeteer v13.5.0 works with Chromium 100.
-# RUN yarn add puppeteer@13.5.0
+RUN yarn add puppeteer@13.5.0
 
 # Copy the bundled code from the build stage to the production image
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-# COPY --chown=node:node --from=build /usr/src/app/template ./template
-# COPY --chown=node:node --from=build /usr/src/app/public ./public
+COPY --chown=node:node --from=build /usr/src/app/public ./public
 
 # Start the server using the production build
 CMD [ "node", "dist/main.js" ]
-EXPOSE 80

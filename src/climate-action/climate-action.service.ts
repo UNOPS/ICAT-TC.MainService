@@ -206,8 +206,44 @@ async allProject(
   }
   async getIntervention(id:number):Promise<ClimateAction> {
     const policy = await this.repo
-          .createQueryBuilder("intervetion")
-          .where("intervetion.id = :id", { id: id })
+          .createQueryBuilder('dr')
+          .leftJoinAndMapOne(
+            'dr.projectStatus',
+            ProjectStatus,
+            'pst',
+            'pst.id = dr.projectStatusId',
+          )
+          .leftJoinAndMapOne(
+            'dr.projectApprovalStatus',
+            ProjectApprovalStatus,
+            'pas',
+            'pas.id = dr.projectApprovalStatusId',
+          )
+          .leftJoinAndMapOne(
+            'dr.user',
+            User,
+            'user',
+            'user.id = dr.user_id',
+          )
+          .leftJoinAndMapOne(
+            'user.country',
+            Country,
+            'cntry',
+            'cntry.id = user.countryId',
+          )
+          .leftJoinAndMapOne(
+            'dr.country',
+            Country,
+            'country',
+            'country.id = dr.countryId',
+          )
+          .leftJoinAndMapOne(
+            'user.institution',
+            Institution,
+            'ins',
+            'ins.id = user.institutionId',
+          )
+          .where("dr.id = :id", { id: id })
           .getOne()
 
     return policy;

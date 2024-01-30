@@ -65,8 +65,6 @@ export class AuthController {
       pwdRestToken,
     );
 
-    // const resetPwdUrl = this.configService.get<string>('PWD_RESET_URL');
-
 
     return response.status(200).send(true);
   }
