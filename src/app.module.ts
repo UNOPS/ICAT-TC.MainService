@@ -124,6 +124,8 @@ import { Portfolio } from './portfolio/entities/portfolio.entity';
 import { PortfolioAssessment } from './portfolio/entities/portfolioAssessment.entity';
 import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
 import { Report } from './report/entities/report.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -232,8 +234,10 @@ import { Report } from './report/entities/report.entity';
     CarbonMarketModule,
     InvestorToolModule,
     PortfolioModule,
-    HttpModule
-
+    HttpModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
   ],
   controllers: [
     AppController,
