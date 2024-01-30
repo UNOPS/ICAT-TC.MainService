@@ -21,7 +21,9 @@ constructor(){}
     
     const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({
-    headless: 'new'
+    headless: 'new',
+    executablePath:'/usr/bin/chromium-browser',
+    args: ['--no-sandbox']
   });
   const page = await browser.newPage();
   await page.setContent(file.content, { waitUntil: 'domcontentloaded' });
@@ -48,7 +50,9 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
 
   const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch({
-    headless: 'new'
+    headless: 'new',
+    executablePath:'/usr/bin/chromium-browser',
+    args: ['--no-sandbox']
   });
   const page = await browser.newPage();
   await page.setContent(file.content, { waitUntil: 'domcontentloaded' });
