@@ -1107,7 +1107,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         let request = new ParameterRequestDto()
         request.equation =meth.meth_code;
         request.data = x.parameters;
-        //Todo
         let response = await axios.post('/calculate', request);
         let indicatorValue:number = response.data.result;
         for (let paramData of x.parameters) {

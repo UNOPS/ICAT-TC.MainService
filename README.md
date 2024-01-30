@@ -4,7 +4,7 @@ Main service used to handle all country services in TC tool - TC-Tool.
 
 Supported by [Initiative for Climate Action Transparency - ICAT](https://climateactiontransparency.org/).
 
-Built using [Node.js 16](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
+Built using [Node.js 20.9.0](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
 
 ## Database Configuration
 
@@ -98,6 +98,10 @@ The environment variables should be declared as follow:
 | `KEY`                            | system security key(*)                         |
 | `JWT_expiresIn`                  |jwt verification token expiration tome(*)       |
 | `JWT_VERIFICATION_TOKEN_SECRET`  | jwt verification token(*)                      |
+| `PROJECT_ID`                     | Google clud project id(*)                      |
+| `PRIVATE_KEY`                    | Service account privat key(*)                  |
+| `CLIENT_EMAIL`                   |service aacount clien email(*)                  |
+| `STORAGE_MEDIA_BUCKET`           |Cloud Bucket name(*)                            |
 
 
 > (*) Can be used the Database Host or the Database Socket Path depending of the database configuration

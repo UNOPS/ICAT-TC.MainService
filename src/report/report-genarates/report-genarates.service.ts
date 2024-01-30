@@ -12,7 +12,7 @@ constructor(){}
     let options = {
       format: 'A4',
       margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
-       path: '/home/ubuntu/code/Main/main/public/' + fileName,
+       path:  process.env.TEMP_FILE_SAVE_URL + fileName,
    
       printBackground: true,
       landscape:true
@@ -42,7 +42,7 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
   let options = {
     format: 'A4',
     margin: { top: '50px', bottom: '50px', left: '0px', right: '0px' },
-     path: '/home/ubuntu/code/Main/main/public/' + fileName,
+     path: process.env.TEMP_FILE_SAVE_URL + fileName,
   
     printBackground: true,
     landscape:true

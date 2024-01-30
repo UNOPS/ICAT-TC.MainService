@@ -1,6 +1,6 @@
-import { Crud, CrudController } from "@nestjsx/crud";
+import { Crud, CrudController, CrudRequest, Override, ParsedBody, ParsedRequest } from "@nestjsx/crud";
 import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, InternalServerErrorException,Request, Query, UseGuards } from "@nestjs/common";
 import { AssessmentCMDetailService } from "../service/assessment-cm-detail.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
@@ -12,6 +12,12 @@ import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
   query: {
     join: {
       assessment: {
+        eager: true,
+      },
+      geographicalAreasCovered: {
+        eager: true,
+      },
+      sectorsCovered: {
         eager: true,
       }
     },
@@ -44,6 +50,21 @@ export class AssessmentCMDetailController
   @Get('getSectorCount')
   async getSectorCount(): Promise<any>{
     return await this.service.getSectorCount();
+  }
+
+  @Override()
+  async createOne(
+    @Request() request,
+    @ParsedRequest() req: CrudRequest,
+    @ParsedBody() dto: AssessmentCMDetail,
+  ): Promise<AssessmentCMDetail> {
+    try {
+      let ca = await this.service.save(dto);
+      return ca;
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+
   }
 
 
