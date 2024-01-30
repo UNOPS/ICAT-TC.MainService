@@ -72,6 +72,8 @@ RUN yarn add puppeteer@13.5.0
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/public ./public
+COPY --chown=node:node --from=build /usr/src/app/public ./home/ubuntu/code/Main/main/public
+COPY --chown=node:node --from=build /usr/src/app/public ./home/node/code/Main/main/public
 
 # Start the server using the production build
 CMD [ "node", "dist/main.js" ]
