@@ -120,6 +120,12 @@ import { Criteria } from './carbon-market/entity/criteria.entity';
 import { Section } from './carbon-market/entity/section.entity';
 import { CMAnswer } from './carbon-market/entity/cm-answer.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Portfolio } from './portfolio/entities/portfolio.entity';
+import { PortfolioAssessment } from './portfolio/entities/portfolioAssessment.entity';
+import { SdgPriority } from './investor-tool/entities/sdg-priority.entity';
+import { Report } from './report/entities/report.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -130,25 +136,24 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot({
       type: 'mysql',
 
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER,
+      host:  process.env.DATABASE_HOST,
+      port:  parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,  
+      database:  process.env.DATABASE_NAME,
 
       entities: [Assessment, Audit, Auth, ClimateAction, PolicyBarriers, Country, CountrySector, ParameterRequest, DefaultValue, CMAssessmentAnswer, CMAssessmentQuestion,
         Documents, InstitutionType, Institution, InstitutionCategory, LearningMaterial, LearningMaterialUserType, NdcSet, TotalInvestment, AssessmentCMDetail, CMQuestion,
-        ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,
+        ClimateChangeDataCategory, FinancingScheme, ProjectApprovalStatus, ProjectOwner, ProjectStatus, Sector, UserType, AssessmentBarriers, AssessmentCharacteristics,Report,
         Characteristics, Barriers, BarriersCategory, Category, Indicators, MethodologyAssessmentParameters, Methodology, MethodologyIndicators, ParameterStatus, AggregatedAction, ActionArea,
         ParameterHistory, BaseTrackingEntity, MasterData, User, MethodologyParameters, CalcParameters, ImpactCovered, InvestorTool, InvestorSector, InvestorImpacts, InvestorAssessment, Notification,
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
-        Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives],
+        Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives, Portfolio, PortfolioAssessment, SdgPriority],
 
       synchronize: false,
       migrationsRun: false,
       logging: true,
       logger: 'file',
-
       migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 
     }),
@@ -182,6 +187,7 @@ import { ConfigModule } from '@nestjs/config';
       PortfolioQuestions,
       PortfolioQuestionDetails,
       SystemStatus,
+      Portfolio,
     ]),
     UsersModule,
     UserTypeModule,
@@ -228,8 +234,10 @@ import { ConfigModule } from '@nestjs/config';
     CarbonMarketModule,
     InvestorToolModule,
     PortfolioModule,
-    HttpModule
-
+    HttpModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
   ],
   controllers: [
     AppController,

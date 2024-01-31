@@ -35,8 +35,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({length: 150})
   policyName: string; 
 
-  @Column({length: 150})
-  policyName_new: string; 
 
   @Column({ default: null, type: 'varchar', length: 1500})
   description: string; 

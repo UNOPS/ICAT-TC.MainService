@@ -8,4 +8,11 @@ export class InstitutionCategoryService extends TypeOrmCrudService<InstitutionCa
     constructor(@InjectRepository(InstitutionCategory) repo){
         super(repo);
     }
+
+
+    async getInstitution() {
+
+          return this.repo.find();
+        
+      }
 }

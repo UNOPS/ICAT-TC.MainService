@@ -92,7 +92,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20, ),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename};
