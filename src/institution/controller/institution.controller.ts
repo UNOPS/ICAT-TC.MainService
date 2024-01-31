@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Query,
   Request,
   UseGuards,
@@ -332,6 +333,7 @@ export class InstitutionController implements CrudController<Institution> {
   ): Promise<any> {
     return await this.service.getAllInstitutions();
   }
+
   @Get('getInstituion')
   async getInstituion(
     @Request() request,
@@ -349,6 +351,31 @@ export class InstitutionController implements CrudController<Institution> {
       type,
       countryId,
     )
+  }
+
+
+  @Get('getInstituionById')
+  async getInstituionById(
+    @Request() request,
+    @Query('id') Id: number,
+  ): Promise<any> {
+
+    return await this.service.getInstituionById(
+      Id,
+    )
+  }
+
+  @Post('updateInstituion')
+  update(@Body()  ins: Institution) {
+
+    return this.service.update(ins);
+  }
+
+  
+  @Post('createInstituion')
+  Create(@Body()  ins: Institution) {
+
+    return this.service.create(ins);
   }
 
 }
