@@ -73,7 +73,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
   remove(id: number) {
     return `This action removes a #${id} report`;
   }
-
+  async findReportByID(id: number):Promise<Report> {
+    
+    
+    return await this.repo
+    .createQueryBuilder('report')
+    .where('report.id = :id', {id})
+    .getOne();
+  }
   async genarateReportDto(
     createReportDto: CreateReportDto,
   ): Promise<ReportDto> {
