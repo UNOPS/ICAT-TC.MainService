@@ -7,7 +7,6 @@ export class ReportGenaratesService {
 constructor(){}
 
     async reportGenarate(name:string,file:any):Promise<any>{
-    const html_to_pdf = require('html-pdf-node');
     let fileName = name;
     let options = {
       format: 'A4',
