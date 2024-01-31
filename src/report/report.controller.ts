@@ -153,7 +153,7 @@ export class ReportController {
       const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
      
       body = { ...body, ...{ actionStatus: "Report generated successfully", } }
-      // this.auditDetailService.log(body)
+      this.auditDetailService.log(body)
       fsPromises.rm(filePath);
       return response
     } catch (error) {
@@ -170,7 +170,7 @@ export class ReportController {
     @Body() req: CreateComparisonReportDto,
     @Res({ passthrough: true }) res, 
   ): Promise<any> {
-    console.log('1')
+   
     let countryIdFromTocken: number;
     let UsernnameFromTocken: string;
     [countryIdFromTocken,UsernnameFromTocken] =
@@ -185,30 +185,30 @@ export class ReportController {
     .join('');
     const uniqname = req.reportName+randomName + '.pdf';
     req.reportName = req.reportName + '.pdf';
-    console.log('2')
+   
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
-    console.log('3')
+ 
    const reportpdf = await this.reportGenarateService.comparisonReportGenarate(
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-    console.log('4')
+
     const filePath = `./public/${uniqname}`;
       
        
     try {
-      console.log('4')
+   
     const fileContent =await fsPromises.readFile(filePath);
-    console.log('6')
+ 
       await this.storageService.save(
         'reports/' + uniqname,
         'application/pdf',
         fileContent,
         [{ mediaId: uniqname }]
       );
-      console.log('7')
+     
     } catch (e) {
       if (e.message.toString().includes("No such object")) {
         throw new NotFoundException("file not found");
@@ -216,9 +216,9 @@ export class ReportController {
         throw new ServiceUnavailableException("internal error");
       }
     }
-    console.log('8')
+ 
     let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
-    console.log('9')
+
      fsPromises.rm(filePath);
     return report;
   }
