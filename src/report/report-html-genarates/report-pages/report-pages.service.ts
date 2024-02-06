@@ -1959,89 +1959,144 @@ ${coverPage.reportDate}
        </tr>
      </thead>
      <tbody class="table-active">
-     ${prossesAssesmentStartingSituation[0]
-       .map((a: { rows: number; name: string; characteristics: any[] }) =>
-         a.characteristics
-           .map((b, index) => {
-             const questionsLength = b.raw_questions.length;
-
-             if (!index) {
-               return `<tr>
-                <td rowspan="${a.rows}" >${a.name}</td>
-                <td rowspan="${questionsLength}">${b.name}</td>
-                <td rowspan="${questionsLength}">${
-                 b.relevance ? b.relevance : '-'
-               }</td>
-                <td>${
-                  questionsLength > 0 &&
-                  b.raw_questions[0].question != null &&
-                  b.raw_questions[0].question != undefined
-                    ? b.raw_questions[0].question
-                    : '-'
-                }</td>
-                <td>${
-                  questionsLength > 0 &&
-                  b.raw_questions[0].score != null &&
-                  b.raw_questions[0].score != undefined
-                    ? b.raw_questions[0].score + '-' + b.raw_questions[0].label
-                    : '-'
-                }</td>
-                <td>${
-                  questionsLength > 0 &&
-                  b.raw_questions[0].justification != null &&
-                  b.raw_questions[0].justification != undefined
-                    ? b.raw_questions[0].justification
-                    : '-'
-                }</td>
-                <td>${
-                  questionsLength > 0 && b.raw_questions[0].document == null
-                    ? 'No'
-                    : 'Yes'
-                }</td>
-              </tr>`;
-             } else {
-               return b.raw_questions
-                 .map(
-                   (question, questionIndex) => `
-                  <tr>
-                    <td>${b.name}</td>
-                    <td>${b.relevance ? b.relevance : '-'}</td>
-                    <td>${
-                      questionsLength > questionIndex &&
-                      question.question != null &&
-                      question.question != undefined
-                        ? question.question
-                        : '-'
-                    }</td>
-                    <td>${
-                      questionsLength > questionIndex &&
-                      question.score != null &&
-                      question.score != undefined
-                        ? question.score + '-' + question.label
-                        : '-'
-                    }</td>
-                    <td>${
-                      questionsLength > questionIndex &&
-                      question.justification != null &&
-                      question.justification != undefined
-                        ? question.justification
-                        : '-'
-                    }</td>
-                    <td>${
-                      questionsLength > questionIndex &&
-                      question.document == null
-                        ? 'No'
-                        : 'Yes'
-                    }</td>
-                  </tr>
-                `,
-                 )
-                 .join('');
-             }
-           })
-           .join(''),
+     ${prossesAssesmentStartingSituation.map(n=>
+       n.map((a: { rows: number; name: string; characteristics: any[] }) =>
+       a.characteristics
+       .map((b, index) => {
+         const questionsLength = b.raw_questions.length;
+       //  console.log(b)
+         if (!index) {
+           return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
+           <td rowspan="${a.rows}" >${a.name}</td>
+           <td rowspan="${questionsLength}">${b.name}</td>
+           <td rowspan="${questionsLength}">${
+           b.relevance ? b.relevance : '-'
+         }</td>
+           <td>${
+             question.question != null &&
+             question.question != undefined
+               ? question.question
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 &&
+             question.score != null &&
+             question.score != undefined
+               ? question.score +
+                 '-' +
+                 question.label
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 &&
+             question.justification != null &&
+             question.justification != undefined
+               ? question.justification
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 && question.document == null
+               ? 'No'
+               : 'Yes'
+           }</td>
+         </tr>`:`<tr>
+         <td>${
+           question.question != null &&
+           question.question != undefined
+             ? question.question
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 &&
+           question.score != null &&
+           question.score != undefined
+             ? question.score +
+               '-' +
+               question.label
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 &&
+           question.justification != null &&
+           question.justification != undefined
+             ? question.justification
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 && question.document == null
+             ? 'No'
+             : 'Yes'
+         }</td>
+       </tr>` ).join('')
+          
+         } else {
+           return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
+          
+           <td rowspan="${questionsLength}">${b.name}</td>
+           <td rowspan="${questionsLength}">${
+           b.relevance ? b.relevance : '-'
+         }</td>
+           <td>${
+             question.question != null &&
+             question.question != undefined
+               ? question.question
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 &&
+             question.score != null &&
+             question.score != undefined
+               ? question.score +
+                 '-' +
+                 question.label
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 &&
+             question.justification != null &&
+             question.justification != undefined
+               ? question.justification
+               : '-'
+           }</td>
+           <td>${
+             questionsLength > 0 && question.document == null
+               ? 'No'
+               : 'Yes'
+           }</td>
+         </tr>`:`<tr>
+         <td>${
+           question.question != null &&
+           question.question != undefined
+             ? question.question
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 &&
+           question.score != null &&
+           question.score != undefined
+             ? question.score +
+               '-' +
+               question.label
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 &&
+           question.justification != null &&
+           question.justification != undefined
+             ? question.justification
+             : '-'
+         }</td>
+         <td>${
+           questionsLength > 0 && question.document == null
+             ? 'No'
+             : 'Yes'
+         }</td>
+       </tr>` ).join('');
+         }
+       })
+       .join('')
        )
-       .join('')}
+       .join('')).join('')}
      </tbody>
    </table>
    </div>
@@ -2052,124 +2107,7 @@ ${coverPage.reportDate}
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-     const allotherpages=prossesAssesmentStartingSituation.filter((a,index)=>index!=0).map(a=>`  <div id="page_9" class="page text-center" >
-     ${header}
-     <div class="content">
-    
-    <div class="report-table-sm ">
-    
-    <table class="table  table-bordered border-dark">
-      <thead class="table-primary  border-dark">
-        <tr>
-          <th scope="col">Category</th>
-          <th scope="col">Process Characteristic</th>
-          <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
-          <th scope="col">Guiding Question </th>
-          <th scope="col">Likelihood score  </th>
-          <th scope="col">Rationale justifying the score  </th>
-          <th scope="col">Supporting Documents Supplied </th>
-        </tr>
-      </thead>
-      <tbody class="table-active">
-      ${a.map((a: { rows: number; name: string; characteristics: any[] }) =>
-          a.characteristics
-            .map((b, index) => {
-              const questionsLength = b.raw_questions.length;
-            //  console.log(b)
-              if (!index) {
-                return `<tr>
-                  <td rowspan="${a.rows}" >${a.name}</td>
-                  <td rowspan="${questionsLength}">${b.name}</td>
-                  <td rowspan="${questionsLength}">${
-                  b.relevance ? b.relevance : '-'
-                }</td>
-                  <td>${
-                    questionsLength > 0 &&
-                    b.raw_questions[0].question != null &&
-                    b.raw_questions[0].question != undefined
-                      ? b.raw_questions[0].question
-                      : '-'
-                  }</td>
-                  <td>${
-                    questionsLength > 0 &&
-                    b.raw_questions[0].score != null &&
-                    b.raw_questions[0].score != undefined
-                      ? b.raw_questions[0].score +
-                        '-' +
-                        b.raw_questions[0].label
-                      : '-'
-                  }</td>
-                  <td>${
-                    questionsLength > 0 &&
-                    b.raw_questions[0].justification != null &&
-                    b.raw_questions[0].justification != undefined
-                      ? b.raw_questions[0].justification
-                      : '-'
-                  }</td>
-                  <td>${
-                    questionsLength > 0 && b.raw_questions[0].document == null
-                      ? 'No'
-                      : 'Yes'
-                  }</td>
-                </tr>`;
-              } else {
-                return b.raw_questions
-                  .map(
-                    (question, questionIndex) => `
-                    <tr>
-                      <td>${b.name}</td>
-                      <td>${b.relevance ? b.relevance : '-'}</td>
-                      <td>${
-                        questionsLength > questionIndex &&
-                        question.question != null &&
-                        question.question != undefined
-                          ? question.question
-                          : '-'
-                      }</td>
-                      <td>${
-                        questionsLength > questionIndex &&
-                        question.score != null &&
-                        question.score != undefined
-                          ? question.score + '-' + question.label
-                          : '-'
-                      }</td>
-                      <td>${
-                        questionsLength > questionIndex &&
-                        question.justification != null &&
-                        question.justification != undefined
-                          ? question.justification
-                          : '-'
-                      }</td>
-                      <td>${
-                        questionsLength > questionIndex &&
-                        question.document == null
-                          ? 'No'
-                          : 'Yes'
-                      }</td>
-                    </tr>
-                  `,
-                  )
-                  .join('');
-              }
-            })
-            .join(''),
-        )
-        .join('')}
-      
-    
-      </tbody>
-    
-    
-      </tbody>
-    </table>
-    </div>
    
-     
-     </div>
-     
-     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-     
-      </div>`).join('');
 
 
     const scale_ghg = content.scale_ghg;
@@ -2660,7 +2598,7 @@ ${coverPage.reportDate}
       return page_1;
     } else {
       return (
-        page_1 +allotherpages+
+        page_1 +
         page_2 +
         page_4 +
         page_5 +
