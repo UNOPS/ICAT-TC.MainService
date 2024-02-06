@@ -40,7 +40,7 @@ export class ReportPagesService {
     { label: 'Unlikely', value: 1 },
     { label: 'Very Unlikely', value: 0 },
   ];
-  fileServerURL = process.env.REPORT_URL + '/uploads/';
+  fileServerURL = process.env.MAIN_URL+'/document/downloadDocumentsFromFileName'+ '/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -1374,7 +1374,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          <tbody>
         <tr>
             <td></td>
-            <td colspan="8">​​Outcome: Extent and sustained nature of transformation</td>
+            <td colspan="8">Outcome: Extent and sustained nature of transformation</td>
         </tr>
         <tr>
             <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
