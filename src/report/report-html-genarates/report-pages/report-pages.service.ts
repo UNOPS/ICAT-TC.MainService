@@ -2052,10 +2052,7 @@ ${coverPage.reportDate}
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-    const page_1_1 =
-      prossesAssesmentStartingSituation.length < 2
-        ? ''
-        : `  <div id="page_9" class="page text-center" >
+     const allotherpages=prossesAssesmentStartingSituation.filter((a,index)=>index!=0).map(a=>`  <div id="page_9" class="page text-center" >
      ${header}
      <div class="content">
     
@@ -2074,12 +2071,11 @@ ${coverPage.reportDate}
         </tr>
       </thead>
       <tbody class="table-active">
-      ${prossesAssesmentStartingSituation[1]
-        .map((a: { rows: number; name: string; characteristics: any[] }) =>
+      ${a.map((a: { rows: number; name: string; characteristics: any[] }) =>
           a.characteristics
             .map((b, index) => {
               const questionsLength = b.raw_questions.length;
-
+            //  console.log(b)
               if (!index) {
                 return `<tr>
                   <td rowspan="${a.rows}" >${a.name}</td>
@@ -2173,7 +2169,7 @@ ${coverPage.reportDate}
      
      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
      
-      </div>`;
+      </div>`).join('');
 
 
     const scale_ghg = content.scale_ghg;
@@ -2664,8 +2660,8 @@ ${coverPage.reportDate}
       return page_1;
     } else {
       return (
-        page_1 +
-        page_1_1 +
+        page_1 +allotherpages+
+        // page_1_1 +
         // page_1_2 +
         // page_1_3 +
         // page_1_4 +
