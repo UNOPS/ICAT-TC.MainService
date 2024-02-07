@@ -824,8 +824,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         intervention_id: result.assessment.climateAction?.intervention_id
       };
     }));
-    const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
-    return this.paginateArray(filteredData, options)
+    // const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
+    return this.paginateArray(formattedResults, options)
   }
   async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
     const { page, limit } = options;
