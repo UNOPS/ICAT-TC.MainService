@@ -484,19 +484,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     switch (number) {
 
-      case -3: {
+      case 3: {
 
         return 'Major';
 
       }
 
-      case -2: {
+      case 2: {
 
         return 'Moderate';
 
       }
 
-      case -1: {
+      case 1: {
 
         return 'Minor';
 
@@ -508,19 +508,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       }
 
-      case 1: {
+      case -1: {
 
         return 'Minor Negative';
 
       }
 
-      case 2: {
+      case -2: {
 
         return 'Moderate Negative';
 
       }
 
-      case 3: {
+      case -3: {
 
         return 'Major Negative';
 
@@ -1647,38 +1647,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
         }
         
         category.rows = rows;
-        if(category.name=='Technology'){
-         category.characteristics.map(char=>char.raw_questions.map(raw_question=>
-            { 
-            if(raw_question.label!=null ||raw_question.label!=undefined){
-              raw_question.label=raw_question.label.replace(/\([^)]*\)/, '').trim()
-            }
-              
-              return raw_question
-            }
-            ))
-          };
-        if(category.name=='Incentives'){
-          let cat1 =  { ...category, characteristics: [category.characteristics[0]] }
-          cat1.rows = 3
-          let cat2 = { 
-            ...category, 
-            characteristics: [
-              category.characteristics[1],
-              category.characteristics[2],
-            ],
-          };
-          cat2.rows = category.rows -cat1.rows;
-          categoryarray.push(cat1)
-          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
-          categoryarray=[]
-          categoryarray.push(cat2)
-          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
 
-        }else{
           categoryarray.push(category)
           contentThree.prossesAssesmentStartingSituation.push(categoryarray)
-        }
+    
         
       }
     }
