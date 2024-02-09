@@ -18,10 +18,8 @@ export class CountryService extends TypeOrmCrudService<Country>{
     }
 
 
-    async getCountry(countryId: number) {
-      let data;
-      if (countryId != 0) {
-        data = this.repo.createQueryBuilder('cou')
+    async getCountry(countryId: number) : Promise<any>{
+      let  data = this.repo.createQueryBuilder('cou')
           .leftJoinAndMapMany(
             'cou.countrysector',
             CountrySector,
@@ -31,9 +29,7 @@ export class CountryService extends TypeOrmCrudService<Country>{
           .where(
             `cou.id = ${countryId}`
           )
-        
-      }else{}
-      return data.getOne();
+      return await data.getOne();
   
       
   }
