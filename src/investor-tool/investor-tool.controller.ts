@@ -215,12 +215,13 @@ export class InvestorToolController {
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.investorToolService.getDashboardData( {
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
   }
 
   @Post('save-tool-multiselect')
