@@ -95,18 +95,17 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @UseInterceptors( FilesInterceptor('files',20, ),)
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
-    return {fileName: files[0].filename};
+    return { fileName: files[0].filename };
   }
+
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
-    @Query('limit') limit: number
-    ):Promise<any> {
-    return await this.service.getDashboardData( {
-      limit: limit,
-      page: page,
-    },);
+    @Query('limit') limit: number,
+    @Query('intervention_ids') intervention_ids: string[]
+  ): Promise<any> {
+    return await this.service.getDashboardData({ limit: limit, page: page }, intervention_ids);
   }
 
   @UseGuards(JwtAuthGuard)
