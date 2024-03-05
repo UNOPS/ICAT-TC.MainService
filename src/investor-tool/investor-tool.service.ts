@@ -1718,7 +1718,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       ;
     return await sectorSum.getRawMany();
   }
-  async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
+  async getDashboardData(options: IPaginationOptions,selectedAssessIds?:number[]): Promise<Pagination<any>> {
     let tool = 'INVESTOR';
     let filter = 'asses.tool=:tool '
     let user = this.userService.currentUser();
@@ -1752,9 +1752,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId }).orderBy('asses.id','DESC')
+      )
+      .andWhere(filter, { tool, userId, userCountryId })
+      if(selectedAssessIds && selectedAssessIds.length>0){
+        data.andWhere('asses.id IN (:selectedAssessIds)',{selectedAssessIds:selectedAssessIds})
+      }
+      
+      data.orderBy('asses.id','DESC')
+    let allData = await data.getMany()
     let result = await paginate(data, options);
-    return result;
+    return {
+      items: result.items,
+      meta: {
+        totalItems: result.meta.totalItems,
+        itemsPerPage: result.meta.itemsPerPage,
+        totalPages: result.meta.totalPages,
+        currentPage: result.meta.currentPage,
+        allData: allData,
+      } as any,
+    };
   }
 
   async sdgSumALLCalculate(): Promise<any[]> {
