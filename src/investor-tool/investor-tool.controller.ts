@@ -245,19 +245,17 @@ export class InvestorToolController {
   async saveSdgPriorities(@Body() req: SdgPriorityDto) {
 
     let details = await this.auditDetailService.getAuditDetails()
-    console.log("details from audit service", details)
     let obj = {
       description: "Save SDG priorities"
     }
     let body = { ...details, ...obj }
     try {
       body = { ...body, ...{ actionStatus: "Saved SDG Priorities", } }
-      console.log("request body to audit", body)
       this.auditDetailService.log(body)
       return await this.investorToolService.saveSdgPriorities(req.priorities)
     } catch (error) {
       body = { ...body, ...{ actionStatus: "Failed to save SDG Priorities", } }
-      console.log("save sdg catch", error)
+      console.error("save sdg catch", error)
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }
