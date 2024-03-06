@@ -19,6 +19,7 @@ import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { SdgPriorityDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -30,10 +31,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     { label: 'STATUS', code: 'status' }
   ]
 
-  cmScores: any
-  piScores: any
-  sdgs_score: any = {}
-  sdgPriorities: SdgPriority[] = [];
 
   constructor(
     @InjectRepository(Portfolio) repo,
@@ -249,25 +246,25 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     let pAssessments = await this.assessmentsByPortfolioId(portfolioId)
 
-    this.cmScores = {}
-    this.piScores = {}
+    let cmScores = {}
+    let piScores = {}
     for (let pAssessment of pAssessments){
       let score = await this.cMAssessmentQuestionService.calculateResult(pAssessment.assessment.id)
       let piscore = await this.investorToolService.calculateNewAssessmentResults(pAssessment.assessment.id)
-      this.cmScores[pAssessment.assessment.id] = score
-      this.piScores[pAssessment.assessment.id] = piscore
+      cmScores[pAssessment.assessment.id] = score
+      piScores[pAssessment.assessment.id] = piscore
     }
 
-    response.process_data = await this.getProcessData(pAssessments)
-    let outcomeResponse = await this.getOutcomeData(pAssessments)
+    response.process_data = await this.getProcessData(pAssessments, cmScores, piScores)
+    let outcomeResponse = await this.getOutcomeData(pAssessments, cmScores, piScores)
     response.outcome_data = outcomeResponse.outcomeData
     response.aggregation_data = await this.getAggragationData(pAssessments)
-    response.alignment_data = await this.getAlignmentData(pAssessments)
+    response.alignment_data = await this.getAlignmentData(pAssessments, cmScores, outcomeResponse.sdg_scores)
 
     return response
   }
 
-  async getProcessData(pAssessments: PortfolioAssessment[]) {
+  async getProcessData(pAssessments: PortfolioAssessment[], cmScores: any, piScores: any) {
     let response: ComparisonDto[] = []
     let intervention_data = []
     let int_categories = []
@@ -286,10 +283,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'PORTFOLIO':
         case 'INVESTOR':
-          res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment)
+          res = await this.getProcessDataPortfolioInvestor(pAssessment.assessment, piScores)
           break;
         case 'CARBON_MARKET':
-          res = await this.getProcessDataCarbonMarket(pAssessment.assessment)
+          res = await this.getProcessDataCarbonMarket(pAssessment.assessment, cmScores)
           break;
       }
       categories = res.categories
@@ -337,9 +334,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return response;
   }
 
-  async getOutcomeData(pAssessments: PortfolioAssessment[]) {
+  async getOutcomeData(pAssessments: PortfolioAssessment[], cmScores: any, piScores: any) {
     let response: ComparisonDto[] = []
     let sdgs: any[] = []
+    let sdgs_score: any
     let intervention_data = []
     let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
     let col_set_2_scale = [
@@ -368,14 +366,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'PORTFOLIO':
         case 'INVESTOR':
-          data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getOutcomeDataPortfolioInvestor(pAssessment.assessment, piScores)
           break;
         case 'CARBON_MARKET':
-          data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment)
+          data = await this.getOutcomeDataCarbonMarket(pAssessment.assessment, cmScores)
           break;
       }
       sdgs.push(...data.sdg)
       sdgs = [... new Set(sdgs)]
+      sdgs_score = data.sdgs_score
       intervention_data.push({ data: data, intervention: _intervention })
     }
 
@@ -753,7 +752,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     return {
       outcomeData: response,
-      sdgs: sdgs
+      sdgs: sdgs,
+      sdg_scores: sdgs_score
     }
   }
 
@@ -791,7 +791,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return response
   }
 
-  async getAlignmentData(pAssessments: PortfolioAssessment[]) {
+  async getAlignmentData(pAssessments: PortfolioAssessment[], cmScores: any, sdgs_score: any) {
     let sdgs = []
     let response: ComparisonDto = new ComparisonDto()
     let intervention_data = []
@@ -799,7 +799,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userCountryId = currentUser.country?.id;
-    this.sdgPriorities = await this.investorToolService.getSdgPrioritiesByCountryId(userCountryId);
+    let sdgPriorities = await this.investorToolService.getSdgPrioritiesByCountryId(userCountryId);
     for (let pAssessment of pAssessments) {
       let _intervention = {
         id: pAssessment.assessment.climateAction.intervention_id,
@@ -812,10 +812,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       switch (pAssessment.assessment.tool) {
         case 'PORTFOLIO':
         case 'INVESTOR':
-          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment)
+          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment, sdgPriorities, sdgs_score)
           break;
         case 'CARBON_MARKET':
-          data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment)
+          data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment, cmScores, sdgPriorities)
           break;
       }
       intervention_data.push({ data: data, intervention: _intervention })
@@ -858,13 +858,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return response;
   }
 
-  async getProcessDataPortfolioInvestor(assessment: Assessment) {
+  async getProcessDataPortfolioInvestor(assessment: Assessment, piScores: any) {
     let categories = [];
     let cat_names = [];
     let cat_obj = {};
     let cat_total = 0;
 
-    let res = this.piScores[assessment.id];
+    let res = piScores[assessment.id];
     let data = res.processData;
 
     for (let cat of data) {
@@ -891,8 +891,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return { categories: categories, cat_names: cat_names, category_scores: cat_obj };
   }
 
-  async getOutcomeDataPortfolioInvestor(assessment: Assessment) {
-    let res = this.piScores[assessment.id];
+  async getOutcomeDataPortfolioInvestor(assessment: Assessment, piScores: any) {
+    let sdgs_score: any = {}
+    let res = piScores[assessment.id];
     let sdg = [];
     let outcome_score = 0;
     outcome_score = res.outcomeScore;
@@ -933,8 +934,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           category_score: this.mapNameAndValue(this.investorToolService.mapScaleScores(sd.sdg_score), sd.sdg_score) 
         }
       }
-      if (this.sdgs_score[sd.name]) this.sdgs_score[sd.name] += sd.sdg_score;
-      else this.sdgs_score[sd.name] = sd.sdg_score;
+      if (sdgs_score[sd.name]) sdgs_score[sd.name] += sd.sdg_score;
+      else sdgs_score[sd.name] = sd.sdg_score;
     }
 
     let scAD = data.find(o => o.code === 'SCALE_ADAPTATION');
@@ -988,8 +989,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           category_score: this.mapNameAndValue(this.investorToolService.mapSustainedScores(sd.sdg_score), sd.sdg_score)
         }
       }
-      if (this.sdgs_score[sd.name]) this.sdgs_score[sd.name] += sd.sdg_score
-      else this.sdgs_score[sd.name] = sd.sdg_score
+      if (sdgs_score[sd.name]) sdgs_score[sd.name] += sd.sdg_score
+      else sdgs_score[sd.name] = sd.sdg_score
     }
 
     let susAD = data.find(o => o.code === 'SUSTAINED_ADAPTATION');
@@ -1016,11 +1017,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         ghg: sustained_GHGs, sdg: sustained_SDs, adaptation: sustained_adaptation
       },
       sdg: sdg,
-      outcome_score: outcome_score
+      outcome_score: outcome_score,
+      sdgs_score: sdgs_score
     }
   }
 
-  async getAlignmentDataPortfolioInvestor(assessment: Assessment) {
+  async getAlignmentDataPortfolioInvestor(assessment: Assessment, sdgPriorities: SdgPriority[], sdgs_score: any) {
     let response = {}
     let col1 = []
     let col2 = []
@@ -1039,15 +1041,16 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .where('assessment.id = :id', { id: assessment.id })
 
     let sdgs = await data.getMany();
+    console.log("sdgs", sdgs)
 
     sdgs.map(sd => {
       let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
-      let sdg_val = this.sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name]
+      let sdg_val = sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name]
       let val = sdg_val === null ? null : Math.floor(sdg_val / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
       let priority_value = ans?.value
-      if (this.sdgPriorities.length !== 0){
-        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
+      if (sdgPriorities.length !== 0){
+        let priority = sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
         priority_value =  ans.value === null ? null : (4 - Math.abs(ans.value - priority.value))
         col2.push({label: priority_name?.toUpperCase(), code: code}) 
@@ -1086,9 +1089,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return total
   }
   
-  async getProcessDataCarbonMarket(assessment: Assessment) {
+  async getProcessDataCarbonMarket(assessment: Assessment, cmScores: any) {
     let data = (await this.cMAssessmentQuestionService.getProcessData(assessment.id)).data;
-    let result = this.cmScores[assessment.id];
+    let result = cmScores[assessment.id];
     let categories = [];
     let cat_names = [];
     let cat_obj = {};
@@ -1117,9 +1120,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     return { categories: categories, cat_names: cat_names, category_scores: cat_obj }
   }
 
-  async getOutcomeDataCarbonMarket(assessment: Assessment) {
+  async getOutcomeDataCarbonMarket(assessment: Assessment, cmScores: any) {
     let data = (await this.cMAssessmentQuestionService.getResults(assessment.id))?.outComeData;
-    let result = this.cmScores[assessment.id];
+    let result = cmScores[assessment.id];
 
     let scGHG_int = data.scale_GHGs.find(o => o.ch_code === 'MACRO_LEVEL')?.outcome_score;
     let scGHG_nat = data.scale_GHGs.find(o => o.ch_code === 'MEDIUM_LEVEL')?.outcome_score;
@@ -1253,12 +1256,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
-  async getAlignmentDataCarbonMarket(assessment: Assessment) {
+  async getAlignmentDataCarbonMarket(assessment: Assessment, cmScores: any, sdgPriorities: SdgPriority[]) {
     let response = {};
     let col1 = [];
     let col2 = [];
     let sdgsArr = [];
-    let result = this.cmScores[assessment.id];
+    let result = cmScores[assessment.id];
     let data = this.sdgAssessRepo.createQueryBuilder('sdgAssessment')
       .innerJoin(
         'sdgAssessment.assessment',
@@ -1279,8 +1282,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let sdg_val = val === null ? null : val;
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(sdg_val), sdg_val));
       let priority_value = ans?.value;
-      if (this.sdgPriorities.length !== 0){
-        let priority = this.sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
+      if (sdgPriorities.length !== 0){
+        let priority = sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
         priority_value = ans.value === null ? null : 4 - Math.abs(ans.value - priority.value)
         col2.push({label: priority_name?.toUpperCase(), code: code}) 
