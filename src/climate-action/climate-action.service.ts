@@ -258,8 +258,10 @@ async allProject(
       .createQueryBuilder('result')
       .leftJoinAndSelect('result.assessment', 'assessment')
       .leftJoinAndSelect('assessment.user', 'user')
-      .leftJoinAndSelect('user.country', 'country') 
+      .leftJoinAndSelect('user.country', 'country')
+      // .where('result.averageProcess IS NOT NULL AND result.averageOutcome IS NOT NULL AND assessment.tool:value2',{value2: 'CARBON_MARKET' }) 
       .getMany();
+      
   
     const policyList: Results[] = [];
     const isUserExternal = currentUser?.userType?.description === 'External';
@@ -281,6 +283,7 @@ async allProject(
           }
         
         if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
+          console.log(x.assessment.tool,x.assessment.id)
           policyList.push(x);
       }
       
