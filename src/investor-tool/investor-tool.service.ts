@@ -1814,21 +1814,36 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
   async getDashboardAllData(options: IPaginationOptions): Promise<Pagination<any>> {
-    let filter = 'asses.process_score is not null and asses.outcome_score is not null'
+    // let filter = 'asses.process_score is not null and asses.outcome_score is not null'
+    let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
     let userCountryId = currentUser.country?.id;
     if (currentUser?.userType?.name === 'External') {
-      filter = filter + ' and asses.user_id=:userId '
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
 
     }
     else {
-      filter = filter + ' and country.id=:userCountryId '
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
       .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
       .leftJoinAndMapOne(
         'asses.climateAction',
         ClimateAction,
