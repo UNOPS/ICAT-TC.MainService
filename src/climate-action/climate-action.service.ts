@@ -597,7 +597,9 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       where: { intervention: { id: policyID } },
     });
   }
-
+  async update(req:ClimateAction) {
+   return this.repo.save(req)
+  }
   async findPolicyBarrierData(policyID: number): Promise<PolicyBarriers[]> {
     let barriers = await this.PolicyBarriersRepo.createQueryBuilder('policyBarriers')
       .leftJoinAndSelect('policyBarriers.barrierCategory', 'barrierCategory')
