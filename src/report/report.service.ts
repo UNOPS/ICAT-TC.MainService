@@ -106,7 +106,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage = new ReportCoverPage();
     coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
@@ -1418,7 +1418,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
@@ -1782,7 +1782,7 @@ return contentFour
 
     coverPage.generateReportName = title;
 
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
 
     coverPage.document_prepared_by = 'user';
 
