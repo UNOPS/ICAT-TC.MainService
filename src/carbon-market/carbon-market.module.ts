@@ -76,6 +76,6 @@ import { HttpModule } from "@nestjs/axios";
     MasterDataService,
     AuditDetailService
   ],
-  exports: [CMAssessmentQuestionService],
+  exports: [CMAssessmentQuestionService, AssessmentCMDetailService],
 })
 export class CarbonMarketModule {}
