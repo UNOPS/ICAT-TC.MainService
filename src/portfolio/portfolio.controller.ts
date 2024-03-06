@@ -70,12 +70,13 @@ export class PortfolioController {
   async getDashboardData(
     @Query('PortfolioID') PortfolioID: number,
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.portfolioService.getDashboardData( PortfolioID,{
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
   }
 
   

@@ -99,7 +99,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
         editedOn,
       })
       .orderBy('dr.createdOn', 'DESC');
-      data.andWhere('not dr.status = -20 ')
+    data.andWhere('not dr.status = -20 ')
     let result = await paginate(data, options);
 
 
@@ -169,7 +169,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       const isMatchingCountry = x.user?.country?.id === currentUser?.country?.id;
       const isUserInternal = x.user?.userType?.description !== 'External';
 
-      if (((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) && (x.status !=-20)) {
+      if (((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) && (x.status != -20)) {
         policyList.push(x);
       }
     }
@@ -197,7 +197,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       const isMatchingCountry = x.climateAction.user?.country?.id === currentUser?.country?.id;
       const isUserInternal = x.climateAction.user?.userType?.description !== 'External';
 
-      if (((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) && (x.climateAction.status !=-20)) {
+      if (((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) && (x.climateAction.status != -20)) {
         policyList.push(x.climateAction);
       }
     }
@@ -260,7 +260,6 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       .leftJoinAndSelect('result.assessment', 'assessment')
       .leftJoinAndSelect('assessment.user', 'user')
       .leftJoinAndSelect('user.country', 'country')
-      // .where('result.averageProcess IS NOT NULL AND result.averageOutcome IS NOT NULL AND assessment.tool:value2',{value2: 'CARBON_MARKET' }) 
       .getMany();
 
 
@@ -286,6 +285,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
         policyList.push(x);
       }
+
 
     }
 
@@ -458,7 +458,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
         `project.countryId = ${countryIdFromTocken} `,
       )
       .orderBy('project.policyName', 'ASC');
-      data.andWhere('not project.status = -20 ')
+    data.andWhere('not project.status = -20 ')
 
     return data.getMany();
   }
@@ -583,7 +583,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
         sectorId,
       })
       .orderBy('dr.createdOn', 'DESC');
-      data.andWhere('not dr.status = -20 ')
+    data.andWhere('not dr.status = -20 ')
     let result = await paginate(data, options);
 
     if (result) {
