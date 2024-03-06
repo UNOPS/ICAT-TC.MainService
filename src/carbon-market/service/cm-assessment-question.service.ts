@@ -20,6 +20,7 @@ import { UsersService } from "src/users/users.service";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -41,7 +42,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     private userService: UsersService,
     private masterDataService: MasterDataService,
     @InjectRepository(SdgAssessment)
-    private sdgAssessmentRepo: Repository<SdgAssessment>
+    private sdgAssessmentRepo: Repository<SdgAssessment>,
+    private assessmentCMDetailService: AssessmentCMDetailService
   ) {
     super(repo);
   }
@@ -51,7 +53,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, expectedGHGMitigation: number, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -167,6 +169,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         await this.resultsRepo.save(resultObj);
 
         this.saveTcValue(assessment.id, res);
+      }
+      if (expectedGHGMitigation) {
+        let cm_detail = await this.assessmentCMDetailService.getAssessmentCMDetailByAssessmentId(assessment.id)
+        if (cm_detail) {
+          cm_detail.expected_ghg_mitigation = expectedGHGMitigation;
+          cm_detail.cmassessment = undefined
+          cm_detail.geographicalAreasCovered = undefined
+          cm_detail.sectorsCovered = undefined
+          this.assessmentCMDetailService.save(cm_detail)
+        }
       }
       return a_ans
     } catch (error) {
