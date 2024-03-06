@@ -16,7 +16,7 @@ describe('AuthService', () => {
         UsersModule,
         PassportModule,
         JwtModule.register({
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_VERIFICATION_TOKEN_SECRET,
           signOptions: { expiresIn: '60s' },
         }),
       ],

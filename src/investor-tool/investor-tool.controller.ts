@@ -256,6 +256,7 @@ export class InvestorToolController {
       return await this.investorToolService.saveSdgPriorities(req.priorities)
     } catch (error) {
       body = { ...body, ...{ actionStatus: "Failed to save SDG Priorities", } }
+      console.error("save sdg catch", error)
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }
