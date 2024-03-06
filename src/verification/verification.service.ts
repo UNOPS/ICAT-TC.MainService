@@ -59,7 +59,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
         'assessment.climateAction',
         ClimateAction,
         'p',
-        `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+        `assessment.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken}`)
       .where(filter, {
         filterText: `%${filterText}%`,
         VRstatusId,
@@ -97,7 +97,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
         'assessment.climateAction',
         ClimateAction,
         'p',
-        `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+        `assessment.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken}`)
       .where(filter + " AND (assessment.verificationStatus !=7 AND assessment.verificationStatus !=6 AND assessment.verificationUser =" + user.id + " )", {
         filterText: `%${filterText}%`,
         VRstatusId,

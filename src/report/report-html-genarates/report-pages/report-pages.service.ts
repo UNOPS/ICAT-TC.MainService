@@ -1964,7 +1964,6 @@ ${coverPage.reportDate}
        a.characteristics
        .map((b, index) => {
          const questionsLength = b.raw_questions.length;
-       //  console.log(b)
          if (!index) {
            return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
            <td rowspan="${a.rows}" >${a.name}</td>

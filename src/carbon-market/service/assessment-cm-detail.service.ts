@@ -78,7 +78,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
         'assessment.climateAction',
         ClimateAction,
         'ca',
-        'ca.id = assessment.climateAction_id',
+        'ca.id = assessment.climateAction_id and not ca.status =-20 ',
       )
       .leftJoinAndMapOne(
         'ca.country',

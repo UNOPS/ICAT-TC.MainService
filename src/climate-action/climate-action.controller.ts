@@ -64,6 +64,13 @@ var multer = require('multer');
       },
 
     },
+    filter: [
+      {
+        field: 'status',
+        operator: '$ne',
+        value: -20,
+      },
+    ],
     exclude: ['id']
   },
 })
@@ -176,7 +183,7 @@ export class ProjectController implements CrudController<ClimateAction> {
 
   @Post('uploadFiles')
   @UseInterceptors(
-    FilesInterceptor('files',5)
+    FilesInterceptor('files', 5)
   )
   async uploadFile2(
     @UploadedFiles() files,
@@ -391,6 +398,17 @@ export class ProjectController implements CrudController<ClimateAction> {
   @Get('getLastID')
   async getLastID() {
     return await this.service.getLastID();
+  }
+  @Get('projectName')
+  async getProjectName( @Query('countryId') countryId: number,) {
+    return this.service.getProjectName(countryId);
+  }
+
+  @Post('delete')
+  async delete(
+    @Query('id') id: number,
+  ): Promise<any> {
+    this.service.delete(id);
   }
 
 }
