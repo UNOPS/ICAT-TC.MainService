@@ -232,12 +232,14 @@ export class InvestorToolController {
   @Get('dashboard-all-data')
   async getDashboardAllData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: [],
     ):Promise<any> {
     return await this.investorToolService.getDashboardAllData( {
       limit: limit,
       page: page,
-    },);
+      
+    },filterText);
   }
 
   @UseGuards(JwtAuthGuard)
