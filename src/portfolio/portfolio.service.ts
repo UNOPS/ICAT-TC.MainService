@@ -208,7 +208,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           'assessment.climateAction',
           ClimateAction,
           'climateAction',
-          'assessment.climateAction_id = climateAction.id'
+          'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
         )
         .leftJoinAndMapOne(
           'climateAction.country',
@@ -1351,7 +1351,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
