@@ -1697,7 +1697,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assessment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1745,7 +1745,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1807,7 +1807,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assessment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1829,8 +1829,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return await sectorSum.getRawMany();
   }
 
-  async getDashboardAllData(options: IPaginationOptions): Promise<Pagination<any>> {
-    // let filter = 'asses.process_score is not null and asses.outcome_score is not null'
+  async getDashboardAllData(options: IPaginationOptions,filterText:[]): Promise<Pagination<any>> {
+
+    let ar= Array.isArray(filterText);
     let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
@@ -1843,6 +1844,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         filter = filter + '  asses.user_id=:userId '  
       }
 
+    }
+    if(filterText && !ar){
+      if(filter){
+        filter = filter + `and climateAction.policyName = :filterText`
+      }
+      else{
+        filter = filter + `climateAction.policyName = :filterText`
+      }
+      
     }
     else {
       if(filter){
@@ -1864,14 +1874,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+      ).where(filter, { userId, userCountryId, filterText }).orderBy('asses.id','DESC')
+      if(filterText && ar){
+        data.andWhere('climateAction.policyName IN (:...filterText)')
+      }
+    
     let result = await paginate(data, options);
     return result;
   }
