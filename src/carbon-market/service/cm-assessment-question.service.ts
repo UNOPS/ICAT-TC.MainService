@@ -838,6 +838,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   
       let formattedResults = await Promise.all(filteredResults.map(async (result) => {
         return {
+          assessment_id: result.assessment.id,
           assessment: result.id,
           process_score: result.averageProcess,
           outcome_score: result.averageOutcome,
@@ -850,12 +851,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       formattedResults.map(r => {
         interventions_to_filter.push({
           intervention: r.intervention,
-          intervention_id: r.intervention_id
+          intervention_id: r.assessment
         })
       })
   
       if (intervention_ids?.length > 0) {
-        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.intervention_id))
+        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.assessment.toString()))
       }
   
       interventions_to_filter = this.getDistinctObjects(interventions_to_filter, 'intervention_id')
