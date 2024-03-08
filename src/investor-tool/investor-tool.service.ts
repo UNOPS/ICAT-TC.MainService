@@ -33,6 +33,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2,} from './dto/processData.dto';
 import { TotalInvestment } from './entities/total-investment.entity';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 const schema = {
   'id': {
@@ -68,6 +69,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
     @InjectRepository(TotalInvestment) private readonly totalInvestmentRepo: Repository<TotalInvestment>,
+    @InjectRepository(PortfolioAssessment) private readonly portfolioAssessRepo: Repository<PortfolioAssessment>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -1773,8 +1775,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     };
   }
 
-  async sdgSumALLCalculate(): Promise<any[]> {
-
+  async sdgSumALLCalculate(portfolioId: number): Promise<any[]> {
     let filter = ''
 
 
@@ -1797,6 +1798,20 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       'sdg',
       `sdgasses.sdgId = sdg.id`,
     )
+    if (portfolioId&&Number(portfolioId)) {
+      let response = this.portfolioAssessRepo.find({
+        relations: ['assessment'],
+        where: { portfolio: { id: portfolioId } },
+      });
+      
+      let assessmentIdArray: number[] = [];
+      for (let data of await response) {
+        let assessmentId = data.assessment.id;
+        assessmentIdArray.push(assessmentId);
+      }
+      sectorSum.andWhere('assessment.id IN (:...ids)', { ids: assessmentIdArray })
+
+    }
     if (currentUser?.userType?.name === 'External') {
       filter = filter + ' assessment.user_id=:userId '
 
@@ -1819,7 +1834,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
  
-    sectorSum.where(filter,{userId,userCountryId})
+    sectorSum.andWhere(filter,{userId,userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasses.id)', 'count')
@@ -1829,7 +1844,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return await sectorSum.getRawMany();
   }
 
-  async getDashboardAllData(options: IPaginationOptions,filterText:[]): Promise<Pagination<any>> {
+  async getDashboardAllData(options: IPaginationOptions,filterText:[],portfolioID: number): Promise<Pagination<any>> {
 
     let ar= Array.isArray(filterText);
     let filter = ''
@@ -1881,7 +1896,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { userId, userCountryId, filterText }).orderBy('asses.id','DESC')
+      )
+      if (Number(portfolioID)) {
+
+        filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        data.innerJoinAndMapOne(
+          'asses.portfolio_assesmet',
+          PortfolioAssessment,
+          'portfolio_assesmet',
+          'asses.id = portfolio_assesmet.assessment_id'
+        )
+      }
+      data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
       if(filterText && ar){
         data.andWhere('climateAction.policyName IN (:...filterText)')
       }
