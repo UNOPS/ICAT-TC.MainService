@@ -18,8 +18,6 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
-import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
-import { SdgPriorityDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -1041,7 +1039,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .where('assessment.id = :id', { id: assessment.id })
 
     let sdgs = await data.getMany();
-    console.log("sdgs", sdgs)
 
     sdgs.map(sd => {
       let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()

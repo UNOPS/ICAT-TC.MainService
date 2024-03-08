@@ -2078,6 +2078,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
+          categoryData.categoryCode = category.code;
           categoryData.type = 'outcome';
           assess.push(x)
         }
@@ -2091,6 +2092,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Scale of the Outcome";
       categoryDataNew.categoryID = 6;
+      categoryDataNew.categoryCode = "SCALE_SD";
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
 
@@ -2101,6 +2103,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Time frame over which the outcome is sustained";
       categoryDataNew.categoryID = 8;
+      categoryDataNew.categoryCode = "SUSTAINED_SD"
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
 
@@ -2186,6 +2189,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           if ((category.name === x.category.name) && (category.id == 6)) {
             categoryData.CategoryName = category.name;
             categoryData.categoryID = category.id;
+            categoryData.categoryCode = category.code;
             categoryData.type = 'outcome';
             let indicatordetails: IndicatorDetails[] = await this.getIndicatorDetials(x.id);
             x.indicator_details = indicatordetails;
@@ -2222,6 +2226,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           if ((category.name === x.category.name) && (category.id == 8)) {
             categoryData.CategoryName = category.name;
             categoryData.categoryID = category.id;
+            categoryData.categoryCode = category.code;
             categoryData.type = 'outcome';
             let indicatordetails: IndicatorDetails[] = await this.getIndicatorDetials(x.id);
             x.indicator_details = indicatordetails;
