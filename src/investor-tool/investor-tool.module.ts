@@ -51,6 +51,7 @@ import { SdgPriority } from './entities/sdg-priority.entity';
 import { TotalInvestment } from './entities/total-investment.entity';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -92,7 +93,8 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
     PortfolioQuestionDetails,
     GeographicalAreasCovered,
     SdgPriority,
-    TotalInvestment
+    TotalInvestment,
+    PortfolioAssessment
   ]),
     HttpModule
   ],
