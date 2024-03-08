@@ -320,19 +320,29 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score: number
-      if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        selected_sdg_count = uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length
-        score = qs.reduce((accumulator, object) => {
-          if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
-          else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
-          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
-        }, 0);
-        score = score / selected_sdg_count / 3
+      if (qs.every(q => +q.assessmentAnswers[0]?.selectedScore === -99)) {
+        score = null
+        if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
+          qs.forEach((object) => {
+           sdgs_score[object.selectedSdg?.id] = null
+          })
+        }
       } else {
-        score = qs.reduce((accumulator, object) => {
-          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
-        }, 0);
-        score = score / 3
+        if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
+          selected_sdg_count = uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length
+          score = qs.reduce((accumulator, object) => {
+            let _score = +object.assessmentAnswers[0]?.selectedScore
+            if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += _score === -99 ? 0 : _score;
+            else sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
+            return accumulator + _score === -99 ? 0 : _score;
+          }, 0);
+          score = score / selected_sdg_count / 3
+        } else {
+          score = qs.reduce((accumulator, object) => {
+            return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
+          }, 0);
+          score = score / 3
+        }
       }
       obj[cat] = {
         score: score,
@@ -341,43 +351,43 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     for (let key of Object.keys(sdgs_score)) {
-      sdgs_score[key] = Math.floor(sdgs_score[key] / 6)
+      sdgs_score[key] = sdgs_score[key] === null ? null : Math.floor(sdgs_score[key] / 6)
     }
 
-    let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
-    let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0;
-    let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
-    let outcome_score = 0
+    let ghg_score = null; let sdg_score = null; let adaptation_score = null
+    let scale_ghg_score = null; let scale_sdg_score = null; let scale_adaptation_score = null;
+    let sustained_ghg_score = null; let sustained_sdg_score = null; let sustained_adaptation_score = null;
+    let outcome_score = null
     if (obj['SCALE_GHG']) {
       scale_ghg_score = obj['SCALE_GHG'].score
       sustained_ghg_score = obj['SUSTAINED_GHG']?.score
-      ghg_score += (scale_ghg_score + sustained_ghg_score) / 2;
-      outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100)
+      ghg_score = scale_ghg_score === null && sustained_ghg_score === null ? null : (scale_ghg_score + sustained_ghg_score) / 2;
+      ghg_score  !== null ? outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) : outcome_score = outcome_score
     }
     if (obj['SCALE_SD']) {
       scale_sdg_score = obj['SCALE_SD'].score
       sustained_sdg_score = obj['SUSTAINED_SD']?.score
-      sdg_score = (scale_sdg_score + sustained_sdg_score) / 2;
-      outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100)
+      sdg_score = scale_sdg_score === null && sustained_sdg_score === null ? null : (scale_sdg_score + sustained_sdg_score) / 2;
+      sdg_score !== null ? outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) : outcome_score = outcome_score
     }
     if (obj['SCALE_ADAPTATION']) {
       scale_adaptation_score = obj['SCALE_ADAPTATION'].score
       sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score
-      adaptation_score = (scale_adaptation_score + sustained_adaptation_score) / 2;
-      outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100)
+      adaptation_score = scale_adaptation_score === null && sustained_adaptation_score === null ? null : (scale_adaptation_score + sustained_adaptation_score) / 2;
+      adaptation_score !== null ? outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) : outcome_score = outcome_score
     }
 
     return {
-      ghg_score: Math.round(ghg_score),
-      sdg_score: Math.round(sdg_score),
-      adaptation_score: Math.round(adaptation_score),
-      outcome_score: Math.round(outcome_score),
-      scale_ghg_score: Math.round(scale_ghg_score),
-      sustained_ghg_score: Math.round(sustained_ghg_score),
-      scale_sdg_score: Math.round(scale_sdg_score),
-      sustained_sdg_score: Math.round(sustained_sdg_score),
-      scale_adaptation_score: Math.round(scale_adaptation_score),
-      sustained_adaptation_score: Math.round(sustained_adaptation_score),
+      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
+      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
+      adaptation_score: adaptation_score === null ? null : Math.round(adaptation_score),
+      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
+      scale_ghg_score: scale_ghg_score === null ? null : Math.round(scale_ghg_score),
+      sustained_ghg_score: sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
+      scale_sdg_score: scale_sdg_score === null ? null : Math.round(scale_sdg_score),
+      sustained_sdg_score: sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
+      scale_adaptation_score: scale_adaptation_score === null ? null : Math.round(scale_adaptation_score),
+      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.round(sustained_adaptation_score),
       sdgs_score: sdgs_score
     }
   }
@@ -828,6 +838,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   
       let formattedResults = await Promise.all(filteredResults.map(async (result) => {
         return {
+          assessment_id: result.assessment.id,
           assessment: result.id,
           process_score: result.averageProcess,
           outcome_score: result.averageOutcome,
@@ -840,12 +851,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       formattedResults.map(r => {
         interventions_to_filter.push({
           intervention: r.intervention,
-          intervention_id: r.intervention_id
+          intervention_id: r.assessment
         })
       })
   
       if (intervention_ids?.length > 0) {
-        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.intervention_id))
+        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.assessment.toString()))
       }
   
       interventions_to_filter = this.getDistinctObjects(interventions_to_filter, 'intervention_id')

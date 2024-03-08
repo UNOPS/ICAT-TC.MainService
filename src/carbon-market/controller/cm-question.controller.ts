@@ -1,11 +1,8 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
-import { AssessmentCMDetailService } from "../service/assessment-cm-detail.service";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { CMQuestionService } from "../service/cm-question.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { UniqueCategories } from "../dto/cm-result.dto";
 
 
