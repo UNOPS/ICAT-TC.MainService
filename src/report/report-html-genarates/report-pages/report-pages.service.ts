@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import {
+  ComparisonReportReportContentFive,
   ComparisonReportReportContentFour,
   ComparisonReportReportContentOne,
+  ComparisonReportReportContentSix,
   ComparisonReportReportContentThree,
   ComparisonReportReportContentTwo,
   ComparisonReportReportTableOfContent,
@@ -1964,6 +1966,7 @@ ${coverPage.reportDate}
        a.characteristics
        .map((b, index) => {
          const questionsLength = b.raw_questions.length;
+  
          if (!index) {
            return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
            <td rowspan="${a.rows}" >${a.name}</td>
@@ -2169,7 +2172,6 @@ ${coverPage.reportDate}
    </table>
    </div>
    <div class="report-table-sm  ">
-    <p>Question - Is the intervention's GHG outcome sustained over time, i.e. the mitigation continues to accrue beyond the crediting period? Note: this is different from permanence of the achieved mitigation</p>
    <table class="table  table-bordered border-dark">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2559,7 +2561,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time - sustainable development</td>
+         <td >Outcome sustained over time - sustainable development</td>
          <td >${
            content.outcomes_categories_assessment.sustained_sdg_score !== null
              ? content.outcomes_categories_assessment.sustained_sdg_score
@@ -2567,7 +2569,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Outcome sustainable over time - adaptation co-benefits </td>
+         <td >Outcome sustained over time - adaptation co-benefits </td>
          <td >${
            content.outcomes_categories_assessment.sustained_adaptation_score !==
            null
@@ -3266,7 +3268,7 @@ PORTFOLIO TOOL
               <th scope="col">Status</th>
               <th scope="col">International</th>
               <th scope="col">National/ sectorial	</th>
-              <th scope="col">Subnational/ subsectorial	 up</th>
+              <th scope="col">Subnational/ subsectorial	</th>
               <th scope="col">Category score</th>
               
             </tr>
@@ -3406,7 +3408,7 @@ PORTFOLIO TOOL
             <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Subnational/ subsectorial	</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -3550,7 +3552,7 @@ PORTFOLIO TOOL
             <th scope="col">Status</th>
             <th scope="col">International</th>
             <th scope="col">National/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">Subnational/ subsectorial	</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -4175,6 +4177,7 @@ PORTFOLIO TOOL
 
     return page_1;
   }
+ 
   comparisonContentFour(
     header: string,
     footer: string,
@@ -4277,7 +4280,88 @@ PORTFOLIO TOOL
 
     return page_1;
   }
+  comparisonContentFive(
+    header: string,
+    footer: string,
+    content: ComparisonReportReportContentFive,
+  ): string {
+    let pageNumber = 5;
+    const page_1 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content same-page">
+     
+      <div  class="main_header text-start">5  TRANFORMATIONAL IMPACT MATRIX   </div>
+    
+      <div class="report-table-sm same-page-table">
+      <table id="heatmap" class="heatmap" style="text-align: center;">
+         <tbody>
+        <tr>
+            <td></td>
+            <td colspan="8">Outcome: Extent and sustained nature of transformation</td>
+        </tr>
+        <tr>
+            <td class="vertical-text-chrome"  rowspan="6">Process: Likelihood of transformation</td>
+            <td></td>
+           
+            ${this.xData
+              .map((x) => {
+                return `
+                 <td  >${x.label}</td> `;
+              })
+              .join('')}
+        </tr>
 
+        ${this.yData
+          .map((y) => {
+            return `
+             <tr > 
+              <td >${y.label}</td> 
+              
+              ${this.generateHeatMapforComparison(y.value, content)}
+            </tr> `;
+          })
+          .join('')}
+        
+       
+        </tbody>
+      </table>
+      </div>
+     
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+
+    return page_1;
+  }
+  comparisonContentSix(
+    header: string,
+    footer: string,
+    content: ComparisonReportReportContentSix,
+  ): string {
+    let pageNumber = 5;
+    const page_1 = `  <div id="page_5" class="page text-center" >
+      ${header}
+      <div class="content same-page">
+     
+      <div  class="main_header text-start">6 SECTOR COVERAGE  </div>
+    
+      <div  class="image-pie "><figure class="figure ">
+      <img src="${content.link}"  alt="A generic square placeholder image with rounded corners in a figure.">
+      
+     </figure></div>
+     
+    
+      </div>
+      
+      ${footer.replace('#pageNumber#', (pageNumber++).toString())}
+      
+       </div>`;
+
+    return page_1;
+  }
   generateAlignmentBody(interventions: any[], cols: any[]) {
     let body = '';
     for (let int of interventions) {
@@ -4414,5 +4498,38 @@ PORTFOLIO TOOL
     contentTwo: ReportContentTwo | ReportCarbonMarketDtoContentFour,
   ) {
     return contentTwo.processScore === y && contentTwo.outcomeScore === x;
+  }
+  generateHeatMapforComparison(
+    y: number,
+    contentTwo: ComparisonReportReportContentFive,
+  ) {
+    let body = '';
+    for (let x of this.xData) {
+      const numberOfmatching:number=this.getInterventionComparison(x.value, y, contentTwo)
+      body =
+        body +
+        '<td  class="charttd" style="background-color:' +
+        this.getBackgroundColorInvestmentHeatmap(x.value, y) +
+        '; color:' +
+        (numberOfmatching
+          ? '#404040'
+          : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
+        ';">' +
+        '<span class="' +
+        (numberOfmatching>0 ?numberOfmatching==1?'intervention': 'intervention-large' : '') +
+        '">1</span>' +
+        '</td>';
+    }
+    return body;
+  }
+  getInterventionComparison(
+    x: number,
+    y: number,
+    contentTwo: ComparisonReportReportContentFive,
+  ) {
+    let a = contentTwo.scores?.filter(item => item.processScore === y && item.outcomeScore === x).length
+   
+    return a 
+
   }
 }

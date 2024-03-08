@@ -138,9 +138,9 @@ body {
     text-align: center;
   }
   .image-larg img {
-    border: 1px solid #a9a9a9;
-    border-radius: 10px;
-    margin-top: 20px;
+    /* border: 1px solid #a9a9a9;
+    border-radius: 10px; */
+    margin-top: auto;
     height: 500px;
     width: 800px;
   }
@@ -155,15 +155,14 @@ body {
    height: auto;
   }
   .image-pie {
-    margin-left: 75px;
-    padding-top: 50px;
+    margin: 0px 0px 15px 75px;
   }
   
   .image-pie img {
-    border: 1px solid #a9a9a9;
-    border-radius: 10px;
+    /* border: 1px solid #a9a9a9;
+    border-radius: 10px; */
   
-    height: 400px;
+    height: 550px;
     width: 800px;
   }
   
@@ -376,7 +375,7 @@ body {
   }
   
   .intervention {
-    background-color: blue;
+    background-color: #404040;
     display: block;
     height: 25px;
     width: 25px;
@@ -406,3 +405,13 @@ body {
     page-break-inside: avoid;
        
   }
+  .intervention-large {
+    background-color: #404040;
+    display: block;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    margin: auto;
+}
