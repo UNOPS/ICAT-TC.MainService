@@ -2267,6 +2267,26 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async saveTotalInvestments(investments: TotalInvestment[]) {
     return await this.totalInvestmentRepo.save(investments);
   }
+  async deleteAssessment(asseId: number) {
+    try {
+      // 
+      await this.investorSectorRepo.delete({assessment:{id:asseId}});
+      let investorTool = await this.repo.findOne({where:{assessment:{id:asseId}}})
+      if(investorTool){
+        await this.totalInvestmentRepo.delete({investor_tool:{id:investorTool.id}})
+        await this.geographicalAreaRepo.delete({investorTool:{id:investorTool.id}}) 
+      }
+      let b = await this.indicatorDetailsRepo.delete({investorAssessment:{assessment:{id:asseId}}});
+      let a = await this.investorAssessRepo.delete({assessment:{id:asseId}});
+     
+      await this.repo.delete({assessment:{id:asseId}});
+      
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
+    
 }
 
 interface SelectedSDG {

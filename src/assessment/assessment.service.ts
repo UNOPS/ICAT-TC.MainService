@@ -32,6 +32,11 @@ import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { throwError } from 'rxjs';
+import { Tool } from 'src/data-request/enum/tool.enum';
+import { ToolsMultiselectDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -39,7 +44,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     @InjectRepository(AssessmentObjectives) private assessmentObjectivesRepo: Repository<AssessmentObjectives>,
+    @InjectRepository(PortfolioAssessment) private portfolioAssessmentRepo: Repository<PortfolioAssessment>,
     private readonly userService: UsersService,
+    private  investorService: InvestorToolService,
   ) {
     super(repo);
   }
@@ -657,5 +664,40 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       
       .where(filter,{ assessmentId });
     return await data.getMany();
+  }
+
+  async deleteAssessment(id:number, tool: string): Promise<any>{
+    
+    try {
+      if(tool == 'PORTFOLIO' || tool == 'INVESTOR'){
+        await this.investorService.deleteAssessment(id)
+      }
+      
+      let portfolioAssessment = await this.getPortfolioAssessmnet(id)
+      
+      if(portfolioAssessment){
+        console.log(portfolioAssessment)
+        await this.portfolioAssessmentRepo.delete({id:portfolioAssessment.id})
+      }
+      
+      return await this.repo.delete({id:id})
+      
+    } catch (error) {
+      console.log("error in delete assessment",id,error)
+    }
+
+  }
+
+  async getPortfolioAssessmnet(id:number){
+    let portfolioAssessment =  this.portfolioAssessmentRepo.createQueryBuilder('portfolioAssess')
+    .leftJoinAndMapOne(
+      'portfolioAssess.assessment',
+      Assessment,
+      'assess',
+      'assess.id = portfolioAssess.assessment_id'
+    )
+    .where('assess.id = :value', { value: id })
+    .getOne()
+    return await portfolioAssessment
   }
 }

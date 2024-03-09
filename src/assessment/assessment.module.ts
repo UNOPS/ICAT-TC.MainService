@@ -12,9 +12,12 @@ import { UserType } from 'src/users/entity/user.type.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Country } from 'src/country/entity/country.entity';
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
+import { InvestorToolModule } from 'src/investor-tool/investor-tool.module';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,AssessmentObjectives]),UsersModule],
+  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,AssessmentObjectives,PortfolioAssessment]),UsersModule, InvestorToolModule],
   controllers: [AssessmentController],
   providers: [AssessmentService,TokenDetails,UsersService,EmailNotificationService]
 })

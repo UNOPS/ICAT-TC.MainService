@@ -101,6 +101,8 @@ import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.
   controllers: [InvestorToolController],
   providers: [InvestorToolService, TokenDetails, EmailNotificationService,
     UsersService, MethodologyAssessmentService,
-    AuditDetailService, MasterDataService]
+    AuditDetailService, MasterDataService],
+  exports:[InvestorToolService]
 })
+
 export class InvestorToolModule { }
