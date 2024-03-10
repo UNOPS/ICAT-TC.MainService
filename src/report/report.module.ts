@@ -73,6 +73,7 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
 import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 
 
 @Module({
@@ -128,7 +129,8 @@ import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detai
       SdgPriority,
       TotalInvestment,
       User,
-      AssessmentCMDetail
+      AssessmentCMDetail,
+      BarrierCategory
     ]), 
     UsersModule,
     CountryModule,

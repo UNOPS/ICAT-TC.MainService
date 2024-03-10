@@ -15,10 +15,26 @@ import { AssessmentObjectives } from 'src/methodology-assessment/entities/assess
 import { InvestorToolModule } from 'src/investor-tool/investor-tool.module';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,AssessmentObjectives,PortfolioAssessment]),UsersModule, InvestorToolModule],
+  imports: [
+    TypeOrmModule.forFeature([Assessment,
+    User, 
+    Institution, 
+    UserType, 
+    Country, 
+    AssessmentObjectives, 
+    PortfolioAssessment,
+    Results,
+    SdgAssessment,
+    PolicyBarriers,
+    BarrierCategory
+  ]), UsersModule, InvestorToolModule],
   controllers: [AssessmentController],
-  providers: [AssessmentService,TokenDetails,UsersService,EmailNotificationService]
+  providers: [AssessmentService, TokenDetails, UsersService, EmailNotificationService]
 })
-export class AssessmentModule {}
+export class AssessmentModule { }
