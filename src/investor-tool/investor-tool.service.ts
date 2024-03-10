@@ -954,7 +954,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return result;
   }
 
-  async findAllSectorCount(): Promise<any[]> {
+  async findAllSectorCount(portfolioId: number): Promise<any[]> {
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
@@ -974,6 +974,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'cntry',
         'cntry.id = user.countryId',
       )
+      if (portfolioId&&Number(portfolioId)) {
+        let response = this.portfolioAssessRepo.find({
+          relations: ['assessment'],
+          where: { portfolio: { id: portfolioId } },
+        });
+        let assessmentIdArray: number[] = [];
+        for (let data of await response) {
+          let assessmentId = data.assessment.id;
+          assessmentIdArray.push(assessmentId);
+        }
+        data.andWhere('assessment.id IN (:...ids)', { ids: assessmentIdArray })
+  
+      }
 
     if (isUserExternal) {
       data.andWhere('user.id = :userId', { userId: currentUser.id })
