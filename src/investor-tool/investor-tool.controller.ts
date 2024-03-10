@@ -117,10 +117,16 @@ export class InvestorToolController {
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
 
-    if(tool =="All Option"){
-      return await this.investorToolService.findAllSectorCount();
-    }
     return await this.investorToolService.findSectorCount(tool);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('find-sector-count-all-tool')
+  async findSectorCountAllTool(
+    @Query('portfolioId') portfolioId: number 
+    ):Promise<any[]> {
+
+      return await this.investorToolService.findAllSectorCount(portfolioId);
   }
   @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
