@@ -2276,12 +2276,50 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         await this.totalInvestmentRepo.delete({investor_tool:{id:investorTool.id}})
         await this.geographicalAreaRepo.delete({investorTool:{id:investorTool.id}}) 
       }
-      let b = await this.indicatorDetailsRepo.delete({investorAssessment:{assessment:{id:asseId}}});
-      let a = await this.investorAssessRepo.delete({assessment:{id:asseId}});
-     
+      let investorAssessment = await this.getInvestorAssessment(asseId)
+      await this.deleteInvestorAssessment(investorAssessment)
+      await this.investorAssessmentRepo.delete({assessment:{id:asseId}})
       await this.repo.delete({assessment:{id:asseId}});
       
     
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async getInvestorAssessment(asseId: number) {
+    try {
+      let investor_assessment = this.investorAssessmentRepo.createQueryBuilder('investorAssess')
+        .leftJoinAndMapMany(
+          'investorAssess.indicator_details',
+          IndicatorDetails,
+          'indicator_details',
+          'indicator_details.investorAssessment_id = investorAssess.id',
+        )
+        .leftJoinAndMapOne(
+          'investorAssess.assessment',
+          Assessment,
+          'assessment',
+          `assessment.id = investorAssess.assessment_id`,
+        )
+        .where('assessment.id = :value', { value: asseId })
+        .getMany()
+
+        return await investor_assessment
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async deleteInvestorAssessment(invest_assessment: InvestorAssessment[]) {
+    try {
+      for await (let assess of invest_assessment) {
+        if(assess.indicator_details){
+          this.indicatorDetailsRepo.delete({investorAssessment:{id:assess.id}})
+        }
+        
+      }
+     
     } catch (error) {
       console.log(error)
     }
