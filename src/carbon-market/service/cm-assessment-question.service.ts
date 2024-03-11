@@ -843,7 +843,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessments: paginated_data
       }
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException(error)
     }
   }
