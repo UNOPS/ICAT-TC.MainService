@@ -84,6 +84,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto): Promise<any> {
 
     if (createInvestorToolDto.investortool) {
+      await this.deleteInvestorDetails(createInvestorToolDto.investortool.assessment.id)
       let assessment = createInvestorToolDto.investortool.assessment;
       let investor = new InvestorTool();
       investor.assessment = assessment;
@@ -122,6 +123,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       throw new error('No data')
     }
 
+  }
+  async deleteInvestorDetails(asseId:number){
+    await this.investorSectorRepo.delete({assessment:{id:asseId}});
+    let investorTool = await this.repo.findOne({where:{assessment:{id:asseId}}})
+      if(investorTool){
+        await this.totalInvestmentRepo.delete({investor_tool:{id:investorTool.id}})
+        await this.geographicalAreaRepo.delete({investorTool:{id:investorTool.id}}) 
+    }
+    await this.repo.delete({assessment:{id:asseId}});
+    
   }
   async findAllImpactCovered(): Promise<ImpactCovered[]> {
     return this.impactCoveredRepo.find();
@@ -387,6 +398,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let results = await this.calculateNewAssessmentResults(data?.assessment?.id)
         data.averageOutcome = results?.outcomeScore;
         data.averageProcess = results?.processScore;
+        let result = await this.getResultbyId(data.assessment.id)
+        if(result){
+          data.id = result.id
+        }
         await this.resultRepository.save(data);
         if (data2.isDraft == false && data2.isEdit == true) {
           assessment.isDraft = data2.isDraft
@@ -600,8 +615,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let results = await this.calculateNewAssessmentResults(data?.assessment?.id).then(
 
         )
+        
         data.averageOutcome = results?.outcomeScore;
         data.averageProcess = results?.processScore;
+        let result = await this.getResultbyId(data.assessment.id)
+        if(result){
+          data.id = result.id
+        }
+        
         await this.resultRepository.save(data);
         if (data2.isDraft == false && data2.isEdit == true) {
           assessment.processDraftLocation = data2.proDraftLocation;
@@ -2336,6 +2357,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     } catch (error) {
       console.log(error)
     }
+  }
+
+  async getResultbyId(asessmentId:number): Promise<Results>{
+    let result = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndMapOne(
+        'result.assessment',
+        Assessment,
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .where('assessment.id = :asessmentId',{asessmentId:asessmentId})
+      .getOne()
+    return await result;
   }
     
 }

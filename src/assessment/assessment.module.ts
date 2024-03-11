@@ -35,6 +35,7 @@ import { BarrierCategory } from 'src/climate-action/entity/barrier-category.enti
     BarrierCategory
   ]), UsersModule, InvestorToolModule],
   controllers: [AssessmentController],
-  providers: [AssessmentService, TokenDetails, UsersService, EmailNotificationService]
+  providers: [AssessmentService, TokenDetails, UsersService, EmailNotificationService],
+  exports: [AssessmentService]
 })
 export class AssessmentModule { }
