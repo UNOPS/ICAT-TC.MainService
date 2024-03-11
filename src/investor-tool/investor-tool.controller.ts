@@ -228,7 +228,13 @@ export class InvestorToolController {
   async saveToolsMultiSelect(@Body() req: ToolsMultiselectDto){
     return await this.investorToolService.saveToolsMultiSelect(req)
   }
-  
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-data-graph') 
+  async getDashboardAllDataGraph(
+    ):Promise<any> {
+      return this.investorToolService.getDashboardAllDataGraph();
+    }
+
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-all-data')
   async getDashboardAllData(
@@ -258,7 +264,6 @@ export class InvestorToolController {
       return await this.investorToolService.saveSdgPriorities(req.priorities)
     } catch (error) {
       body = { ...body, ...{ actionStatus: "Failed to save SDG Priorities", } }
-      console.error("save sdg catch", error)
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }

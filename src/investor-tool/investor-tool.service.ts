@@ -33,6 +33,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2,} from './dto/processData.dto';
 import { TotalInvestment } from './entities/total-investment.entity';
+import { GraphResdDto } from './dto/graphRes.dto';
 
 const schema = {
   'id': {
@@ -1828,6 +1829,122 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       ;
     return await sectorSum.getRawMany();
   }
+  async getDashboardAllDataGraph() {
+
+    let filter = ''
+    let user =await this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    if (currentUser?.userType?.name === 'External') {
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+
+    }
+    else {
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+   
+    
+    let result1 =await data.getMany();
+    let heatMapScore =  await result1.map(item => {return {processScore: item.process_score, outcomeScore: item.outcome_score}});
+    let d =new Array();
+    let colour =new Array();
+    let result =new Array();
+    colour=['#ec6665', '#ed816c','#f19f70','#f19f70','#f9d57f','#f98570','#fdbf7b','#fedc82','#a9d27f','#86c97d','#63be7b']
+   
+    let r= await  this.heatMapCAl(heatMapScore);
+        d.push(r.mineThree*100/r.total);
+        d.push(r.mineTwo*100/r.total);
+        d.push(r.mineOne*100/r.total);
+        d.push(r.zero*100/r.total);
+        d.push(r.one*100/r.total);
+        d.push(r.two*100/r.total);
+        d.push(r.three*100/r.total);
+        d.push(r.four*100/r.total);
+        d.push(r.five*100/r.total);
+        d.push(r.six*100/r.total);
+        d.push(r.seven*100/r.total);
+
+        result.push(d);
+        result.push(colour);
+        return result;
+  }
+
+  async heatMapCAl(heatMapScore:any){
+    let data = new GraphResdDto();
+    for await(let item of heatMapScore){
+      data.total +=1;
+      if ( item.processScore != null && item.outcomeScore !=null)  {
+        let value =  item.processScore  +  item.outcomeScore ;
+        switch (value) {
+          case -3:
+            data.mineOne +=1;
+            break;
+          case -2:
+            data.mineTwo +=1;
+            break;
+          case -1:
+            data.mineThree +=1;
+            break;
+          case 0:
+            data.zero +=1;
+            break;
+          case 1:
+            data.one +=1;
+            break;
+          case 2:
+            data.two +=1;
+            break;
+          case 3:
+            data.three +=1;
+            break;
+          case 4:
+            data.four +=1;
+            break;
+          case 5:
+            data.five +=1;
+            break;
+          case 6:
+            data.six +=1;
+            break;
+          case 7:
+            data.seven +=1;
+            break;
+        }
+      } 
+    }
+    return data;
+  }
+
 
   async getDashboardAllData(options: IPaginationOptions,filterText:[]): Promise<Pagination<any>> {
 
