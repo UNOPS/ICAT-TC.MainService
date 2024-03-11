@@ -72,4 +72,9 @@ export class CMSeedController {
     async updateToolNameInAssessment(){
         return await this.service.updateToolNameInAssessment()
     }
+
+    @Post('default-value-seed')
+    async defaultValueSeed(){
+        return await this.service.defaultValueSeed()
+    }
 }

@@ -340,8 +340,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
     let col_set_2_scale = [
       { label: 'INTERNATIONAL', code: 'international' },
-      { label: 'NATIONAL/SECTORIAL', code: 'national' },
-      { label: 'SUBNATIONAL/SUBSECTORIAL', code: 'subnational' },
+      { label: 'NATIONAL/SECTORAL', code: 'national' },
+      { label: 'SUBNATIONAL/SUBSECTORAL', code: 'subnational' },
       { label: 'CATEGORY SCORE', code: 'category_score' }
     ]
     let col_set_2_sustained = [

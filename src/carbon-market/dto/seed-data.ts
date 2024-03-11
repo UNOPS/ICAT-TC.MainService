@@ -105,7 +105,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Financial additionality',
         message: "The intervention cannot be considered additional, clearly not enabling transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: "Q3: This only applies to ITMOs: Is the envisaged carbon market intervention consistent with the host country's NDC targets and goes beyond the host country's (unconditional) NDC targets? ",
@@ -128,7 +128,7 @@ export const questions = [
         short_label: 'Robust quantification and verification of mitigation outcomes',
         message: "The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
         related_questions: ['S-2-C-1-Q-4', 'S-2-C-1-Q-5', 'S-2-C-1-Q-6', 'S-2-C-1-Q-7'],
-        isUpdate: true
+        isUpdate: false
     },
     {
         label: 'Q5: Does the carbon market intervention robustly quantify and verify mitigation outcomes by setting a realistic, credible, and conservative baseline (below BAU)?',
@@ -1610,10 +1610,10 @@ export const characteristic = [
         name: 'Scale up',
         code: 'SCALE_UP',
         category_id: 1,
-        description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectorial public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
+        description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectoral public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
         main_question: 'Does the intervention support the scale-up and diffusion of low-carbon and/or climate resilient innovations?',
         weight: 20,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Entrepreneurs',
@@ -1706,7 +1706,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'National/Sectorial level',
+        name: 'National/Sectoral level',
         code: 'MEDIUM_LEVEL',
         category_id: 5,
         description: '',
@@ -1715,7 +1715,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'Subnational/regional/municipal or sub sectorial level',
+        name: 'Subnational/regional/municipal or sub sectoral level',
         code: 'MICRO_LEVEL',
         category_id: 5,
         description: '',
@@ -1733,7 +1733,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'National/Sectorial level',
+        name: 'National/Sectoral level',
         code: 'MEDIUM_LEVEL',
         category_id: 6,
         description: '',
@@ -1742,7 +1742,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'Subnational/regional/municipal or sub sectorial level',
+        name: 'Subnational/regional/municipal or sub sectoral level',
         code: 'MICRO_LEVEL',
         category_id: 6,
         description: '',
@@ -1814,7 +1814,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'National/Sectorial level',
+        name: 'National/Sectoral level',
         code: 'NATIONAL',
         category_id: 9,
         description: '',
@@ -1823,7 +1823,7 @@ export const characteristic = [
         isUpdate: false
     },
     {
-        name: 'Subnational/regional/municipal or sub sectorial level',
+        name: 'Subnational/regional/municipal or sub sectoral level',
         code: 'SUBNATIONAL',
         category_id: 9,
         description: '',
@@ -1930,5 +1930,35 @@ export const categories = [
         description: '',
         weight: 30,
         isUpdate: false
+    },
+]
+
+export const defaultValues = [
+    {
+        category: 'SCALE_GHG',
+        characteristic: 'MACRO_LEVEL',
+        starting_situation_value: 59,
+        expected_impact_value: 59,
+        source: '',
+        unit: 'GtCO2-eq',
+        code: 'SCALE_GHG_MACRO_LEVEL_DEF_1'
+    },
+    {
+        category: 'SCALE_GHG',
+        characteristic: 'MEDIUM_LEVEL',
+        starting_situation_value: 59,
+        expected_impact_value: 59,
+        source: '',
+        unit: '',
+        code: 'SCALE_GHG_MEDIUM_LEVEL_DEF_1'
+    },
+    {
+        category: 'SCALE_GHG',
+        characteristic: 'MICRO_LEVEL',
+        starting_situation_value: 59,
+        expected_impact_value: 59,
+        source: '',
+        unit: 'GtCO2-eq',
+        code: 'SCALE_GHG_MICRO_LEVEL_DEF_1'
     },
 ]
