@@ -1341,7 +1341,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       )
     }
     if(allTool !='ALL_OPTION'){
-      console.log("allTool",allTool)
       filter = filter + ' and asses.tool=:tool '
     }
     data.select(['asses.id','asses.tool', 'result.id', 'result.averageProcess','result.averageOutcome'])
