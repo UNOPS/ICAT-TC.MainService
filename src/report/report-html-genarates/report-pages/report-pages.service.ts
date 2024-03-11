@@ -3266,8 +3266,8 @@ PORTFOLIO TOOL
               <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">International</th>
-              <th scope="col">National/ sectorial	</th>
-              <th scope="col">Subnational/ subsectorial	 up</th>
+              <th scope="col">National/ sectoral	</th>
+              <th scope="col">Subnational/ subsectoral	 up</th>
               <th scope="col">Category score</th>
               
             </tr>
@@ -3406,8 +3406,8 @@ PORTFOLIO TOOL
             <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">international</th>
-            <th scope="col">national/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">national/ sectoral	</th>
+            <th scope="col">Subnational/ subsectoral	 up</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -3550,8 +3550,8 @@ PORTFOLIO TOOL
             <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">International</th>
-            <th scope="col">National/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	 up</th>
+            <th scope="col">National/ sectoral	</th>
+            <th scope="col">Subnational/ subsectoral	 up</th>
             <th scope="col">Category score</th>
             
           </tr>

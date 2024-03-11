@@ -56,6 +56,7 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { HttpModule } from '@nestjs/axios';
 import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
 
 @Module({
   controllers: [PortfolioController],
@@ -80,7 +81,8 @@ import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detai
     PortfolioQuestions, MethodologyAssessmentParameters, Methodology, Barriers, AssessmentBarriers,
     BarriersCategory, Indicators, AssessmentCharacteristics, MethodologyIndicators,PolicyBarriers,
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
-    CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment, AssessmentCMDetail
+    CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment, AssessmentCMDetail,
+    CMDefaultValue
 
   ]),
     HttpModule,

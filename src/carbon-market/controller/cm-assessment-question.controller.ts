@@ -111,6 +111,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   async getAssessmentQuestionsByAssessmentId(@Param('id') id: number) {
     return await this.service.getAssessmentQuestionsByAssessmentId(id)
   }
+
+  @Get('get-cm-default-values')
+  async getCMDefaultValues(@Query('characteristic_id') characteristic_id: number) {
+    return await this.service.getCMDefaultValues(characteristic_id)
+  }
   
 
 }

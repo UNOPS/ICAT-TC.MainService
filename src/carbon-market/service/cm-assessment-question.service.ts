@@ -21,29 +21,23 @@ import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
+import { CMDefaultValue } from "../entity/cm-default-value.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
 
   constructor(
     @InjectRepository(CMAssessmentQuestion) repo,
-    @InjectRepository(CMAssessmentAnswer)
-    private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
-    @InjectRepository(CMAssessmentQuestion)
-    private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
-    @InjectRepository(Results)
-    private resultsRepo: Repository<Results>,
-    @InjectRepository(Assessment)
-    private assessmentRepo: Repository<Assessment>,
-    @InjectRepository(ParameterRequest)
-    private parameterRequestRepo: Repository<ParameterRequest>,
-    @InjectRepository(Characteristics)
-    private characteristicRepo: Repository<Characteristics>,
+    @InjectRepository(CMAssessmentAnswer) private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
+    @InjectRepository(CMAssessmentQuestion) private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    @InjectRepository(Results) private resultsRepo: Repository<Results>,
+    @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
+    @InjectRepository(ParameterRequest) private parameterRequestRepo: Repository<ParameterRequest>,
+    @InjectRepository(SdgAssessment) private sdgAssessmentRepo: Repository<SdgAssessment>,
+    @InjectRepository(CMDefaultValue) private cmDefaultValueRepo: Repository<CMDefaultValue>,
     private userService: UsersService,
     private masterDataService: MasterDataService,
-    @InjectRepository(SdgAssessment)
-    private sdgAssessmentRepo: Repository<SdgAssessment>,
-    private assessmentCMDetailService: AssessmentCMDetailService
+    private assessmentCMDetailService: AssessmentCMDetailService,
   ) {
     super(repo);
   }
@@ -1017,6 +1011,28 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     .getMany()
     return result;
   }
+
+  async getCMDefaultValues(characteristic_id: number) {
+    try {
+      return await this.cmDefaultValueRepo.createQueryBuilder('default_value')
+        .innerJoin(
+          'default_value.characteristic',
+          'characteristic',
+          'characteristic.id = default_value.characteristicId'
+        )
+        // .innerJoin(
+        //   'characteristic.category',
+        //   'category',
+        //   'category.id = characteristic.category_id'
+        // )
+        .where('characteristic.id = :id', { id: characteristic_id })
+        .getMany()
+    } catch (error) {
+      console.error(error)
+      throw new InternalServerErrorException()
+    }
+  }
+    
 }
 export class CharacteristicData {
   characteristic: string;

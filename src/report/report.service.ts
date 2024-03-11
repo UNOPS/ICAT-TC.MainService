@@ -2005,10 +2005,10 @@ return contentFour
       if(name=='International/global level'){
         return 'Macro level'
       }
-      else if(name=='National/Sectorial level'){
+      else if(name=='National/Sectoral level'){
         return 'Medium level '
       }
-      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+      else if(name=='Subnational/regional/municipal or sub sectoral level'){
         return 'Micro level '
       }
       if(name=='Short term (<5 years)'){

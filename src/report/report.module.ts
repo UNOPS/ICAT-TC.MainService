@@ -73,6 +73,8 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
 import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { CarbonMarketModule } from 'src/carbon-market/carbon-market.module';
+import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
 
 
 @Module({
@@ -128,14 +130,15 @@ import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detai
       SdgPriority,
       TotalInvestment,
       User,
-      AssessmentCMDetail
+      AssessmentCMDetail,
+      CMDefaultValue
     ]), 
     UsersModule,
     CountryModule,
     InvestorToolModule,
     MethodologyAssessmentModule,
     PortfolioModule,
-    HttpModule
+    HttpModule,
   ],
   controllers: [ReportController],
 
