@@ -1299,9 +1299,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
-  async getDashboardData(portfolioID: number, options: IPaginationOptions,selectedAssessIds?:number[]): Promise<Pagination<any>> {
-    let tool = 'PORTFOLIO';
+  async getDashboardData(portfolioID: number, options: IPaginationOptions, selectedAssessIds?:number[],allTool?:string, ): Promise<Pagination<any>> {
     let filter = ''
+    let tool = 'PORTFOLIO';
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1339,8 +1339,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         'portfolio_assesmet',
         'asses.id = portfolio_assesmet.assessment_id'
       )
-    }else{
-
+    }
+    if(allTool !='ALL_OPTION'){
+      console.log("allTool",allTool)
       filter = filter + ' and asses.tool=:tool '
     }
     data.select(['asses.id','asses.tool', 'result.id', 'result.averageProcess','result.averageOutcome'])
