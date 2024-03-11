@@ -2114,7 +2114,6 @@ ${coverPage.reportDate}
 
     const scale_ghg = content.scale_ghg;
     const sustained_ghg = content.sustained_ghg;
-    console.log(scale_ghg, sustained_ghg);
     const page_2 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
