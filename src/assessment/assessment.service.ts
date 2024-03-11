@@ -676,16 +676,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       if(tool == 'PORTFOLIO' || tool == 'INVESTOR'){
         await this.investorService.deleteAssessment(id)
       }
-
+      
       let portfolioAssessment = await this.getPortfolioAssessmnet(id)
       if(portfolioAssessment){
         await this.portfolioAssessmentRepo.delete({id:portfolioAssessment.id})
       }
-      let policyBarriers = await this.getPolicyBarriers(id);
-      if(policyBarriers){
-        await this.deleteBarrierCategories(policyBarriers)
-      }
-      await this.policyBarrierRepo.delete({assessment:{id:id}})
+      await this.deleteBarriers(id)
       await this.resultsRepo.delete({assessment:{id: id}})
       await this.sdgAssessmentRepo.delete({assessment:{id: id}})
       await this.repo.delete({id:id})
@@ -696,6 +692,13 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       return false
     }
 
+  }
+  async deleteBarriers(id: number){
+    let policyBarriers = await this.getPolicyBarriers(id);
+      if(policyBarriers){
+        await this.deleteBarrierCategories(policyBarriers)
+      }
+      await this.policyBarrierRepo.delete({assessment:{id:id}})
   }
 
   async getPortfolioAssessmnet(id:number){
