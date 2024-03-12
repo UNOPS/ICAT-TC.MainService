@@ -9,9 +9,7 @@ import { Report } from './entities/report.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { AssessmentService } from 'src/assessment/assessment.service';
-import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
-import { AssessmentModule } from 'src/assessment/assessment.module';
 import { Country } from 'src/country/entity/country.entity';
 import { CountryModule } from 'src/country/country.module';
 import { TokenDetails } from 'src/utills/token_details';
@@ -73,8 +71,8 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
 import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
-import { CarbonMarketModule } from 'src/carbon-market/carbon-market.module';
 import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 
 
 @Module({
@@ -131,7 +129,8 @@ import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity
       TotalInvestment,
       User,
       AssessmentCMDetail,
-      CMDefaultValue
+      CMDefaultValue,
+      BarrierCategory
     ]), 
     UsersModule,
     CountryModule,

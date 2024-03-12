@@ -151,7 +151,7 @@ import { CMDefaultValue } from './carbon-market/entity/cm-default-value.entity';
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
         Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives, Portfolio, PortfolioAssessment, SdgPriority, CMDefaultValue],
 
-      synchronize: false,
+      synchronize: true,
       migrationsRun: false,
       logging: true,
       logger: 'file',
