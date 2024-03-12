@@ -1843,10 +1843,6 @@ return contentFour
           description: portfolio.date ? portfolio.date : 'N/A',
         },
         {
-          information: 'Implementing entity or entities',
-          description: portfolio.person ? portfolio.person : 'N/A',
-        },
-        {
           information: 'Objectives of the assessment',
           description: portfolio.objectives ? portfolio.objectives : 'N/A',
         },

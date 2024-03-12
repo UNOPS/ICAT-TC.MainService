@@ -1369,7 +1369,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -1502,7 +1502,7 @@ ${coverPage.reportDate}
      <div class="table-of-content-sub-header-item"><div >3.3	Process categories assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
      <div class="table-of-content-sub-header-item"><div >3.4	Outcomes categories assessment  .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
   
-     <div class="table-of-content-header-item"><div >4. Tranformational Impact Matrix ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+     <div class="table-of-content-header-item"><div >4. Transformational Impact Matrix ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
      <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
  
   
@@ -2618,7 +2618,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -4290,7 +4290,7 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">5  TRANFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">5  TRANSFORMATIONAL IMPACT MATRIX   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">

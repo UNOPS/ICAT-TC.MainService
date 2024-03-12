@@ -9,7 +9,7 @@ export const sections = [
         isUpdate: false
     },
     {
-        name: 'Section 3: Tranformational Change Indicators',
+        name: 'Section 3: Transformational Change Indicators',
         code: 'SECTION_3',
         order: 2,
         description: 'This section of the carbon markets tool will examine the potential of the intervention to contribute to fundamental, sustained change. The 2021 ‘Promoting transformational change through carbon markets’ report builds on the original ICAT Transformational Change Assessment Methodology  and defines four main drivers of change: 1) technology change, 2) agents of change, 3) incentives for change, and 4) norms and behavioral change, which are operationalized in form of indicators from the responses to the following questions. Indicators from responses to questions in this section will be weighted and form the overall transformational change score.',
@@ -1627,10 +1627,10 @@ export const characteristic = [
         name: 'Entrepreneurs',
         code: 'ENTREPRENEURS',
         category_id: 2,
-        description: 'Enterpreneurs are key agents of change that can invest, innovate and experiment with new technologies, applications or business models to drive change. They can be supported by creating an enabling environment and facilitating the exchange of information and ideas.',
-        main_question: 'Does the intervention promote enterpreneurs, businesses and investors to catalyse transformational change?',
+        description: 'Entrepreneurs are key agents of change that can invest, innovate and experiment with new technologies, applications or business models to drive change. They can be supported by creating an enabling environment and facilitating the exchange of information and ideas.',
+        main_question: 'Does the intervention promote entrepreneurs, businesses and investors to catalyse transformational change?',
         weight: 33,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Coalition of advocates',
@@ -1879,9 +1879,9 @@ export const categories = [
     {
         name: 'Agents',
         code: 'AGENTS',
-        description: 'Governments, enterpreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.',
+        description: 'Governments, entrepreneurs, the private sector and civil society, as well as cross-cutting coalitions and networks as agents of transformational change.',
         weight: 10,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Incentives',
