@@ -20,11 +20,11 @@ export const sections = [
 export const criterias = [
     //section 2
     {
-        name: 'Criterion 1: Safeguards on environmental integrity',
+        name: 'Criterion 1: Safeguards for environmental integrity',
         code: 'S-2-CRITERIA-1',
         order: 1,
         section: 'SECTION_2',
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Criterion 2: Prevention of GHG emissions lock-in',
@@ -86,18 +86,19 @@ export const criterias = [
 
 export const questions = [
     {
-        label: "Q1: Is the carbon market intervention directly mandated by law or otherwise triggered by legal requirements (e.g., legally binding agreements, covenants, consent decrees, contracts with government agencies and private parties)? ",
+        label: "Q1: Is the carbon market intervention directly mandated by law or otherwise triggered by legal requirements (e.g., regulatory documents such as ordinances and decrees)?",
         code: "S-2-C-1-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
         criteria: "S-2-CRITERIA-1",
         characteristic: "",
         short_label: 'Regulatory additionality',
-        message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        message: "The intervention is not additional, will result in “hot air” and undermine the host country’s NDC, clearly not enabling transformational change. \"Hot air\" occurs when an activity’s emission goal is more lenient than its actual business-as-usual (BAU) trajectory. The simplest method to create \"hot air\" is by overestimating the BAU. The activity does not meet the integrity preconditions and will not be eligible for a transformational change score.",
+        description: 'An intervention that is to be credited through carbon market instruments needs to demonstrate regulatory additionality, meaning that it goes beyond existing and firmly scheduled legal requirements.',
+        isUpdate: true
     },
     {
-        label: "Q2: Does the intervention exhibit financial additionality or can it be proved that the intervention faces specified barriers to implementation (e.g. investment barriers, technological barriers, etc.)?",
+        label: "Q2: Has the carbon market intervention successfully demonstrated financial additionality or convincingly specified prohibitive barriers to its implementation and how these are overcome by the intervention?",
         code: "S-2-C-1-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -105,10 +106,11 @@ export const questions = [
         characteristic: "",
         short_label: 'Financial additionality',
         message: "The intervention cannot be considered additional, clearly not enabling transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        description: "A financial additionality test, meaning an investment analysis (e.g. simple cost analysis, investment comparison, benchmark analysis) is conducted to show that the intervention is not financially viable without the expected revenues from the sale of the mitigation outcomes. A barrier test is conducted to corroborate the barriers that prevent the implementation of the activity (e.g., investment barrier, technological barriers).",
+        isUpdate: true
     },
     {
-        label: "Q3: This only applies to ITMOs: Is the envisaged carbon market intervention consistent with the host country's NDC targets and goes beyond the host country's (unconditional) NDC targets? ",
+        label: "Q3: This only applies to interventions generating Internationally Transferred Mitigation Outcomes (ITMOs): Does the envisaged carbon market intervention go beyond (exceed) the host country's unconditional Nationally Determined Contribution (NDC) targets?",
         code: "S-2-C-1-Q-3",
         answer_type: AnswerType.SINGLE,
         order: 3,
@@ -116,7 +118,8 @@ export const questions = [
         characteristic: "",
         short_label: 'For ITMOs: NDC alignment',
         message: "The envisaged Article 6 intervention might not go beyond reasonably anticipated measures and thus not contribute to increased ambition. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        description: "ITMOs are mitigation outcomes authorised for use towards NDCs or other international mitigation purposes (e.g. CORSIA, voluntary carbon market) according to the Article 6.2 guidance. <br>Please note that not every country clearly distinguishes between unconditional and conditional NDC targets. Conditional is thereby referring to those NDC targets whose achievement is subject to international support. If the respective country has differentiated NDC targets, the Article 6 activity should go beyond its unconditional target (i.e. conditional NDC, outside of NDC)",
+        isUpdate: true
     },
     {
         label: "Q4: Does the carbon market intervention robustly quantify and verify mitigation outcomes by disclosing underlying assumptions and considering uncertainty?",
@@ -127,11 +130,12 @@ export const questions = [
         characteristic: "",
         short_label: 'Robust quantification and verification of mitigation outcomes',
         message: "The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
+        description: 'Using a frequently applied and revised carbon market methodology would usually allow to answer this question with “yes”. If the methodology is new or has not been approved, please consider its specific characteristics',
         related_questions: ['S-2-C-1-Q-4', 'S-2-C-1-Q-5', 'S-2-C-1-Q-6', 'S-2-C-1-Q-7'],
-        isUpdate: false
+        isUpdate: true
     },
     {
-        label: 'Q5: Does the carbon market intervention robustly quantify and verify mitigation outcomes by setting a realistic, credible, and conservative baseline (below BAU)?',
+        label: 'Q5: Does the carbon market intervention robustly quantify and verify mitigation outcomes by setting a realistic, credible, and conservative baseline (below business-as-usual (BAU))?',
         code: 'S-2-C-1-Q-5',
         answer_type: AnswerType.SINGLE,
         order: 5,
@@ -139,7 +143,8 @@ export const questions = [
         characteristic: '',
         short_label: '',
         message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: false
+        description: 'A BAU baseline represents a plausible scenario for GHG emissions in the absence of the implementation of the carbon market intervention.',
+        isUpdate: true
     },
     {
         label: 'Q6: Does the carbon market intervention robustly quantify and verify mitigation outcomes by ensuring conservativeness of parameters, default values and the overall quantification methodologies?',
@@ -161,7 +166,8 @@ export const questions = [
         characteristic: '',
         short_label: '',
         message: 'The envisaged intervention might overestimate the impact of the activity, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: false
+        description: 'Leakage refers to the unintended rise of GHG emissions attributable to the mitigation intervention outside of its boundaries. For example, emissions are shifted to locations that are not targeted by the mitigation intervention such as the shift of agricultural practices from areas to be afforested to others.',
+        isUpdate: true
     },
     {
         label: 'Q8: This only applies to carbon market interventions that involve carbon storage (compared to the baseline): Does the carbon market intervention design aim to minimise the risk of non-permanence and does the intervention foresee the full addressing of reversals of emission reductions and removals if these occur?',
@@ -172,10 +178,11 @@ export const questions = [
         characteristic: '',
         short_label: 'Minimising non-permanance and addressing reversals in full',
         message: 'The envisaged intervention might lead to a reversal in emission reductions, undermining environmental integrity. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.',
-        isUpdate: false
+        description: 'Permanence denotes a state wherein the mitigation outcomes generated by a mitigation intervention are not reversed over time. In cases where there is a risk of reversal, the non-permanence of mitigation outcome must be approached with diligence, incorporating robust measures such as insurances, buffer pools, liability rules etc.',
+        isUpdate: true
     },
     {
-        label: "Q1: Is the intervention type listed on any negative list of activities that could lead to lock in (e.g., developed by the host country, the Article 6.4 Supervisory Body, the Integrity Council for Voluntary Carbon Markets, the International Energy Agency etc.)? ",
+        label: "Q1: Is the intervention type listed on any negative list of activities that could lead to lock in (e.g., developed by the host country, the Article 6.4 Supervisory Body, the <a href=\"https://icvcm.org/wp-content/uploads/2024/02/CCP-Section-4-V2-FINAL-6Feb24.pdf\" target=\"_blank\">Integrity Council for the Voluntary Carbon Market</a>, the International Energy Agency etc.)? ",
         code: "S-2-C-2-Q-1",
         answer_type: AnswerType.SINGLE,
         order: 1,
@@ -183,7 +190,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Intervention does not appear on a negative list',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Q2: Is the carbon market intervention in line with the host country’s scenarios of its long-term low-emission development strategy (LT-LEDS) (if available), or in case an LT-LEDS is not available, can it be ensured that the intervention does not lead to a lock-in of current emission levels or continuation of emissions intensive practices by prolonging the lifetime of installations using emissions-intensive technologies or by constructing new installations using emissions intensive technologies?",
@@ -194,7 +201,8 @@ export const questions = [
         characteristic: "",
         short_label: 'Alignment with long-term low-emission development strategy',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        description: 'Emissions intensive practice or technology refers to a practice or technology with a GHG emissions intensity per unit of production/consumption surpassing the intensity of the lowest emitting, technically feasible and commercially available production pathway for the delivered product, service or output.',
+        isUpdate: true
     },
     {
         label: "Q1: Does the implementation of the carbon market intervention result in significant negative environmental impacts (i.e., air, water and soil pollution, destruction of biodiversity, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
@@ -208,7 +216,7 @@ export const questions = [
         isUpdate: false
     },
     {
-        label: "Q2: Does the implementation of the carbon market intervention result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)? (“Significant” means a material change of more than 5% of the baseline value of pollution load or biodiversity parameters in the intervention area.)",
+        label: "Q2: Does the implementation of the carbon market intervention result in any significant negative social impacts (i.e., displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites, etc.)?",
         code: "S-2-C-3-Q-2",
         answer_type: AnswerType.SINGLE,
         order: 2,
@@ -216,7 +224,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Prevention/avoidance of negative social impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g., by implementing a programme across multiple geographies? ',
@@ -762,9 +770,9 @@ export const answers = [
         code: "S-2-C-1-Q-8-A-3",
         weight: 0,
         score_portion: 1,
-        isPassing: false,
+        isPassing: true,
         question: "S-2-C-1-Q-8",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Unsure",

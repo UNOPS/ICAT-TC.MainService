@@ -92,6 +92,7 @@ export class CMSeedService {
                 q.order = question.order;
                 q.answer_type = question.answer_type;
                 q.short_label = question.short_label;
+                q.description = question.description;
                 if (criteria !== undefined) q.criteria = criteria;
                 let ch = await this.characRepo.findOne({where: {code: question.characteristic}});
                 if (ch !== undefined) q.characteristic = ch;
@@ -152,6 +153,7 @@ export class CMSeedService {
                     q.answer_type = question.answer_type;
                     q.order = question.order;
                     q.short_label = question.short_label;
+                    q.description = question.description;
                     if (question.related_questions?.length > 0) {
                         q.related_questions = JSON.stringify(question.related_questions);
                     }
