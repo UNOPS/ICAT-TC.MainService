@@ -225,6 +225,13 @@ export class MethodologyAssessmentController {
     return await this.methodologyAssessmentService.getResultPageData(skip, pageSize, filterText, sectorList, assessmentType);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('get-assessment-count')
+  async getAssessmentCount(){
+    return await this.methodologyAssessmentService.getAssessmentCount();
+  }
+     
+
   @Get('results')
   async results() {
 

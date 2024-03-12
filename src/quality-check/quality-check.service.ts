@@ -49,7 +49,7 @@ export class QualityCheckService extends TypeOrmCrudService<ParameterRequest>{
     
         let data = this.assessmentRepo
           .createQueryBuilder('as')
-          .innerJoinAndMapOne('as.climateAction', ClimateAction, 'p', `as.climateAction_id = p.id and p.countryId = ${countryIdFromTocken} ` )
+          .innerJoinAndMapOne('as.climateAction', ClimateAction, 'p', `as.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken} ` )
     
           .where(filter, {
             filterText: `%${filterText}%`,

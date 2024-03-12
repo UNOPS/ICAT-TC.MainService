@@ -206,7 +206,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           'assessment.climateAction',
           ClimateAction,
           'climateAction',
-          'assessment.climateAction_id = climateAction.id'
+          'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
         )
         .leftJoinAndMapOne(
           'climateAction.country',
@@ -1299,9 +1299,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
 
-  async getDashboardData(portfolioID: number, options: IPaginationOptions): Promise<Pagination<any>> {
-    let tool = 'PORTFOLIO';
+  async getDashboardData(portfolioID: number, options: IPaginationOptions, selectedAssessIds?:number[],allTool?:string, ): Promise<Pagination<any>> {
     let filter = ''
+    let tool = 'PORTFOLIO';
     let user = this.userService.currentUser();
     const currentUser = await user;
     let userId = currentUser.id;
@@ -1339,8 +1339,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         'portfolio_assesmet',
         'asses.id = portfolio_assesmet.assessment_id'
       )
-    }else{
-
+    }
+    if(allTool !='ALL_OPTION'){
       filter = filter + ' and asses.tool=:tool '
     }
     data.select(['asses.id','asses.tool', 'result.id', 'result.averageProcess','result.averageOutcome'])
@@ -1348,21 +1348,32 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId, portfolioID }).orderBy('asses.id','DESC')
+      )
+      if(selectedAssessIds && selectedAssessIds.length>0){
+        data.andWhere('asses.id IN (:selectedAssessIds)',{selectedAssessIds:selectedAssessIds})
+      }
+      data.andWhere(filter, { tool, userId, userCountryId, portfolioID })
+      .orderBy('asses.id','DESC')
+      let allData = await data.getMany()
+      let result = await paginate(data, options);
+      return {
+        items: result.items,
+        meta: {
+          totalItems: result.meta.totalItems,
+          itemsPerPage: result.meta.itemsPerPage,
+          totalPages: result.meta.totalPages,
+          currentPage: result.meta.currentPage,
+          allData: allData,
+        } as any,
+      };
 
-
-  
-
-    let result = await paginate(data, options);
-
-    return result;
   }
 
   mapNameAndValue(name, value){

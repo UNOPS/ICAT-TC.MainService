@@ -39,8 +39,6 @@ import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
- 
-  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -510,7 +508,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
-    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
+    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id and not cl.status =-20'`)
     .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
     .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
     .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
@@ -593,6 +591,37 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         return res
       } catch (err) {
       }
+  }
+
+  async getAssessmentCount():Promise<number> {
+    let user = await this.userService.currentUser();
+    let data = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndSelect(
+        'result.assessment',
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .leftJoinAndSelect(
+        'assessment.user',
+        'user',
+        'user.id = assessment.user_id'
+      )
+      .leftJoinAndSelect(
+        'user.country',
+        'country',
+        'country.id = user.countryId'
+      )
+      if (user.userType?.name === 'External') {
+        if (user?.id) data.where('user.id = :userId', {userId: user.id})
+      } else {
+        if (user?.country?.id) data.where('country.id = :countryId', {countryId: user.country.id})
+      }
+      try {
+        let res=  await data.getCount()
+        return res
+      } catch (err) {
+      }
+
   }
 
   async results(): Promise<Results[]> {
@@ -1010,7 +1039,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let data = this.assessmentRepository
       .createQueryBuilder('assessment')
-      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and not p.status =-20' and p.countryId = ${countryIdFromTocken}`)
       .leftJoinAndMapOne(
         'assessment.verificationUser',
         User,
