@@ -79,6 +79,21 @@ export class PortfolioController {
     },selectedAssessIds);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('get-all-tool-dashboard-data')
+  async getAlltoolDashboardData(
+    @Query('PortfolioID') PortfolioID: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[],
+    @Query('tool') tool: string,
+    ):Promise<any> {
+    return await this.portfolioService.getDashboardData( PortfolioID,{
+      limit: limit,
+      page: page,
+    },selectedAssessIds,tool);
+  }
+
   
   @UseGuards(JwtAuthGuard)
   @Get('get-comparison-data/:portfolioId')

@@ -20,6 +20,7 @@ import { AllBarriersSelected } from './dto/selected-barriers.dto';
 import { BarrierCategory } from './entity/barrier-category.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { Report } from 'src/report/entities/report.entity';
+import { AssessmentService } from 'src/assessment/assessment.service';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -32,6 +33,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(Report) private readonly reportRepository: Repository<Report>,
     private userService: UsersService,
+    private assessmentService: AssessmentService,
 
   ) {
     super(repo);
@@ -108,6 +110,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     }
   }
   async save(req: AllBarriersSelected) {
+    await this.assessmentService.deleteBarriers(req.assessment.id)
     for (let re of req.allBarriers) {
       let policyBarrier = new PolicyBarriers()
       policyBarrier.barrier = re.barrier;
@@ -287,9 +290,6 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
           policyList.push(x);
       }
 
-      if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
-        policyList.push(x);
-      }
 
 
     }

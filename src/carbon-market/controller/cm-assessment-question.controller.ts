@@ -1,19 +1,13 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get, NotFoundException,InternalServerErrorException, Param, Post, Query, Res, ServiceUnavailableException, StreamableFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get,InternalServerErrorException, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
-import { CMResultDto, CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
-import { Assessment } from "src/assessment/entities/assessment.entity";
+import { CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from 'multer';
-import { editFileName } from "src/utills/file-upload.utils";
-import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StorageService } from "src/storage/storage.service";
-import { StorageFile } from "src/storage/storage-file";
 import { AuditDetailService } from "src/utills/audit_detail.service";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 
@@ -43,7 +37,6 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     public service: CMAssessmentQuestionService,
     @InjectRepository(CMAssessmentQuestion)
     public cMAssessmentQuestionRepo: Repository<CMAssessmentQuestion>,
-    private storageService: StorageService,
     private auditDetailService: AuditDetailService,
     private masterDataService: MasterDataService
   ) { }
@@ -70,7 +63,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     try {
       body = { ...body, ...{ actionStatus:req.isDraft ? 'Saved draft successfully' : 'Created assessment successfully', } }
       this.auditDetailService.log(body)
-      return await this.service.saveResult(req.result, req.assessment, req.isDraft, req.name, req.type)
+      return await this.service.saveResult(req.result, req.assessment, req.isDraft, req.name, req.type, req.expectedGHGMitigation)
     } catch (error) {
       body = { ...body, ...{ actionStatus:req.isDraft ? 'Failed to save draft' : 'Failed to create assessment', } }
       this.auditDetailService.log(body)
@@ -117,6 +110,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @Get('get-assessment-questions-by-assessment-id/:id')
   async getAssessmentQuestionsByAssessmentId(@Param('id') id: number) {
     return await this.service.getAssessmentQuestionsByAssessmentId(id)
+  }
+
+  @Get('get-cm-default-values')
+  async getCMDefaultValues(@Query('characteristic_id') characteristic_id: number) {
+    return await this.service.getCMDefaultValues(characteristic_id)
   }
   
 

@@ -135,4 +135,16 @@ export class AssessmentController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete-assessment/:id/:tool')
+  async deleteAssessment(
+    @Query('id') id: number,
+    @Query('tool') tool: string,
+  ): Promise<any> {
+    return await this.assessmentService.deleteAssessment(
+      id,
+      tool,
+    );
+  }
+
 }

@@ -9,9 +9,7 @@ import { Report } from './entities/report.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { AssessmentService } from 'src/assessment/assessment.service';
-import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
-import { AssessmentModule } from 'src/assessment/assessment.module';
 import { Country } from 'src/country/entity/country.entity';
 import { CountryModule } from 'src/country/country.module';
 import { TokenDetails } from 'src/utills/token_details';
@@ -71,6 +69,10 @@ import { StorageService } from 'src/storage/storage.service';
 import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
+import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
+import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 
 
 @Module({
@@ -125,19 +127,22 @@ import { ConfigModule } from '@nestjs/config';
       CMAssessmentAnswer,
       SdgPriority,
       TotalInvestment,
-      User
+      User,
+      AssessmentCMDetail,
+      CMDefaultValue,
+      BarrierCategory
     ]), 
     UsersModule,
     CountryModule,
     InvestorToolModule,
     MethodologyAssessmentModule,
     PortfolioModule,
-    HttpModule
+    HttpModule,
   ],
   controllers: [ReportController],
 
   providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, 
-    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
+    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService, AssessmentCMDetailService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}
