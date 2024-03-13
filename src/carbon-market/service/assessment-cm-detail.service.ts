@@ -143,11 +143,10 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   }
 
   save(dto: AssessmentCMDetail) {
-    console.log("save")
     try {
       return this.repo.save(dto);
     } catch (error) {
-      console.log("service error", error)
+      throw new InternalServerErrorException(error)
     }
   }
 
