@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
@@ -74,6 +74,17 @@ export class CMAssessmentAnswerService extends TypeOrmCrudService<CMAssessmentAn
         })
       });
     });
+  }
+
+  async deleteAssessmentAnswers(cmAssessmentQuestionIds: number[]) {
+    try {
+      for await (let id of cmAssessmentQuestionIds) {
+        await this.repo.delete({assessment_question: {id: id}});
+      }
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 
 

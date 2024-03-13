@@ -73,6 +73,12 @@ import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
 import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
+import { CMAssessmentAnswerService } from 'src/carbon-market/service/cm-assessment-answer.service';
+import { CMQuestionService } from 'src/carbon-market/service/cm-question.service';
+import { CMQuestion } from 'src/carbon-market/entity/cm-question.entity';
+import { Criteria } from 'src/carbon-market/entity/criteria.entity';
+import { Section } from 'src/carbon-market/entity/section.entity';
+import { CMAnswer } from 'src/carbon-market/entity/cm-answer.entity';
 
 
 @Module({
@@ -130,7 +136,11 @@ import { BarrierCategory } from 'src/climate-action/entity/barrier-category.enti
       User,
       AssessmentCMDetail,
       CMDefaultValue,
-      BarrierCategory
+      BarrierCategory,
+      CMQuestion,
+      Criteria,
+      Section,
+      CMAnswer
     ]), 
     UsersModule,
     CountryModule,
@@ -142,7 +152,8 @@ import { BarrierCategory } from 'src/climate-action/entity/barrier-category.enti
   controllers: [ReportController],
 
   providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, 
-    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService, AssessmentCMDetailService],
+    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService, AssessmentCMDetailService, CMAssessmentAnswerService,
+    CMQuestionService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}
