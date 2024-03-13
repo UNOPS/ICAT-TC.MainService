@@ -39,8 +39,6 @@ import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
- 
-  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -593,6 +591,37 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         return res
       } catch (err) {
       }
+  }
+
+  async getAssessmentCount():Promise<number> {
+    let user = await this.userService.currentUser();
+    let data = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndSelect(
+        'result.assessment',
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .leftJoinAndSelect(
+        'assessment.user',
+        'user',
+        'user.id = assessment.user_id'
+      )
+      .leftJoinAndSelect(
+        'user.country',
+        'country',
+        'country.id = user.countryId'
+      )
+      if (user.userType?.name === 'External') {
+        if (user?.id) data.where('user.id = :userId', {userId: user.id})
+      } else {
+        if (user?.country?.id) data.where('country.id = :countryId', {countryId: user.country.id})
+      }
+      try {
+        let res=  await data.getCount()
+        return res
+      } catch (err) {
+      }
+
   }
 
   async results(): Promise<Results[]> {

@@ -71,6 +71,9 @@ import { StorageService } from 'src/storage/storage.service';
 import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
+import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
+import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 
 
 @Module({
@@ -125,7 +128,9 @@ import { ConfigModule } from '@nestjs/config';
       CMAssessmentAnswer,
       SdgPriority,
       TotalInvestment,
-      User
+      User,
+      AssessmentCMDetail,
+      BarrierCategory
     ]), 
     UsersModule,
     CountryModule,
@@ -137,7 +142,7 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [ReportController],
 
   providers: [ReportService,StorageService, ReportGenaratesService, ReportHtmlGenaratesService, ReportPagesService, AssessmentPagesService, AssessmentService, 
-    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService],
+    TokenDetails, EmailNotificationService,InvestorToolService,PortfolioService,CMAssessmentQuestionService,MasterDataService,AuditDetailService, AssessmentCMDetailService],
   exports: [ReportService,ReportGenaratesService, ReportHtmlGenaratesService,AssessmentService, EmailNotificationService,InvestorToolService,],
 })
 export class ReportModule {}
