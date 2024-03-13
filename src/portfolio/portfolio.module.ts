@@ -54,6 +54,9 @@ import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { TotalInvestment } from 'src/investor-tool/entities/total-investment.entity';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { HttpModule } from '@nestjs/axios';
+import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
+import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
 
 @Module({
   controllers: [PortfolioController],
@@ -66,7 +69,8 @@ import { HttpModule } from '@nestjs/axios';
     MasterDataService,
     InvestorToolService,
     MethodologyAssessmentService,
-    AuditDetailService
+    AuditDetailService,
+    AssessmentCMDetailService
   ],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
@@ -77,10 +81,11 @@ import { HttpModule } from '@nestjs/axios';
     PortfolioQuestions, MethodologyAssessmentParameters, Methodology, Barriers, AssessmentBarriers,
     BarriersCategory, Indicators, AssessmentCharacteristics, MethodologyIndicators,PolicyBarriers,
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
-    CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment
+    CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment, AssessmentCMDetail,
+    CMDefaultValue
 
   ]),
-    HttpModule
+    HttpModule,
   ],
   exports: [
     PortfolioService

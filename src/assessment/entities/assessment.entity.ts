@@ -158,6 +158,8 @@ export class Assessment extends BaseTrackingEntity {
   @ApiHideProperty()
   geographical_areas_covered: GeographicalAreasCovered[];
   @ApiHideProperty()
+  @OneToMany((type) => AssessmentCMDetail, cmDetail => cmDetail.cmassessment)
+  @JoinColumn()
   cmAssessmentDetails: AssessmentCMDetail;
 
 }
