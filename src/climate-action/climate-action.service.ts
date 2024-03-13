@@ -283,7 +283,7 @@ async allProject(
           }
         
         if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
-          console.log(x.assessment.tool,x.assessment.id)
+
           policyList.push(x);
       }
       
