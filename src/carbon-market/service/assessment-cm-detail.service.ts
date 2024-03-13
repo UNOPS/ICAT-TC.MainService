@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,6 +11,7 @@ import { Country } from "src/country/entity/country.entity";
 import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
+import { Sector } from "src/master-data/sector/entity/sector.entity";
 
 
 @Injectable()
@@ -22,6 +23,8 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
     @InjectRepository(AssessmentCMDetail) private assessmentCMDetailsRepo: Repository<AssessmentCMDetail>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
+    @InjectRepository(GeographicalAreasCovered) private geographicalAreasCoveredRepo: Repository<GeographicalAreasCovered>,
+    @InjectRepository(InvestorSector) private investorSectorRepo: Repository<InvestorSector>
 
 
   ) {
@@ -140,7 +143,79 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   }
 
   save(dto: AssessmentCMDetail) {
-    return this.repo.save(dto);
+    console.log("save")
+    try {
+      return this.repo.save(dto);
+    } catch (error) {
+      console.log("service error", error)
+    }
+  }
+
+  async deleteCmAssessmentDetail(assessmentId: number) {
+    await this.deleteGeographicalAreasCovered(assessmentId);
+    await this.deleteInvestorSector(assessmentId);
+
+    try {
+      await this.repo.delete({cmassessment: {id: assessmentId}});
+    } catch (error) {
+      console.error(error)
+      throw new InternalServerErrorException();
+    }
+
+  }
+
+  async deleteGeographicalAreasCovered(assessmentId: number){
+    try {
+      await this.geographicalAreasCoveredRepo.delete({assessment: {id: assessmentId}});
+      // let areas = await this.geographicalAreasCoveredRepo.createQueryBuilder('geoAreas')
+      //   .innerJoin(
+      //     'geoAreas.assessment',
+      //     'assessment',
+      //     'geoAreas.assessmentId = assessment.id'
+      //   )
+      //   .select(['geoAreas.id'])
+      //   .where('assessment.id = :assessmentId', {assessmentId: assessmentId})
+      //   .getMany();
+      
+      // if (areas && areas.length > 0) {
+      //   let areaIds = areas.map(a => a.id);
+      //   for await (let id of areaIds) {
+      //     await this.geographicalAreasCoveredRepo.delete({id: id});
+      //   }
+      // } else {
+      //   console.error("No geographical areas found for the assessment")
+      // }
+    } catch (error) {
+      console.error(error)
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async deleteInvestorSector(assessmentId: number) {
+    try {
+      await this.investorSectorRepo.delete({assessment: {id: assessmentId}});
+      // let sectors = await this.investorSectorRepo.createQueryBuilder('sector')
+      //   .innerJoin(
+      //     'sector.assessment',
+      //     'assessment',
+      //     'sector.assessmentId = assessment.id'
+      //   )
+      //   .select(['sector.id'])
+      //   .where('assessment.id = :assessmentId', {assessmentId: assessmentId})
+      //   .getMany();
+      
+      // if (sectors && sectors.length > 0) {
+      //   let sectorIds = sectors.map(a => a.id);
+      //   for await (let id of sectorIds) {
+      //     await this.investorSectorRepo.delete({id: id});
+      //   }
+      // } else {
+      //   console.error("No investor sectors found for the assessment")
+      // }
+    } catch (error) {
+      console.error(error)
+      throw new InternalServerErrorException()
+    }
   }
 }
 

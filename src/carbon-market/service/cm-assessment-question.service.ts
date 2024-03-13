@@ -22,6 +22,7 @@ import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
 import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
 import { CMDefaultValue } from "../entity/cm-default-value.entity";
+import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -38,6 +39,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     private userService: UsersService,
     private masterDataService: MasterDataService,
     private assessmentCMDetailService: AssessmentCMDetailService,
+    private cMAssessmentAnswerService: CMAssessmentAnswerService
   ) {
     super(repo);
   }
@@ -1032,7 +1034,37 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       throw new InternalServerErrorException()
     }
   }
+
+  async deleteCMAssessment(assessementId: number) {
+    try {
+      await this.assessmentCMDetailService.deleteCmAssessmentDetail(assessementId);
+      let assessmentQuestions = await this.repo.createQueryBuilder('cmAssessmentQuestion')
+        .innerJoin(
+          'cmAssessmentQuestion.assessment',
+          'assessment',
+          'assessment.id = cmAssessmentQuestion.assessmentId'
+        )
+        .select(['cmAssessmentQuestion.id'])
+        .where('assessment.id = :assessmentId', {assessmentId: assessementId})
+        .getMany()
+      
+      if (assessmentQuestions && assessmentQuestions.length > 0) {
+        let assessmentQuestionIds = assessmentQuestions.map(q => q.id)
+        await this.cMAssessmentAnswerService.deleteAssessmentAnswers(assessmentQuestionIds)
+
+        for await (let id of assessmentQuestionIds) {
+          await this.repo.delete({id: id})
+        }
+      } else {
+        console.error("No CM Assessment Questions found");
+      }
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(error);
+    }
     
+  }
+
 }
 export class CharacteristicData {
   characteristic: string;

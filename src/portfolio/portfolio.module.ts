@@ -57,6 +57,13 @@ import { HttpModule } from '@nestjs/axios';
 import { AssessmentCMDetailService } from 'src/carbon-market/service/assessment-cm-detail.service';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
 import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity';
+import { CMAssessmentAnswerService } from 'src/carbon-market/service/cm-assessment-answer.service';
+import { CMQuestionService } from 'src/carbon-market/service/cm-question.service';
+import { CMQuestion } from 'src/carbon-market/entity/cm-question.entity';
+import { Criteria } from 'src/carbon-market/entity/criteria.entity';
+import { CarbonMarketModule } from 'src/carbon-market/carbon-market.module';
+import { Section } from 'src/carbon-market/entity/section.entity';
+import { CMAnswer } from 'src/carbon-market/entity/cm-answer.entity';
 
 @Module({
   controllers: [PortfolioController],
@@ -70,7 +77,9 @@ import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity
     InvestorToolService,
     MethodologyAssessmentService,
     AuditDetailService,
-    AssessmentCMDetailService
+    AssessmentCMDetailService,
+    CMAssessmentAnswerService,
+    CMQuestionService
   ],
   imports: [TypeOrmModule.forFeature([
     Portfolio, PortfolioAssessment, InvestorAssessment,SdgAssessment,
@@ -82,10 +91,10 @@ import { CMDefaultValue } from 'src/carbon-market/entity/cm-default-value.entity
     BarriersCategory, Indicators, AssessmentCharacteristics, MethodologyIndicators,PolicyBarriers,
     BarriersCharacteristics, AssessmentCategory, Objectives,  AssessmentObjectives, MethodologyParameters,
     CalculationResults, GeographicalAreasCovered, SdgPriority, TotalInvestment, TotalInvestment, AssessmentCMDetail,
-    CMDefaultValue
+    CMDefaultValue, CMQuestion, Criteria, Section, CMAnswer
 
   ]),
-    HttpModule,
+    HttpModule, CarbonMarketModule
   ],
   exports: [
     PortfolioService
