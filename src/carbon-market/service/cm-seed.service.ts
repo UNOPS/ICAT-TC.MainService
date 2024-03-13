@@ -5,7 +5,6 @@ import { Section } from "../entity/section.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
-import { CMQuestionService } from "./cm-question.service";
 import { Repository } from "typeorm";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";

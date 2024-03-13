@@ -32,6 +32,12 @@ import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { throwError } from 'rxjs';
+import { Tool } from 'src/data-request/enum/tool.enum';
+import { ToolsMultiselectDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -39,7 +45,13 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     @InjectRepository(AssessmentObjectives) private assessmentObjectivesRepo: Repository<AssessmentObjectives>,
+    @InjectRepository(PortfolioAssessment) private portfolioAssessmentRepo: Repository<PortfolioAssessment>,
+    @InjectRepository(Results) private resultsRepo: Repository<Results>,
+    @InjectRepository(SdgAssessment) private sdgAssessmentRepo: Repository<SdgAssessment>,
+    @InjectRepository(PolicyBarriers) private policyBarrierRepo: Repository<PolicyBarriers>,
+    @InjectRepository(BarrierCategory) private barrierCategoryRepo: Repository<BarrierCategory>,
     private readonly userService: UsersService,
+    private  investorService: InvestorToolService,
   ) {
     super(repo);
   }
@@ -657,5 +669,85 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       
       .where(filter,{ assessmentId });
     return await data.getMany();
+  }
+
+  async deleteAssessment(id:number, tool: string): Promise<any>{
+    try {
+      if(tool == 'PORTFOLIO' || tool == 'INVESTOR'){
+        await this.investorService.deleteAssessment(id)
+      }
+      
+      let portfolioAssessment = await this.getPortfolioAssessmnet(id)
+      if(portfolioAssessment){
+        await this.portfolioAssessmentRepo.delete({id:portfolioAssessment.id})
+      }
+      await this.deleteBarriers(id)
+      await this.resultsRepo.delete({assessment:{id: id}})
+      await this.sdgAssessmentRepo.delete({assessment:{id: id}})
+      await this.repo.delete({id:id})
+      return true
+      
+    } catch (error) {
+      console.log("error in delete assessment",id,error)
+      return false
+    }
+
+  }
+  async deleteBarriers(id: number){
+    let policyBarriers = await this.getPolicyBarriers(id);
+      if(policyBarriers){
+        await this.deleteBarrierCategories(policyBarriers)
+      }
+      await this.policyBarrierRepo.delete({assessment:{id:id}})
+  }
+
+  async getPortfolioAssessmnet(id:number){
+    let portfolioAssessment =  this.portfolioAssessmentRepo.createQueryBuilder('portfolioAssess')
+    .leftJoinAndMapOne(
+      'portfolioAssess.assessment',
+      Assessment,
+      'assess',
+      'assess.id = portfolioAssess.assessment_id'
+    )
+    .where('assess.id = :value', { value: id })
+    .getOne()
+    return await portfolioAssessment
+  }
+
+  async getPolicyBarriers(asseId: number) {
+    try {
+      let policy_barrier = this.policyBarrierRepo.createQueryBuilder('policy_barrier')
+        .leftJoinAndMapMany(
+          'policy_barrier.barrierCategory',
+          BarrierCategory,
+          'barrierCategory',
+          'barrierCategory.barriersId = policy_barrier.id',
+        )
+        .leftJoinAndMapOne(
+          'policy_barrier.assessment',
+          Assessment,
+          'assessment',
+          `assessment.id = policy_barrier.assessmentId`,
+        )
+        .where('assessment.id = :value', { value: asseId })
+        .getMany()
+
+        return await policy_barrier
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async deleteBarrierCategories(polcybarrier: PolicyBarriers[]) {
+    try {
+      for await (let barrier of polcybarrier) {
+        if(barrier.barrierCategory){
+          this.barrierCategoryRepo.delete({barriers:{id:barrier.id}})
+        }
+      }
+     
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

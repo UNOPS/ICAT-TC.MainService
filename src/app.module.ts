@@ -150,7 +150,7 @@ import { join } from 'path';
         PolicySector, InvestorQuestions, IndicatorDetails, PortfolioSdg, SdgAssessment, BarrierCategory, PortfolioQuestions, PortfolioQuestionDetails, GeographicalAreasCovered, SystemStatus,
         Criteria, Section, CMAnswer, Results, BarriersCharacteristics, AssessmentCategory, Objectives, AssessmentObjectives, Portfolio, PortfolioAssessment, SdgPriority],
 
-      synchronize: false,
+      synchronize: true,
       migrationsRun: false,
       logging: true,
       logger: 'file',

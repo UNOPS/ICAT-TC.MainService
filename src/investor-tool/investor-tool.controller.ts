@@ -117,10 +117,16 @@ export class InvestorToolController {
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
 
-    if(tool =="All Option"){
-      return await this.investorToolService.findAllSectorCount();
-    }
     return await this.investorToolService.findSectorCount(tool);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('find-sector-count-all-tool')
+  async findSectorCountAllTool(
+    @Query('portfolioId') portfolioId: number 
+    ):Promise<any[]> {
+
+      return await this.investorToolService.findAllSectorCount(portfolioId);
   }
   @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
@@ -207,8 +213,10 @@ export class InvestorToolController {
 
   @UseGuards(JwtAuthGuard)
   @Get('sdgSumAllCalculateInvester')
-  async sdgSumAllCalculate() {
-    return await this.investorToolService.sdgSumALLCalculate();
+  async sdgSumAllCalculate(
+    @Query('portfolioId') portfolioId: number
+  ) {
+    return await this.investorToolService.sdgSumALLCalculate(portfolioId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -241,12 +249,13 @@ export class InvestorToolController {
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('filterText') filterText: [],
+    @Query('PortfolioID') PortfolioID: number,
     ):Promise<any> {
     return await this.investorToolService.getDashboardAllData( {
       limit: limit,
       page: page,
       
-    },filterText);
+    },filterText,PortfolioID);
   }
 
   @UseGuards(JwtAuthGuard)
