@@ -1605,7 +1605,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return questionNumberA - questionNumberB;
         });
       for  (const res of questions) {
-        if(res.criteria == 'Criterion 1: Safeguards on environmental integrity'){
+        if(res.criteria == 'Criterion 1: Safeguards for environmental integrity'){
           safeguardsArray.push(res)
         }
         else if(res.criteria == 'Criterion 2: Prevention of GHG emissions lock-in'){
@@ -1847,10 +1847,6 @@ return contentFour
         {
           information: 'Date',
           description: portfolio.date ? portfolio.date : 'N/A',
-        },
-        {
-          information: 'Implementing entity or entities',
-          description: portfolio.person ? portfolio.person : 'N/A',
         },
         {
           information: 'Objectives of the assessment',
