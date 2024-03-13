@@ -21,6 +21,8 @@ import {
   ReportCarbonMarketDtoContentFive,
   ReportCarbonMarketDtoCoverPage,
   ReportContentThree,
+  ComparisonReportReportContentFive,
+  ComparisonReportReportContentSix,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -39,7 +41,10 @@ import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { CMScoreDto } from 'src/carbon-market/dto/cm-result.dto';
 import { User } from 'src/users/entity/user.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { Sector } from 'src/master-data/sector/entity/sector.entity';
 
+import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
@@ -48,6 +53,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Portfolio) private portfolioRepo: Repository<Portfolio>,
     @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,
+    @InjectRepository(PolicySector) private readonly policySectorsRepo: Repository<PolicySector>,
     private usersService: UsersService,
     public assessmentService: AssessmentService,
     private readonly investorToolService: InvestorToolService,
@@ -1656,38 +1662,44 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
       
     }
     if(this.cmResult.outComeData?.sustained_GHGs && this.cmResult.outComeData?.sustained_GHGs.length>0 ){
       contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_adaptation && this.cmResult.outComeData?.scale_adaptation.length>0 ){
       contentThree.scale_adaptation = this.cmResult.outComeData.scale_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_adaptation && this.cmResult.outComeData?.sustained_adaptation.length>0 ){
       contentThree.sustained_adaptation = this.cmResult.outComeData.sustained_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_SDs && this.cmResult.outComeData?.scale_SDs.length>0 ){
       contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_SDs && this.cmResult.outComeData?.sustained_SDs.length>0 ){
       contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
@@ -1766,6 +1778,10 @@ return contentFour
     );
     comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour(result.alignment_data
     );
+    comparisonReportDto.contentFive = await this.genarateComparisonReportDtoContentFive(createReportDto.portfolioId
+      );
+      comparisonReportDto.contentSix = await this.genarateComparisonReportDtoContentSix(comparisonReportDto.contentOne
+        );
     comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(createReportDto.reportTitle,);
 
     return comparisonReportDto;
@@ -1806,6 +1822,7 @@ return contentFour
      contentOne.intervation_details.push(
       {
         id: ass.assessment.climateAction.intervention_id,
+        climateAction_id: ass.assessment.climateAction.id,
         name: ass.assessment.climateAction.policyName,
         assessmentType: ass.assessment.assessmentType,
         assessmentPeriodfrom: ass.assessment.from,
@@ -1991,6 +2008,134 @@ return contentFour
       return contentOne;
 
     }
+
+    async genarateComparisonReportDtoContentFive(portfolioId: number): Promise<ComparisonReportReportContentFive> {
+      const contentOne = new ComparisonReportReportContentFive();
+      contentOne.scores= (await this.portfolioService.getDashboardData( portfolioId,{
+        limit: 10000,
+        page: 1,
+      },)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+      return contentOne;
+
+    }
+    async genarateComparisonReportDtoContentSix(comparisonReportReportContentOne:ComparisonReportReportContentOne): Promise<ComparisonReportReportContentSix> {
+      const contentOne = new ComparisonReportReportContentSix();
+  
+      console.log(comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id))
+      const dataquery=this.policySectorsRepo.createQueryBuilder('policySectors')
+      .leftJoinAndMapOne('policySectors.sector',Sector,'sector','sector.id = policySectors.sector_id')
+      .where('policySectors.intervention_id IN (:...ids)', { ids: comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id) })
+      .select(['policySectors.id','sector.name', 'sector.id'])
+
+const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
+    console.log(data)
+
+   const url=await this.generateAndSavePieChart(data, '');
+
+    contentOne.link=url;
+return contentOne;
+
+    }
+
+
+
+    async generateAndSavePieChart(data: any[], outputPath: string): Promise<string> {
+
+     const sector_color_map = [
+        {id: 1, sectorNumber: 1, color: '#003360'},
+        {id: 2, sectorNumber: 3, color: '#A52A2A'},
+        {id: 3, sectorNumber: 2, color: '#C0C0C0'},
+        {id: 4, sectorNumber: 5, color: '#8B4513'},
+        {id: 5, sectorNumber: 4, color: '#808080'},
+        {id: 6, sectorNumber: 6, color: '#008000'},
+        {id: 7, sectorNumber: 7, color: '#007BA7'},
+        {id: 8, sectorNumber: 8, color: '#483C32'},
+      ]
+    const  defaulColors =[
+        'rgba(153, 102, 255, 1)',
+        'rgba(75, 192, 192,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(123, 122, 125, 1)',
+        'rgba(255, 99, 132, 1)',
+        'rgba(255, 205, 86, 1)',
+        'rgba(70, 51, 102, 1)',
+        'rgba(40, 102, 102, 1)',
+        'rgba(27, 74, 107, 1)',
+        'rgba(75, 74, 77, 1)',
+        'rgba(121, 27, 53, 1)',
+        'rgba(121, 98, 20, 1)',
+        'rgba(51, 0, 51, 1)',
+        'rgba(25, 25, 112, 1)',
+        'rgba(139, 0, 0, 1)',
+        'rgba(0, 0, 139, 1)',
+        'rgba(47, 79, 79, 1)',
+        'rgba(139, 69, 19, 1)'
+      ]
+      const width = 1000; // Width of the canvas
+      const height = 700; // Height of the canvas
+  
+      // Configure chart options
+     const counts= data.map(item => item.count);
+     const total = counts.reduce((acc, val) => acc + val, 0);
+      // const percentages = counts.map(count => ((count / total) * 100).toFixed(2));
+
+
+     const secbgColors : string[] = [];
+     data.forEach((sd: any) => {
+      let color = sector_color_map.find(o => o.sectorNumber === sd.id)
+      if (color) {
+       secbgColors.push(color.color)
+      } else {
+        secbgColors.push(defaulColors[sd.id])
+      }
+    })
+    
+      const chartOptions = {
+        type: 'pie',
+        data: {
+          labels: data.map(item => item.sector),
+          datasets: [{
+            data: counts,
+            backgroundColor: secbgColors,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins:{
+            legend:{
+              position: 'bottom',
+              labels: {
+              }
+            },
+            datalabels: {
+              display: true,
+              align: 'bottom',
+              color:'#fff',
+              font: {
+                size: 12,
+              },
+              formatter: (value, ctx) => {
+                const label = ctx.chart.data.labels![ctx.dataIndex];
+                const percentage = ((value / total) * 100).toFixed(2) + "%";
+                console.log(percentage,value)
+                return percentage;
+              },
+            },
+          
+         }
+  
+        },
+      };
+  
+      const chartNode = new ChartJSNodeCanvas({ width, height });
+      //@ts-ignore
+
+      const dataUrl =  chartNode.renderToDataURLSync(chartOptions);
+      return dataUrl
+    }
+
+
     mapRelevance(value: number) {
       switch (value) {
         case 0:
@@ -2003,22 +2148,72 @@ return contentFour
     }
     mapCharacteristicsnames(name: string) {
       if(name=='International/global level'){
-        return 'Macro level'
+        return 'Global level'
       }
       else if(name=='National/Sectorial level'){
-        return 'Medium level '
+        return 'National/sectoral level'
       }
       else if(name=='Subnational/regional/municipal or sub sectorial level'){
-        return 'Micro level '
+        return 'Subsectoral level'
       }
       if(name=='Short term (<5 years)'){
         return 'Short term (&#60 5 years)'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'Medium-term (≥5 years and < than 15 years)'
       }
       else{
         return name
       }
     }
 
+    mapCharacteristicsnamesforCarbonMarcket(name: string) {
+      if(name=='International/global level'){
+        return 'Global level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'National/sectoral level'
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Subsectoral level'
+      } 
+      if(name=='Long term (>15 years)'){
+        return 'Global level'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'National/sectoral level'
+      }
+      if(name=='Short term (<5 years)'){
+        return 'Subsectoral level'
+      }
+      else{
+        return name
+      }
+    }
+
+    mapScoreforCarbonMarcket(name: string) {
+      if(name=='-1'){
+        return 'Expected negative impact'
+      }
+      else if(name=='0'){
+        return 'No expected impact on the selected scale'
+      }
+      else if(name=='1'){
+        return 'Expected positive impact of 0-10 years on the selected scale'
+      } 
+      if(name=='2'){
+        return 'Expected positive impact of 11-20 years on the selected scale '
+      }
+      if(name=='3'){
+        return 'Expected positive impact of over 20 years on the selected scale'
+      }
+    
+      else{
+        return name
+      }
+    }
+
   }
+  
 
 

@@ -274,12 +274,17 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       const toolName =
         x.assessment?.tool === "PORTFOLIO" ? "General" :
           x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market" :
-            x.assessment?.tool === "INVESTOR" ? "Investment" :
-              x.assessment?.tool;
+          x.assessment?.tool === "INVESTOR" ? "Investment" :
+          x.assessment?.tool;
+    
+          if(x?.assessment?.tool){
+            
+            x.assessment.tool = toolName;
+          }
+        
+        if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
 
-      if (x?.assessment?.tool) {
-
-        x.assessment.tool = toolName;
+          policyList.push(x);
       }
 
       if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {

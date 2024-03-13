@@ -152,6 +152,8 @@ let comparisonContentOne=this.reportPagesService.comparisonContentOne('','',repp
 let comparisonContentTwo=this.reportPagesService.comparisonContentTwo('','',repportDto.contentTwo)
 let comparisonContentThree=this.reportPagesService.comparisonContentThree('','',repportDto.contentThree)
 let comparisonContentFour=this.reportPagesService.comparisonContentFour('','',repportDto.contentFour)
+let comparisonContentFive=this.reportPagesService.comparisonContentFive('','',repportDto.contentFive)
+let comparisonContentSix=this.reportPagesService.comparisonContentSix('','',repportDto.contentSix)
 
 
     return {
@@ -176,7 +178,8 @@ let comparisonContentFour=this.reportPagesService.comparisonContentFour('','',re
              ${comparisonContentTwo}
              ${comparisonContentThree}
              ${comparisonContentFour}
-           
+             ${comparisonContentFive}
+             ${comparisonContentSix}
             </body></html>`,
     };
 
