@@ -60,7 +60,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapOne(
         'asse.methodology',
@@ -171,7 +171,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 and proj.countryId = ${countryIdFromTocken}`,
       )
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -214,7 +214,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       'asse.climateAction',
       ClimateAction,
       'proj',
-      `proj.id = asse.climateAction_id `,
+      `proj.id = asse.climateAction_id and not proj.status =-20 `,
     )
     .where(filter, {
       filterText: `%${filterText}%`,
@@ -228,7 +228,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id `,
+        `proj.id = asse.climateAction_id  and not proj.status =-20 `,
       )
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -246,7 +246,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policySector',
@@ -286,7 +286,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .leftJoinAndMapMany('as.parameters', MethodologyAssessmentParameters, 'pa', 'as.id = pa.assessment_id ',)
       .leftJoinAndMapOne('pa.institution', Institution, 'in', 'in.id = pa.institution_id',)
       .leftJoinAndMapOne('pa.parameterRequest', ParameterRequest, 'par', 'par.ParameterId = pa.id',)
-      .leftJoinAndMapOne('as.project', ClimateAction, 'pr', 'pr.id = as.climateAction_id')
+      .leftJoinAndMapOne('as.project', ClimateAction, 'pr', 'pr.id = as.climateAction_id and not pr.status =-20 ')
       .where(
         `as.id = ${assessmentId} AND par.dataRequestStatus in (9,-9,11)`,
       );
@@ -410,7 +410,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policy_sector',
@@ -495,7 +495,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policy_sector',

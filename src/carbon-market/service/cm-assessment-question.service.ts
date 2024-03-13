@@ -785,48 +785,77 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
-    let user = this.userService.currentUser();
-    const currentUser = await user;
-    const isUserExternal = currentUser?.userType?.name === 'External';
-    let tool = 'CARBON_MARKET';;
-
-    const results = await this.resultsRepo.find({
-      relations: ['assessment',],
-      order: {
-        id: 'DESC'
+  async getDashboardData(options: IPaginationOptions, intervention_ids?: string[]): Promise<any> {
+    try {
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      let tool = 'CARBON_MARKET';;
+  
+      const results = await this.resultsRepo.find({
+        relations: ['assessment',],
+        order: {
+          id: 'DESC'
+        }
+      });;
+      let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+  
+      if (isUserExternal) {
+        filteredResults = filteredResults.filter(result => {
+          if (result.assessment?.user?.id === currentUser?.id) {
+            return result;
+          }
+        })
+      } else {
+        filteredResults = filteredResults.filter(result => {
+          if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
+            return result;
+          }
+        })
       }
-    });;
-    let filteredResults = results.filter(result => result?.assessment?.tool === tool);
-
-    if (isUserExternal) {
-      filteredResults = filteredResults.filter(result => {
-        if (result.assessment?.user?.id === currentUser?.id) {
-          return result;
-        }
+  
+      let formattedResults = await Promise.all(filteredResults.map(async (result) => {
+        return {
+          assessment: result.id,
+          process_score: result.averageProcess,
+          outcome_score: result.averageOutcome,
+          intervention: result.assessment.climateAction?.policyName,
+          intervention_id: result.assessment.climateAction?.intervention_id
+        };
+      }));
+  
+      let interventions_to_filter = []
+      formattedResults.map(r => {
+        interventions_to_filter.push({
+          intervention: r.intervention,
+          intervention_id: r.intervention_id
+        })
       })
-
-    }
-    else {
-      filteredResults = filteredResults.filter(result => {
-        if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
-          return result;
-        }
-      })
-    }
-
-    const formattedResults = await Promise.all(filteredResults.map(async (result) => {;
+  
+      if (intervention_ids?.length > 0) {
+        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.intervention_id))
+      }
+  
+      interventions_to_filter = this.getDistinctObjects(interventions_to_filter, 'intervention_id')
+      let paginated_data = await this.paginateArray(formattedResults, options)
       return {
-        assessment: result.id,
-        process_score: result.averageProcess,
-        outcome_score: result.averageOutcome,
-        intervention: result.assessment.climateAction?.policyName,
-        intervention_id: result.assessment.climateAction?.intervention_id
-      };
-    }));
-    // const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
-    return this.paginateArray(formattedResults, options)
+        interventions: interventions_to_filter,
+        assessments: paginated_data
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
+
+  getDistinctObjects(array, property) {
+    const uniqueMap = new Map();
+
+    return array.filter(obj => {
+      const propertyValue = obj[property];
+      return uniqueMap.has(propertyValue) ? false : uniqueMap.set(propertyValue, true);
+    });
+  };
+
   async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
     const { page, limit } = options;
     const startIndex = (Number(page) - 1) * Number(limit);

@@ -215,29 +215,38 @@ export class InvestorToolController {
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.investorToolService.getDashboardData( {
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
   }
 
   @Post('save-tool-multiselect')
   async saveToolsMultiSelect(@Body() req: ToolsMultiselectDto){
     return await this.investorToolService.saveToolsMultiSelect(req)
   }
-  
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-data-graph') 
+  async getDashboardAllDataGraph(
+    ):Promise<any> {
+      return this.investorToolService.getDashboardAllDataGraph();
+    }
+
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-all-data')
   async getDashboardAllData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: [],
     ):Promise<any> {
     return await this.investorToolService.getDashboardAllData( {
       limit: limit,
       page: page,
-    },);
+      
+    },filterText);
   }
 
   @UseGuards(JwtAuthGuard)

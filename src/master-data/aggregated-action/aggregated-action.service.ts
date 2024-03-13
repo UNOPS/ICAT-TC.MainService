@@ -122,7 +122,7 @@ else{
       'dr.project',
       ClimateAction,
       'pro',
-      'pro.ndcId = dr.id',
+      'pro.ndcId = dr.id and not pro.status =-20',
     )
     .where(filter, {
       sectorId,
@@ -213,7 +213,7 @@ else{
       'asse.project',
       ClimateAction,
       'proj',
-      'asse.projectId = proj.id ',
+      'asse.projectId = proj.id and not proj.status =-20',
     )
     .where(filter, {
       sectorId,

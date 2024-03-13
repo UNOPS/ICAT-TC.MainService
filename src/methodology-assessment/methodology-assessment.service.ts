@@ -510,7 +510,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
-    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
+    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id and not cl.status =-20'`)
     .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
     .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
     .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
@@ -1010,7 +1010,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let data = this.assessmentRepository
       .createQueryBuilder('assessment')
-      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and not p.status =-20' and p.countryId = ${countryIdFromTocken}`)
       .leftJoinAndMapOne(
         'assessment.verificationUser',
         User,
