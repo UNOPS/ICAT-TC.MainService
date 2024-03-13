@@ -27,7 +27,7 @@ import { ConfigModule } from '@nestjs/config';
     PassportModule,
     JwtModule.register({
       secret:process.env.JWT_VERIFICATION_TOKEN_SECRET ,
-      signOptions: { expiresIn: jwtConstants.JWT_expiresIn },
+      signOptions: { expiresIn: process.env.JWT_expiresIn },
     }),
     TypeOrmModule.forFeature([Institution, UserType, User, Country,Audit]),
   ],
