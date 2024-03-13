@@ -148,7 +148,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
             .map(
               (a: {
@@ -236,7 +236,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="table-active">
+          <tbody class="test-tble">
           ${understanPolicyOrActions&&understanPolicyOrActions.length>0?understanPolicyOrActions
             .map(
               (a: { Time_periods: string; description: string }) =>
@@ -261,7 +261,7 @@ ${coverPage.reportDate}
               <th scope="col">Barrier directly targeted by intervention</th>
             </tr>
           </thead>
-          <tbody class="table-active">
+          <tbody class="test-tble">
           ${barriers&&barriers.length>0?barriers
             .map(
               (a: {
@@ -308,7 +308,7 @@ ${coverPage.reportDate}
       
       </tr>
     </thead>
-    <tbody class="table-active">
+    <tbody class="test-tble">
     <tr><td>
     Assessment type
     </td><td> 
@@ -370,7 +370,7 @@ ${coverPage.reportDate}
       <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
     </tr>
   </thead>
-  <tbody class="table-active">
+  <tbody class="test-tble">
   ${catagory_out&&catagory_out.length>0?catagory_out
     .map((a: { rows: number; name: string; characteristics: any[] }) =>
       a.characteristics
@@ -428,7 +428,7 @@ ${coverPage.reportDate}
        <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
      </tr>
    </thead>
-   <tbody class="table-active">
+   <tbody class="test-tble">
    ${catagory_process&& catagory_process.length>0?catagory_process
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -498,7 +498,7 @@ ${coverPage.reportDate}
       <th scope="col">Supporting Documents Supplied </th>
     </tr>
   </thead>
-  <tbody class="table-active">
+  <tbody class="test-tble">
   ${prossesAssesmentStartingSituation1&&prossesAssesmentStartingSituation1.length>0?prossesAssesmentStartingSituation1
     .map((a: { rows: number; name: string; characteristics: any[] }) =>
       a.characteristics
@@ -566,7 +566,7 @@ ${coverPage.reportDate}
        <th scope="col">Supporting Documents Supplied </th>
      </tr>
    </thead>
-   <tbody class="table-active">
+   <tbody class="test-tble">
    ${prossesAssesmentStartingSituation2&& prossesAssesmentStartingSituation2.length > 0? prossesAssesmentStartingSituation2
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -637,7 +637,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <th scope="col">Rationale justifying the score </th>
      </tr>
    </thead>
-   <tbody class="table-active">
+   <tbody class="test-tble">
    ${scale_ghg&&scale_ghg.length>0?scale_ghg
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -681,7 +681,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <th scope="col">Rationale justifying the score </th>
      </tr>
    </thead>
-   <tbody class="table-active">
+   <tbody class="test-tble">
    ${sustained_ghg&&sustained_ghg.length>0?sustained_ghg
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -740,7 +740,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score </th>
       </tr>
     </thead>
-    <tbody class="table-active">
+    <tbody class="test-tble">
     ${scale_adaptation&&scale_adaptation.length>0?scale_adaptation
       .map((a: { rows: number; name: string; characteristics: any[] }) =>
         a.characteristics
@@ -784,7 +784,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score </th>
       </tr>
     </thead>
-    <tbody class="table-active">
+    <tbody class="test-tble">
     ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
       .map((a: { rows: number; name: string; characteristics: any[] }) =>
         a.characteristics
@@ -846,7 +846,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <th scope="col">Rationale justifying the score</th>
       </tr>
     </thead>
-    <tbody class="table-active">
+    <tbody class="test-tble">
     
     ${scale_sd.sdg&&scale_sd.sdg.length>0?scale_sd.sdg
       .map(
@@ -948,7 +948,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score</th>
         </tr>
       </thead>
-      <tbody class="table-active">
+      <tbody class="test-tble">
       
       ${sustained_sd.sdg&&sustained_sd.sdg.length>0?sustained_sd.sdg
         .map(
@@ -1048,7 +1048,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${process_categories_assessment&&process_categories_assessment.length?process_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1088,7 +1088,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${outcomes_categories_assessment&&outcomes_categories_assessment.length>0?outcomes_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1104,8 +1104,8 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
                  ? 'Outcome sustained over time - Sustainable Development '
-                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - Adaptation ':
-                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - Adaptation ':'-'
+                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - adaptation ':
+                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - adaptation ':'-'
                : '-'
            }</td>
            <td>${
@@ -1154,7 +1154,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${process_categories_assessment&&process_categories_assessment.length > 0? process_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1194,7 +1194,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${outcomes_categories_assessment&&outcomes_categories_assessment.length>0?outcomes_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1303,7 +1303,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     </tr>
   </thead>
-  <tbody class="table-active">
+  <tbody class="test-tble">
   ${outcomeDescribeResult&&outcomeDescribeResult.length>0?outcomeDescribeResult
     .map(
       (a: {
@@ -1541,7 +1541,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
             .map(
               (a: { information: string; description: string }) =>
@@ -1582,7 +1582,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${characteristics&&characteristics.length>0?characteristics
             .map(
               (a: { information: string; description: string }) =>
@@ -1612,7 +1612,7 @@ ${coverPage.reportDate}
                    
                  </tr>
                </thead>
-               <tbody class="table-active ">
+               <tbody class="test-tble ">
                ${transformational&&transformational.length>0?transformational
                  .map(
                    (a: { information: string; description: string }) =>
@@ -1649,7 +1649,7 @@ ${coverPage.reportDate}
          <th scope="col">Barrier directly targeted by the policy or action</th>
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${barriers&&barriers.length>0?barriers
        .map(
          (a: {
@@ -1687,7 +1687,7 @@ ${coverPage.reportDate}
     
     </tr>
   </thead>
-  <tbody class="table-active">
+  <tbody class="test-tble">
   <tr><td>
   Assessment type
   </td><td> 
@@ -1734,7 +1734,7 @@ ${coverPage.reportDate}
     <div class="content ">
     <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
     <blockquote class=" paragraph blockquote text-start ">
-    <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: Safeguards for environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
+    <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards for environmental integrity </div>
@@ -1750,7 +1750,7 @@ ${coverPage.reportDate}
                
              </tr>
            </thead>
-           <tbody class="table-active ">
+           <tbody class="test-tble ">
            ${safeguards&&safeguards.length > 0? safeguards
              .map(
                (a: {
@@ -1805,7 +1805,7 @@ ${coverPage.reportDate}
                  
                </tr>
              </thead>
-             <tbody class="table-active ">
+             <tbody class="test-tble ">
              ${prevention_ghg_emissions&&prevention_ghg_emissions.length>0?prevention_ghg_emissions
                .map(
                  (a: {
@@ -1846,7 +1846,7 @@ ${coverPage.reportDate}
                
              </tr>
            </thead>
-           <tbody class="table-active ">
+           <tbody class="test-tble ">
            ${prevention_negative_environmental&&prevention_negative_environmental.length>0?prevention_negative_environmental
              .map(
                (a: {
@@ -1898,7 +1898,7 @@ ${coverPage.reportDate}
                   
                 </tr>
               </thead>
-              <tbody class="table-active ">
+              <tbody class="test-tble ">
               ${outcomes&&outcomes.length>0?outcomes
                 .map(
                   (a: {
@@ -1960,7 +1960,7 @@ ${coverPage.reportDate}
          <th scope="col">Supporting Documents Supplied </th>
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${prossesAssesmentStartingSituation&&prossesAssesmentStartingSituation.length>0?prossesAssesmentStartingSituation.map(n=>
        n.map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -2133,11 +2133,12 @@ ${coverPage.reportDate}
          <th scope="col">Starting situation   </th>
          <th scope="col">Expected impact   </th>
          <th scope="col">Score  </th>
+         <th scope="col"> Score explanation  </th>
          <th scope="col">Rationale justifying the score </th>
          <th scope="col">Documentation uploaded?   </th>
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${scale_ghg&& scale_ghg.length > 0? scale_ghg
        .map((a: any, index) => {
          if (!index) {
@@ -2147,6 +2148,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2158,6 +2160,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2178,11 +2181,12 @@ ${coverPage.reportDate}
          <th scope="col">Category</th>
          <th scope="col">Outcome Characteristic</th>
          <th scope="col">Score </th>
+         <th scope="col"> Score explanation  </th>
          <th scope="col">Rationale justifying the score </th>
          <th scope="col">Documentation uploaded? </th>
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${sustained_ghg&& sustained_ghg.length>0?sustained_ghg
        .map((a: any, index) => {
          if (!index) {
@@ -2192,6 +2196,7 @@ ${coverPage.reportDate}
                 }" >Outcome sustained over time - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2201,6 +2206,7 @@ ${coverPage.reportDate}
            return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2239,22 +2245,24 @@ ${coverPage.reportDate}
           <th scope="col">Starting situation   </th>
           <th scope="col">Expected impact   </th>
           <th scope="col">Score  </th>
+          <th scope="col"> Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
           <th scope="col">Documentation uploaded?   </th>
         </tr>
       </thead>
-      <tbody class="table-active">
+      <tbody class="test-tble">
       ${scale_adaptation&&scale_adaptation.length>0 ?scale_adaptation
         .map((a: any, index) => {
           if (!index) {
             return `<tr>
               <td rowspan="${
                 scale_adaptation.length
-              }" >Scale of outcome - Adaptation cobenefits</td>
+              }" >Scale of outcome - adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.starting_situation ? a.starting_situation : '-'}</td>
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
               <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2266,6 +2274,7 @@ ${coverPage.reportDate}
             <td>${a.starting_situation ? a.starting_situation : '-'}</td>
             <td>${a.expected_impact ? a.expected_impact : '-'}</td>
             <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+            <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
             <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
             <td>${
               a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2279,27 +2288,29 @@ ${coverPage.reportDate}
     </table>
     </div>
     <div class="report-table-sm  ">
-  <p>Question - Is the intervention's contribution to the adaptation co-benefit sustained in nature?</p>
+
     <table class="table  table-bordered border-dark">
       <thead class="table-primary  border-dark">
         <tr>
           <th scope="col">Category</th>
           <th scope="col">Outcome Characteristic</th>
           <th scope="col">Score</th>
+          <th scope="col"> Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
           <th scope="col">Documentation uploaded? </th>
         </tr>
       </thead>
-      <tbody class="table-active">
+      <tbody class="test-tble">
       ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
         .map((a: any, index) => {
           if (!index) {
             return `<tr>
               <td rowspan="${
                 sustained_adaptation.length
-              }" >Outcome sustained over time - Adaptation cobenefits</td>
+              }" >Outcome sustained over time - adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
               <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2309,6 +2320,7 @@ ${coverPage.reportDate}
             return `<tr>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
               <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2348,11 +2360,12 @@ ${coverPage.reportDate}
         <th scope="col">Starting situation   </th>
         <th scope="col">Expected impact   </th>
         <th scope="col">Score  </th>
+        <th scope="col"> Score explanation  </th>
         <th scope="col">Rationale justifying the score</th>
         <th scope="col">Justification uploaded   </th>
         </tr>
       </thead>
-      <tbody class="table-active">
+      <tbody class="test-tble">
       
           ${scale_sd&&scale_sd.length>0?scale_sd
             .map((a: any, index) => {
@@ -2366,6 +2379,7 @@ ${coverPage.reportDate}
                   <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                   <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                   <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                  <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                   <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                   <td>${
                     a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2378,6 +2392,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2411,7 +2426,7 @@ ${coverPage.reportDate}
     
     
       <div class="report-table-sm ">
-      <p>Question - Is the activity's contribution to the selected SDG sustained in nature?</p>
+    
       <table class="table  table-bordered border-dark">
         <thead class="table-primary  border-dark">
           <tr>
@@ -2419,11 +2434,12 @@ ${coverPage.reportDate}
           <th scope="col">SDG</th>
           <th scope="col">Outcome Characteristic</th>
           <th scope="col">Likelihood Score   </th>
+          <th scope="col">Likelihood Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
           <th scope="col">Justification uploaded </th>
           </tr>
         </thead>
-        <tbody class="table-active">
+        <tbody class="test-tble">
         ${sustained_sd&&sustained_sd.length>0?sustained_sd
           .map((a: any, index) => {
             if (!index) {
@@ -2434,6 +2450,7 @@ ${coverPage.reportDate}
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2444,6 +2461,7 @@ ${coverPage.reportDate}
               <td>${a.SDG ? a.SDG : '-'}</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
               <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2487,7 +2505,7 @@ ${coverPage.reportDate}
            
          </tr>
        </thead>
-       <tbody class="table-active">
+       <tbody class="test-tble">
        ${process_categories_assessment&& process_categories_assessment.length > 0? process_categories_assessment
          .map((a: { name: string; cat_score: number }) => {
            return `<tr>
@@ -2526,7 +2544,7 @@ ${coverPage.reportDate}
            
          </tr>
        </thead>
-       <tbody class="table-active">
+       <tbody class="test-tble">
        <tr>
          <td >Scale of outcome - GHGs</td>
          <td >${
@@ -2544,7 +2562,7 @@ ${coverPage.reportDate}
          }</td>
        </tr>
        <tr>
-         <td >Scale of outcome - Adaptation co-benefits </td>
+         <td >Scale of outcome - adaptation co-benefits </td>
          <td >${
            content.outcomes_categories_assessment.scale_adaptation_score !==
            null
@@ -2618,7 +2636,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX</div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -2687,7 +2705,7 @@ ${coverPage.reportDate}
       
        </tr>
      </thead>
-     <tbody class="table-active">
+     <tbody class="test-tble">
      ${annex&&annex.length > 0? annex
        .map(
          (a: {
@@ -2826,7 +2844,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${portfolio_details&&portfolio_details.length>0?portfolio_details
             .map(
               (a: { information: string; description: string }) =>
@@ -2851,7 +2869,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${intervation_details&&intervation_details.length>0?intervation_details
             .map(
               (a: { id: string; name: string }) =>
@@ -2909,7 +2927,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${prosses_tech&&prosses_tech.length>0?prosses_tech
             .map(
               (a: {
@@ -2967,7 +2985,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="table-active ">
+        <tbody class="test-tble ">
         ${prosses_agent&&prosses_agent.length>0?prosses_agent
           .map(
             (a: {
@@ -3036,7 +3054,7 @@ PORTFOLIO TOOL
                
              </tr>
            </thead>
-           <tbody class="table-active ">
+           <tbody class="test-tble ">
            ${prosses_incentive&&prosses_incentive.length>0?prosses_incentive
              .map(
                (a: {
@@ -3097,7 +3115,7 @@ PORTFOLIO TOOL
              
            </tr>
          </thead>
-         <tbody class="table-active ">
+         <tbody class="test-tble ">
          ${prosses_norms&&prosses_norms.length>0?prosses_norms
            .map(
              (a: {
@@ -3169,7 +3187,7 @@ PORTFOLIO TOOL
                 
               </tr>
             </thead>
-            <tbody class="table-active ">
+            <tbody class="test-tble ">
             ${process_score&&process_score.length>0?process_score
               .map(
                 (a: {
@@ -3273,7 +3291,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${ghg_scale&&ghg_scale.length>0?ghg_scale
             .map(
               (a: {
@@ -3336,7 +3354,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="table-active ">
+        <tbody class="test-tble ">
         ${ghg_sustaind&&ghg_sustaind.length>0?ghg_sustaind
           .map(
             (a: {
@@ -3413,7 +3431,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="table-active ">
+        <tbody class="test-tble ">
         ${adaptation_scale&&adaptation_scale.length>0?adaptation_scale
           .map(
             (a: {
@@ -3475,7 +3493,7 @@ PORTFOLIO TOOL
           
         </tr>
       </thead>
-      <tbody class="table-active ">
+      <tbody class="test-tble ">
       ${adaptation_sustaind&&adaptation_sustaind.length>0?adaptation_sustaind
         .map(
           (a: {
@@ -3557,7 +3575,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="table-active ">
+        <tbody class="test-tble ">
         ${a.sdg_scale&&a.sdg_scale.length>0?a.sdg_scale
           .map(
             (a: {
@@ -3621,7 +3639,7 @@ PORTFOLIO TOOL
           
         </tr>
       </thead>
-      <tbody class="table-active ">
+      <tbody class="test-tble ">
       ${a.sdg_sustaind&&a.sdg_sustaind.length>0?a.sdg_sustaind
         .map(
           (a: {
@@ -3697,7 +3715,7 @@ PORTFOLIO TOOL
          
        </tr>
      </thead>
-     <tbody  class="table-active ">
+     <tbody  class="test-tble ">
      ${ghg_scale_sustaind_comparison&&ghg_scale_sustaind_comparison.length>0?ghg_scale_sustaind_comparison
        .map(
          (a: {
@@ -3756,7 +3774,7 @@ PORTFOLIO TOOL
        
      </tr>
    </thead>
-   <tbody class="table-active ">
+   <tbody class="test-tble ">
    ${adaptation_scale_sustaind_comparison&&adaptation_scale_sustaind_comparison.length>0?adaptation_scale_sustaind_comparison
      .map(
        (a: {
@@ -3832,7 +3850,7 @@ PORTFOLIO TOOL
         
       </tr>
     </thead>
-    <tbody class="table-active ">
+    <tbody class="test-tble ">
     ${b.data&&b.data.length>0?b.data
       .map(
         (a: {
@@ -3908,7 +3926,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${sacle_comparison&&sacle_comparison.length>0?sacle_comparison
             .map(
               (a: {
@@ -3968,7 +3986,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="table-active ">
+        <tbody class="test-tble ">
         ${sustaind_comparison&&sustaind_comparison.length>0?sustaind_comparison
           .map(
             (a: {
@@ -4041,7 +4059,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${outcome_level&&outcome_level.length>0?outcome_level
             .map(
               (a: {
@@ -4137,7 +4155,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="table-active ">
+          <tbody class="test-tble ">
           ${aggregation.data&&aggregation.data.length>0?aggregation.data
             .map(
               (a: {
@@ -4225,7 +4243,7 @@ PORTFOLIO TOOL
                 
               </tr>
             </thead>
-            <tbody class="table-active">
+            <tbody class="test-tble">
                   ${this.generateAlignmentBody(
                     alignment_table.interventions,
                     alignment_table.col_set_2,
@@ -4265,7 +4283,7 @@ PORTFOLIO TOOL
                 .join('')}
             </tr>
           </thead>
-          <tbody class="table-active">
+          <tbody class="test-tble">
                 ${this.generateHeatMapBody(
                   alignment_table.interventions,
                   alignment_table.col_set_2,

@@ -1662,38 +1662,44 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
       
     }
     if(this.cmResult.outComeData?.sustained_GHGs && this.cmResult.outComeData?.sustained_GHGs.length>0 ){
       contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_adaptation && this.cmResult.outComeData?.scale_adaptation.length>0 ){
       contentThree.scale_adaptation = this.cmResult.outComeData.scale_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_adaptation && this.cmResult.outComeData?.sustained_adaptation.length>0 ){
       contentThree.sustained_adaptation = this.cmResult.outComeData.sustained_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_SDs && this.cmResult.outComeData?.scale_SDs.length>0 ){
       contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_SDs && this.cmResult.outComeData?.sustained_SDs.length>0 ){
       contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
@@ -2138,22 +2144,72 @@ return contentOne;
     }
     mapCharacteristicsnames(name: string) {
       if(name=='International/global level'){
-        return 'Macro level'
+        return 'Global level'
       }
-      else if(name=='National/Sectoral level'){
-        return 'Medium level '
+      else if(name=='National/Sectorial level'){
+        return 'National/sectoral level'
       }
-      else if(name=='Subnational/regional/municipal or sub sectoral level'){
-        return 'Micro level '
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Subsectoral level'
       }
       if(name=='Short term (<5 years)'){
         return 'Short term (&#60 5 years)'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'Medium-term (≥5 years and < than 15 years)'
       }
       else{
         return name
       }
     }
 
+    mapCharacteristicsnamesforCarbonMarcket(name: string) {
+      if(name=='International/global level'){
+        return 'Global level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'National/sectoral level'
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Subsectoral level'
+      } 
+      if(name=='Long term (>15 years)'){
+        return 'Global level'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'National/sectoral level'
+      }
+      if(name=='Short term (<5 years)'){
+        return 'Subsectoral level'
+      }
+      else{
+        return name
+      }
+    }
+
+    mapScoreforCarbonMarcket(name: string) {
+      if(name=='-1'){
+        return 'Expected negative impact'
+      }
+      else if(name=='0'){
+        return 'No expected impact on the selected scale'
+      }
+      else if(name=='1'){
+        return 'Expected positive impact of 0-10 years on the selected scale'
+      } 
+      if(name=='2'){
+        return 'Expected positive impact of 11-20 years on the selected scale '
+      }
+      if(name=='3'){
+        return 'Expected positive impact of over 20 years on the selected scale'
+      }
+    
+      else{
+        return name
+      }
+    }
+
   }
+  
 
 
