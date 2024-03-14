@@ -2039,7 +2039,7 @@ return contentOne;
 
 
     async generateAndSavePieChart(data: any[], outputPath: string): Promise<string> {
-
+      const ChartJSImage = require('chart.js-image');
      const sector_color_map = [
         {id: 1, sectorNumber: 1, color: '#003360'},
         {id: 2, sectorNumber: 3, color: '#A52A2A'},
@@ -2128,9 +2128,47 @@ return contentOne;
       };
   
       //@ts-ignore
-
+      const line_chart = ChartJSImage()
+      .chart({
+        type: 'pie',
+        data: {
+          labels: data.map(item => item.sector),
+          datasets: [{
+            data: counts,
+            backgroundColor: secbgColors,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins:{
+            legend:{
+              position: 'bottom',
+              labels: {
+              }
+            },
+            labels: {
+              render: 'value',
+              fontColor: ['green', 'white', 'red']
+            },
+            datalabels: {
+              display: true,
+              align: 'bottom',
+              color:'#fff',
+              font: {
+                size: 12,
+              },
+          
+            },
+          
+         }
+  
+        },
+      }).backgroundColor('white')
+      .width(width)
+      .height(height);
      
-      return ''
+      return await line_chart.toDataURI();
     }
 
 
