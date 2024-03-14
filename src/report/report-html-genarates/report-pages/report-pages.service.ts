@@ -140,7 +140,7 @@ ${coverPage.reportDate}
  <div  class="main_header_sub text-start">1.1 Description  </div> 
         <div class="report-table-sm  ">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Information</th>
@@ -225,7 +225,7 @@ ${coverPage.reportDate}
       
       <div class="report-table-sm  ">
       <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             
             <tr>
@@ -252,7 +252,7 @@ ${coverPage.reportDate}
       </div>
         <div class="report-table-sm ">
         <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Barriers</th>
@@ -300,7 +300,7 @@ ${coverPage.reportDate}
 
   <div class="report-table-sm  ">
   <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
-  <table class="table  table-bordered border-dark">
+  <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Information</th>
@@ -361,7 +361,7 @@ ${coverPage.reportDate}
 
            <div class="report-table-sm  ">
 
-<table class="table  table-bordered border-dark">
+<table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Category</th>
@@ -419,7 +419,7 @@ ${coverPage.reportDate}
  
             <div class="report-table-sm  ">
 
- <table class="table  table-bordered border-dark">
+ <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
@@ -486,7 +486,7 @@ ${coverPage.reportDate}
 <p>
   Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
 </p>
-<table class="table  table-bordered border-dark">
+<table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Category</th>
@@ -554,7 +554,7 @@ ${coverPage.reportDate}
 
    <div class="content">
    <div class="report-table-sm  ">
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
@@ -627,7 +627,7 @@ ${coverPage.reportDate}
 <p>
 Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
 </p>
- <table class="table  table-bordered border-dark">
+ <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
@@ -671,7 +671,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  </div>
  <div class="report-table-sm  ">
 
- <table class="table  table-bordered border-dark">
+ <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
@@ -730,7 +730,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
  
   <div class="report-table-sm  ">
 
-  <table class="table  table-bordered border-dark">
+  <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Category</th>
@@ -774,7 +774,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   </div>
   <div class="report-table-sm  ">
 
-  <table class="table  table-bordered border-dark">
+  <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Category</th>
@@ -834,7 +834,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
   <div class="report-table-sm  ">
 
-  <table class="table  table-bordered border-dark">
+  <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
       <th scope="col">Category</th>
@@ -936,7 +936,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   
     <div class="report-table-sm  ">
   
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
         <tr>
         <th scope="col">Category</th>
@@ -1039,7 +1039,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
    <div class="report-table-sm  ">
   
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -1079,7 +1079,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
    <div class="report-table-sm  ">
   
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -1145,7 +1145,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    
    <div class="report-table-sm  ">
   
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -1185,7 +1185,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 
    <div class="report-table-sm ">
   
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -1293,7 +1293,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     
     <div class="report-table-sm  ">
   
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
       <tr>
       <th scope="col">Category</th>
@@ -1533,7 +1533,7 @@ ${coverPage.reportDate}
  <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
         <div class="report-table-sm  ">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Information</th>
@@ -1574,7 +1574,7 @@ ${coverPage.reportDate}
  <div  class="main_header_sub text-start">1.2 Understanding the characteristics of the proposed carbon market activity  </div> 
         <div class="report-table-sm  ">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Information</th>
@@ -1604,7 +1604,7 @@ ${coverPage.reportDate}
      
              <div class="report-table-sm  ">
             
-             <table class="table  table-bordered border-dark">
+             <table class="table  test-table-one">
                <thead class="table-primary  border-dark">
                  <tr>
                    <th scope="col">Information</th>
@@ -1640,7 +1640,7 @@ ${coverPage.reportDate}
 
    
    <div class="report-table-sm  ">
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Barriers</th>
@@ -1679,7 +1679,7 @@ ${coverPage.reportDate}
 
 
 <div class="report-table-sm  ">
-<table class="table  table-bordered border-dark">
+<table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Information</th>
@@ -1740,7 +1740,7 @@ ${coverPage.reportDate}
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards for environmental integrity </div>
          <div class="report-table-sm ">
         
-         <table class="table  table-bordered border-dark">
+         <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
              <tr>
                <th scope="col">Question </th>
@@ -1795,7 +1795,7 @@ ${coverPage.reportDate}
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention of GHG emissions lock-in   </div>
            <div class="report-table-sm ">
           
-           <table class="table  table-bordered border-dark">
+           <table class="table  test-table-one">
              <thead class="table-primary  border-dark">
                <tr>
                <th scope="col">Question </th>
@@ -1836,7 +1836,7 @@ ${coverPage.reportDate}
          <div  class="main_header_sub_sub text-start">2.1.3 Prevention/avoidance of negative environmental and social impacts    </div>
          <div class="report-table-sm ">
         
-         <table class="table  table-bordered border-dark">
+         <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
              <tr>
              <th scope="col">Question </th>
@@ -1888,7 +1888,7 @@ ${coverPage.reportDate}
    
             <div class="report-table-sm ">
            
-            <table class="table  table-bordered border-dark">
+            <table class="table  test-table-one">
               <thead class="table-primary  border-dark ">
                 <tr>
                 <th scope="col">Precondition  </th>
@@ -1948,7 +1948,7 @@ ${coverPage.reportDate}
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
    <div class="report-table-sm ">
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -2124,7 +2124,7 @@ ${coverPage.reportDate}
    
    <div class="report-table-sm  ">
 
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -2175,7 +2175,7 @@ ${coverPage.reportDate}
    </table>
    </div>
    <div class="report-table-sm  ">
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
@@ -2236,7 +2236,7 @@ ${coverPage.reportDate}
    
     <div class="report-table-sm ">
   
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
         <tr>
           <th scope="col">Category</th>
@@ -2289,7 +2289,7 @@ ${coverPage.reportDate}
     </div>
     <div class="report-table-sm  ">
 
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
         <tr>
           <th scope="col">Category</th>
@@ -2351,7 +2351,7 @@ ${coverPage.reportDate}
     
     <div class="report-table-sm  ">
   
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
         <tr>
         <th scope="col">Category</th>
@@ -2427,7 +2427,7 @@ ${coverPage.reportDate}
     
       <div class="report-table-sm ">
     
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
           <tr>
           <th scope="col">Category</th>
@@ -2496,7 +2496,7 @@ ${coverPage.reportDate}
      
      <div class="report-table-sm  ">
     
-     <table class="table  table-bordered border-dark">
+     <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
@@ -2535,7 +2535,7 @@ ${coverPage.reportDate}
   
      <div class="report-table-sm  ">
     
-     <table class="table  table-bordered border-dark">
+     <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
@@ -2696,7 +2696,7 @@ ${coverPage.reportDate}
       <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
     
       <div class="report-table-sm  ">
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Characteristic</th>
@@ -2836,7 +2836,7 @@ PORTFOLIO TOOL
  <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
         <div class="report-table-sm  ">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Information</th>
@@ -2861,7 +2861,7 @@ PORTFOLIO TOOL
 
       <div class="report-table-sm  ">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
               <th scope="col">Intervention ID</th>
@@ -2908,7 +2908,7 @@ PORTFOLIO TOOL
  <div  class="main_header_sub text-start">2.1	Processes impacts comparison</div> 
         <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
           <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
@@ -2966,7 +2966,7 @@ PORTFOLIO TOOL
 
       <div class="report-table-sm same-page-table">
        
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
         <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
@@ -3035,7 +3035,7 @@ PORTFOLIO TOOL
     
          <div class="report-table-sm same-page-table">
         
-         <table class="table  table-bordered border-dark">
+         <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
            <tr>
            <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
@@ -3096,7 +3096,7 @@ PORTFOLIO TOOL
  
        <div class="report-table-sm same-page-table">
         
-       <table class="table  table-bordered border-dark">
+       <table class="table  test-table-one">
          <thead class="table-primary  border-dark">
          <tr>
          <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
@@ -3166,7 +3166,7 @@ PORTFOLIO TOOL
      
           <div class="report-table-sm same-page-table">
          
-          <table class="table  table-bordered border-dark">
+          <table class="table  test-table-one">
             <thead class="table-primary  border-dark">
             <tr>
             <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
@@ -3267,7 +3267,7 @@ PORTFOLIO TOOL
  <div  class="main_header_sub text-start">2.2	Outcomes impacts comparison</div> 
         <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark ">
+        <table class="table  test-table-one ">
           <thead class="table-primary  border-dark ">
           <tr>
           <th colspan="4" scope="col">SCALE COMPARISON	</th>
@@ -3329,7 +3329,7 @@ PORTFOLIO TOOL
 
       <div class="report-table-sm same-page-table">
        
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
 
         <tr>
@@ -3407,7 +3407,7 @@ PORTFOLIO TOOL
 
       <div class="report-table-sm same-page-table">
        
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
         <th colspan="4" scope="col">SCALE COMPARISON	</th>
@@ -3468,7 +3468,7 @@ PORTFOLIO TOOL
     </div>
     <div class="report-table-sm same-page-table">
        
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
 
       <tr>
@@ -3551,7 +3551,7 @@ PORTFOLIO TOOL
       <div class="content">
       <div class="report-table-sm same-page-table">
          
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
         <th colspan="4" scope="col">SCALE COMPARISON	</th>
@@ -3614,7 +3614,7 @@ PORTFOLIO TOOL
   
     <div class="report-table-sm same-page-table">
          
-    <table class="table  table-bordered border-dark">
+    <table class="table  test-table-one">
       <thead class="table-primary  border-dark">
   
       <tr>
@@ -3692,7 +3692,7 @@ PORTFOLIO TOOL
    
    <div class="report-table-sm same-page-table">
        
-   <table class="table  table-bordered border-dark">
+   <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
      <tr>
      <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
@@ -3751,7 +3751,7 @@ PORTFOLIO TOOL
 
  <div class="report-table-sm same-page-table">
        
- <table class="table  table-bordered border-dark">
+ <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
    <tr>
    <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
@@ -3827,7 +3827,7 @@ PORTFOLIO TOOL
  
   <div class="report-table-sm same-page-table">
        
-  <table class="table  table-bordered border-dark">
+  <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
     <tr>
     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
@@ -3902,7 +3902,7 @@ PORTFOLIO TOOL
 
         <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
           <th colspan="4" scope="col">SCALE COMPARISON	</th>
@@ -3962,7 +3962,7 @@ PORTFOLIO TOOL
 
       <div class="report-table-sm same-page-table">
        
-      <table class="table  table-bordered border-dark">
+      <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
         <th colspan="4" scope="col">SUSTAINED  COMPARISON	</th>
@@ -4035,7 +4035,7 @@ PORTFOLIO TOOL
 
         <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
           <th colspan="4" scope="col">OUTCOME LEVEL COMPARISON	</th>
@@ -4133,7 +4133,7 @@ PORTFOLIO TOOL
  
         <div class="report-table-sm same-page-table">
        
-        <table class="table  table-bordered border-dark">
+        <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
           <th colspan="5" scope="col">AGGREGATION</th>
@@ -4216,7 +4216,7 @@ PORTFOLIO TOOL
    
         <div class=" same-page-table-rotate">
        
-          <table class="table  table-bordered border-dark table-fixed-width">
+          <table class="table  test-table-one table-fixed-width">
             <thead class="table-primary  border-dark">
               <tr>
                 <th colspan="4" scope="col">ALIGNMENT</th>
@@ -4257,7 +4257,7 @@ PORTFOLIO TOOL
 
         <div class="report-all-table-sm-rotate same-page">
         <div class=" same-page-table-rotate">
-        <table class="table  table-bordered border-dark table-fixed-width">
+        <table class="table  test-table-one table-fixed-width">
           <thead class="table-primary  border-dark">
             <tr>
               <th colspan="4" scope="col">ALIGNMENT</th>
