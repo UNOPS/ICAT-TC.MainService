@@ -44,7 +44,6 @@ import { User } from 'src/users/entity/user.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 
-import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
@@ -2128,11 +2127,10 @@ return contentOne;
         },
       };
   
-      const chartNode = new ChartJSNodeCanvas({ width, height });
       //@ts-ignore
 
-      const dataUrl =  chartNode.renderToDataURLSync(chartOptions);
-      return dataUrl
+     
+      return ''
     }
 
 
