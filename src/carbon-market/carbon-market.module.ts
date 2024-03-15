@@ -38,6 +38,8 @@ import { HttpModule } from "@nestjs/axios";
 import { CMDefaultValue } from "./entity/cm-default-value.entity";
 import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
 import { MethodologyAssessmentModule } from "src/methodology-assessment/methodology-assessment.module";
+import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
+import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 
 
 @Module({
@@ -57,7 +59,9 @@ import { MethodologyAssessmentModule } from "src/methodology-assessment/methodol
       Category,
       User, UserType, Institution, Country,Audit,
       SdgAssessment,
-      CMDefaultValue
+      CMDefaultValue,
+      GeographicalAreasCovered,
+      InvestorSector
     ]),
     HttpModule,
     MethodologyAssessmentModule

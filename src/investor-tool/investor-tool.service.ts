@@ -2159,6 +2159,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let res_s
     let res_g
     let response = {}
+    if (selects.isCompleted) {
+      await this.investorSectorRepo.delete({assessment: {id: selects.assessmentId}});
+      await this.geographicalAreaRepo.delete({assessment: {id: selects.assessmentId}})
+    }
     if (selects.sectors){
       res_s = await this.investorSectorRepo.save(selects.sectors);
     }
