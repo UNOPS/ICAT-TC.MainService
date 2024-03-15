@@ -1771,7 +1771,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score','asses.from','asses.to'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -2029,7 +2029,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
