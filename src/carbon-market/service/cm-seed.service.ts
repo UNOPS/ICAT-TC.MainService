@@ -219,11 +219,12 @@ export class CMSeedService {
                 let c = await this.characRepo.createQueryBuilder('ch').where('ch.code = :name', {name: char.code}).getMany();
                 if (c){
                     for await (let _c of c){
-                        _c.main_question = char.main_question;;
-                        _characterisctics.push(_c);;
+                        _c.main_question = char.main_question;
+                        _c.description = char.description;
+                        _characterisctics.push(_c);
                     }
                 } else {
-                    response[char.name] = 'Not found';;
+                    response[char.name] = 'Not found';
                 }
             }
         }

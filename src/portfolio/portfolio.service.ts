@@ -335,7 +335,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   async getOutcomeData(pAssessments: PortfolioAssessment[], cmScores: any, piScores: any) {
     let response: ComparisonDto[] = []
     let sdgs: any[] = []
-    let sdgs_score: any
+    let sdgs_score: any = {}
     let intervention_data = []
     let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
     let col_set_2_scale = [
@@ -372,7 +372,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
       sdgs.push(...data.sdg)
       sdgs = [... new Set(sdgs)]
-      sdgs_score = data.sdgs_score
+      sdgs_score[pAssessment.assessment.id] = data.sdgs_score
+
       intervention_data.push({ data: data, intervention: _intervention })
     }
 
@@ -807,10 +808,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
 
       let data
+      console.log("TOOL", pAssessment.id, pAssessment.assessment.tool)
+      console.log(sdgs_score)
       switch (pAssessment.assessment.tool) {
         case 'PORTFOLIO':
         case 'INVESTOR':
-          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment, sdgPriorities, sdgs_score)
+          data = await this.getAlignmentDataPortfolioInvestor(pAssessment.assessment, sdgPriorities, sdgs_score[pAssessment.assessment.id.toString()])
           break;
         case 'CARBON_MARKET':
           data = await this.getAlignmentDataCarbonMarket(pAssessment.assessment, cmScores, sdgPriorities)
@@ -1021,6 +1024,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAlignmentDataPortfolioInvestor(assessment: Assessment, sdgPriorities: SdgPriority[], sdgs_score: any) {
+    console.log(sdgs_score)
     let response = {}
     let col1 = []
     let col2 = []
@@ -1056,6 +1060,12 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
+    console.log(assessment.id,{
+      response: response,
+      col2: col2,
+      col1: col1,
+      sdgs: sdgsArr
+    } )
     return {
       response: response,
       col2: col2,
@@ -1078,8 +1088,11 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     if (result.investor_assessment) {
       for (let investor of result.investor_assessment) {
-
-        investor.expected_ghg_mitigation ? total += Number(investor.expected_ghg_mitigation) : 0
+        if (assessment.tool === 'INVESTOR') {
+          investor.expected_ghg_mitigation_year ? total += Number(investor.expected_ghg_mitigation_year) : 0
+        } else {
+          investor.expected_ghg_mitigation ? total += Number(investor.expected_ghg_mitigation) : 0
+        }
       }
     }
 
