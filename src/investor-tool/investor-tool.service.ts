@@ -2491,8 +2491,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .where('assessment.id = :asessmentId',{asessmentId:asessmentId})
       .getOne()
     return await result;
-  }
-    
+  } 
 }
 
 interface SelectedSDG {
