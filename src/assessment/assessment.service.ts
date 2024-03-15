@@ -32,12 +32,10 @@ import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
-import { throwError } from 'rxjs';
-import { Tool } from 'src/data-request/enum/tool.enum';
-import { ToolsMultiselectDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -52,6 +50,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     @InjectRepository(BarrierCategory) private barrierCategoryRepo: Repository<BarrierCategory>,
     private readonly userService: UsersService,
     private  investorService: InvestorToolService,
+    private cmAssessmentQuestionService: CMAssessmentQuestionService
   ) {
     super(repo);
   }
@@ -675,6 +674,8 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     try {
       if(tool == 'PORTFOLIO' || tool == 'INVESTOR'){
         await this.investorService.deleteAssessment(id)
+      } else if (tool === 'CARBON_MARKET') {
+        await this.cmAssessmentQuestionService.deleteCMAssessment(id);
       }
       
       let portfolioAssessment = await this.getPortfolioAssessmnet(id)

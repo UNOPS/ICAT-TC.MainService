@@ -19,6 +19,7 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
 import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
+import { CarbonMarketModule } from 'src/carbon-market/carbon-market.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { BarrierCategory } from 'src/climate-action/entity/barrier-category.enti
     SdgAssessment,
     PolicyBarriers,
     BarrierCategory
-  ]), UsersModule, InvestorToolModule],
+  ]), UsersModule, InvestorToolModule, CarbonMarketModule],
   controllers: [AssessmentController],
   providers: [AssessmentService, TokenDetails, UsersService, EmailNotificationService],
   exports: [AssessmentService]
