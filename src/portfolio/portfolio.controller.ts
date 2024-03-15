@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query, InternalServerErrorException } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Portfolio } from './entities/portfolio.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -70,12 +70,28 @@ export class PortfolioController {
   async getDashboardData(
     @Query('PortfolioID') PortfolioID: number,
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.portfolioService.getDashboardData( PortfolioID,{
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('get-all-tool-dashboard-data')
+  async getAlltoolDashboardData(
+    @Query('PortfolioID') PortfolioID: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[],
+    @Query('tool') tool: string,
+    ):Promise<any> {
+    return await this.portfolioService.getDashboardData( PortfolioID,{
+      limit: limit,
+      page: page,
+    },selectedAssessIds,tool);
   }
 
   

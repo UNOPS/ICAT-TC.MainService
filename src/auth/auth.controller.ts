@@ -1,31 +1,15 @@
 import { Body, Controller, Get, Param, Put, Res } from '@nestjs/common';
-import { Request, Post, UseGuards } from '@nestjs/common';
-
-import { ConfigService } from '@nestjs/config';
-import { AuthService } from './service/auth.service';
+import { Post } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { ResetPassword } from './dto/reset.password.dto';
 import { ForgotPasswordDto } from './dto/forgot.passowrd.dto';
-import { EmailNotificationService } from 'src/notifications/email.notification.service';
-import { AuditService } from 'src/audit/audit.service';
-import { AuditDto } from 'src/audit/dto/audit-dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-
-
 const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
 
 @Controller('auth')
 export class AuthController {
   username: string;
   constructor(
-    private authService: AuthService,
     private usersService: UsersService,
-    private configService: ConfigService,
-    private emailService: EmailNotificationService,
-
-    private readonly auditService: AuditService,
-
   ) {}
 
 
@@ -80,8 +64,6 @@ export class AuthController {
       user.id,
       pwdRestToken,
     );
-
-    const resetPwdUrl = this.configService.get<string>('PWD_RESET_URL');
 
 
     return response.status(200).send(true);

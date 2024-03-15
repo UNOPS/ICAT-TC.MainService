@@ -7,7 +7,6 @@ import { ProjectService } from './climate-action.service';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
 import { TokenDetails } from 'src/utills/token_details';
 import { PolicySector } from './entity/policy-sectors.entity';
-import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { UsersService } from 'src/users/users.service';
 import { UserType } from 'src/users/entity/user.type.entity';
 import { User } from 'src/users/entity/user.entity';
@@ -19,9 +18,15 @@ import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { Report } from 'src/report/entities/report.entity';
 import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { ConfigModule } from '@nestjs/config';
+import { AssessmentModule } from 'src/assessment/assessment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report]), HttpModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
+    TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report]), HttpModule,AssessmentModule],
   controllers: [ProjectController],
   providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService,BarrierCategory, AuditDetailService],
   exports: [ProjectService],

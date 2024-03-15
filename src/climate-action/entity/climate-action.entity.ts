@@ -1,11 +1,8 @@
-import { ApiProperty, ApiBody, ApiHideProperty } from '@nestjs/swagger';
-import { type } from 'os';
+
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
-import { FinancingScheme } from 'src/master-data/financing-scheme/financing-scheme.entity';
 import { AggregatedAction } from 'src/master-data/aggregated-action/entity/aggregated-action.entity';
 import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/project-approval-status.entity';
-import { ProjectOwner } from 'src/master-data/project-owner/projeect-owner.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 
@@ -17,11 +14,9 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ActionArea } from 'src/master-data/action-area/entity/action-area.entity';
-import { PolicyBarriers } from './policy-barriers.entity';
 import { User } from 'src/users/entity/user.entity';
 import { PolicySector } from './policy-sectors.entity';
 
@@ -40,8 +35,6 @@ export class ClimateAction extends BaseTrackingEntity {
   @Column({length: 150})
   policyName: string; 
 
-  @Column({length: 150})
-  policyName_new: string; 
 
   @Column({ default: null, type: 'varchar', length: 1500})
   description: string; 

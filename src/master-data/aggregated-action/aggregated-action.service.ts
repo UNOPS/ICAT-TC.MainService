@@ -67,9 +67,9 @@ else{
     .orderBy('dr.createdOn', 'ASC'); 
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -122,7 +122,7 @@ else{
       'dr.project',
       ClimateAction,
       'pro',
-      'pro.ndcId = dr.id',
+      'pro.ndcId = dr.id and not pro.status =-20',
     )
     .where(filter, {
       sectorId,
@@ -132,9 +132,9 @@ else{
     .orderBy('dr.createdOn', 'ASC'); 
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -213,7 +213,7 @@ else{
       'asse.project',
       ClimateAction,
       'proj',
-      'asse.projectId = proj.id ',
+      'asse.projectId = proj.id and not proj.status =-20',
     )
     .where(filter, {
       sectorId,
@@ -223,11 +223,11 @@ else{
     .orderBy('ndc.createdOn', 'ASC'); 
 
 
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 

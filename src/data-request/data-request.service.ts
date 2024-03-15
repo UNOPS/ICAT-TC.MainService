@@ -1,6 +1,6 @@
 import { User } from 'src/users/entity/user.entity';
 import { DataRequestStatus } from './entity/data-request-status.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ParameterRequest } from './entity/data-request.entity';
@@ -59,7 +59,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
   }
 
   async getDateRequestToManageDataStatus(
-    assesmentId: number,
+    assessmentId: number,
     assessmentYear: number,
     tool: Tool
   ): Promise<any> {
@@ -83,7 +83,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment',
           'assessment.id = assessment_question.assessmentId',
         ).where(
-          `assessment.id = ${assesmentId}`,
+          `assessment.id = ${assessmentId}`,
         )
       } else if (tool === Tool.Investor_tool || tool === Tool.Portfolio_tool){
         data.leftJoinAndMapMany(
@@ -92,7 +92,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'para',
           'para.id = dr.investmentParameterId',
         ).where(
-          `para.assessment_id = ${assesmentId}`,
+          `para.assessment_id = ${assessmentId}`,
         )
       } else [
         data.leftJoinAndMapMany(
@@ -101,7 +101,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'para',
           'para.id = dr.parameterId',
         ).where(
-          `para.assessment_id = ${assesmentId}`,
+          `para.assessment_id = ${assessmentId}`,
         )
       ]
 
@@ -161,7 +161,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'question',
           'question.id = investmentAssessment.institutionDescription',
         )
-        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id and not intervention.status =-20')
         .andWhere(
           (
             (dataProvider != 0 ? `ins.id=${dataProvider} AND ` : '') +
@@ -231,7 +231,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment.climateAction',
            ClimateAction, 
           'intervention', 
-          'intervention.id = assessment.climateAction_id'
+          'intervention.id = assessment.climateAction_id and not intervention.status =-20'
          )
          .andWhere(
           (
@@ -419,7 +419,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'question',
           'question.id = investmentAssessment.institutionDescription',
         )
-        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id')
+        .leftJoinAndMapOne('assessment.climateAction', ClimateAction, 'intervention', 'intervention.id = assessment.climateAction_id and not intervention.status =-20')
         .andWhere(
           (
             (institutionId != 0 ? `ins.id=${institutionId} AND ` : '') +
@@ -489,7 +489,7 @@ export class ParameterRequestService extends TypeOrmCrudService<ParameterRequest
           'assessment.climateAction',
            ClimateAction, 
           'intervention', 
-          'intervention.id = assessment.climateAction_id'
+          'intervention.id = assessment.climateAction_id and not intervention.status =-20'
          )
          .andWhere(
           (

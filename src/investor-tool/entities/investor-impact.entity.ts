@@ -1,7 +1,6 @@
-import { Query } from "@nestjs/common";
-import { Sector } from "src/master-data/sector/entity/sector.entity";
+
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne,PrimaryGeneratedColumn } from "typeorm";
 import { InvestorTool } from "./investor-tool.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 

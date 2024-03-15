@@ -10,8 +10,6 @@ import { Assessment } from 'src/assessment/entities/assessment.entity';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { ParameterHistoryService } from 'src/parameter-history/parameter-history.service';
-import { User } from 'src/users/entity/user.entity';
-import { TokenDetails } from 'src/utills/token_details';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -21,10 +19,7 @@ export class QualityCheckService extends TypeOrmCrudService<ParameterRequest>{
         @InjectRepository(ParameterRequest) repo,
         @InjectRepository(Assessment)
         private readonly assessmentRepo: Repository<Assessment>,
-        @InjectRepository(User)
-        private readonly userRepo: Repository<User>,
         public parameterHistoryService: ParameterHistoryService,
-        private readonly tokenDetails:TokenDetails,
         
       ) {
         super(repo);
@@ -54,16 +49,16 @@ export class QualityCheckService extends TypeOrmCrudService<ParameterRequest>{
     
         let data = this.assessmentRepo
           .createQueryBuilder('as')
-          .innerJoinAndMapOne('as.climateAction', ClimateAction, 'p', `as.climateAction_id = p.id and p.countryId = ${countryIdFromTocken} ` )
+          .innerJoinAndMapOne('as.climateAction', ClimateAction, 'p', `as.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken} ` )
     
           .where(filter, {
             filterText: `%${filterText}%`,
             QAstatusId,
           });
     
-        let resualt = await paginate(data, options);
-        if (resualt) {
-          return resualt;
+        let result = await paginate(data, options);
+        if (result) {
+          return result;
         }
       }
 }

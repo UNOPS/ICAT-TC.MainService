@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,  Query, Put, UseInterceptors, UploadedFile, UploadedFiles, UseGuards, InternalServerErrorException } from '@nestjs/common';
 import { InvestorToolService } from './investor-tool.service';
 import { CreateInvestorToolDto } from './dto/create-investor-tool.dto';
 import { UpdateInvestorToolDto } from './dto/update-investor-tool.dto';
@@ -117,10 +117,16 @@ export class InvestorToolController {
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
 
-    if(tool =="All Option"){
-      return await this.investorToolService.findAllSectorCount();
-    }
     return await this.investorToolService.findSectorCount(tool);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('find-sector-count-all-tool')
+  async findSectorCountAllTool(
+    @Query('portfolioId') portfolioId: number 
+    ):Promise<any[]> {
+
+      return await this.investorToolService.findAllSectorCount(portfolioId);
   }
   @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
@@ -187,14 +193,14 @@ export class InvestorToolController {
 
 
   @Post('upload-file')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20))
   async uploadJustification(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
   }
 
   @Post('upload-file-investment')
-  @UseInterceptors( FilesInterceptor('files',20, { storage: diskStorage({destination: '/home/ubuntu/code/Main/main/public/uploads',filename: editFileName})}),)
+  @UseInterceptors( FilesInterceptor('files',20))
   async uploadJustificationInvestment(@UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return {fileName: files[0].filename}
@@ -207,37 +213,49 @@ export class InvestorToolController {
 
   @UseGuards(JwtAuthGuard)
   @Get('sdgSumAllCalculateInvester')
-  async sdgSumAllCalculate() {
-    return await this.investorToolService.sdgSumALLCalculate();
+  async sdgSumAllCalculate(
+    @Query('portfolioId') portfolioId: number
+  ) {
+    return await this.investorToolService.sdgSumALLCalculate(portfolioId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.investorToolService.getDashboardData( {
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
   }
 
   @Post('save-tool-multiselect')
   async saveToolsMultiSelect(@Body() req: ToolsMultiselectDto){
     return await this.investorToolService.saveToolsMultiSelect(req)
   }
-  
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-data-graph') 
+  async getDashboardAllDataGraph(
+    ):Promise<any> {
+      return this.investorToolService.getDashboardAllDataGraph();
+    }
+
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-all-data')
   async getDashboardAllData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: [],
+    @Query('PortfolioID') PortfolioID: number,
     ):Promise<any> {
     return await this.investorToolService.getDashboardAllData( {
       limit: limit,
       page: page,
-    },);
+      
+    },filterText,PortfolioID);
   }
 
   @UseGuards(JwtAuthGuard)

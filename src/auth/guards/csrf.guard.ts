@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, Type } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Type } from "@nestjs/common";
 
 export function CSRFGuard(): Type<CanActivate>{
 

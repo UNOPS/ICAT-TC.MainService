@@ -31,14 +31,14 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
     public userRepo: Repository<User>,
     @InjectRepository(ParameterRequest)
     private readonly ParameterRequestRepo: Repository<ParameterRequest>,
-    @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>, 
+    @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
     public parameterHistoryService: ParameterHistoryService,
     private readonly emaiService: EmailNotificationService,
   ) {
     super(repo);
   }
 
-  async GetVRParameters( 
+  async GetVRParameters(
     options: IPaginationOptions,
     filterText: string,
     VRstatusId: number,
@@ -59,17 +59,17 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
         'assessment.climateAction',
         ClimateAction,
         'p',
-        `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+        `assessment.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken}`)
       .where(filter, {
         filterText: `%${filterText}%`,
         VRstatusId,
       })
       .orderBy('assessment.qaDeadline', 'DESC');
 
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -97,15 +97,15 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
         'assessment.climateAction',
         ClimateAction,
         'p',
-        `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+        `assessment.climateAction_id = p.id and not p.status =-20 and p.countryId = ${countryIdFromTocken}`)
       .where(filter + " AND (assessment.verificationStatus !=7 AND assessment.verificationStatus !=6 AND assessment.verificationUser =" + user.id + " )", {
         filterText: `%${filterText}%`,
         VRstatusId,
       })
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -114,13 +114,14 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
       this.verificationDetailRepo.save(verificationDetail);
 
       let ass = verificationDetail[0].assessment.id;
-      let assesment = await this.assessmentRepo.findOne({
-        where: { id: ass } , 
-        relations: ['climateAction', 'climateAction.country', 'climateAction.sector']})
+      let assessment = await this.assessmentRepo.findOne({
+        where: { id: ass },
+        relations: ['climateAction', 'climateAction.country', 'climateAction.sector']
+      })
 
       let user: User[];
-      let inscon = assesment.climateAction.country;
-      let insSec = assesment.climateAction.sector;
+      let inscon = assessment.climateAction.country;
+      let insSec = assessment.climateAction.sector;
       let ins = await this.institutionRepo.findOne({ where: { country: { id: inscon.id }, sector: { id: insSec.id }, type: { id: 2 } } });
       user = await this.userRepo.find({ where: { country: { id: inscon.id }, userType: { id: 5 }, institution: { id: ins.id } } });
 
@@ -130,7 +131,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
           ab.username + ' ' +
           '<br/>Data request with following information has shared with you.' +
           ' <br/> Accepted Verifir value' +
-          '<br> project -: ' + assesment.climateAction.policyName;
+          '<br> project -: ' + assessment.climateAction.policyName;
 
         this.emaiService.sendMail(
           ab.email,
@@ -176,7 +177,7 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
 
           if (a.id == undefined && a.isDataRequested == true) {
             let dataRequest = await this.ParameterRequestRepo.findOne({
-              where: { parameter: {id: a.parameter.id} },
+              where: { parameter: { id: a.parameter.id } },
             });
             dataRequest.dataRequestStatus =
               DataRequestStatus.Verifier_Data_Request;
@@ -211,10 +212,10 @@ export class VerificationService extends TypeOrmCrudService<ParameterRequest> {
       )
       .where('assessment.id = :assessmentId', { assessmentId });
 
-    let resualt = data.getMany();
+    let result = data.getMany();
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 }

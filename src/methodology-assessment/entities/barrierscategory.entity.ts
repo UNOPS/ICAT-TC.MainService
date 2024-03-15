@@ -1,5 +1,5 @@
-import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+
+import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
 
 @Entity()
 export class BarriersCategory {

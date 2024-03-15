@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { statticFileLocation } from './entity/file-upload.utils';
 import { DocumentOwner } from './entity/document-owner.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +14,6 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
   
   constructor(
     @InjectRepository(Documents) repo,
-    private configService: ConfigService,
   ) {
     super(repo);
   }
@@ -53,9 +51,9 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     let documenst = await this.repo.find({
       where: { documentOwnerId: oid, documentOwner: owner },
     });
-    const base = this.configService.get<string>('baseUrl');
+    const base = process.env.MAIN_URL ;
     documenst.forEach((a) => {
-      a.url = `${base}document/downloadDocument/attachment/${a.id}`;
+      a.url = `${base}/document/downloadDocument/attachment/${a.id}`;
     });
 
     return documenst;

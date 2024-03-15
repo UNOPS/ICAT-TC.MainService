@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Request, UseGuards, Put,  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Request, UseGuards, Put,  } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
@@ -98,7 +98,7 @@ export class AssessmentController {
     }
   }
   @UseGuards(JwtAuthGuard,RoleGuard([LoginRole.MASTER_ADMIN]))
-  @Get('getAssessmentsForApproveData/:id/:assementYear/:userName')
+  @Get('getAssessmentsForApproveData/:id/:assessmentYear/:userName')
   async getAssessmentsForApproveData(
     @Request() request,
     @Query('id') id: number,
@@ -132,6 +132,18 @@ export class AssessmentController {
       countryIdFromTocken,
       cuserRoleFromTocken,
       userNameFromTocken
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete-assessment/:id/:tool')
+  async deleteAssessment(
+    @Query('id') id: number,
+    @Query('tool') tool: string,
+  ): Promise<any> {
+    return await this.assessmentService.deleteAssessment(
+      id,
+      tool,
     );
   }
 
