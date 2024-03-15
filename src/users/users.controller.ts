@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
 
 import {
   Crud,
@@ -21,11 +20,9 @@ import {
   Override,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Institution } from 'src/institution/entity/institution.entity';
-import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
@@ -59,19 +56,13 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
 @Controller('users')
 export class UsersController implements CrudController<User> {
   constructor(
-    public service: UsersService,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Institution)
-    private readonly institutionRepository: Repository<Institution>,
+    public service: UsersService,    
     private auditDetailService: AuditDetailService,
-    private readonly auditService: AuditService,
   ) {}
 
   @Post('createUser')
   @UseGuards(JwtAuthGuard)
   async create(@Body() createUserDto: User): Promise<User> {
-    console.log('create user')
     let details = await this.auditDetailService.getAuditDetails()
     let obj = {
       description: "Create user"
@@ -89,6 +80,17 @@ export class UsersController implements CrudController<User> {
     }
 
   }
+  @Post('updateUser')
+  @UseGuards(JwtAuthGuard)
+  async Update(@Body() createUserDto: User): Promise<User> {
+    try {
+      let user = await this.service.update(createUserDto);
+      return user 
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   @Post('createExternalUser')
   createExternalUser(@Body() createUserDto: User): Promise<User> {
 

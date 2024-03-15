@@ -1,6 +1,4 @@
-
-import { Assessment } from "src/assessment/entities/assessment.entity";
-import { Column, Entity,  JoinColumn,  ManyToOne,  PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { SdgAssessment } from "./sdg-assessment.entity";
 import { ApiHideProperty } from "@nestjs/swagger";
 

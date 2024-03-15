@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';;
 import { Repository } from 'typeorm';;
 import { User } from './entity/user.entity';
 import * as bcript from 'bcrypt';;
-import { UserType } from './entity/user.type.entity';;
-import { ConfigService } from '@nestjs/config';
+import { UserType } from './entity/user.type.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { RecordStatus } from 'src/shared/entities/base.tracking.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
@@ -21,13 +20,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   constructor(
     @InjectRepository(User) repo,
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
-    @InjectRepository(Institution)
-    private readonly institutionRepository: Repository<Institution>,
-    @InjectRepository(UserType)
-    private readonly usersTypeRepository: Repository<UserType>,
     private readonly emaiService: EmailNotificationService,
-    private configService: ConfigService,
     @InjectRepository(Country)
     private readonly countryRepo: Repository<Country>,
     private readonly tokenDetails: TokenDetails,
@@ -36,7 +29,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async create(createUserDto: User): Promise<User> {
-    let userTypeId = createUserDto.userType.id;
     let countryId = null;
     let insId = null;
     if (createUserDto.userType['id'] == 3) {;
@@ -88,6 +80,38 @@ export class UsersService extends TypeOrmCrudService<User> {
     return newUserDb;
   }
 
+  async update(createUserDto: User): Promise<User> {
+  
+
+    let newUser =await  this.repo.findOne({where:{id:createUserDto.id}})
+
+    newUser.firstName = createUserDto.firstName;
+    newUser.lastName = createUserDto.lastName;
+    newUser.email = createUserDto.email;
+    newUser.username=createUserDto.email;
+    newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
+    newUser.status = RecordStatus.Active;
+    newUser.landline = createUserDto.landline ? createUserDto.landline : '';
+    newUser.userType = createUserDto.userType;
+    newUser.country = createUserDto.country;
+    newUser.institution = createUserDto.institution;
+    newUser.loginProfile = createUserDto.loginProfile;
+    newUser.admin = ''
+    let newUUID = uuidv4();
+    newUser.resetToken = '';
+    var newUserDb = await this.repo.save(newUser);
+    let systemLoginUrl = '';
+    if (newUser.userType.id == 2) {
+      let url =   process.env.ClientURl;
+      systemLoginUrl = url;
+    }
+    else {
+      let url =  process.env.ClientURl;
+      systemLoginUrl = url;
+    }
+
+    return newUserDb;
+  }
 
   async chnageStatus(userId: number, status: number): Promise<User> {
     let user = await this.repo.findOne({ where: { id: userId } });
@@ -457,8 +481,6 @@ export class UsersService extends TypeOrmCrudService<User> {
     const user = await this.repo.findOne({ where: { username: userName } });
     let institutionId = user ? user.institution.id : 0;
 
-    let filter: string = '';
-
     let data = this.repo
       .createQueryBuilder('user')
       .leftJoinAndMapOne(
@@ -477,10 +499,10 @@ export class UsersService extends TypeOrmCrudService<User> {
       .where(' type.id=' + userTypeId + ' AND ins.id=' + institutionId)
       .orderBy('user.status', 'ASC');
     let SQLString = data.getSql();
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 

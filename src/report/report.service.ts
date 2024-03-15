@@ -21,6 +21,8 @@ import {
   ReportCarbonMarketDtoContentFive,
   ReportCarbonMarketDtoCoverPage,
   ReportContentThree,
+  ComparisonReportReportContentFive,
+  ComparisonReportReportContentSix,
 } from './dto/report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -39,6 +41,8 @@ import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
 import { CMScoreDto } from 'src/carbon-market/dto/cm-result.dto';
 import { User } from 'src/users/entity/user.entity';
+import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import { Sector } from 'src/master-data/sector/entity/sector.entity';
 
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
@@ -48,6 +52,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Portfolio) private portfolioRepo: Repository<Portfolio>,
     @InjectRepository(PortfolioAssessment) private portfolioAssessRepo: Repository<PortfolioAssessment>,
+    @InjectRepository(PolicySector) private readonly policySectorsRepo: Repository<PolicySector>,
     private usersService: UsersService,
     public assessmentService: AssessmentService,
     private readonly investorToolService: InvestorToolService,
@@ -73,7 +78,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
   remove(id: number) {
     return `This action removes a #${id} report`;
   }
-
+  async findReportByID(id: number):Promise<Report> {
+    
+    
+    return await this.repo
+    .createQueryBuilder('report')
+    .where('report.id = :id', {id})
+    .getOne();
+  }
   async genarateReportDto(
     createReportDto: CreateReportDto,
   ): Promise<ReportDto> {
@@ -99,7 +111,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage = new ReportCoverPage();
     coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
@@ -131,7 +143,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let report = new Report();
     report.reportName = name;
     report.generateReportName = fileName;
-    report.savedLocation = './public/' + fileName;
+    report.savedLocation = 'reports/' + fileName;
     report.tool = tool;
     report.type = type;
     if(portfolioid&&portfolioid!=0){
@@ -477,19 +489,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     switch (number) {
 
-      case -3: {
+      case 3: {
 
         return 'Major';
 
       }
 
-      case -2: {
+      case 2: {
 
         return 'Moderate';
 
       }
 
-      case -1: {
+      case 1: {
 
         return 'Minor';
 
@@ -501,19 +513,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       }
 
-      case 1: {
+      case -1: {
 
         return 'Minor Negative';
 
       }
 
-      case 2: {
+      case -2: {
 
         return 'Moderate Negative';
 
       }
 
-      case 3: {
+      case -3: {
 
         return 'Major Negative';
 
@@ -548,11 +560,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
     let catagoryProcess = [];
 
-    let catagoryProcessExAnteAssesment = [];
+    let catagoryProcessExAnteAssessment = [];
 
     if (asssIndicatorsProcess) {
 
-      reportContentTwo.assesmentType = asssIndicatorsProcess.assessmentType;
+      reportContentTwo.assessmentType = asssIndicatorsProcess.assessmentType;
 
 
 
@@ -1363,7 +1375,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportContentTwo.prossesAssesmentStartingSituation1 = catagoryProcess.slice(0,catagoryProcess.length/2);
     reportContentTwo.prossesAssesmentStartingSituation2 = catagoryProcess.slice(catagoryProcess.length/2,catagoryProcess.length);
 
-    reportContentTwo.prossesExAnteAssesment = catagoryProcessExAnteAssesment;
+    reportContentTwo.prossesExAnteAssessment = catagoryProcessExAnteAssessment;
 
     return reportContentTwo;
 
@@ -1411,7 +1423,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
@@ -1493,19 +1505,19 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Scale of the activity',
-        description: asse.cmAssementDetails.scale
+        description: asse.cmAssessmentDetails.scale
       },
       {
         information: 'Assessment boundaries',
-        description: asse.cmAssementDetails.boundraries
+        description: asse.cmAssessmentDetails.boundraries
       },
       {
         information: 'International carbon market approach used ',
-        description: asse.cmAssementDetails.intCMApproach
+        description: asse.cmAssessmentDetails.intCMApproach
       },
       {
         information: 'Baseline and monitoring methodology applied by the activity ',
-        description: asse.cmAssementDetails.appliedMethodology
+        description: asse.cmAssessmentDetails.appliedMethodology
       },
     ]
 
@@ -1592,7 +1604,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return questionNumberA - questionNumberB;
         });
       for  (const res of questions) {
-        if(res.criteria == 'Criterion 1: Safeguards on environmental integrity'){
+        if(res.criteria == 'Criterion 1: Safeguards for environmental integrity'){
           safeguardsArray.push(res)
         }
         else if(res.criteria == 'Criterion 2: Prevention of GHG emissions lock-in'){
@@ -1640,75 +1652,53 @@ export class ReportService extends TypeOrmCrudService<Report> {
         }
         
         category.rows = rows;
-        if(category.name=='Technology'){
-         category.characteristics.map(char=>char.raw_questions.map(raw_question=>
-            { 
-            if(raw_question.label!=null ||raw_question.label!=undefined){
-              raw_question.label=raw_question.label.replace(/\([^)]*\)/, '').trim()
-            }
-              
-              return raw_question
-            }
-            ))
-          };
-        if(category.name=='Incentives'){
-          let cat1 =  { ...category, characteristics: [category.characteristics[0]] }
-          cat1.rows = 3
-          let cat2 = { 
-            ...category, 
-            characteristics: [
-              category.characteristics[1],
-              category.characteristics[2],
-            ],
-          };
-          cat2.rows = category.rows -cat1.rows;
-          categoryarray.push(cat1)
-          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
-          categoryarray=[]
-          categoryarray.push(cat2)
-          contentThree.prossesAssesmentStartingSituation.push(categoryarray)
 
-        }else{
           categoryarray.push(category)
           contentThree.prossesAssesmentStartingSituation.push(categoryarray)
-        }
+    
         
       }
     }
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
       
     }
     if(this.cmResult.outComeData?.sustained_GHGs && this.cmResult.outComeData?.sustained_GHGs.length>0 ){
       contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_adaptation && this.cmResult.outComeData?.scale_adaptation.length>0 ){
       contentThree.scale_adaptation = this.cmResult.outComeData.scale_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_adaptation && this.cmResult.outComeData?.sustained_adaptation.length>0 ){
       contentThree.sustained_adaptation = this.cmResult.outComeData.sustained_adaptation.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_SDs && this.cmResult.outComeData?.scale_SDs.length>0 ){
       contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
     if(this.cmResult.outComeData?.sustained_SDs && this.cmResult.outComeData?.sustained_SDs.length>0 ){
       contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(a=>{
-        a.characteristic=this.mapCharacteristicsnames(a.characteristic);
+        a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
+        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
         return a
       })
     }
@@ -1787,6 +1777,10 @@ return contentFour
     );
     comparisonReportDto.contentFour = await this.genarateComparisonReportDtoContentFour(result.alignment_data
     );
+    comparisonReportDto.contentFive = await this.genarateComparisonReportDtoContentFive(createReportDto.portfolioId
+      );
+      comparisonReportDto.contentSix = await this.genarateComparisonReportDtoContentSix(comparisonReportDto.contentOne
+        );
     comparisonReportDto.coverPage = this.genarateComparisonReportDtoCoverPage(createReportDto.reportTitle,);
 
     return comparisonReportDto;
@@ -1803,7 +1797,7 @@ return contentFour
 
     coverPage.generateReportName = title;
 
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
 
     coverPage.document_prepared_by = 'user';
 
@@ -1816,21 +1810,22 @@ return contentFour
 
   async genarateComparisonReportDtoContentOne(portfolioId: number): Promise<ComparisonReportReportContentOne> {
     let portfolio = new Portfolio();
-    let assesment: PortfolioAssessment[] = []
+    let assessment: PortfolioAssessment[] = []
     portfolio = await this.portfolioRepo.findOne({ where: { id: portfolioId } });
-    assesment = await this.portfolioAssessRepo.find({
+    assessment = await this.portfolioAssessRepo.find({
       relations: ['assessment'], where: { portfolio: { id: portfolioId } },
     });
     const contentOne = new ComparisonReportReportContentOne();
 
-    for (let ass of assesment) {
+    for (let ass of assessment) {
      contentOne.intervation_details.push(
       {
         id: ass.assessment.climateAction.intervention_id,
+        climateAction_id: ass.assessment.climateAction.id,
         name: ass.assessment.climateAction.policyName,
-        assesmentType: ass.assessment.assessmentType,
-        assesmentPeriodfrom: ass.assessment.from,
-        assesmentPeriodto: ass.assessment.to,
+        assessmentType: ass.assessment.assessmentType,
+        assessmentPeriodfrom: ass.assessment.from,
+        assessmentPeriodto: ass.assessment.to,
       }
      ) 
     }
@@ -1851,10 +1846,6 @@ return contentFour
         {
           information: 'Date',
           description: portfolio.date ? portfolio.date : 'N/A',
-        },
-        {
-          information: 'Implementing entity or entities',
-          description: portfolio.person ? portfolio.person : 'N/A',
         },
         {
           information: 'Objectives of the assessment',
@@ -2012,6 +2003,133 @@ return contentFour
       return contentOne;
 
     }
+
+    async genarateComparisonReportDtoContentFive(portfolioId: number): Promise<ComparisonReportReportContentFive> {
+      const contentOne = new ComparisonReportReportContentFive();
+      contentOne.scores= (await this.portfolioService.getDashboardData( portfolioId,{
+        limit: 10000,
+        page: 1,
+      },)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+      return contentOne;
+
+    }
+    async genarateComparisonReportDtoContentSix(comparisonReportReportContentOne:ComparisonReportReportContentOne): Promise<ComparisonReportReportContentSix> {
+      const contentOne = new ComparisonReportReportContentSix();
+  
+      console.log(comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id))
+      const dataquery=this.policySectorsRepo.createQueryBuilder('policySectors')
+      .leftJoinAndMapOne('policySectors.sector',Sector,'sector','sector.id = policySectors.sector_id')
+      .where('policySectors.intervention_id IN (:...ids)', { ids: comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id) })
+      .select(['policySectors.id','sector.name', 'sector.id'])
+
+const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
+    console.log(data)
+
+   const url=await this.generateAndSavePieChart(data, '');
+
+    contentOne.link=url;
+return contentOne;
+
+    }
+
+
+
+    async generateAndSavePieChart(data: any[], outputPath: string): Promise<string> {
+
+     const sector_color_map = [
+        {id: 1, sectorNumber: 1, color: '#003360'},
+        {id: 2, sectorNumber: 3, color: '#A52A2A'},
+        {id: 3, sectorNumber: 2, color: '#C0C0C0'},
+        {id: 4, sectorNumber: 5, color: '#8B4513'},
+        {id: 5, sectorNumber: 4, color: '#808080'},
+        {id: 6, sectorNumber: 6, color: '#008000'},
+        {id: 7, sectorNumber: 7, color: '#007BA7'},
+        {id: 8, sectorNumber: 8, color: '#483C32'},
+      ]
+    const  defaulColors =[
+        'rgba(153, 102, 255, 1)',
+        'rgba(75, 192, 192,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(123, 122, 125, 1)',
+        'rgba(255, 99, 132, 1)',
+        'rgba(255, 205, 86, 1)',
+        'rgba(70, 51, 102, 1)',
+        'rgba(40, 102, 102, 1)',
+        'rgba(27, 74, 107, 1)',
+        'rgba(75, 74, 77, 1)',
+        'rgba(121, 27, 53, 1)',
+        'rgba(121, 98, 20, 1)',
+        'rgba(51, 0, 51, 1)',
+        'rgba(25, 25, 112, 1)',
+        'rgba(139, 0, 0, 1)',
+        'rgba(0, 0, 139, 1)',
+        'rgba(47, 79, 79, 1)',
+        'rgba(139, 69, 19, 1)'
+      ]
+      const width = 1000; // Width of the canvas
+      const height = 700; // Height of the canvas
+  
+      // Configure chart options
+     const counts= data.map(item => item.count);
+     const total = counts.reduce((acc, val) => acc + val, 0);
+      // const percentages = counts.map(count => ((count / total) * 100).toFixed(2));
+
+
+     const secbgColors : string[] = [];
+     data.forEach((sd: any) => {
+      let color = sector_color_map.find(o => o.sectorNumber === sd.id)
+      if (color) {
+       secbgColors.push(color.color)
+      } else {
+        secbgColors.push(defaulColors[sd.id])
+      }
+    })
+    
+      const chartOptions = {
+        type: 'pie',
+        data: {
+          labels: data.map(item => item.sector),
+          datasets: [{
+            data: counts,
+            backgroundColor: secbgColors,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins:{
+            legend:{
+              position: 'bottom',
+              labels: {
+              }
+            },
+            datalabels: {
+              display: true,
+              align: 'bottom',
+              color:'#fff',
+              font: {
+                size: 12,
+              },
+              formatter: (value, ctx) => {
+                const label = ctx.chart.data.labels![ctx.dataIndex];
+                const percentage = ((value / total) * 100).toFixed(2) + "%";
+                console.log(percentage,value)
+                return percentage;
+              },
+            },
+          
+         }
+  
+        },
+      };
+  
+      //@ts-ignore
+
+     
+      return ''
+    }
+
+
     mapRelevance(value: number) {
       switch (value) {
         case 0:
@@ -2024,22 +2142,72 @@ return contentFour
     }
     mapCharacteristicsnames(name: string) {
       if(name=='International/global level'){
-        return 'Macro level'
+        return 'Global level'
       }
       else if(name=='National/Sectorial level'){
-        return 'Medium level '
+        return 'National/sectoral level'
       }
       else if(name=='Subnational/regional/municipal or sub sectorial level'){
-        return 'Micro level '
+        return 'Subsectoral level'
       }
       if(name=='Short term (<5 years)'){
         return 'Short term (&#60 5 years)'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'Medium-term (≥5 years and < than 15 years)'
       }
       else{
         return name
       }
     }
 
+    mapCharacteristicsnamesforCarbonMarcket(name: string) {
+      if(name=='International/global level'){
+        return 'Global level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'National/sectoral level'
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Subsectoral level'
+      } 
+      if(name=='Long term (>15 years)'){
+        return 'Global level'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'National/sectoral level'
+      }
+      if(name=='Short term (<5 years)'){
+        return 'Subsectoral level'
+      }
+      else{
+        return name
+      }
+    }
+
+    mapScoreforCarbonMarcket(name: string) {
+      if(name=='-1'){
+        return 'Expected negative impact'
+      }
+      else if(name=='0'){
+        return 'No expected impact on the selected scale'
+      }
+      else if(name=='1'){
+        return 'Expected positive impact of 0-10 years on the selected scale'
+      } 
+      if(name=='2'){
+        return 'Expected positive impact of 11-20 years on the selected scale '
+      }
+      if(name=='3'){
+        return 'Expected positive impact of over 20 years on the selected scale'
+      }
+    
+      else{
+        return name
+      }
+    }
+
   }
+  
 
 

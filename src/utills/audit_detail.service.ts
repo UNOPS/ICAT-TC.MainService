@@ -42,9 +42,8 @@ export class AuditDetailService {
 
     log(body: any) {
         try {
-            this.httpService.post(this.auditlogURL, body).subscribe(rr => { }, er => console.log("log failed 1"))
+            this.httpService.post(this.auditlogURL, body).subscribe(rr => { },  )
         } catch (err) {
-            console.log("log failed ")
         }
     }
 }

@@ -10,7 +10,10 @@ import {
   Query,
   UseGuards,
   Res,
+  NotFoundException,
+  ServiceUnavailableException,
   InternalServerErrorException,
+  StreamableFile,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
@@ -23,9 +26,12 @@ import { AssessmentDto } from './dto/assessment.dto';
 import { AssessmentService } from 'src/assessment/assessment.service';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { StorageService } from 'src/storage/storage.service';
+import { promises as fsPromises } from 'fs';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
-
+import { StorageFile } from 'src/storage/storage-file';
+import { Report } from './entities/report.entity';
 @Controller('report')
 @ApiTags('report')
 export class ReportController {
@@ -35,6 +41,7 @@ export class ReportController {
     private readonly reportHtmlGenarateService: ReportHtmlGenaratesService,
     private readonly assessmentService: AssessmentService,
     private readonly tokenDetails: TokenDetails,
+    private storageService: StorageService,
     private auditDetailService: AuditDetailService,
     private masterDataService: MasterDataService
   ) { }
@@ -123,15 +130,38 @@ export class ReportController {
         )
       }
 
-      const response = await this.reportService.saveReport(req.reportName, uniqname, UsernnameFromTocken, req.climateAction, 0, req.tool, req.type)
+      const filePath = `./public/${uniqname}`;
+      
+       
+      try {
+      const fileContent =await fsPromises.readFile(filePath);
+     
+        await this.storageService.save(
+          'reports/' + uniqname,
+          'application/pdf',
+          fileContent,
+          [{ mediaId: uniqname }]
+        );
+      } catch (e) {
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("file not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
+    
+      const response = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,0,req.tool,req.type)
+     
       body = { ...body, ...{ actionStatus: "Report generated successfully", } }
       this.auditDetailService.log(body)
+      fsPromises.rm(filePath);
       return response
     } catch (error) {
       body = { ...body, ...{ actionStatus: "Failed to generate report", } }
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }
+  
   }
 
   @UseGuards(JwtAuthGuard)
@@ -140,6 +170,7 @@ export class ReportController {
     @Body() req: CreateComparisonReportDto,
     @Res({ passthrough: true }) res, 
   ): Promise<any> {
+   
     let countryIdFromTocken: number;
     let UsernnameFromTocken: string;
     [countryIdFromTocken,UsernnameFromTocken] =
@@ -154,16 +185,41 @@ export class ReportController {
     .join('');
     const uniqname = req.reportName+randomName + '.pdf';
     req.reportName = req.reportName + '.pdf';
+   
     const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
       req,
     );
-
+ 
    const reportpdf = await this.reportGenarateService.comparisonReportGenarate(
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
-    let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
+
+    const filePath = `./public/${uniqname}`;
+      
+       
+    try {
    
+    const fileContent =await fsPromises.readFile(filePath);
+ 
+      await this.storageService.save(
+        'reports/' + uniqname,
+        'application/pdf',
+        fileContent,
+        [{ mediaId: uniqname }]
+      );
+     
+    } catch (e) {
+      if (e.message.toString().includes("No such object")) {
+        throw new NotFoundException("file not found");
+      } else {
+        throw new ServiceUnavailableException("internal error");
+      }
+    }
+ 
+    let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
+
+     fsPromises.rm(filePath);
     return report;
   }
 
@@ -232,4 +288,26 @@ export class ReportController {
   test():{name:string,value:string}{
    return {name:"test",value:"234"}
   }
+
+      @Get('downloadReport/:state/:id')
+    async downloadReport(@Res({ passthrough: true }) res,  @Param("id") id: number,@Param("state") state: string ) :Promise<StreamableFile>  {
+      let report:Report =await this.reportService.findReportByID(id);
+      let storageFile: StorageFile;
+      try {
+        storageFile = await this.storageService.get(report.savedLocation);
+      } catch (e) {
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("image not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
+      res.set({
+        'Content-Type': `application/pdf`,
+        'Content-Disposition': `${state}; filename=${report.reportName}`,
+      });
+  
+  
+      return new StreamableFile(storageFile.buffer);
+    }
 }

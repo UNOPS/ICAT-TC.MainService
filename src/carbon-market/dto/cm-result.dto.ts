@@ -3,7 +3,6 @@ import { CMAnswer } from "../entity/cm-answer.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { Institution } from "src/institution/entity/institution.entity";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
-import { Portfolio } from "src/portfolio/entities/portfolio.entity";
 import { PortfolioSdg } from "src/investor-tool/entities/portfolio-sdg.entity";
 
 export class CMResultDto {
@@ -34,6 +33,7 @@ export class SaveCMResultDto {
     isDraft: boolean;
     type:string;
     name:string;
+    expectedGHGMitigation: number;
 }
 
 export class CalculateDto {

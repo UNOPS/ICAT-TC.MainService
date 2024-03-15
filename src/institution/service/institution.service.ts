@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 
 import {
@@ -22,10 +22,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     @InjectRepository(Institution) repo,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(User)
-    private readonly userService: UsersService,
-    @InjectRepository(Country)
-    private readonly countryRepository: Repository<Country>,
   ) {
     super(repo);
   }
@@ -115,9 +111,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .groupBy('ins.id');
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -139,7 +135,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         'ins.country',
         Country,
         'cou',
-        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken} and ins.name= '` +filterText+`'`,
+        `ins.countryId = cou.id and cou.id = ${countryIdFromTocken} and ins.name= '` + filterText + `'`,
       )
 
     let num = await data.getMany();
@@ -157,6 +153,11 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .where('typeId=' + filterText + ' AND countryId=' + countryId)
       .getMany();
     return policies
+  }
+  async getInstituionById(
+    Id: number) {
+
+    return this.repo.findOne({ relations: ['type', 'category'], where: { id: Id } })
   }
 
   async getInstitutionForUsers(
@@ -179,10 +180,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
 
-    let resualt = await data.getCount();
-    if (resualt) {
+    let result = await data.getCount();
+    if (result) {
 
-      return resualt;
+      return result;
     }
   }
 
@@ -208,10 +209,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .where('type.id = 3')
       .orderBy('ins.name', 'ASC');
 
-    let resualt = await data.getMany();
+    let result = await data.getMany();
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -240,10 +241,10 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .where('type.id = 3' + (sectorIdFromTocken != 0 ? ` and ins.sectorId in ${arr}` : ''))
       .orderBy('ins.name', 'ASC');
 
-    let resualt = await data.getMany();
+    let result = await data.getMany();
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
@@ -261,7 +262,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     id: number
   ) {
     let filter: string = 'ins.status=0';
-  
+
     if (id != 0) {
       let user1 = await this.userRepository.findOne({ where: { id: id } });
       if (role == "Country Admin" && user1.userType.id != 1) {
@@ -274,7 +275,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       }
     }
     if (id == 0) {
-      if (role == "Country Admin" ) {
+      if (role == "Country Admin") {
         let user = await this.userRepository.findOne({ where: { username: username } });
         if (filter) {
           filter = `${filter}  and ins.id not in (${user.institution.id})`;
@@ -343,9 +344,9 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
 
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
 
   }
@@ -361,6 +362,33 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     return this.repo.save(ins)
   }
 
+  async update(ins: Institution) {
+    let instituon = await this.repo.findOne({ where: { id: ins.id } })
 
+    instituon.name = ins.name;
+    instituon.email = ins.email;
+    instituon.telephoneNumber = ins.telephoneNumber;
+    instituon.description = ins.description;
+    instituon.address = ins.address;
+    instituon.category = ins.category;
+    instituon.status = ins.status;
+    return this.repo.save(instituon)
+  }
+
+  async create(ins: Institution) {
+    let institution = new Institution();
+    institution.name = ins.name;
+    institution.email = ins.email;
+    institution.telephoneNumber = ins.telephoneNumber;
+    institution.description = ins.description;
+    institution.address = ins.address;
+    institution.category = ins.category;
+    institution.status = ins.status;
+    institution.type = ins.type;
+    institution.country = ins.country;
+    institution.sector = ins.sector;
+    institution.sortOrder = 1;
+    return await this.repo.save(institution)
+  }
 
 }

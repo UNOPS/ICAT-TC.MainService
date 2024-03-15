@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -7,7 +7,6 @@ import { Assessment } from './entities/assessment.entity';
 import {
   IPaginationOptions,
   paginate,
-  Pagination,
 } from 'nestjs-typeorm-paginate';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Methodology } from 'src/methodology-assessment/entities/methodology.entity';
@@ -16,21 +15,15 @@ import { MethodologyAssessmentParameters } from 'src/methodology-assessment/enti
 import { Institution } from 'src/institution/entity/institution.entity';
 import { ParameterRequest } from 'src/data-request/entity/data-request.entity';
 import { DataVerifierDto } from './dto/dataVerifier.dto';
-import { User } from 'src/users/entity/user.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
-import { AssessmentCharacteristics } from 'src/methodology-assessment/entities/assessmentcharacteristics.entity';
 import { Category } from 'src/methodology-assessment/entities/category.entity';
 import { Characteristics } from 'src/methodology-assessment/entities/characteristics.entity';
 import { Indicators } from 'src/methodology-assessment/entities/indicators.entity';
-import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
 import { Repository } from 'typeorm';
 import { Objectives } from 'src/methodology-assessment/entities/objectives.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
-import { InvestorTool } from 'src/investor-tool/entities/investor-tool.entity';
-import { AssessmentBarriers } from 'src/methodology-assessment/entities/assessmentbarriers.entity';
-import { Barriers } from 'src/methodology-assessment/entities/barriers.entity';
 import { InvestorSector } from 'src/investor-tool/entities/investor-sector.entity';
 import { InvestorAssessment } from 'src/investor-tool/entities/investor-assessment.entity';
 import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
@@ -39,6 +32,12 @@ import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity
 import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
 import { GeographicalAreasCovered } from 'src/investor-tool/entities/geographical-areas-covered.entity';
 import { AssessmentCMDetail } from 'src/carbon-market/entity/assessment-cm-detail.entity';
+import { throwError } from 'rxjs';
+import { Tool } from 'src/data-request/enum/tool.enum';
+import { ToolsMultiselectDto } from 'src/investor-tool/dto/final-investor-assessment.dto';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -46,7 +45,13 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
   constructor(
     @InjectRepository(Assessment) repo,
     @InjectRepository(AssessmentObjectives) private assessmentObjectivesRepo: Repository<AssessmentObjectives>,
+    @InjectRepository(PortfolioAssessment) private portfolioAssessmentRepo: Repository<PortfolioAssessment>,
+    @InjectRepository(Results) private resultsRepo: Repository<Results>,
+    @InjectRepository(SdgAssessment) private sdgAssessmentRepo: Repository<SdgAssessment>,
+    @InjectRepository(PolicyBarriers) private policyBarrierRepo: Repository<PolicyBarriers>,
+    @InjectRepository(BarrierCategory) private barrierCategoryRepo: Repository<BarrierCategory>,
     private readonly userService: UsersService,
+    private  investorService: InvestorToolService,
   ) {
     super(repo);
   }
@@ -67,7 +72,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapOne(
         'asse.methodology',
@@ -178,7 +183,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id and  proj.countryId = ${countryIdFromTocken}`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 and proj.countryId = ${countryIdFromTocken}`,
       )
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -188,9 +193,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         sectorIdFromTocken,
       })
 
-    let resualt = await paginate(data, options);
-    if (resualt) {
-      return resualt;
+    let result = await paginate(data, options);
+    if (result) {
+      return result;
     }
   }
 
@@ -221,7 +226,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       'asse.climateAction',
       ClimateAction,
       'proj',
-      `proj.id = asse.climateAction_id `,
+      `proj.id = asse.climateAction_id and not proj.status =-20 `,
     )
     .where(filter, {
       filterText: `%${filterText}%`,
@@ -235,15 +240,15 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id `,
+        `proj.id = asse.climateAction_id  and not proj.status =-20 `,
       )
       .where(filter, {
         filterText: `%${filterText}%`,
       })
       .orderBy('asse.id', 'ASC');
-    let resualt = await paginate(data, options);
+    let result = await paginate(data, options);
     let newarray = new Array();
-    for (let asse of resualt.items) {
+    for (let asse of result.items) {
       newarray.push(asse.id)
     }
 
@@ -253,7 +258,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policySector',
@@ -293,7 +298,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       .leftJoinAndMapMany('as.parameters', MethodologyAssessmentParameters, 'pa', 'as.id = pa.assessment_id ',)
       .leftJoinAndMapOne('pa.institution', Institution, 'in', 'in.id = pa.institution_id',)
       .leftJoinAndMapOne('pa.parameterRequest', ParameterRequest, 'par', 'par.ParameterId = pa.id',)
-      .leftJoinAndMapOne('as.project', ClimateAction, 'pr', 'pr.id = as.climateAction_id')
+      .leftJoinAndMapOne('as.project', ClimateAction, 'pr', 'pr.id = as.climateAction_id and not pr.status =-20 ')
       .where(
         `as.id = ${assessmentId} AND par.dataRequestStatus in (9,-9,11)`,
       );
@@ -417,7 +422,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policy_sector',
@@ -463,10 +468,10 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'policy_barrier',
         `policy_barrier.assessmentId = asse.id`,
       ).leftJoinAndMapOne(
-        'asse.cmAssementDetails',
+        'asse.cmAssessmentDetails',
         AssessmentCMDetail,
-        'cmAssementDetails',
-        `cmAssementDetails.cmassessmentId = asse.id`,
+        'cmAssessmentDetails',
+        `cmAssessmentDetails.cmassessmentId = asse.id`,
       )
       .leftJoinAndMapMany(
         'policy_barrier.barrierCategory',
@@ -502,7 +507,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'asse.climateAction',
         ClimateAction,
         'proj',
-        `proj.id = asse.climateAction_id`,
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
       .leftJoinAndMapMany(
         'proj.policy_sector',
@@ -664,5 +669,85 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       
       .where(filter,{ assessmentId });
     return await data.getMany();
+  }
+
+  async deleteAssessment(id:number, tool: string): Promise<any>{
+    try {
+      if(tool == 'PORTFOLIO' || tool == 'INVESTOR'){
+        await this.investorService.deleteAssessment(id)
+      }
+      
+      let portfolioAssessment = await this.getPortfolioAssessmnet(id)
+      if(portfolioAssessment){
+        await this.portfolioAssessmentRepo.delete({id:portfolioAssessment.id})
+      }
+      await this.deleteBarriers(id)
+      await this.resultsRepo.delete({assessment:{id: id}})
+      await this.sdgAssessmentRepo.delete({assessment:{id: id}})
+      await this.repo.delete({id:id})
+      return true
+      
+    } catch (error) {
+      console.log("error in delete assessment",id,error)
+      return false
+    }
+
+  }
+  async deleteBarriers(id: number){
+    let policyBarriers = await this.getPolicyBarriers(id);
+      if(policyBarriers){
+        await this.deleteBarrierCategories(policyBarriers)
+      }
+      await this.policyBarrierRepo.delete({assessment:{id:id}})
+  }
+
+  async getPortfolioAssessmnet(id:number){
+    let portfolioAssessment =  this.portfolioAssessmentRepo.createQueryBuilder('portfolioAssess')
+    .leftJoinAndMapOne(
+      'portfolioAssess.assessment',
+      Assessment,
+      'assess',
+      'assess.id = portfolioAssess.assessment_id'
+    )
+    .where('assess.id = :value', { value: id })
+    .getOne()
+    return await portfolioAssessment
+  }
+
+  async getPolicyBarriers(asseId: number) {
+    try {
+      let policy_barrier = this.policyBarrierRepo.createQueryBuilder('policy_barrier')
+        .leftJoinAndMapMany(
+          'policy_barrier.barrierCategory',
+          BarrierCategory,
+          'barrierCategory',
+          'barrierCategory.barriersId = policy_barrier.id',
+        )
+        .leftJoinAndMapOne(
+          'policy_barrier.assessment',
+          Assessment,
+          'assessment',
+          `assessment.id = policy_barrier.assessmentId`,
+        )
+        .where('assessment.id = :value', { value: asseId })
+        .getMany()
+
+        return await policy_barrier
+    
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  async deleteBarrierCategories(polcybarrier: PolicyBarriers[]) {
+    try {
+      for await (let barrier of polcybarrier) {
+        if(barrier.barrierCategory){
+          this.barrierCategoryRepo.delete({barriers:{id:barrier.id}})
+        }
+      }
+     
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

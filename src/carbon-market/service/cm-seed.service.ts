@@ -1,15 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { answers, categories, characteristic, criterias, questions, sections } from "../dto/seed-data";
+import { answers, categories, characteristic, criterias, defaultValues, questions, sections } from "../dto/seed-data";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Section } from "../entity/section.entity";
 import { Criteria } from "../entity/criteria.entity";
 import { CMQuestion } from "../entity/cm-question.entity";
 import { CMAnswer } from "../entity/cm-answer.entity";
-import { CMQuestionService } from "./cm-question.service";
 import { Repository } from "typeorm";
 import { Characteristics } from "src/methodology-assessment/entities/characteristics.entity";
 import { Category } from "src/methodology-assessment/entities/category.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { CMDefaultValue } from "../entity/cm-default-value.entity";
+import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
 
 @Injectable()
 export class CMSeedService {
@@ -22,7 +23,8 @@ export class CMSeedService {
         @InjectRepository(Characteristics) private characRepo: Repository<Characteristics>,
         @InjectRepository(Category) private catRepo: Repository<Category>,
         @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
-        private questionService: CMQuestionService
+        @InjectRepository(CMDefaultValue) private cmDefaultValueRepo: Repository<CMDefaultValue>,
+        private methodologyAssessmentService: MethodologyAssessmentService
     ){}
 
     async sectionSeed(){
@@ -90,6 +92,7 @@ export class CMSeedService {
                 q.order = question.order;
                 q.answer_type = question.answer_type;
                 q.short_label = question.short_label;
+                q.description = question.description;
                 if (criteria !== undefined) q.criteria = criteria;
                 let ch = await this.characRepo.findOne({where: {code: question.characteristic}});
                 if (ch !== undefined) q.characteristic = ch;
@@ -150,6 +153,7 @@ export class CMSeedService {
                     q.answer_type = question.answer_type;
                     q.order = question.order;
                     q.short_label = question.short_label;
+                    q.description = question.description;
                     if (question.related_questions?.length > 0) {
                         q.related_questions = JSON.stringify(question.related_questions);
                     }
@@ -406,6 +410,41 @@ export class CMSeedService {
             }
         }  else {
             return { status: "Nothing to save"};
+        }
+    }
+
+    async defaultValueSeed() {
+        let _defaults: CMDefaultValue[] = []
+        for await (let default_value of defaultValues){
+            let exist = await this.cmDefaultValueRepo.createQueryBuilder('default').where('code = :code', {code: default_value.code}).getOne()
+            if (!exist){
+                let characteristic = await this.methodologyAssessmentService.findCharacteristicByCode(default_value.category, default_value.characteristic)
+                let def = new CMDefaultValue();
+                if (characteristic !== undefined) def.characteristic = characteristic;
+                def.starting_situation_value = default_value.starting_situation_value;
+                def.expected_impact_value = default_value.expected_impact_value;
+                def.unit = default_value.unit;
+                def.source = default_value.source;
+                def.code = default_value.code;
+                _defaults.push(def);
+            } else {
+                exist.starting_situation_value = default_value.starting_situation_value;
+                exist.expected_impact_value = default_value.expected_impact_value;
+                exist.source = default_value.source;
+                exist.unit = default_value.unit;
+                exist.code = default_value.code;
+                _defaults.push(exist)
+            }
+        }
+        if (_defaults.length > 0) {
+            let res = this.cmDefaultValueRepo.save(_defaults)
+            if (res) {
+                return "saved";
+            } else {
+                return "failed to save";
+            }
+        } else {
+            return "All the default values are saved";
         }
     }
 }

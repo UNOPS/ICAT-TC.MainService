@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
 import { Repository } from "typeorm-next";
