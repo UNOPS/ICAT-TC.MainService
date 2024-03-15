@@ -1343,7 +1343,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     if(allTool !='ALL_OPTION'){
       filter = filter + ' and asses.tool=:tool '
     }
-    data.select(['asses.id','asses.tool', 'result.id', 'result.averageProcess','result.averageOutcome'])
+    data.select(['asses.id','asses.tool','asses.from','asses.to', 'result.id', 'result.averageProcess','result.averageOutcome'])
       .leftJoinAndMapOne(
         'asses.climateAction',
         ClimateAction,
