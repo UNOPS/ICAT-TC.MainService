@@ -33,6 +33,8 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2,} from './dto/processData.dto';
 import { TotalInvestment } from './entities/total-investment.entity';
+import { GraphResdDto } from './dto/graphRes.dto';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 const schema = {
   'id': {
@@ -68,6 +70,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     @InjectRepository(GeographicalAreasCovered) private readonly geographicalAreaRepo: Repository<GeographicalAreasCovered>,
     @InjectRepository(SdgPriority) private readonly sdgPriorityRepo: Repository<SdgPriority>,
     @InjectRepository(TotalInvestment) private readonly totalInvestmentRepo: Repository<TotalInvestment>,
+    @InjectRepository(PortfolioAssessment) private readonly portfolioAssessRepo: Repository<PortfolioAssessment>,
     private userService: UsersService,
     private methAssessService: MethodologyAssessmentService,
     private masterDataService: MasterDataService
@@ -82,6 +85,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async createinvestorToolAssessment(createInvestorToolDto: CreateInvestorToolDto): Promise<any> {
 
     if (createInvestorToolDto.investortool) {
+      await this.deleteInvestorDetails(createInvestorToolDto.investortool.assessment.id)
       let assessment = createInvestorToolDto.investortool.assessment;
       let investor = new InvestorTool();
       investor.assessment = assessment;
@@ -120,6 +124,16 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       throw new error('No data')
     }
 
+  }
+  async deleteInvestorDetails(asseId:number){
+    await this.investorSectorRepo.delete({assessment:{id:asseId}});
+    let investorTool = await this.repo.findOne({where:{assessment:{id:asseId}}})
+      if(investorTool){
+        await this.totalInvestmentRepo.delete({investor_tool:{id:investorTool.id}})
+        await this.geographicalAreaRepo.delete({investorTool:{id:investorTool.id}}) 
+    }
+    await this.repo.delete({assessment:{id:asseId}});
+    
   }
   async findAllImpactCovered(): Promise<ImpactCovered[]> {
     return this.impactCoveredRepo.find();
@@ -385,6 +399,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let results = await this.calculateNewAssessmentResults(data?.assessment?.id)
         data.averageOutcome = results?.outcomeScore;
         data.averageProcess = results?.processScore;
+        let result = await this.getResultbyId(data.assessment.id)
+        if(result){
+          data.id = result.id
+        }
         await this.resultRepository.save(data);
         if (data2.isDraft == false && data2.isEdit == true) {
           assessment.isDraft = data2.isDraft
@@ -598,8 +616,14 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         let results = await this.calculateNewAssessmentResults(data?.assessment?.id).then(
 
         )
+        
         data.averageOutcome = results?.outcomeScore;
         data.averageProcess = results?.processScore;
+        let result = await this.getResultbyId(data.assessment.id)
+        if(result){
+          data.id = result.id
+        }
+        
         await this.resultRepository.save(data);
         if (data2.isDraft == false && data2.isEdit == true) {
           assessment.processDraftLocation = data2.proDraftLocation;
@@ -952,7 +976,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return result;
   }
 
-  async findAllSectorCount(): Promise<any[]> {
+  async findAllSectorCount(portfolioId: number): Promise<any[]> {
     let user = this.userService.currentUser();
     const currentUser = await user;
     const isUserExternal = currentUser?.userType?.name === 'External';
@@ -972,6 +996,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'cntry',
         'cntry.id = user.countryId',
       )
+      if (portfolioId&&Number(portfolioId)) {
+        let response = this.portfolioAssessRepo.find({
+          relations: ['assessment'],
+          where: { portfolio: { id: portfolioId } },
+        });
+        let assessmentIdArray: number[] = [];
+        for (let data of await response) {
+          let assessmentId = data.assessment.id;
+          assessmentIdArray.push(assessmentId);
+        }
+        data.andWhere('assessment.id IN (:...ids)', { ids: assessmentIdArray })
+  
+      }
 
     if (isUserExternal) {
       data.andWhere('user.id = :userId', { userId: currentUser.id })
@@ -1697,7 +1734,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assessment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1718,7 +1755,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       ;
     return await sectorSum.getRawMany();
   }
-  async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
+  async getDashboardData(options: IPaginationOptions,selectedAssessIds?:number[]): Promise<Pagination<any>> {
     let tool = 'INVESTOR';
     let filter = 'asses.tool=:tool '
     let user = this.userService.currentUser();
@@ -1734,7 +1771,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score','asses.from','asses.to'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -1745,20 +1782,35 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { tool, userId, userCountryId }).orderBy('asses.id','DESC')
+      )
+      .andWhere(filter, { tool, userId, userCountryId })
+      if(selectedAssessIds && selectedAssessIds.length>0){
+        data.andWhere('asses.id IN (:selectedAssessIds)',{selectedAssessIds:selectedAssessIds})
+      }
+      
+      data.orderBy('asses.id','DESC')
+    let allData = await data.getMany()
     let result = await paginate(data, options);
-    return result;
+    return {
+      items: result.items,
+      meta: {
+        totalItems: result.meta.totalItems,
+        itemsPerPage: result.meta.itemsPerPage,
+        totalPages: result.meta.totalPages,
+        currentPage: result.meta.currentPage,
+        allData: allData,
+      } as any,
+    };
   }
 
-  async sdgSumALLCalculate(): Promise<any[]> {
-
+  async sdgSumALLCalculate(portfolioId: number): Promise<any[]> {
     let filter = ''
 
 
@@ -1781,6 +1833,20 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       'sdg',
       `sdgasses.sdgId = sdg.id`,
     )
+    if (portfolioId&&Number(portfolioId)) {
+      let response = this.portfolioAssessRepo.find({
+        relations: ['assessment'],
+        where: { portfolio: { id: portfolioId } },
+      });
+      
+      let assessmentIdArray: number[] = [];
+      for (let data of await response) {
+        let assessmentId = data.assessment.id;
+        assessmentIdArray.push(assessmentId);
+      }
+      sectorSum.andWhere('assessment.id IN (:...ids)', { ids: assessmentIdArray })
+
+    }
     if (currentUser?.userType?.name === 'External') {
       filter = filter + ' assessment.user_id=:userId '
 
@@ -1791,7 +1857,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'assessment.climateAction',
         ClimateAction,
         'climateAction',
-        'assessment.climateAction_id = climateAction.id'
+        'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
@@ -1803,7 +1869,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
  
-    sectorSum.where(filter,{userId,userCountryId})
+    sectorSum.andWhere(filter,{userId,userCountryId})
       .select('sdg.name', 'sdg')
       .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasses.id)', 'count')
@@ -1812,9 +1878,126 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       ;
     return await sectorSum.getRawMany();
   }
+  async getDashboardAllDataGraph() {
 
-  async getDashboardAllData(options: IPaginationOptions): Promise<Pagination<any>> {
-    // let filter = 'asses.process_score is not null and asses.outcome_score is not null'
+    let filter = ''
+    let user =await this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    if (currentUser?.userType?.name === 'External') {
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+
+    }
+    else {
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+    .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+    .innerJoinAndMapOne(
+      'asses.result',
+      Results,
+      'result',
+      'asses.id = result.assessment_id'
+    )
+    .leftJoinAndMapOne(
+      'asses.climateAction',
+      ClimateAction,
+      'climateAction',
+      'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+    )
+    .leftJoinAndMapOne(
+      'climateAction.country',
+      Country,
+      'country',
+      'climateAction.countryId = country.id'
+    ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+   
+    
+    let result1 =await data.getMany();
+    let heatMapScore =  await result1.map(item => {return {processScore: item.process_score, outcomeScore: item.outcome_score}});
+    let d =new Array();
+    let colour =new Array();
+    let result =new Array();
+    colour=['#ec6665', '#ed816c','#f19f70','#f19f70','#f9d57f','#f98570','#fdbf7b','#fedc82','#a9d27f','#86c97d','#63be7b']
+   
+    let r= await  this.heatMapCAl(heatMapScore);
+        d.push(r.mineThree*100/r.total);
+        d.push(r.mineTwo*100/r.total);
+        d.push(r.mineOne*100/r.total);
+        d.push(r.zero*100/r.total);
+        d.push(r.one*100/r.total);
+        d.push(r.two*100/r.total);
+        d.push(r.three*100/r.total);
+        d.push(r.four*100/r.total);
+        d.push(r.five*100/r.total);
+        d.push(r.six*100/r.total);
+        d.push(r.seven*100/r.total);
+
+        result.push(d);
+        result.push(colour);
+        return result;
+  }
+
+  async heatMapCAl(heatMapScore:any){
+    let data = new GraphResdDto();
+    for await(let item of heatMapScore){
+      data.total +=1;
+      if ( item.processScore != null )  {
+        let value =  item.processScore  +  item.outcomeScore ;
+        switch (value) {
+          case -3:
+            data.mineOne +=1;
+            break;
+          case -2:
+            data.mineTwo +=1;
+            break;
+          case -1:
+            data.mineThree +=1;
+            break;
+          case 0:
+            data.zero +=1;
+            break;
+          case 1:
+            data.one +=1;
+            break;
+          case 2:
+            data.two +=1;
+            break;
+          case 3:
+            data.three +=1;
+            break;
+          case 4:
+            data.four +=1;
+            break;
+          case 5:
+            data.five +=1;
+            break;
+          case 6:
+            data.six +=1;
+            break;
+          case 7:
+            data.seven +=1;
+            break;
+        }
+      } 
+    }
+    return data;
+  }
+
+
+  async getDashboardAllData(skip, pageSize,filterText:[],portfolioID: number): Promise<any> {
+
+    let ar= Array.isArray(filterText);
     let filter = ''
     let user = this.userService.currentUser();
     const currentUser = await user;
@@ -1827,6 +2010,93 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         filter = filter + '  asses.user_id=:userId '  
       }
 
+    }
+    if(filterText && !ar){
+      if(filter){
+        filter = filter + `and climateAction.policyName = :filterText`
+      }
+      else{
+        filter = filter + `climateAction.policyName = :filterText`
+      }
+      
+    }
+    else {
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      )
+      if (Number(portfolioID)) {
+
+        if(filter){
+          filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        }else{
+          filter = filter + 'portfolio_assesmet.portfolio_id=:portfolioID'
+        }
+        data.innerJoinAndMapOne(
+          'asses.portfolio_assesmet',
+          PortfolioAssessment,
+          'portfolio_assesmet',
+          'asses.id = portfolio_assesmet.assessment_id'
+        )
+      }
+      data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
+      if(filterText && ar){
+        data.andWhere('climateAction.policyName IN (:...filterText)')
+      }
+      data.skip(skip)
+      data.take(pageSize)
+
+    let result =  await data.getManyAndCount()
+    return result;
+  }
+
+  async getDashboardAllDataFilter(options: IPaginationOptions,filterText:[],portfolioID: number):  Promise<Pagination<any>> {
+
+    let ar= Array.isArray(filterText);
+    let filter = ''
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    if (currentUser?.userType?.name === 'External') {
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+
+    }
+    if(filterText && !ar){
+      if(filter){
+        filter = filter + `and climateAction.policyName = :filterText`
+      }
+      else{
+        filter = filter + `climateAction.policyName = :filterText`
+      }
+      
     }
     else {
       if(filter){
@@ -1848,18 +2118,47 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         'asses.climateAction',
         ClimateAction,
         'climateAction',
-        'asses.climateAction_id = climateAction.id'
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
       )
       .leftJoinAndMapOne(
         'climateAction.country',
         Country,
         'country',
         'climateAction.countryId = country.id'
-      ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
-    let result = await paginate(data, options);
-    return result;
-  }
+      )
+      if (Number(portfolioID)) {
 
+        if(filter){
+          filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        }else{
+          filter = filter + 'portfolio_assesmet.portfolio_id=:portfolioID'
+        }
+        data.innerJoinAndMapOne(
+          'asses.portfolio_assesmet',
+          PortfolioAssessment,
+          'portfolio_assesmet',
+          'asses.id = portfolio_assesmet.assessment_id'
+        )
+      }
+      data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
+      if(filterText && ar){
+        data.andWhere('climateAction.policyName IN (:...filterText)')
+      }
+
+
+     let result = await paginate(data, options);
+     let allData = await data.getMany()
+     return {
+      items: result.items,
+      meta: {
+        totalItems: allData.length,
+        itemsPerPage: result.meta.itemsPerPage,
+        totalPages: result.meta.totalPages,
+        currentPage: result.meta.currentPage,
+        allData: allData,
+      } as any,
+    };
+  }
   roundDown(value: number) {
     if(value>0){
       return Math.floor(value)
@@ -1952,6 +2251,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let res_s
     let res_g
     let response = {}
+    if (selects.isCompleted) {
+      await this.investorSectorRepo.delete({assessment: {id: selects.assessmentId}});
+      await this.geographicalAreaRepo.delete({assessment: {id: selects.assessmentId}})
+    }
     if (selects.sectors){
       res_s = await this.investorSectorRepo.save(selects.sectors);
     }
@@ -2022,6 +2325,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
+          categoryData.categoryCode = category.code;
           categoryData.type = 'outcome';
           assess.push(x)
         }
@@ -2035,6 +2339,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Scale of the Outcome";
       categoryDataNew.categoryID = 6;
+      categoryDataNew.categoryCode = "SCALE_SD";
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
 
@@ -2045,6 +2350,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Time frame over which the outcome is sustained";
       categoryDataNew.categoryID = 8;
+      categoryDataNew.categoryCode = "SUSTAINED_SD"
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
 
@@ -2130,6 +2436,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           if ((category.name === x.category.name) && (category.id == 6)) {
             categoryData.CategoryName = category.name;
             categoryData.categoryID = category.id;
+            categoryData.categoryCode = category.code;
             categoryData.type = 'outcome';
             let indicatordetails: IndicatorDetails[] = await this.getIndicatorDetials(x.id);
             x.indicator_details = indicatordetails;
@@ -2166,6 +2473,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           if ((category.name === x.category.name) && (category.id == 8)) {
             categoryData.CategoryName = category.name;
             categoryData.categoryID = category.id;
+            categoryData.categoryCode = category.code;
             categoryData.type = 'outcome';
             let indicatordetails: IndicatorDetails[] = await this.getIndicatorDetials(x.id);
             x.indicator_details = indicatordetails;
@@ -2206,6 +2514,72 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   async saveTotalInvestments(investments: TotalInvestment[]) {
     return await this.totalInvestmentRepo.save(investments);
   }
+  async deleteAssessment(asseId: number) {
+    try {
+      await this.investorSectorRepo.delete({assessment:{id:asseId}});
+      let investorTool = await this.repo.findOne({where:{assessment:{id:asseId}}})
+      if(investorTool){
+        await this.totalInvestmentRepo.delete({investor_tool:{id:investorTool.id}})
+        await this.geographicalAreaRepo.delete({investorTool:{id:investorTool.id}}) 
+      }
+      let investorAssessment = await this.getInvestorAssessment(asseId)
+      await this.deleteInvestorAssessment(investorAssessment)
+      await this.investorAssessmentRepo.delete({assessment:{id:asseId}})
+      await this.repo.delete({assessment:{id:asseId}});
+      
+    
+    } catch (error) {
+    }
+  }
+
+  async getInvestorAssessment(asseId: number) {
+    try {
+      let investor_assessment = this.investorAssessmentRepo.createQueryBuilder('investorAssess')
+        .leftJoinAndMapMany(
+          'investorAssess.indicator_details',
+          IndicatorDetails,
+          'indicator_details',
+          'indicator_details.investorAssessment_id = investorAssess.id',
+        )
+        .leftJoinAndMapOne(
+          'investorAssess.assessment',
+          Assessment,
+          'assessment',
+          `assessment.id = investorAssess.assessment_id`,
+        )
+        .where('assessment.id = :value', { value: asseId })
+        .getMany()
+
+        return await investor_assessment
+    
+    } catch (error) {
+    }
+  }
+  async deleteInvestorAssessment(invest_assessment: InvestorAssessment[]) {
+    try {
+      for await (let assess of invest_assessment) {
+        if(assess.indicator_details){
+          this.indicatorDetailsRepo.delete({investorAssessment:{id:assess.id}})
+        }
+        
+      }
+     
+    } catch (error) {
+    }
+  }
+
+  async getResultbyId(asessmentId:number): Promise<Results>{
+    let result = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndMapOne(
+        'result.assessment',
+        Assessment,
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .where('assessment.id = :asessmentId',{asessmentId:asessmentId})
+      .getOne()
+    return await result;
+  } 
 }
 
 interface SelectedSDG {

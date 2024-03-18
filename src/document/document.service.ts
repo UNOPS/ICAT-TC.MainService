@@ -51,9 +51,9 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     let documenst = await this.repo.find({
       where: { documentOwnerId: oid, documentOwner: owner },
     });
-    const base = process.env.ClientURl;
+    const base = process.env.MAIN_URL ;
     documenst.forEach((a) => {
-      a.url = `${base}document/downloadDocument/attachment/${a.id}`;
+      a.url = `${base}/document/downloadDocument/attachment/${a.id}`;
     });
 
     return documenst;

@@ -35,6 +35,11 @@ import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity"
 import { StorageService } from "src/storage/storage.service";
 import { AuditDetailService } from "src/utills/audit_detail.service";
 import { HttpModule } from "@nestjs/axios";
+import { CMDefaultValue } from "./entity/cm-default-value.entity";
+import { MethodologyAssessmentService } from "src/methodology-assessment/methodology-assessment.service";
+import { MethodologyAssessmentModule } from "src/methodology-assessment/methodology-assessment.module";
+import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
+import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 
 
 @Module({
@@ -53,9 +58,13 @@ import { HttpModule } from "@nestjs/axios";
       Characteristics,
       Category,
       User, UserType, Institution, Country,Audit,
-      SdgAssessment
+      SdgAssessment,
+      CMDefaultValue,
+      GeographicalAreasCovered,
+      InvestorSector
     ]),
-    HttpModule
+    HttpModule,
+    MethodologyAssessmentModule
   ],
   controllers: [
     AssessmentCMDetailController,
@@ -74,8 +83,8 @@ import { HttpModule } from "@nestjs/axios";
     UsersService,
     MasterDataService,StorageService,
     MasterDataService,
-    AuditDetailService
+    AuditDetailService,
   ],
-  exports: [CMAssessmentQuestionService],
+  exports: [CMAssessmentQuestionService, AssessmentCMDetailService],
 })
 export class CarbonMarketModule {}

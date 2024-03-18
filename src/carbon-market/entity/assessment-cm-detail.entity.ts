@@ -27,13 +27,16 @@ export class AssessmentCMDetail extends BaseTrackingEntity {
   @JoinColumn()
   cmassessment: Assessment
 
-   @Column({nullable:true})
-  sectoral_boundary: string; 
+  @Column({ nullable: true })
+  sectoral_boundary: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   scale: string;
 
-  @ManyToMany((type) => GeographicalAreasCovered, (area)=> area.assessmentCMDetail)
+  @Column({ type: 'double', nullable: true })
+  expected_ghg_mitigation: number;
+
+  @ManyToMany((type) => GeographicalAreasCovered, (area) => area.assessmentCMDetail)
   geographicalAreasCovered: GeographicalAreasCovered[];
 
   @ManyToMany((type) => InvestorSector, (sector)=> sector.assessmentCMDetail)

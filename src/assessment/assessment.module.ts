@@ -12,10 +12,31 @@ import { UserType } from 'src/users/entity/user.type.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Country } from 'src/country/entity/country.entity';
 import { AssessmentObjectives } from 'src/methodology-assessment/entities/assessmentobjectives.entity';
+import { InvestorToolModule } from 'src/investor-tool/investor-tool.module';
+import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
+import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
+import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { SdgAssessment } from 'src/investor-tool/entities/sdg-assessment.entity';
+import { PolicyBarriers } from 'src/climate-action/entity/policy-barriers.entity';
+import { BarrierCategory } from 'src/climate-action/entity/barrier-category.entity';
+import { CarbonMarketModule } from 'src/carbon-market/carbon-market.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assessment,User,Institution,UserType,Country,AssessmentObjectives]),UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Assessment,
+    User, 
+    Institution, 
+    UserType, 
+    Country, 
+    AssessmentObjectives, 
+    PortfolioAssessment,
+    Results,
+    SdgAssessment,
+    PolicyBarriers,
+    BarrierCategory
+  ]), UsersModule, InvestorToolModule, CarbonMarketModule],
   controllers: [AssessmentController],
-  providers: [AssessmentService,TokenDetails,UsersService,EmailNotificationService]
+  providers: [AssessmentService, TokenDetails, UsersService, EmailNotificationService],
+  exports: [AssessmentService]
 })
-export class AssessmentModule {}
+export class AssessmentModule { }

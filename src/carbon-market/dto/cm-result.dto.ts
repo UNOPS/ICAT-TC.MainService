@@ -33,6 +33,7 @@ export class SaveCMResultDto {
     isDraft: boolean;
     type:string;
     name:string;
+    expectedGHGMitigation: number;
 }
 
 export class CalculateDto {
