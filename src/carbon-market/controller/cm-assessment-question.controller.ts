@@ -96,7 +96,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   async getDashboardData(
     @Query('page') page: number,
     @Query('limit') limit: number,
-    @Query('intervention_ids') intervention_ids: string[]
+    @Query('intervention_ids') intervention_ids: number[]
   ): Promise<any> {
     return await this.service.getDashboardData({ limit: limit, page: page }, intervention_ids);
   }

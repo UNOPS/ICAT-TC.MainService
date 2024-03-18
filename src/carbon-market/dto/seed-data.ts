@@ -766,13 +766,13 @@ export const answers = [
         isUpdate: false
     },
     {
-        label: "Not relevant",
+        label: "This does not apply",
         code: "S-2-C-1-Q-8-A-3",
         weight: 0,
         score_portion: 1,
         isPassing: true,
         question: "S-2-C-1-Q-8",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Unsure",
@@ -1947,7 +1947,7 @@ export const defaultValues = [
         characteristic: 'MACRO_LEVEL',
         starting_situation_value: 59,
         expected_impact_value: 59,
-        source: '',
+        source: '± 6.6 GtCO2-eq (Global net anthropogenic GHG emissions in 2019, according to IPCC Sixth Assessment Report (2023))',
         unit: 'GtCO2-eq',
         code: 'SCALE_GHG_MACRO_LEVEL_DEF_1'
     },
