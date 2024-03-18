@@ -1022,6 +1022,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAlignmentDataPortfolioInvestor(assessment: Assessment, sdgPriorities: SdgPriority[], sdgs_score: any) {
+  
     let response = {}
     let col1 = []
     let col2 = []
