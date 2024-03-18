@@ -1256,7 +1256,6 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       .andWhere('category.code = :cat_code', {cat_code: cat_code})
       .getOne() 
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException()
     }
   }

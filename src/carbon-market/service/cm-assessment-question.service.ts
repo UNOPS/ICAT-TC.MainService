@@ -1021,15 +1021,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           'characteristic',
           'characteristic.id = default_value.characteristicId'
         )
-        // .innerJoin(
-        //   'characteristic.category',
-        //   'category',
-        //   'category.id = characteristic.category_id'
-        // )
         .where('characteristic.id = :id', { id: characteristic_id })
         .getMany()
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException()
     }
   }
@@ -1055,10 +1049,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           await this.repo.delete({id: id})
         }
       } else {
-        console.error("No CM Assessment Questions found");
       }
     } catch (error) {
-      console.error(error);
       throw new InternalServerErrorException(error);
     }
     
