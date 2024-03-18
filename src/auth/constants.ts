@@ -1,6 +1,6 @@
 export const jwtConstants = {
   secret:  '7AnEd5epXmdaJfUrokkQ' ,
-  JWT_expiresIn: process.env.JWT_expiresIn || '3600s',
+  JWT_expiresIn: process.env.JWT_expiresIn || '36000s',
 };
 
 export enum LoginRole {
