@@ -2050,7 +2050,11 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       )
       if (Number(portfolioID)) {
 
-        filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        if(filter){
+          filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        }else{
+          filter = filter + 'portfolio_assesmet.portfolio_id=:portfolioID'
+        }
         data.innerJoinAndMapOne(
           'asses.portfolio_assesmet',
           PortfolioAssessment,
@@ -2069,6 +2073,92 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     return result;
   }
 
+  async getDashboardAllDataFilter(options: IPaginationOptions,filterText:[],portfolioID: number):  Promise<Pagination<any>> {
+
+    let ar= Array.isArray(filterText);
+    let filter = ''
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    if (currentUser?.userType?.name === 'External') {
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+
+    }
+    if(filterText && !ar){
+      if(filter){
+        filter = filter + `and climateAction.policyName = :filterText`
+      }
+      else{
+        filter = filter + `climateAction.policyName = :filterText`
+      }
+      
+    }
+    else {
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      )
+      if (Number(portfolioID)) {
+
+        if(filter){
+          filter = filter + 'and portfolio_assesmet.portfolio_id=:portfolioID'
+        }else{
+          filter = filter + 'portfolio_assesmet.portfolio_id=:portfolioID'
+        }
+        data.innerJoinAndMapOne(
+          'asses.portfolio_assesmet',
+          PortfolioAssessment,
+          'portfolio_assesmet',
+          'asses.id = portfolio_assesmet.assessment_id'
+        )
+      }
+      data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
+      if(filterText && ar){
+        data.andWhere('climateAction.policyName IN (:...filterText)')
+      }
+
+
+     let result = await paginate(data, options);
+     let allData = await data.getMany()
+     return {
+      items: result.items,
+      meta: {
+        totalItems: allData.length,
+        itemsPerPage: result.meta.itemsPerPage,
+        totalPages: result.meta.totalPages,
+        currentPage: result.meta.currentPage,
+        allData: allData,
+      } as any,
+    };
+  }
   roundDown(value: number) {
     if(value>0){
       return Math.floor(value)
@@ -2426,7 +2516,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async deleteAssessment(asseId: number) {
     try {
-      // 
       await this.investorSectorRepo.delete({assessment:{id:asseId}});
       let investorTool = await this.repo.findOne({where:{assessment:{id:asseId}}})
       if(investorTool){
@@ -2440,7 +2529,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       
     
     } catch (error) {
-      console.log(error)
     }
   }
 
@@ -2465,7 +2553,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return await investor_assessment
     
     } catch (error) {
-      console.log(error)
     }
   }
   async deleteInvestorAssessment(invest_assessment: InvestorAssessment[]) {
@@ -2478,7 +2565,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
      
     } catch (error) {
-      console.log(error)
     }
   }
 

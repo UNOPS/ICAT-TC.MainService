@@ -157,7 +157,6 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
     try {
       await this.repo.delete({cmassessment: {id: assessmentId}});
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException();
     }
 
@@ -166,26 +165,8 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   async deleteGeographicalAreasCovered(assessmentId: number){
     try {
       await this.geographicalAreasCoveredRepo.delete({assessment: {id: assessmentId}});
-      // let areas = await this.geographicalAreasCoveredRepo.createQueryBuilder('geoAreas')
-      //   .innerJoin(
-      //     'geoAreas.assessment',
-      //     'assessment',
-      //     'geoAreas.assessmentId = assessment.id'
-      //   )
-      //   .select(['geoAreas.id'])
-      //   .where('assessment.id = :assessmentId', {assessmentId: assessmentId})
-      //   .getMany();
-      
-      // if (areas && areas.length > 0) {
-      //   let areaIds = areas.map(a => a.id);
-      //   for await (let id of areaIds) {
-      //     await this.geographicalAreasCoveredRepo.delete({id: id});
-      //   }
-      // } else {
-      //   console.error("No geographical areas found for the assessment")
-      // }
+    
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException()
     }
   }
@@ -193,26 +174,8 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   async deleteInvestorSector(assessmentId: number) {
     try {
       await this.investorSectorRepo.delete({assessment: {id: assessmentId}});
-      // let sectors = await this.investorSectorRepo.createQueryBuilder('sector')
-      //   .innerJoin(
-      //     'sector.assessment',
-      //     'assessment',
-      //     'sector.assessmentId = assessment.id'
-      //   )
-      //   .select(['sector.id'])
-      //   .where('assessment.id = :assessmentId', {assessmentId: assessmentId})
-      //   .getMany();
-      
-      // if (sectors && sectors.length > 0) {
-      //   let sectorIds = sectors.map(a => a.id);
-      //   for await (let id of sectorIds) {
-      //     await this.investorSectorRepo.delete({id: id});
-      //   }
-      // } else {
-      //   console.error("No investor sectors found for the assessment")
-      // }
+     
     } catch (error) {
-      console.error(error)
       throw new InternalServerErrorException()
     }
   }
