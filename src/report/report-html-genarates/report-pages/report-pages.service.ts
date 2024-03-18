@@ -1369,7 +1369,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -1473,8 +1473,8 @@ ${coverPage.reportDate}
 
   <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment.................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards on environmental integrity .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>................</bdi></div></div></div>
-  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention on GHG emissions lock-in	 .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...............</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards for environmental integrity .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>................</bdi></div></div></div>
+  <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention of GHG emissions lock-in	 .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...............</bdi></div></div></div>
   <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>..................</bdi></div></div></div>
 
   <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
@@ -1737,7 +1737,7 @@ ${coverPage.reportDate}
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
-  <div  class="main_header_sub_sub text-start">2.1.1 Safeguards on environmental integrity </div>
+  <div  class="main_header_sub_sub text-start">2.1.1 Safeguards for environmental integrity </div>
          <div class="report-table-sm ">
         
          <table class="table  test-table-one">
@@ -1792,7 +1792,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content">
     
-    <div  class="main_header_sub_sub text-start">2.1.2 Prevention on GHG emissions lock-in   </div>
+    <div  class="main_header_sub_sub text-start">2.1.2 Prevention of GHG emissions lock-in   </div>
            <div class="report-table-sm ">
           
            <table class="table  test-table-one">
@@ -3290,8 +3290,8 @@ PORTFOLIO TOOL
               <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               <th scope="col">International</th>
-              <th scope="col">National/ sectorial	</th>
-              <th scope="col">Subnational/ subsectorial	</th>
+              <th scope="col">National/ sectoral	</th>
+              <th scope="col">Subnational/ subsectoral	 up</th>
               <th scope="col">Category score</th>
               
             </tr>
@@ -3430,8 +3430,8 @@ PORTFOLIO TOOL
             <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">international</th>
-            <th scope="col">national/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	</th>
+            <th scope="col">national/ sectoral	</th>
+            <th scope="col">Subnational/ subsectoral	 up</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -3574,8 +3574,8 @@ PORTFOLIO TOOL
             <th scope="col">Tool Applied	</th>
             <th scope="col">Status</th>
             <th scope="col">International</th>
-            <th scope="col">National/ sectorial	</th>
-            <th scope="col">Subnational/ subsectorial	</th>
+            <th scope="col">National/ sectoral	</th>
+            <th scope="col">Subnational/ subsectoral	 up</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -4313,7 +4313,7 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">5  TRANFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">5  TRANSFORMATIONAL IMPACT MATRIX   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">

@@ -20,28 +20,26 @@ import { UsersService } from "src/users/users.service";
 import { IPaginationOptions, Pagination } from "nestjs-typeorm-paginate";
 import { MasterDataService } from "src/shared/entities/master-data.service";
 import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity";
+import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
+import { CMDefaultValue } from "../entity/cm-default-value.entity";
+import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
 
   constructor(
     @InjectRepository(CMAssessmentQuestion) repo,
-    @InjectRepository(CMAssessmentAnswer)
-    private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
-    @InjectRepository(CMAssessmentQuestion)
-    private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
-    @InjectRepository(Results)
-    private resultsRepo: Repository<Results>,
-    @InjectRepository(Assessment)
-    private assessmentRepo: Repository<Assessment>,
-    @InjectRepository(ParameterRequest)
-    private parameterRequestRepo: Repository<ParameterRequest>,
-    @InjectRepository(Characteristics)
-    private characteristicRepo: Repository<Characteristics>,
+    @InjectRepository(CMAssessmentAnswer) private assessmentAnswerRepo: Repository<CMAssessmentAnswer>,
+    @InjectRepository(CMAssessmentQuestion) private assessmentQuestionRepo: Repository<CMAssessmentQuestion>,
+    @InjectRepository(Results) private resultsRepo: Repository<Results>,
+    @InjectRepository(Assessment) private assessmentRepo: Repository<Assessment>,
+    @InjectRepository(ParameterRequest) private parameterRequestRepo: Repository<ParameterRequest>,
+    @InjectRepository(SdgAssessment) private sdgAssessmentRepo: Repository<SdgAssessment>,
+    @InjectRepository(CMDefaultValue) private cmDefaultValueRepo: Repository<CMDefaultValue>,
     private userService: UsersService,
     private masterDataService: MasterDataService,
-    @InjectRepository(SdgAssessment)
-    private sdgAssessmentRepo: Repository<SdgAssessment>
+    private assessmentCMDetailService: AssessmentCMDetailService,
+    private cMAssessmentAnswerService: CMAssessmentAnswerService
   ) {
     super(repo);
   }
@@ -51,7 +49,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
 
-  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, score = 1) {
+  async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, expectedGHGMitigation: number, score = 1) {
     let a_ans: any[]
     let _answers = []
     let selectedSdgs = []
@@ -167,6 +165,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         await this.resultsRepo.save(resultObj);
 
         this.saveTcValue(assessment.id, res);
+      }
+      if (expectedGHGMitigation) {
+        let cm_detail = await this.assessmentCMDetailService.getAssessmentCMDetailByAssessmentId(assessment.id)
+        if (cm_detail) {
+          cm_detail.expected_ghg_mitigation = expectedGHGMitigation;
+          cm_detail.cmassessment = undefined
+          cm_detail.geographicalAreasCovered = undefined
+          cm_detail.sectorsCovered = undefined
+          this.assessmentCMDetailService.save(cm_detail)
+        }
       }
       return a_ans
     } catch (error) {
@@ -308,19 +316,29 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
       let score: number
-      if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
-        selected_sdg_count = uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length
-        score = qs.reduce((accumulator, object) => {
-          if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += +object.assessmentAnswers[0]?.selectedScore
-          else sdgs_score[object.selectedSdg?.id] = +object.assessmentAnswers[0]?.selectedScore
-          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
-        }, 0);
-        score = score / selected_sdg_count / 3
+      if (qs.every(q => +q.assessmentAnswers[0]?.selectedScore === -99)) {
+        score = null
+        if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
+          qs.forEach((object) => {
+           sdgs_score[object.selectedSdg?.id] = null
+          })
+        }
       } else {
-        score = qs.reduce((accumulator, object) => {
-          return accumulator + +object.assessmentAnswers[0]?.selectedScore;
-        }, 0);
-        score = score / 3
+        if (cat === 'SCALE_SD' || cat === 'SUSTAINED_SD') {
+          selected_sdg_count = uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length
+          score = qs.reduce((accumulator, object) => {
+            let _score = +object.assessmentAnswers[0]?.selectedScore
+            if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += _score === -99 ? 0 : _score;
+            else sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
+            return accumulator + _score === -99 ? 0 : _score;
+          }, 0);
+          score = score / selected_sdg_count / 3
+        } else {
+          score = qs.reduce((accumulator, object) => {
+            return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
+          }, 0);
+          score = score / 3
+        }
       }
       obj[cat] = {
         score: score,
@@ -329,43 +347,43 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     for (let key of Object.keys(sdgs_score)) {
-      sdgs_score[key] = Math.floor(sdgs_score[key] / 6)
+      sdgs_score[key] = sdgs_score[key] === null ? null : Math.floor(sdgs_score[key] / 6)
     }
 
-    let ghg_score = 0; let sdg_score = 0; let adaptation_score = 0
-    let scale_ghg_score = 0; let scale_sdg_score = 0; let scale_adaptation_score = 0;
-    let sustained_ghg_score = 0; let sustained_sdg_score = 0; let sustained_adaptation_score = 0;
-    let outcome_score = 0
+    let ghg_score = null; let sdg_score = null; let adaptation_score = null
+    let scale_ghg_score = null; let scale_sdg_score = null; let scale_adaptation_score = null;
+    let sustained_ghg_score = null; let sustained_sdg_score = null; let sustained_adaptation_score = null;
+    let outcome_score = null
     if (obj['SCALE_GHG']) {
       scale_ghg_score = obj['SCALE_GHG'].score
       sustained_ghg_score = obj['SUSTAINED_GHG']?.score
-      ghg_score += (scale_ghg_score + sustained_ghg_score) / 2;
-      outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100)
+      ghg_score = scale_ghg_score === null && sustained_ghg_score === null ? null : (scale_ghg_score + sustained_ghg_score) / 2;
+      ghg_score  !== null ? outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) : outcome_score = outcome_score
     }
     if (obj['SCALE_SD']) {
       scale_sdg_score = obj['SCALE_SD'].score
       sustained_sdg_score = obj['SUSTAINED_SD']?.score
-      sdg_score = (scale_sdg_score + sustained_sdg_score) / 2;
-      outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100)
+      sdg_score = scale_sdg_score === null && sustained_sdg_score === null ? null : (scale_sdg_score + sustained_sdg_score) / 2;
+      sdg_score !== null ? outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) : outcome_score = outcome_score
     }
     if (obj['SCALE_ADAPTATION']) {
       scale_adaptation_score = obj['SCALE_ADAPTATION'].score
       sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score
-      adaptation_score = (scale_adaptation_score + sustained_adaptation_score) / 2;
-      outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100)
+      adaptation_score = scale_adaptation_score === null && sustained_adaptation_score === null ? null : (scale_adaptation_score + sustained_adaptation_score) / 2;
+      adaptation_score !== null ? outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) : outcome_score = outcome_score
     }
 
     return {
-      ghg_score: Math.round(ghg_score),
-      sdg_score: Math.round(sdg_score),
-      adaptation_score: Math.round(adaptation_score),
-      outcome_score: Math.round(outcome_score),
-      scale_ghg_score: Math.round(scale_ghg_score),
-      sustained_ghg_score: Math.round(sustained_ghg_score),
-      scale_sdg_score: Math.round(scale_sdg_score),
-      sustained_sdg_score: Math.round(sustained_sdg_score),
-      scale_adaptation_score: Math.round(scale_adaptation_score),
-      sustained_adaptation_score: Math.round(sustained_adaptation_score),
+      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
+      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
+      adaptation_score: adaptation_score === null ? null : Math.round(adaptation_score),
+      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
+      scale_ghg_score: scale_ghg_score === null ? null : Math.round(scale_ghg_score),
+      sustained_ghg_score: sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
+      scale_sdg_score: scale_sdg_score === null ? null : Math.round(scale_sdg_score),
+      sustained_sdg_score: sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
+      scale_adaptation_score: scale_adaptation_score === null ? null : Math.round(scale_adaptation_score),
+      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.round(sustained_adaptation_score),
       sdgs_score: sdgs_score
     }
   }
@@ -785,48 +803,78 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData(options: IPaginationOptions): Promise<Pagination<any>> {
-    let user = this.userService.currentUser();
-    const currentUser = await user;
-    const isUserExternal = currentUser?.userType?.name === 'External';
-    let tool = 'CARBON_MARKET';;
-
-    const results = await this.resultsRepo.find({
-      relations: ['assessment',],
-      order: {
-        id: 'DESC'
+  async getDashboardData(options: IPaginationOptions, intervention_ids?: string[]): Promise<any> {
+    try {
+      let user = this.userService.currentUser();
+      const currentUser = await user;
+      const isUserExternal = currentUser?.userType?.name === 'External';
+      let tool = 'CARBON_MARKET';;
+  
+      const results = await this.resultsRepo.find({
+        relations: ['assessment',],
+        order: {
+          id: 'DESC'
+        }
+      });;
+      let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+  
+      if (isUserExternal) {
+        filteredResults = filteredResults.filter(result => {
+          if (result.assessment?.user?.id === currentUser?.id) {
+            return result;
+          }
+        })
+      } else {
+        filteredResults = filteredResults.filter(result => {
+          if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
+            return result;
+          }
+        })
       }
-    });;
-    let filteredResults = results.filter(result => result?.assessment?.tool === tool);
-
-    if (isUserExternal) {
-      filteredResults = filteredResults.filter(result => {
-        if (result.assessment?.user?.id === currentUser?.id) {
-          return result;
-        }
+  
+      let formattedResults = await Promise.all(filteredResults.map(async (result) => {
+        return {
+          assessment_id: result.assessment.id,
+          assessment: result.id,
+          process_score: result.averageProcess,
+          outcome_score: result.averageOutcome,
+          intervention: result.assessment.climateAction?.policyName,
+          intervention_id: result.assessment.climateAction?.intervention_id
+        };
+      }));
+  
+      let interventions_to_filter = []
+      formattedResults.map(r => {
+        interventions_to_filter.push({
+          intervention: r.intervention,
+          intervention_id: r.assessment
+        })
       })
-
-    }
-    else {
-      filteredResults = filteredResults.filter(result => {
-        if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
-          return result;
-        }
-      })
-    }
-
-    const formattedResults = await Promise.all(filteredResults.map(async (result) => {;
+  
+      if (intervention_ids?.length > 0) {
+        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.assessment.toString()))
+      }
+  
+      interventions_to_filter = this.getDistinctObjects(interventions_to_filter, 'intervention_id')
+      let paginated_data = await this.paginateArray(formattedResults, options)
       return {
-        assessment: result.id,
-        process_score: result.averageProcess,
-        outcome_score: result.averageOutcome,
-        intervention: result.assessment.climateAction?.policyName,
-        intervention_id: result.assessment.climateAction?.intervention_id
-      };
-    }));
-    // const filteredData = formattedResults.filter(item => item.process_score !== undefined && item.outcome_score !== null && !isNaN(item.outcome_score) && !isNaN(item.process_score));
-    return this.paginateArray(formattedResults, options)
+        interventions: interventions_to_filter,
+        assessments: paginated_data
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
+
+  getDistinctObjects(array, property) {
+    const uniqueMap = new Map();
+
+    return array.filter(obj => {
+      const propertyValue = obj[property];
+      return uniqueMap.has(propertyValue) ? false : uniqueMap.set(propertyValue, true);
+    });
+  };
+
   async paginateArray<T>(data: T[], options: IPaginationOptions): Promise<Pagination<T>> {
     const { page, limit } = options;
     const startIndex = (Number(page) - 1) * Number(limit);
@@ -964,6 +1012,50 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     .getMany()
     return result;
   }
+
+  async getCMDefaultValues(characteristic_id: number) {
+    try {
+      return await this.cmDefaultValueRepo.createQueryBuilder('default_value')
+        .innerJoin(
+          'default_value.characteristic',
+          'characteristic',
+          'characteristic.id = default_value.characteristicId'
+        )
+        .where('characteristic.id = :id', { id: characteristic_id })
+        .getMany()
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async deleteCMAssessment(assessementId: number) {
+    try {
+      await this.assessmentCMDetailService.deleteCmAssessmentDetail(assessementId);
+      let assessmentQuestions = await this.repo.createQueryBuilder('cmAssessmentQuestion')
+        .innerJoin(
+          'cmAssessmentQuestion.assessment',
+          'assessment',
+          'assessment.id = cmAssessmentQuestion.assessmentId'
+        )
+        .select(['cmAssessmentQuestion.id'])
+        .where('assessment.id = :assessmentId', {assessmentId: assessementId})
+        .getMany()
+      
+      if (assessmentQuestions && assessmentQuestions.length > 0) {
+        let assessmentQuestionIds = assessmentQuestions.map(q => q.id)
+        await this.cMAssessmentAnswerService.deleteAssessmentAnswers(assessmentQuestionIds)
+
+        for await (let id of assessmentQuestionIds) {
+          await this.repo.delete({id: id})
+        }
+      } else {
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+    
+  }
+
 }
 export class CharacteristicData {
   characteristic: string;

@@ -113,7 +113,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage = new ReportCoverPage();
     coverPage.tool = tool;
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
     return coverPage;
@@ -1467,7 +1467,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
     return coverPage;
@@ -1648,7 +1648,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return questionNumberA - questionNumberB;
         });
       for  (const res of questions) {
-        if(res.criteria == 'Criterion 1: Safeguards on environmental integrity'){
+        if(res.criteria == 'Criterion 1: Safeguards for environmental integrity'){
           safeguardsArray.push(res)
         }
         else if(res.criteria == 'Criterion 2: Prevention of GHG emissions lock-in'){
@@ -1847,7 +1847,7 @@ return contentFour
 
     coverPage.generateReportName = title;
 
-    coverPage.reportDate = moment().format("YYYY-MM-DD");
+    coverPage.reportDate = moment().format("DD/MM/YYYY");
 
     coverPage.document_prepared_by = 'user';
 
@@ -1896,10 +1896,6 @@ return contentFour
         {
           information: 'Date',
           description: portfolio.date ? portfolio.date : 'N/A',
-        },
-        {
-          information: 'Implementing entity or entities',
-          description: portfolio.person ? portfolio.person : 'N/A',
         },
         {
           information: 'Objectives of the assessment',
@@ -2069,6 +2065,7 @@ return contentFour
     }
     async genarateComparisonReportDtoContentSix(comparisonReportReportContentOne:ComparisonReportReportContentOne): Promise<ComparisonReportReportContentSix> {
       const contentOne = new ComparisonReportReportContentSix();
+  
       const dataquery=this.policySectorsRepo.createQueryBuilder('policySectors')
       .leftJoinAndMapOne('policySectors.sector',Sector,'sector','sector.id = policySectors.sector_id')
       .where('policySectors.intervention_id IN (:...ids)', { ids: comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id) })
@@ -2076,6 +2073,7 @@ return contentFour
 
 const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
   
+   
 
    const url=await this.generateAndSavePieChart(data, '');
 
@@ -2167,6 +2165,7 @@ return contentOne;
               }
             },
 
+       
           
          }
   

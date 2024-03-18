@@ -109,10 +109,6 @@ export class AssessmentPagesService {
         assessment_information : 'test value',
       },
       {
-        general_information : 'Person(s)/organisation(s) that did the assessment',
-        assessment_information : 'test value',
-      },
-      {
         general_information : 'Date of the assessment',
         assessment_information : 'test value',
       }, {
