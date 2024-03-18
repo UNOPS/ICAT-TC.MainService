@@ -1771,7 +1771,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score'])
+      .select(['asses.id', 'asses.process_score', 'asses.outcome_score','asses.from','asses.to'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -1902,25 +1902,25 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
-      .innerJoinAndMapOne(
-        'asses.result',
-        Results,
-        'result',
-        'asses.id = result.assessment_id'
-      )
-      .leftJoinAndMapOne(
-        'asses.climateAction',
-        ClimateAction,
-        'climateAction',
-        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
-      )
-      .leftJoinAndMapOne(
-        'climateAction.country',
-        Country,
-        'country',
-        'climateAction.countryId = country.id'
-      ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+    .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+    .innerJoinAndMapOne(
+      'asses.result',
+      Results,
+      'result',
+      'asses.id = result.assessment_id'
+    )
+    .leftJoinAndMapOne(
+      'asses.climateAction',
+      ClimateAction,
+      'climateAction',
+      'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+    )
+    .leftJoinAndMapOne(
+      'climateAction.country',
+      Country,
+      'country',
+      'climateAction.countryId = country.id'
+    ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
    
     
     let result1 =await data.getMany();
@@ -1952,7 +1952,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let data = new GraphResdDto();
     for await(let item of heatMapScore){
       data.total +=1;
-      if ( item.processScore != null && item.outcomeScore !=null)  {
+      if ( item.processScore != null )  {
         let value =  item.processScore  +  item.outcomeScore ;
         switch (value) {
           case -3:
@@ -1995,7 +1995,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
 
 
-  async getDashboardAllData(options: IPaginationOptions,filterText:[],portfolioID: number): Promise<Pagination<any>> {
+  async getDashboardAllData(skip, pageSize,filterText:[],portfolioID: number): Promise<any> {
 
     let ar= Array.isArray(filterText);
     let filter = ''
@@ -2029,7 +2029,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -2062,8 +2062,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       if(filterText && ar){
         data.andWhere('climateAction.policyName IN (:...filterText)')
       }
-    
-    let result = await paginate(data, options);
+      data.skip(skip)
+      data.take(pageSize)
+
+    let result =  await data.getManyAndCount()
     return result;
   }
 

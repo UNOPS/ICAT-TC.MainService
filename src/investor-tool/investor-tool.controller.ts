@@ -244,18 +244,14 @@ export class InvestorToolController {
     }
 
   @UseGuards(JwtAuthGuard)
-  @Get('dashboard-all-data')
+  @Get('dashboard-all-data/:skip/:pageSize')
   async getDashboardAllData(
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Param('skip') skip: number,
+    @Param('pageSize') pageSize: number,
     @Query('filterText') filterText: [],
     @Query('PortfolioID') PortfolioID: number,
     ):Promise<any> {
-    return await this.investorToolService.getDashboardAllData( {
-      limit: limit,
-      page: page,
-      
-    },filterText,PortfolioID);
+    return await this.investorToolService.getDashboardAllData( skip, pageSize, filterText,PortfolioID);
   }
 
   @UseGuards(JwtAuthGuard)
