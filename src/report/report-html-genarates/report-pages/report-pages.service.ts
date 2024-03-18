@@ -4426,7 +4426,7 @@ PORTFOLIO TOOL
         this.getBackgroundColorInvestmentHeatmap(x.value, y) +
         '; color:' +
         (this.getIntervention(x.value, y, contentTwo)
-          ? 'blue'
+          ? '#404040'
           : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
         ';">' +
         '<span class="' +
