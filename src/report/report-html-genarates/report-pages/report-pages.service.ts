@@ -55,7 +55,7 @@ export class ReportPagesService {
 
     
           ${
-            coverPage.tool == 'Investment'
+            coverPage.tool.trim() == 'Investor & Private Sector Tool'
               ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   '
               : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
           }
@@ -2133,7 +2133,7 @@ ${coverPage.reportDate}
          <th scope="col">Starting situation   </th>
          <th scope="col">Expected impact   </th>
          <th scope="col">Score  </th>
-         <th scope="col"> Score explanation  </th>
+        
          <th scope="col">Rationale justifying the score </th>
          <th scope="col">Documentation uploaded?   </th>
        </tr>
@@ -2148,7 +2148,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+          
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2160,7 +2160,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+               
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2245,7 +2245,7 @@ ${coverPage.reportDate}
           <th scope="col">Starting situation   </th>
           <th scope="col">Expected impact   </th>
           <th scope="col">Score  </th>
-          <th scope="col"> Score explanation  </th>
+       
           <th scope="col">Rationale justifying the score </th>
           <th scope="col">Documentation uploaded?   </th>
         </tr>
@@ -2262,7 +2262,7 @@ ${coverPage.reportDate}
               <td>${a.starting_situation ? a.starting_situation : '-'}</td>
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+            
               <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2274,7 +2274,7 @@ ${coverPage.reportDate}
             <td>${a.starting_situation ? a.starting_situation : '-'}</td>
             <td>${a.expected_impact ? a.expected_impact : '-'}</td>
             <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-            <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+            
             <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
             <td>${
               a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2360,7 +2360,7 @@ ${coverPage.reportDate}
         <th scope="col">Starting situation   </th>
         <th scope="col">Expected impact   </th>
         <th scope="col">Score  </th>
-        <th scope="col"> Score explanation  </th>
+       
         <th scope="col">Rationale justifying the score</th>
         <th scope="col">Justification uploaded   </th>
         </tr>
@@ -2379,7 +2379,7 @@ ${coverPage.reportDate}
                   <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                   <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                   <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                  <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+                  
                   <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                   <td>${
                     a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2392,7 +2392,7 @@ ${coverPage.reportDate}
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
+                
                 <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
@@ -2614,7 +2614,12 @@ ${coverPage.reportDate}
        
         </div>`;
     if (prossesAssesmentStartingSituation.length == 0) {
-      return page_1;
+      return page_1 +
+      page_2 +
+      page_4 +
+      page_5 +
+      page_3 +
+      page_6;
     } else {
       return (
         page_1 +
