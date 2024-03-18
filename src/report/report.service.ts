@@ -44,6 +44,8 @@ import { User } from 'src/users/entity/user.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
 
+
+
 @Injectable()
 export class ReportService extends TypeOrmCrudService<Report> {
   constructor(
@@ -535,6 +537,48 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
   }
 
+  getScoreSustained(number: number): string {
+
+    switch (number) {
+
+      case 3: {
+
+        return 'Very likely (90-100%)';
+
+      }
+
+      case 2: {
+
+        return 'Likely (60-90%)';
+
+      }
+
+      case 1: {
+
+        return 'Possible (30-60%)';
+
+      }
+
+      case 0: {
+
+        return 'Less likely (10-30%)';
+
+      }
+
+      case -1: {
+
+        return 'Unlikely (0-10%)';
+
+      }
+
+    default: {
+      return 'Outside assessment boundaries';
+    }
+
+    }
+
+  }
+
   async genarateReportDtoContentTwo(
 
     assessmentId: number,
@@ -806,7 +850,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             score: invesass.score != null && invesass.score != undefined
 
-              ? this.getScore(invesass.score)
+              ? this.getScoreSustained(invesass.score)
 
               : 'Outside Assessment Boundaries',
 
@@ -843,7 +887,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 score: invesass.score != null && invesass.score != undefined
 
-                  ? this.getScore(invesass.score)
+                  ? this.getScoreSustained(invesass.score)
 
                   : 'Outside Assessment Boundaries',
 
@@ -1020,7 +1064,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             score: invesass.score != null && invesass.score != undefined
 
-              ? this.getScore(invesass.score)
+              ? this.getScoreSustained(invesass.score)
 
               : 'Outside Assessment Boundaries',
 
@@ -1058,7 +1102,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 score: invesass.score != null && invesass.score != undefined
 
-                  ? this.getScore(invesass.score)
+                  ? this.getScoreSustained(invesass.score)
 
                   : 'Outside Assessment Boundaries',
 
@@ -1282,7 +1326,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             score: invesass.score != null && invesass.score != undefined
 
-              ? this.getScore(invesass.score)
+              ? this.getScoreSustained(invesass.score)
 
               : 'Outside Assessment Boundaries',
 
@@ -1321,7 +1365,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 score: invesass.score != null && invesass.score != undefined
 
-                  ? this.getScore(invesass.score)
+                  ? this.getScoreSustained(invesass.score)
 
                   : 'Outside Assessment Boundaries',
 
@@ -1662,7 +1706,8 @@ export class ReportService extends TypeOrmCrudService<Report> {
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
-        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+      
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
       
@@ -1671,13 +1716,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
       contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
         a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_adaptation && this.cmResult.outComeData?.scale_adaptation.length>0 ){
       contentThree.scale_adaptation = this.cmResult.outComeData.scale_adaptation.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
-        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+      
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
     }
@@ -1685,13 +1732,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
       contentThree.sustained_adaptation = this.cmResult.outComeData.sustained_adaptation.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
         a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
     }
     if(this.cmResult.outComeData?.scale_SDs && this.cmResult.outComeData?.scale_SDs.length>0 ){
       contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
-        a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+    
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
     }
@@ -1699,6 +1748,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(a=>{
         a.characteristic=this.mapCharacteristicsnamesforCarbonMarcket(a.characteristic);
         a.outcome_score_explain=this.mapScoreforCarbonMarcket(a.outcome_score);
+        a.outcome_score=this.changeScoreforCarbonMarcket(a.outcome_score)
         return a
       })
     }
@@ -2022,6 +2072,7 @@ return contentFour
       .select(['policySectors.id','sector.name', 'sector.id'])
 
 const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
+  
    
 
    const url=await this.generateAndSavePieChart(data, '');
@@ -2034,7 +2085,7 @@ return contentOne;
 
 
     async generateAndSavePieChart(data: any[], outputPath: string): Promise<string> {
-
+     
      const sector_color_map = [
         {id: 1, sectorNumber: 1, color: '#003360'},
         {id: 2, sectorNumber: 3, color: '#A52A2A'},
@@ -2065,13 +2116,13 @@ return contentOne;
         'rgba(47, 79, 79, 1)',
         'rgba(139, 69, 19, 1)'
       ]
-      const width = 1000; // Width of the canvas
-      const height = 700; // Height of the canvas
+      const width = 800; // Width of the canvas
+      const height = 550; // Height of the canvas
   
       // Configure chart options
      const counts= data.map(item => item.count);
      const total = counts.reduce((acc, val) => acc + val, 0);
-      // const percentages = counts.map(count => ((count / total) * 100).toFixed(2));
+   
 
 
      const secbgColors : string[] = [];
@@ -2083,8 +2134,12 @@ return contentOne;
         secbgColors.push(defaulColors[sd.id])
       }
     })
-    
+
+    const { Chart, ChartConfiguration, registerables  } = require('chart.js');
+    Chart.register(...registerables);
+
       const chartOptions = {
+
         type: 'pie',
         data: {
           labels: data.map(item => item.sector),
@@ -2093,38 +2148,42 @@ return contentOne;
             backgroundColor: secbgColors,
           }],
         },
+     
         options: {
+          labels: {
+            render: 'label'
+          },
           responsive: true,
           maintainAspectRatio: false,
           plugins:{
             legend:{
-              position: 'bottom',
+              position: 'right',
+              font: {
+                size: 24,
+              },
               labels: {
               }
             },
-            datalabels: {
-              display: true,
-              align: 'bottom',
-              color:'#fff',
-              font: {
-                size: 12,
-              },
-              formatter: (value, ctx) => {
-                const label = ctx.chart.data.labels![ctx.dataIndex];
-                const percentage = ((value / total) * 100).toFixed(2) + "%";
-                return percentage;
-              },
-            },
+
+       
           
          }
   
         },
       };
   
-      //@ts-ignore
-
      
-      return ''
+      const { createCanvas } = require('canvas');
+   
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+
+    
+//@ts-ignore
+      const chart = new Chart(ctx,chartOptions);
+      
+      return canvas.toDataURL();
+
     }
 
 
@@ -2152,7 +2211,28 @@ return contentOne;
         return 'Short term (&#60 5 years)'
       }
       if(name=='Medium term (5-15 years)'){
-        return 'Medium-term (≥5 years and < than 15 years)'
+        return 'Medium-term (≥5 years and ≤ than 15 years)'
+      }
+      else{
+        return name
+      }
+    }
+
+    mapCharacteristicsnamesForSustaind(name: string) {
+      if(name=='International/global level'){
+        return 'Global level'
+      }
+      else if(name=='National/Sectorial level'){
+        return 'National/sectoral level'
+      }
+      else if(name=='Subnational/regional/municipal or sub sectorial level'){
+        return 'Subsectoral level'
+      }
+      if(name=='Short term (<5 years)'){
+        return 'Short term (&#60 5 years)'
+      }
+      if(name=='Medium term (5-15 years)'){
+        return 'Medium-term (≥5 years and ≤ than 15 years)'
       }
       else{
         return name
@@ -2200,6 +2280,17 @@ return contentOne;
         return 'Expected positive impact of over 20 years on the selected scale'
       }
     
+    
+      else{
+        return'N/A'
+      }
+    }
+
+    changeScoreforCarbonMarcket(name: string) {
+      if(name=='-99'){
+        return 'Outside assessment boundaries'
+      }
+   
       else{
         return name
       }
