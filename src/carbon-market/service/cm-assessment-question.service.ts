@@ -332,12 +332,14 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             else sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
             return accumulator + _score === -99 ? 0 : _score;
           }, 0);
-          score = score / selected_sdg_count / 3
+          let valid_scores_sdg = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          score = score / selected_sdg_count / valid_scores_sdg
         } else {
           score = qs.reduce((accumulator, object) => {
             return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
           }, 0);
-          score = score / 3
+          let valid_scores = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          score = score / valid_scores
         }
       }
       obj[cat] = {
