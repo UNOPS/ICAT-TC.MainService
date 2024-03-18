@@ -2016,14 +2016,13 @@ return contentFour
     async genarateComparisonReportDtoContentSix(comparisonReportReportContentOne:ComparisonReportReportContentOne): Promise<ComparisonReportReportContentSix> {
       const contentOne = new ComparisonReportReportContentSix();
   
-      console.log(comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id))
       const dataquery=this.policySectorsRepo.createQueryBuilder('policySectors')
       .leftJoinAndMapOne('policySectors.sector',Sector,'sector','sector.id = policySectors.sector_id')
       .where('policySectors.intervention_id IN (:...ids)', { ids: comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id) })
       .select(['policySectors.id','sector.name', 'sector.id'])
 
 const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
-    console.log(data)
+   
 
    const url=await this.generateAndSavePieChart(data, '');
 
@@ -2113,7 +2112,6 @@ return contentOne;
               formatter: (value, ctx) => {
                 const label = ctx.chart.data.labels![ctx.dataIndex];
                 const percentage = ((value / total) * 100).toFixed(2) + "%";
-                console.log(percentage,value)
                 return percentage;
               },
             },
