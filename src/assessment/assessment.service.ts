@@ -689,7 +689,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       return true
       
     } catch (error) {
-      console.log("error in delete assessment",id,error)
       return false
     }
 
@@ -736,7 +735,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         return await policy_barrier
     
     } catch (error) {
-      console.log(error)
     }
   }
   async deleteBarrierCategories(polcybarrier: PolicyBarriers[]) {
@@ -748,7 +746,6 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       }
      
     } catch (error) {
-      console.log(error)
     }
   }
 }

@@ -82,7 +82,6 @@ export class CMAssessmentAnswerService extends TypeOrmCrudService<CMAssessmentAn
         await this.repo.delete({assessment_question: {id: id}});
       }
     } catch (error) {
-      console.error(error);
       throw new InternalServerErrorException();
     }
   }
