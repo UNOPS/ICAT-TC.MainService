@@ -23,6 +23,7 @@ import { SdgAssessment } from "src/investor-tool/entities/sdg-assessment.entity"
 import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
 import { CMDefaultValue } from "../entity/cm-default-value.entity";
 import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
+import * as moment from "moment";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -332,12 +333,14 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             else sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
             return accumulator + _score === -99 ? 0 : _score;
           }, 0);
-          score = score / selected_sdg_count / 3
+          let valid_scores_sdg = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          score = score / selected_sdg_count / valid_scores_sdg
         } else {
           score = qs.reduce((accumulator, object) => {
             return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
           }, 0);
-          score = score / 3
+          let valid_scores = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          score = score / valid_scores
         }
       }
       obj[cat] = {
@@ -803,8 +806,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     await this.parameterRequestRepo.save(requests)
   }
 
-  async getDashboardData(options: IPaginationOptions, intervention_ids?: string[]): Promise<any> {
+  async getDashboardData(options: IPaginationOptions, intervention_ids?: number[]): Promise<any> {
     try {
+      if (intervention_ids && !Array.isArray(intervention_ids)) {intervention_ids = [intervention_ids]}
       let user = this.userService.currentUser();
       const currentUser = await user;
       const isUserExternal = currentUser?.userType?.name === 'External';
@@ -839,20 +843,22 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           process_score: result.averageProcess,
           outcome_score: result.averageOutcome,
           intervention: result.assessment.climateAction?.policyName,
-          intervention_id: result.assessment.climateAction?.intervention_id
+          intervention_id: result.assessment.climateAction?.intervention_id,
+          assessment_period: (result.assessment.from !== null ? moment(result.assessment.from).format('DD/MM/yyyy'): null) + ' - ' + (result.assessment.to !== null ? moment(result.assessment.to).format('DD/MM/yyyy') : null)
         };
       }));
   
       let interventions_to_filter = []
       formattedResults.map(r => {
         interventions_to_filter.push({
-          intervention: r.intervention,
+          intervention: r.intervention + '(' + r.assessment_period + ')',
           intervention_id: r.assessment
         })
       })
-  
+
       if (intervention_ids?.length > 0) {
-        formattedResults = formattedResults.filter(r => intervention_ids.includes(r.assessment.toString()))
+        let ids = intervention_ids.map(id => +id)
+        formattedResults = formattedResults.filter(r => ids.includes(r.assessment))
       }
   
       interventions_to_filter = this.getDistinctObjects(interventions_to_filter, 'intervention_id')
@@ -862,6 +868,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessments: paginated_data
       }
     } catch (error) {
+      console.error(error)
       throw new InternalServerErrorException(error)
     }
   }
