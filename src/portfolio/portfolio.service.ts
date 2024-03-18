@@ -808,8 +808,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
 
       let data
-      console.log("TOOL", pAssessment.id, pAssessment.assessment.tool)
-      console.log(sdgs_score)
       switch (pAssessment.assessment.tool) {
         case 'PORTFOLIO':
         case 'INVESTOR':
@@ -1024,7 +1022,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
   }
 
   async getAlignmentDataPortfolioInvestor(assessment: Assessment, sdgPriorities: SdgPriority[], sdgs_score: any) {
-    console.log(sdgs_score)
     let response = {}
     let col1 = []
     let col2 = []
@@ -1060,12 +1057,6 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
-    console.log(assessment.id,{
-      response: response,
-      col2: col2,
-      col1: col1,
-      sdgs: sdgsArr
-    } )
     return {
       response: response,
       col2: col2,

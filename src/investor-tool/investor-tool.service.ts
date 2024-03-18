@@ -221,6 +221,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
           iassess.indicatorStartingVal = assess.indicatorStartingVal;
           iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
           iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+          iassess.expected_ghg_mitigation_year = assess.expected_ghg_mitigation_year;
 
           let institution = new Institution();
           institution.id = 1
@@ -303,6 +304,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             iassess.indicatorStartingVal = assess.indicatorStartingVal;
             iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
             iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+            iassess.expected_ghg_mitigation_year = assess.expected_ghg_mitigation_year;
 
             let institution = new Institution();
             institution.id = 1;
@@ -349,6 +351,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
             iassess.indicatorStartingVal = assess.indicatorStartingVal;
             iassess.indicatorExpectedVal = assess.indicatorExpectedVal;
             iassess.expected_ghg_mitigation = assess.expected_ghg_mitigation;
+            iassess.expected_ghg_mitigation_year = assess.expected_ghg_mitigation_year;
 
             let institution = new Institution();
             institution.id = 1;
