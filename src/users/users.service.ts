@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';;
 import { Repository } from 'typeorm';;
 import { User } from './entity/user.entity';
@@ -503,6 +503,16 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     if (result) {
       return result;
+    }
+  }
+
+  async getUserByLoginProfileId(login_profile_id: string) {
+    try {
+      let user = await this.repo.createQueryBuilder('user').where('loginProfile = :loginProfile', {loginProfile: login_profile_id}).getOne()
+      return user
+    } catch (error) {
+      console.error(error)
+      throw new InternalServerErrorException()
     }
   }
 
