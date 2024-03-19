@@ -2135,8 +2135,7 @@ return contentOne;
       }
     })
 
-    const { Chart, ChartConfiguration, registerables  } = require('chart.js');
-    Chart.register(...registerables);
+ 
 
       const chartOptions = {
 
@@ -2173,17 +2172,8 @@ return contentOne;
       };
   
      
-      const { createCanvas } = require('canvas');
-   
-      const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext('2d');
-
-    
-//@ts-ignore
-      const chart = new Chart(ctx,chartOptions);
-      
-      return canvas.toDataURL();
-
+     
+return '';
     }
 
 
