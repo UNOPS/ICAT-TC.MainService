@@ -255,6 +255,17 @@ export class InvestorToolController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-filter/:skip/:pageSize')
+  async getDashboardAllDatafilter(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: [],
+    @Query('PortfolioID') PortfolioID: number,
+    ):Promise<any> { 
+    return await this.investorToolService.getDashboardAllDataFilter( {page,limit},  filterText,PortfolioID);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('save-sdg-priorities')
   async saveSdgPriorities(@Body() req: SdgPriorityDto) {
 
