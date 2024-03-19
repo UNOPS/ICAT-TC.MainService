@@ -2094,10 +2094,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     if(filterText && !ar){
       if(filter){
-        filter = filter + `and climateAction.policyName = :filterText`
+        filter = filter + `and asses.id = :filterText`
       }
       else{
-        filter = filter + `climateAction.policyName = :filterText`
+        filter = filter + `asses.id = :filterText`
       }
       
     }
@@ -2110,7 +2110,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -2145,12 +2145,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
       data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
       if(filterText && ar){
-        data.andWhere('climateAction.policyName IN (:...filterText)')
+        data.andWhere('asses.id IN (:...filterText)')
       }
 
-
+      let allData = await data.getMany();
      let result = await paginate(data, options);
-     let allData = await data.getMany()
+     
      return {
       items: result.items,
       meta: {
