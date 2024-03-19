@@ -24,6 +24,8 @@ import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
 import { CMDefaultValue } from "../entity/cm-default-value.entity";
 import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
 import * as moment from "moment";
+import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
+import { Country } from "src/country/entity/country.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -815,27 +817,70 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       const isUserExternal = currentUser?.userType?.name === 'External';
       let tool = 'CARBON_MARKET';;
   
-      const results = await this.resultsRepo.find({
-        relations: ['assessment',],
-        order: {
-          id: 'DESC'
-        }
-      });;
-      let filteredResults = results.filter(result => result?.assessment?.tool === tool);
-  
+      // const results = await this.resultsRepo.find({
+      //   relations: ['assessment',],
+      //   order: {
+      //     id: 'DESC'
+      //   }
+      // });
+      let queryResults= await this.resultsRepo.createQueryBuilder('result')
+      .leftJoinAndMapOne(
+        'result.assessment',
+        Assessment,
+        'assessment',
+        `assessment.id = result.assessment_id and assessment.tool='CARBON_MARKET' `,
+      )
+      .innerJoinAndMapOne(
+        'assessment.climateAction',
+        ClimateAction,
+        'climateAction',
+        `climateAction.id = assessment.climateAction_id and not climateAction.status =-20 `,
+      )
+    
       if (isUserExternal) {
-        filteredResults = filteredResults.filter(result => {
-          if (result.assessment?.user?.id === currentUser?.id) {
-            return result;
-          }
-        })
+        queryResults=queryResults 
+        .innerJoinAndMapOne(
+         'assessment.user',
+         Country,
+         'user',
+         `user.id = assessment.user_id and user.id = :userid`,
+       )
+
       } else {
-        filteredResults = filteredResults.filter(result => {
-          if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
-            return result;
-          }
-        })
+        queryResults=queryResults 
+         .innerJoinAndMapOne(
+          'climateAction.country',
+          Country,
+          'country',
+          `country.id = climateAction.countryId and country.id = :countryid`,
+        )
+
       }
+
+      if(intervention_ids?.length > 0){}else{
+
+      }
+      queryResults.where('', { userid: currentUser?.id,countryid: currentUser?.country?.id });
+
+
+      const results=await queryResults.getMany();
+// console.log(results.length)
+ let filteredResults=results;
+      // let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+      // console.log(filteredResults)
+      // if (isUserExternal) {
+      //   filteredResults = filteredResults.filter(result => {
+      //     if (result.assessment?.user?.id === currentUser?.id) {
+      //       return result;
+      //     }
+      //   })
+      // } else {
+      //   filteredResults = filteredResults.filter(result => {
+      //     if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
+      //       return result;
+      //     }
+      //   })
+      // }
   
       let formattedResults = await Promise.all(filteredResults.map(async (result) => {
         return {
