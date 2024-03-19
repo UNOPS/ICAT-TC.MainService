@@ -4,8 +4,22 @@
 
 FROM public.ecr.aws/docker/library/node:20.9.0-alpine As development
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV python /usr/bin/python3
 # Create app directory
 WORKDIR /usr/src/app
+
+RUN apk add --update --no-cache \
+python3 \
+    make \
+    g++ \
+    jpeg-dev \
+    cairo-dev \
+    giflib-dev \
+    pango-dev \
+    libtool \
+    autoconf \
+    automake
+# Set environment variable for Python
 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
@@ -27,8 +41,23 @@ USER node
 
 FROM public.ecr.aws/docker/library/node:20.9.0-alpine  As build
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV python /usr/bin/python3
 
 WORKDIR /usr/src/app
+
+RUN apk add --update --no-cache \
+    python3 \
+    make \
+    g++ \
+    jpeg-dev \
+    cairo-dev \
+    giflib-dev \
+    pango-dev \
+    libtool \
+    autoconf \
+    automake
+# Set environment variable for Python
+
 
 COPY --chown=node:node package*.json ./
 
@@ -53,6 +82,8 @@ USER node
 ###################
 
 FROM public.ecr.aws/docker/library/node:20.9.0-alpine As production
+# Set environment variable for Python
+ENV python /usr/bin/python3
 
 RUN apk add --no-cache \
     chromium \
@@ -60,7 +91,17 @@ RUN apk add --no-cache \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    python3 \
+    make \
+    g++ \
+    jpeg-dev \
+    cairo-dev \
+    giflib-dev \
+    pango-dev \
+    libtool \
+    autoconf \
+    automake
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true

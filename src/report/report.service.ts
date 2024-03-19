@@ -2059,7 +2059,8 @@ return contentFour
       contentOne.scores= (await this.portfolioService.getDashboardData( portfolioId,{
         limit: 10000,
         page: 1,
-      },)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+      },[],'ALL_OPTION')).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+   
       return contentOne;
 
     }
@@ -2135,7 +2136,8 @@ return contentOne;
       }
     })
 
- 
+    const { Chart, ChartConfiguration, registerables  } = require('chart.js');
+    Chart.register(...registerables);
 
       const chartOptions = {
 
@@ -2172,8 +2174,17 @@ return contentOne;
       };
   
      
-     
-return '';
+      const { createCanvas } = require('canvas');
+   
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+
+    
+//@ts-ignore
+      const chart = new Chart(ctx,chartOptions);
+      
+      return canvas.toDataURL();
+
     }
 
 
