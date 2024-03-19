@@ -532,6 +532,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return 'Major Negative';
 
       }
+      case 99: {
+
+        return 'Outside assessment boundaries';
+
+      }
+      default: {
+        return '-';
+      }
 
     }
 
@@ -570,9 +578,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return 'Unlikely (0-10%)';
 
       }
+      case 99: {
+
+        return 'Outside assessment boundaries';
+
+      }
 
     default: {
-      return 'Outside assessment boundaries';
+      return '-';
     }
 
     }
@@ -2291,7 +2304,9 @@ return contentOne;
       if(name=='-99'){
         return 'Outside assessment boundaries'
       }
-   
+      if(name==null || name ==undefined){
+        return '-'
+      }
       else{
         return name
       }
