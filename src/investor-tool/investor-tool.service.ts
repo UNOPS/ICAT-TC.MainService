@@ -2291,6 +2291,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
+          categoryData.categoryCode = category.code;
           categoryData.type = 'process';
           let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) ;
           x.indicator_details =indicatordetails;
