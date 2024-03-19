@@ -532,6 +532,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return 'Major Negative';
 
       }
+      case 99: {
+
+        return 'Outside assessment boundaries';
+
+      }
+      default: {
+        return '-';
+      }
 
     }
 
@@ -570,9 +578,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
         return 'Unlikely (0-10%)';
 
       }
+      case 99: {
+
+        return 'Outside assessment boundaries';
+
+      }
 
     default: {
-      return 'Outside assessment boundaries';
+      return '-';
     }
 
     }
@@ -2059,7 +2072,8 @@ return contentFour
       contentOne.scores= (await this.portfolioService.getDashboardData( portfolioId,{
         limit: 10000,
         page: 1,
-      },)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+      },[],'ALL_OPTION')).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
+   
       return contentOne;
 
     }
@@ -2135,7 +2149,8 @@ return contentOne;
       }
     })
 
- 
+    const { Chart, ChartConfiguration, registerables  } = require('chart.js');
+    Chart.register(...registerables);
 
       const chartOptions = {
 
@@ -2172,8 +2187,17 @@ return contentOne;
       };
   
      
-     
-return '';
+      const { createCanvas } = require('canvas');
+   
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+
+    
+//@ts-ignore
+      const chart = new Chart(ctx,chartOptions);
+      
+      return canvas.toDataURL();
+
     }
 
 
@@ -2280,7 +2304,9 @@ return '';
       if(name=='-99'){
         return 'Outside assessment boundaries'
       }
-   
+      if(name==null || name ==undefined){
+        return '-'
+      }
       else{
         return name
       }

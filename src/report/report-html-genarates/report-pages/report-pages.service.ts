@@ -55,7 +55,7 @@ export class ReportPagesService {
 
     
           ${
-            coverPage.tool.trim() == 'Investor & Private Sector Tool'
+            coverPage.tool.trim() == 'Investment Tool'
               ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   '
               : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
           }
@@ -1937,10 +1937,7 @@ ${coverPage.reportDate}
     let pageNumber = 4;
     let prossesAssesmentStartingSituation =
       content.prossesAssesmentStartingSituation;
-    const page_1 =
-      prossesAssesmentStartingSituation.length == 0
-        ? ''
-        : `  <div id="page_9" class="page text-center" >
+    const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
     <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
@@ -2548,57 +2545,55 @@ ${coverPage.reportDate}
        <tr>
          <td >Scale of outcome - GHGs</td>
          <td >${
-           content.outcomes_categories_assessment.scale_ghg_score !== null
+           content.outcomes_categories_assessment.scale_ghg_score
              ? content.outcomes_categories_assessment.scale_ghg_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td >Scale of outcome - sustainable development </td>
          <td >${
-           content.outcomes_categories_assessment.scale_sdg_score !== null
+           content.outcomes_categories_assessment.scale_sdg_score
              ? content.outcomes_categories_assessment.scale_sdg_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td >Scale of outcome - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.scale_adaptation_score !==
-           null
+           content.outcomes_categories_assessment.scale_adaptation_score
              ? content.outcomes_categories_assessment.scale_adaptation_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - GHGs </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_ghg_score !== null
+           content.outcomes_categories_assessment.sustained_ghg_score
              ? content.outcomes_categories_assessment.sustained_ghg_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - sustainable development</td>
          <td >${
-           content.outcomes_categories_assessment.sustained_sdg_score !== null
+           content.outcomes_categories_assessment.sustained_sdg_score 
              ? content.outcomes_categories_assessment.sustained_sdg_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_adaptation_score !==
-           null
+           content.outcomes_categories_assessment.sustained_adaptation_score
              ? content.outcomes_categories_assessment.sustained_adaptation_score
-             : '-'
+             : 'no data found'
          }</td>
        </tr>
        <tr>
          <td class="bold-table-row"> Outcomes score </td>
          <td class="bold-table-row">${
-           content.outcomeScore !== null ? content.outcomeScore : '-'
+           content.outcomeScore  ? content.outcomeScore : 'no data found'
          }</td>
        </tr>
       
@@ -3291,7 +3286,7 @@ PORTFOLIO TOOL
               <th scope="col">Status</th>
               <th scope="col">International</th>
               <th scope="col">National/ sectoral	</th>
-              <th scope="col">Subnational/ subsectoral	 up</th>
+              <th scope="col">Subnational/ subsectoral</th>
               <th scope="col">Category score</th>
               
             </tr>
@@ -3431,7 +3426,7 @@ PORTFOLIO TOOL
             <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectoral	</th>
-            <th scope="col">Subnational/ subsectoral	 up</th>
+            <th scope="col">Subnational/ subsectoral</th>
             <th scope="col">Category score</th>
             
           </tr>
@@ -3575,7 +3570,7 @@ PORTFOLIO TOOL
             <th scope="col">Status</th>
             <th scope="col">International</th>
             <th scope="col">National/ sectoral	</th>
-            <th scope="col">Subnational/ subsectoral	 up</th>
+            <th scope="col">Subnational/ subsectoral</th>
             <th scope="col">Category score</th>
             
           </tr>

@@ -49,6 +49,7 @@ import { AuditDetailService } from 'src/utills/audit_detail.service';
       },
       
     },
+    exclude: ['id']
 
   },
 })
@@ -251,6 +252,12 @@ export class UsersController implements CrudController<User> {
       userTypeId,
       userName,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('get-user-login-profile')
+  async getUserLoginProfile(@Query('loginProfile') loginProfile: string) {
+    return await this.service.getUserByLoginProfileId(loginProfile)
   }
 
   

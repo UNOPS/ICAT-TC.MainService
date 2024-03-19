@@ -24,6 +24,8 @@ import { AssessmentCMDetailService } from "./assessment-cm-detail.service";
 import { CMDefaultValue } from "../entity/cm-default-value.entity";
 import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
 import * as moment from "moment";
+import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
+import { Country } from "src/country/entity/country.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -337,9 +339,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           score = score / selected_sdg_count / valid_scores_sdg
         } else {
           score = qs.reduce((accumulator, object) => {
-            return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
+            let score = (+object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore)
+            return accumulator + score;
           }, 0);
-          let valid_scores = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          let valid_scores = qs.reduce((total, x) => ((+x.assessmentAnswers[0]?.selectedScore  !== -99) ? total + 1 : total), 0)
           score = score / valid_scores
         }
       }
@@ -377,16 +380,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     return {
-      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
-      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
-      adaptation_score: adaptation_score === null ? null : Math.round(adaptation_score),
-      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
-      scale_ghg_score: scale_ghg_score === null ? null : Math.round(scale_ghg_score),
-      sustained_ghg_score: sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
-      scale_sdg_score: scale_sdg_score === null ? null : Math.round(scale_sdg_score),
-      sustained_sdg_score: sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
-      scale_adaptation_score: scale_adaptation_score === null ? null : Math.round(scale_adaptation_score),
-      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.round(sustained_adaptation_score),
+      ghg_score: ghg_score === null ? null : Math.floor(ghg_score),
+      sdg_score: sdg_score === null ? null : Math.floor(sdg_score),
+      adaptation_score: adaptation_score === null ? null : Math.floor(adaptation_score),
+      outcome_score: outcome_score === null ? null : Math.floor(outcome_score),
+      scale_ghg_score: scale_ghg_score === null ? null : Math.floor(scale_ghg_score),
+      sustained_ghg_score: sustained_ghg_score === null ? null : Math.floor(sustained_ghg_score),
+      scale_sdg_score: scale_sdg_score === null ? null : Math.floor(scale_sdg_score),
+      sustained_sdg_score: sustained_sdg_score === null ? null : Math.floor(sustained_sdg_score),
+      scale_adaptation_score: scale_adaptation_score === null ? null : Math.floor(scale_adaptation_score),
+      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.floor(sustained_adaptation_score),
       sdgs_score: sdgs_score
     }
   }
@@ -814,27 +817,70 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       const isUserExternal = currentUser?.userType?.name === 'External';
       let tool = 'CARBON_MARKET';;
   
-      const results = await this.resultsRepo.find({
-        relations: ['assessment',],
-        order: {
-          id: 'DESC'
-        }
-      });;
-      let filteredResults = results.filter(result => result?.assessment?.tool === tool);
-  
+      // const results = await this.resultsRepo.find({
+      //   relations: ['assessment',],
+      //   order: {
+      //     id: 'DESC'
+      //   }
+      // });
+      let queryResults= await this.resultsRepo.createQueryBuilder('result')
+      .leftJoinAndMapOne(
+        'result.assessment',
+        Assessment,
+        'assessment',
+        `assessment.id = result.assessment_id and assessment.tool='CARBON_MARKET' `,
+      )
+      .innerJoinAndMapOne(
+        'assessment.climateAction',
+        ClimateAction,
+        'climateAction',
+        `climateAction.id = assessment.climateAction_id and not climateAction.status =-20 `,
+      )
+    
       if (isUserExternal) {
-        filteredResults = filteredResults.filter(result => {
-          if (result.assessment?.user?.id === currentUser?.id) {
-            return result;
-          }
-        })
+        queryResults=queryResults 
+        .innerJoinAndMapOne(
+         'assessment.user',
+         Country,
+         'user',
+         `user.id = assessment.user_id and user.id = :userid`,
+       )
+
       } else {
-        filteredResults = filteredResults.filter(result => {
-          if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
-            return result;
-          }
-        })
+        queryResults=queryResults 
+         .innerJoinAndMapOne(
+          'climateAction.country',
+          Country,
+          'country',
+          `country.id = climateAction.countryId and country.id = :countryid`,
+        )
+
       }
+
+      if(intervention_ids?.length > 0){}else{
+
+      }
+      queryResults.where('', { userid: currentUser?.id,countryid: currentUser?.country?.id });
+
+
+      const results=await queryResults.getMany();
+// console.log(results.length)
+ let filteredResults=results;
+      // let filteredResults = results.filter(result => result?.assessment?.tool === tool);
+      // console.log(filteredResults)
+      // if (isUserExternal) {
+      //   filteredResults = filteredResults.filter(result => {
+      //     if (result.assessment?.user?.id === currentUser?.id) {
+      //       return result;
+      //     }
+      //   })
+      // } else {
+      //   filteredResults = filteredResults.filter(result => {
+      //     if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
+      //       return result;
+      //     }
+      //   })
+      // }
   
       let formattedResults = await Promise.all(filteredResults.map(async (result) => {
         return {
