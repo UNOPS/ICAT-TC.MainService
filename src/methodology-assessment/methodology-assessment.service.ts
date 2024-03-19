@@ -528,15 +528,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let user = await this.userService.currentUser();
     let data = this.resultRepository.createQueryBuilder('result')
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         'result.assessment',
         'assessment',
         'assessment.id = result.assessment_id'
       )
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         'assessment.climateAction',
         'climateAction',
-        'climateAction.id = assessment.climateAction_id'
+        'climateAction.id = assessment.climateAction_id and not climateAction.status = -20 '
       )
       .leftJoinAndMapMany(
         'climateAction.policy_sector',
