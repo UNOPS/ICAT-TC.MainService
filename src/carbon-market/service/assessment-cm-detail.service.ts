@@ -12,6 +12,7 @@ import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
 import { Sector } from "src/master-data/sector/entity/sector.entity";
+import { Results } from "src/methodology-assessment/entities/results.entity";
 
 
 @Injectable()
@@ -71,6 +72,12 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
     let totolAssess = await this.assessmentRepo
       .createQueryBuilder('assessment')
+      .innerJoinAndMapOne(
+        'assessment.result',
+        Results,
+        'result',
+        'result.assessment_id  = assessment.id'
+      )
       .leftJoinAndMapOne(
         'assessment.user',
         User,
@@ -89,7 +96,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
         'cntry',
         'cntry.id = ca.countryId',
       )
-      .where('assessment.tool = :value', { value: tool })
+      .andWhere('assessment.tool = :value', { value: tool })
 
     if (isUserExternal) {
       totolAssess.andWhere('user.id = :userId', { userId: currentUser.id })
@@ -100,30 +107,15 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
     }
     let totolCount = await totolAssess.getCount();
-
-
-    let passedAssess = await this.assessmentAnswerRepo
-      .createQueryBuilder('assessmentAnswer')
-      .innerJoinAndSelect('assessmentAnswer.answer', 'answer')
-      .innerJoinAndSelect('assessmentAnswer.assessment_question', 'question')
-      .innerJoinAndSelect('question.assessment', 'assessment')
-      .innerJoinAndSelect('assessment.user', 'user')
-      .innerJoinAndSelect('assessment.climateAction', 'ca')
-      .innerJoinAndSelect('ca.country', 'cntry')
-      .where('(answer.code = :value1 OR answer.code = :value2) ', { value1: answerCode1, value2: answerCode2 })
-
-    if (isUserExternal) {
-      passedAssess.andWhere('user.id = :userId', { userId: currentUser.id })
-
+    let totalassess = await totolAssess.getMany();
+    let failed = 0;
+    for await(let assess of totalassess){
+      if(assess.result.averageOutcome == null && assess.result.averageOutcome == null){
+        failed = failed +1;
+      }
     }
-    else {
-      passedAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
-
-    }
-    let passedCount = await passedAssess.getCount();
-
-    let failedCount = totolCount - passedCount
-
+    let passedCount = totolCount -failed
+    let failedCount = failed
     return [{ sector: 'passed', count: passedCount },
     { sector: 'failed', count: failedCount }]
 
