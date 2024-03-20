@@ -260,6 +260,7 @@ export class ComparisonReportDto {
 
 export class ComparisonReportReportTableOfContent {}
 export class ComparisonReportReportContentOne  {
+    portfolioId:number=0;
  portfolio_details:object[]=[];  
  intervation_details:object[]=[];
 
