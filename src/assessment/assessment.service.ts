@@ -73,6 +73,18 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'proj',
         `proj.id = asse.climateAction_id and not proj.status =-20 `,
       )
+      .leftJoinAndMapMany(
+        'proj.policySector',
+        PolicySector,
+        'policySector',
+        `policySector.intervention_id = proj.id`,
+      )
+      .leftJoinAndMapOne(
+        'policySector.sector',
+        Sector,
+        'pol_sector',
+        `pol_sector.id = policySector.sector_id`,
+      )
       .leftJoinAndMapOne(
         'asse.methodology',
         Methodology,

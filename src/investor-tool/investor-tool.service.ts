@@ -1471,9 +1471,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.category = category.name;
           categoryData.code = category.code;
-          if(x.score==99){
-            x.score =null;
-          }
+          // if(x.score==99){
+          //   x.score =null;
+          // }
           categoryData.category_weight = category.ip_weight;
           categoryData.isSDG = (category.code == 'SCALE_SD' || category.code == 'SUSTAINED_SD') ? (true) : (false);
           let isSutained: boolean = (category.code == 'SUSTAINED_GHG' || category.code == 'SUSTAINED_ADAPTATION'||category.code == 'SUSTAINED_SD') ? (true) : (false)
@@ -1485,7 +1485,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               isCalulate: (x.score == null||x.score == 99) ? false : true,
               sdg: (categoryData.isSDG) ? ('SDG ' + x?.portfolioSdg?.number + ' - ' + x?.portfolioSdg?.name) : ''
             }
+           
           )
+         
         }
       }
       outcomeArray.push(categoryData)
@@ -1537,6 +1539,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (sdg_count != 0) {
           category.category_score = { name:(this.mapScaleScores(this.roundDown(total_sdg_score / sdg_count))), value: this.roundDown(total_sdg_score / sdg_count) }; 
           sdgArray.push(category);
+         
         }
 
 
@@ -1576,9 +1579,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       finalProcessDataArray.aggregatedScore.value = null;
       finalProcessDataArray.aggregatedScore.name = '-';
     }
+    
     finalProcessDataArray.outcomeData = outcomeArray;
-    if(total_outcome_cat_weight !=0 && total_outcome_cat_weight != null){
+    if (total_outcome_cat_weight != null){
+      
       finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100);
+      
     }
     let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD');
     let sustained_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SUSTAINED_SD');
@@ -2094,10 +2100,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     if(filterText && !ar){
       if(filter){
-        filter = filter + `and climateAction.policyName = :filterText`
+        filter = filter + `and asses.id = :filterText`
       }
       else{
-        filter = filter + `climateAction.policyName = :filterText`
+        filter = filter + `asses.id = :filterText`
       }
       
     }
@@ -2110,7 +2116,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
 
     const data = this.assessmentRepo.createQueryBuilder('asses')
-      .select(['asses.id', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
       .innerJoinAndMapOne(
         'asses.result',
         Results,
@@ -2145,12 +2151,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       }
       data.andWhere(filter, { userId, userCountryId, filterText, portfolioID }).orderBy('asses.id','DESC')
       if(filterText && ar){
-        data.andWhere('climateAction.policyName IN (:...filterText)')
+        data.andWhere('asses.id IN (:...filterText)')
       }
 
-
+      let allData = await data.getMany();
      let result = await paginate(data, options);
-     let allData = await data.getMany()
+     
      return {
       items: result.items,
       meta: {
@@ -2219,7 +2225,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case 99:
         return 'Outside assessment boundaries'
       case null:
-        return 'Outside assessment boundaries'
+        return '-'
       default:
         return value.toString();
 
@@ -2291,6 +2297,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
+          categoryData.categoryCode = category.code;
           categoryData.type = 'process';
           let indicatordetails:IndicatorDetails[] = await this.getIndicatorDetials(x.id) ;
           x.indicator_details =indicatordetails;
