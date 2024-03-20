@@ -339,9 +339,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           score = score / selected_sdg_count / valid_scores_sdg
         } else {
           score = qs.reduce((accumulator, object) => {
-            return accumulator + +object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore;
+            let score = (+object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore)
+            return accumulator + score;
           }, 0);
-          let valid_scores = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
+          let valid_scores = qs.reduce((total, x) => ((+x.assessmentAnswers[0]?.selectedScore  !== -99) ? total + 1 : total), 0)
           score = score / valid_scores
         }
       }
@@ -379,16 +380,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     return {
-      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
-      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
-      adaptation_score: adaptation_score === null ? null : Math.round(adaptation_score),
-      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
-      scale_ghg_score: scale_ghg_score === null ? null : Math.round(scale_ghg_score),
-      sustained_ghg_score: sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
-      scale_sdg_score: scale_sdg_score === null ? null : Math.round(scale_sdg_score),
-      sustained_sdg_score: sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
-      scale_adaptation_score: scale_adaptation_score === null ? null : Math.round(scale_adaptation_score),
-      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.round(sustained_adaptation_score),
+      ghg_score: ghg_score === null ? null : Math.floor(ghg_score),
+      sdg_score: sdg_score === null ? null : Math.floor(sdg_score),
+      adaptation_score: adaptation_score === null ? null : Math.floor(adaptation_score),
+      outcome_score: outcome_score === null ? null : Math.floor(outcome_score),
+      scale_ghg_score: scale_ghg_score === null ? null : Math.floor(scale_ghg_score),
+      sustained_ghg_score: sustained_ghg_score === null ? null : Math.floor(sustained_ghg_score),
+      scale_sdg_score: scale_sdg_score === null ? null : Math.floor(scale_sdg_score),
+      sustained_sdg_score: sustained_sdg_score === null ? null : Math.floor(sustained_sdg_score),
+      scale_adaptation_score: scale_adaptation_score === null ? null : Math.floor(scale_adaptation_score),
+      sustained_adaptation_score: sustained_adaptation_score === null ? null : Math.floor(sustained_adaptation_score),
       sdgs_score: sdgs_score
     }
   }
