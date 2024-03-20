@@ -160,6 +160,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         this.assessmentRepo.save(assessment);
         let resultObj = new Results();
         let res = await this.calculateResult(assessment.id);
+        let exist = await this.resultsRepo.findOne({where: {assessment: {id: assessment.id}}})
+        if (exist && exist.id) {
+          resultObj.id = exist.id
+        }
         resultObj.assessment = assessment;
         resultObj.averageProcess = res.process_score;
         resultObj.averageOutcome = res.outcome_score?.outcome_score;
@@ -313,6 +317,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     const uniqueSdgNamesSet = [...new Set(sdgs.map(assessment => assessment.sdg.name))];
     let obj = {}
     let sdgs_score = {}
+    let valid_sdg_score_count = {}
     for (let cat of categories) {
       let selected_sdg_count = 0
       let qs = questions.filter(o => o.characteristic.category.code === cat)
@@ -331,10 +336,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             let _score = +object.assessmentAnswers[0]?.selectedScore
             if (sdgs_score[object.selectedSdg?.id]) sdgs_score[object.selectedSdg?.id] += _score === -99 ? 0 : _score;
             else sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
-            return accumulator + _score === -99 ? 0 : _score;
+            return accumulator + (_score === -99 ? 0 : _score);
           }, 0);
+          qs.forEach(o => {
+            if (+o.assessmentAnswers[0]?.selectedScore !== -99) {
+              if (valid_sdg_score_count[o.selectedSdg?.id]) valid_sdg_score_count[o.selectedSdg?.id] += 1
+              else valid_sdg_score_count[o.selectedSdg?.id] = 1
+            }
+          })
           let valid_scores_sdg = qs.reduce((total, x) => (+x.assessmentAnswers[0]?.selectedScore  !== -99 ? total + 1 : total), 0)
-          score = score / selected_sdg_count / valid_scores_sdg
+          score = score / valid_scores_sdg
+
         } else {
           score = qs.reduce((accumulator, object) => {
             let score = (+object.assessmentAnswers[0]?.selectedScore === -99 ? 0 : +object.assessmentAnswers[0]?.selectedScore)
@@ -351,7 +363,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     for (let key of Object.keys(sdgs_score)) {
-      sdgs_score[key] = sdgs_score[key] === null ? null : Math.floor(sdgs_score[key] / 6)
+      sdgs_score[key] = sdgs_score[key] === null ? null : Math.floor(sdgs_score[key] / valid_sdg_score_count[key])
     }
 
     let ghg_score = null; let sdg_score = null; let adaptation_score = null
