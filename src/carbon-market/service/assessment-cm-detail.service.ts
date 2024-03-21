@@ -116,8 +116,8 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
     }
     let passedCount = totolCount -failed
     let failedCount = failed
-    return [{ sector: 'passed', count: passedCount },
-    { sector: 'failed', count: failedCount }]
+    return [{ sector: 'Passed', count: passedCount },
+    { sector: 'Failed', count: failedCount }]
 
 
   }
