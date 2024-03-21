@@ -56,7 +56,7 @@ export class ReportPagesService {
     
           ${
             coverPage.tool.trim() == 'Investment Tool'
-              ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT & PRIVATE SECTOR TOOL  </div></div>   '
+              ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT TOOL  </div></div>   '
               : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
           }
 
@@ -2545,7 +2545,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Scale of outcome - GHGs</td>
          <td >${
-           content.outcomes_categories_assessment.scale_ghg_score
+           content.outcomes_categories_assessment.scale_ghg_score!=null|| content.outcomes_categories_assessment.scale_ghg_score!=undefined
              ? content.outcomes_categories_assessment.scale_ghg_score
              : 'no data found'
          }</td>
@@ -2553,7 +2553,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Scale of outcome - sustainable development </td>
          <td >${
-           content.outcomes_categories_assessment.scale_sdg_score
+           content.outcomes_categories_assessment.scale_sdg_score !=null|| content.outcomes_categories_assessment.scale_sdg_score!=undefined
              ? content.outcomes_categories_assessment.scale_sdg_score
              : 'no data found'
          }</td>
@@ -2561,7 +2561,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Scale of outcome - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.scale_adaptation_score
+           content.outcomes_categories_assessment.scale_adaptation_score !=null|| content.outcomes_categories_assessment.scale_adaptation_score!=undefined
              ? content.outcomes_categories_assessment.scale_adaptation_score
              : 'no data found'
          }</td>
@@ -2569,7 +2569,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Outcome sustained over time - GHGs </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_ghg_score
+           content.outcomes_categories_assessment.sustained_ghg_score !=null|| content.outcomes_categories_assessment.sustained_ghg_score!=undefined
              ? content.outcomes_categories_assessment.sustained_ghg_score
              : 'no data found'
          }</td>
@@ -2577,7 +2577,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Outcome sustained over time - sustainable development</td>
          <td >${
-           content.outcomes_categories_assessment.sustained_sdg_score 
+           content.outcomes_categories_assessment.sustained_sdg_score !=null|| content.outcomes_categories_assessment.sustained_sdg_score!=undefined
              ? content.outcomes_categories_assessment.sustained_sdg_score
              : 'no data found'
          }</td>
@@ -2585,7 +2585,7 @@ ${coverPage.reportDate}
        <tr>
          <td >Outcome sustained over time - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_adaptation_score
+           content.outcomes_categories_assessment.sustained_adaptation_score !=null|| content.outcomes_categories_assessment.sustained_adaptation_score!=undefined
              ? content.outcomes_categories_assessment.sustained_adaptation_score
              : 'no data found'
          }</td>
@@ -2593,7 +2593,7 @@ ${coverPage.reportDate}
        <tr>
          <td class="bold-table-row"> Outcomes score </td>
          <td class="bold-table-row">${
-           content.outcomeScore  ? content.outcomeScore : 'no data found'
+           content.outcomeScore!=null|| content.outcomeScore!=undefined  ? content.outcomeScore : 'no data found'
          }</td>
        </tr>
       
@@ -4367,7 +4367,7 @@ PORTFOLIO TOOL
       <div  class="main_header text-start">6 SECTOR COVERAGE  </div>
     
       <div  class="image-pie "><figure class="figure ">
-      <img src="${content.link}"  alt="A generic square placeholder image with rounded corners in a figure.">
+      <img src="${content.link}"  alt="sector coverage represent chart.">
       
      </figure></div>
      

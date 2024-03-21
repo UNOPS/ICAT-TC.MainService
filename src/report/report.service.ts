@@ -1924,7 +1924,7 @@ return contentFour
         },
       ]
 
-
+      contentOne.portfolioId=portfolioId;
       return contentOne;
     }
     genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[], outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
@@ -2069,25 +2069,16 @@ return contentFour
 
     async genarateComparisonReportDtoContentFive(portfolioId: number): Promise<ComparisonReportReportContentFive> {
       const contentOne = new ComparisonReportReportContentFive();
-      contentOne.scores= (await this.portfolioService.getDashboardData( portfolioId,{
-        limit: 10000,
-        page: 1,
-      },[],'ALL_OPTION')).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}})
-   
+      //@ts-ignore
+      contentOne.scores=(await this.investorToolService.getDashboardAllDataFilter( {page:1,limit:1000}, '',portfolioId)).items.map(item => {return {outcomeScore: item.outcome_score, processScore: item.process_score,}});
+ 
       return contentOne;
 
     }
     async genarateComparisonReportDtoContentSix(comparisonReportReportContentOne:ComparisonReportReportContentOne): Promise<ComparisonReportReportContentSix> {
       const contentOne = new ComparisonReportReportContentSix();
-  
-      const dataquery=this.policySectorsRepo.createQueryBuilder('policySectors')
-      .leftJoinAndMapOne('policySectors.sector',Sector,'sector','sector.id = policySectors.sector_id')
-      .where('policySectors.intervention_id IN (:...ids)', { ids: comparisonReportReportContentOne.intervation_details.map((a:{climateAction_id:number}) => a.climateAction_id) })
-      .select(['policySectors.id','sector.name', 'sector.id'])
-
-const data =this.investorToolService.countSectors((await dataquery.getMany()).map((policySector) => ({ sector: policySector.sector.name, id: policySector.sector.id })))
-  
-   
+ 
+  const data=await this.investorToolService.findAllSectorCount(comparisonReportReportContentOne.portfolioId)
 
    const url=await this.generateAndSavePieChart(data, '');
 
@@ -2141,11 +2132,11 @@ return contentOne;
 
      const secbgColors : string[] = [];
      data.forEach((sd: any) => {
-      let color = sector_color_map.find(o => o.sectorNumber === sd.id)
+      let color = sector_color_map.find(o => o.sectorNumber === sd.sector_id)
       if (color) {
        secbgColors.push(color.color)
       } else {
-        secbgColors.push(defaulColors[sd.id])
+        secbgColors.push(defaulColors[sd.sector_id])
       }
     })
 
