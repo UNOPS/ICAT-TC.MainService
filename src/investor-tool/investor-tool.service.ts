@@ -2251,6 +2251,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Certainly (100%)'
       case null:
         return 'Empty'
+      case 99: 
+        return 'Outside assessment boundaries'
       default:
         return value.toString();
     }
