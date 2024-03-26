@@ -63,7 +63,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     try {
       for await (let res of results) {
-        if (res.selectedSdg.id !== undefined && !savedSdgs.includes(res.selectedSdg.id)) {
+        if (res.selectedSdg?.id !== undefined && !savedSdgs.includes(res.selectedSdg?.id)) {
           let exist = await this.sdgAssessmentRepo.find({ where: { sdg: { id: res.selectedSdg.id }, assessment: { id: assessment.id } } })
           if (exist.length === 0) {
             let obj = new SdgAssessment()
@@ -95,7 +95,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         ass_question.sdgIndicator = res.sdgIndicator;
         ass_question.startingSituation = res.startingSituation;
         ass_question.expectedImpact = res.expectedImpact;
-        if (res.selectedSdg.id) ass_question.selectedSdg = res.selectedSdg;
+        if (res.selectedSdg?.id) ass_question.selectedSdg = res.selectedSdg;
         ass_question.uploadedDocumentPath = res.filePath;
         ass_question.relevance = res.relevance;
         ass_question.adaptationCoBenifit = res.adaptationCoBenifit;
@@ -185,6 +185,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
       return a_ans
     } catch (error) {
+      console.error(error)
       throw new InternalServerErrorException(error)
     }
 
