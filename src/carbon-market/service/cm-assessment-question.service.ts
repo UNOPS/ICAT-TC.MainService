@@ -153,7 +153,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
         a_ans = await this.assessmentAnswerRepo.save(_answers)
       } catch (err) {
-        return new InternalServerErrorException()
+        console.error("error", err)
+        throw new InternalServerErrorException()
       }
       await this.saveDataRequests(_answers);
 
@@ -185,7 +186,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
       return a_ans
     } catch (error) {
-      console.error(error)
+      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
 
@@ -927,7 +928,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessments: paginated_data
       }
     } catch (error) {
-      console.error(error)
+      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
   }
@@ -1090,6 +1091,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('characteristic.id = :id', { id: characteristic_id })
         .getMany()
     } catch (error) {
+      console.error("error", error)
       throw new InternalServerErrorException()
     }
   }
@@ -1117,6 +1119,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       } else {
       }
     } catch (error) {
+      console.error("error", error)
       throw new InternalServerErrorException(error);
     }
     

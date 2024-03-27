@@ -67,6 +67,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     } catch (error) {
       body = { ...body, ...{ actionStatus:req.isDraft ? 'Failed to save draft' : 'Failed to create assessment', } }
       this.auditDetailService.log(body)
+      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
   }
