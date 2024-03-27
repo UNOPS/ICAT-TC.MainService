@@ -117,6 +117,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   async getCMDefaultValues(@Query('characteristic_id') characteristic_id: number) {
     return await this.service.getCMDefaultValues(characteristic_id)
   }
+
+  @Get('get-selected-sdgs')
+  async getSelectedSDGs(@Query('assessmentId') assessmentId: number) {
+    return await this.service.getSelectedSDGs(assessmentId)
+  }
   
 
 }
