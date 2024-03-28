@@ -53,6 +53,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
   async deleteRemovedSDGS(assessmentId: number, selectedSDGS: number[]){
+    if (!Array.isArray(selectedSDGS)) selectedSDGS = [selectedSDGS]
+    selectedSDGS = selectedSDGS.map(i => +i)
     let savedSDGS = await this.sdgAssessmentRepo.find({where: {assessment: {id: assessmentId}}})
     if (savedSDGS.length > 0) {
       for (let ex of savedSDGS) {
@@ -94,7 +96,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           } else exists.push(res.selectedSdg.id)
         }
       }
-      this.deleteRemovedSDGS(assessment.id, [...new Set(allSdgs.map(item => item.id))])
       if (isDraft) {
         assessment.isDraft = isDraft;
         assessment.lastDraftLocation = type;

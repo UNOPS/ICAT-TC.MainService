@@ -1,5 +1,5 @@
 import { Crud, CrudController } from "@nestjsx/crud";
-import { Body, Controller, Get,InternalServerErrorException, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get,InternalServerErrorException, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMAssessmentQuestionService } from "../service/cm-assessment-question.service";
 import { CMScoreDto, CalculateDto, SaveCMResultDto } from "../dto/cm-result.dto";
@@ -121,6 +121,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @Get('get-selected-sdgs')
   async getSelectedSDGs(@Query('assessmentId') assessmentId: number) {
     return await this.service.getSelectedSDGs(assessmentId)
+  }
+
+  @Post('delete-removed-sdgs')
+  async deleteRemovedSDGS(@Query('assessmentId') assessmentId: number, @Query('selectedSDGS') selectedSDGS: number[]) {
+    return await this.service.deleteRemovedSDGS(assessmentId, selectedSDGS)
   }
   
 
