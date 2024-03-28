@@ -2224,6 +2224,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         return 'Major';
       case 99:
         return 'Outside assessment boundaries'
+      case -99:
+        return 'Outside assessment boundaries'
       case null:
         return '-'
       default:
@@ -2252,6 +2254,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       case null:
         return 'Empty'
       case 99: 
+        return 'Outside assessment boundaries'
+      case -99: 
         return 'Outside assessment boundaries'
       default:
         return value.toString();

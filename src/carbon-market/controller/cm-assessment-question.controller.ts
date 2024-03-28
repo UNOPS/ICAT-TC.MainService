@@ -67,6 +67,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
     } catch (error) {
       body = { ...body, ...{ actionStatus:req.isDraft ? 'Failed to save draft' : 'Failed to create assessment', } }
       this.auditDetailService.log(body)
+      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
   }
@@ -115,6 +116,11 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
   @Get('get-cm-default-values')
   async getCMDefaultValues(@Query('characteristic_id') characteristic_id: number) {
     return await this.service.getCMDefaultValues(characteristic_id)
+  }
+
+  @Get('get-selected-sdgs')
+  async getSelectedSDGs(@Query('assessmentId') assessmentId: number) {
+    return await this.service.getSelectedSDGs(assessmentId)
   }
   
 

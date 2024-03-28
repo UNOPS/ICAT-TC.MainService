@@ -1385,7 +1385,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     if (value === null || value === '-' || value === undefined || Number.isNaN(value)){
       return {name: '-', value: null}
     } else {
-      return {name: (value === 99 ? '' : value + ' - ')  + name, value: value}
+      return {name: ((value === 99 || value === -99 || value === '-99') ? '' : value + ' - ')  + name, value: ((value === 99 || value === -99 || value === '-99') ? null : value)}
     }
   }
 
