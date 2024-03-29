@@ -5,7 +5,7 @@ import { CMAssessmentQuestion } from "../entity/cm-assessment-question.entity";
 import { CMResultDto, CMScoreDto } from "../dto/cm-result.dto";
 import { Assessment } from "src/assessment/entities/assessment.entity";
 import { CMAssessmentAnswer } from "../entity/cm-assessment-answer.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { Results } from "src/methodology-assessment/entities/results.entity";
 import { Approach } from "../enum/answer-type.enum";
 import { ParameterRequest } from "src/data-request/entity/data-request.entity";
@@ -26,6 +26,7 @@ import { CMAssessmentAnswerService } from "./cm-assessment-answer.service";
 import * as moment from "moment";
 import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
 import { Country } from "src/country/entity/country.entity";
+import { PortfolioSdg } from "src/investor-tool/entities/portfolio-sdg.entity";
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -51,10 +52,30 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return await this.repo.save(question)
   }
 
+  async deleteRemovedSDGS(assessmentId: number, selectedSDGS: number[]){
+    if (!Array.isArray(selectedSDGS)) selectedSDGS = [selectedSDGS]
+    selectedSDGS = selectedSDGS.map(i => +i)
+    let savedSDGS = await this.sdgAssessmentRepo.find({where: {assessment: {id: assessmentId}}})
+    if (savedSDGS.length > 0) {
+      for (let ex of savedSDGS) {
+        if (!selectedSDGS.find(o => o === ex.sdg.id)) {
+          let res = await this.sdgAssessmentRepo.delete({id: ex.id})
+          let assessmentQuestion = await this.repo.find({where: {assessment: {id: assessmentId}, selectedSdg: {id: ex.sdg.id}}})
+          let qids = assessmentQuestion.map(q => q.id)
+          let assessmentAnswers = await this.assessmentAnswerRepo.find({where: {assessment_question: {id: In(qids)}}})
+          let aids = assessmentAnswers.map(a => a.id)
+          if (aids.length > 0) await this.assessmentAnswerRepo.delete(aids)
+          if (qids.length > 0) await this.repo.delete(qids)
+        } 
+      }
+    }
+  }
+
 
   async saveResult(result: CMResultDto[], assessment: Assessment, isDraft: boolean, name: string, type: string, expectedGHGMitigation: number, score = 1) {
     let a_ans: any[]
     let _answers = []
+    let allSdgs = []
     let selectedSdgs = []
     let savedSdgs = []
     let exists = []
@@ -63,6 +84,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     try {
       for await (let res of results) {
+        if (res.selectedSdg?.id !== undefined ) allSdgs.push(res.selectedSdg)
         if (res.selectedSdg?.id !== undefined && !savedSdgs.includes(res.selectedSdg?.id)) {
           let exist = await this.sdgAssessmentRepo.find({ where: { sdg: { id: res.selectedSdg.id }, assessment: { id: assessment.id } } })
           if (exist.length === 0) {
