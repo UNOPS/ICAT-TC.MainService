@@ -215,35 +215,35 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     filterText: string,
     countryIdFromTocken: number,
     cuserRoleFromTocken,
-      userNameFromTocken
+    userNameFromTocken
   ): Promise<any> {
 
-     let filter: string ='asse.isDraft = true';
-    if( cuserRoleFromTocken !="External"){
-     filter = `${filter} AND proj.countryId = ${countryIdFromTocken}`;
+    let filter: string = 'asse.isDraft = true';
+    if (cuserRoleFromTocken != "External") {
+      filter = `${filter} AND proj.countryId = ${countryIdFromTocken}`;
     }
-    if( cuserRoleFromTocken !="Country Admin"){
+    if (cuserRoleFromTocken != "Country Admin") {
       let userItem = await this.userService.findByUseremail(userNameFromTocken);
-      filter =`${filter} AND asse.user_id =${userItem.id}`
-         }
-    
+      filter = `${filter} AND asse.user_id =${userItem.id}`
+    }
+
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = `${filter} AND (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
     }
 
     let data3 = this.repo
-    .createQueryBuilder('asse')
-    .leftJoinAndMapOne(
-      'asse.climateAction',
-      ClimateAction,
-      'proj',
-      `proj.id = asse.climateAction_id and not proj.status =-20 `,
-    )
-    .where(filter, {
-      filterText: `%${filterText}%`,
-    })
-    .orderBy('asse.id', 'ASC')
-    .getMany();
+      .createQueryBuilder('asse')
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+      })
+      .orderBy('asse.id', 'ASC')
+      .getMany();
 
     let data = this.repo
       .createQueryBuilder('asse')
@@ -283,15 +283,15 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'sector',
         `sector.id = policySector.sector_id`,
       )
-      .where('asse.id in (:...newarray)', {newarray });
+      .where('asse.id in (:...newarray)', { newarray });
 
-      let item =new Array()
-      let re =new Array()
-      let total :number;
-    
+    let item = new Array()
+    let re = new Array()
+    let total: number;
+
     if (data1) {
       total = (await data3).length;
-      item= await data1.getMany();
+      item = await data1.getMany();
       re.push(total);
       re.push(item);
       return re;
