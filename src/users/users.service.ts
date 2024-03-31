@@ -511,8 +511,7 @@ export class UsersService extends TypeOrmCrudService<User> {
       let user = await this.repo.createQueryBuilder('user').where('loginProfile = :loginProfile', {loginProfile: login_profile_id}).getOne()
       return user
     } catch (error) {
-      console.error(error)
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
   }
 

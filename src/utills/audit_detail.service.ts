@@ -44,7 +44,6 @@ export class AuditDetailService {
         try {
             this.httpService.post(this.auditlogURL, body).subscribe(rr => { },  )
         } catch (err) {
-            console.error("error getAuditDetails", err)
         }
     }
 }

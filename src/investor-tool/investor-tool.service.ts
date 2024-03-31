@@ -1471,9 +1471,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         if (category.name === x.category.name) {
           categoryData.category = category.name;
           categoryData.code = category.code;
-          // if(x.score==99){
-          //   x.score =null;
-          // }
           categoryData.category_weight = category.ip_weight;
           categoryData.isSDG = (category.code == 'SCALE_SD' || category.code == 'SUSTAINED_SD') ? (true) : (false);
           let isSutained: boolean = (category.code == 'SUSTAINED_GHG' || category.code == 'SUSTAINED_ADAPTATION'||category.code == 'SUSTAINED_SD') ? (true) : (false)
