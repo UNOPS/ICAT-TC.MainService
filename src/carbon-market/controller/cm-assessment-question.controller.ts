@@ -66,8 +66,7 @@ export class CMAssessmentQuestionController implements CrudController<CMAssessme
       return await this.service.saveResult(req.result, req.assessment, req.isDraft, req.name, req.type, req.expectedGHGMitigation)
     } catch (error) {
       body = { ...body, ...{ actionStatus:req.isDraft ? 'Failed to save draft' : 'Failed to create assessment', } }
-      this.auditDetailService.log(body)
-      console.error("error", error)
+      this.auditDetailService.log(body);
       throw new InternalServerErrorException(error)
     }
   }

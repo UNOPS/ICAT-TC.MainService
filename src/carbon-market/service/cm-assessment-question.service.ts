@@ -175,7 +175,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
         a_ans = await this.assessmentAnswerRepo.save(_answers)
       } catch (err) {
-        console.error("error", err)
         throw new InternalServerErrorException()
       }
       await this.saveDataRequests(_answers);
@@ -208,7 +207,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       }
       return a_ans
     } catch (error) {
-      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
 
@@ -853,12 +851,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       const isUserExternal = currentUser?.userType?.name === 'External';
       let tool = 'CARBON_MARKET';;
   
-      // const results = await this.resultsRepo.find({
-      //   relations: ['assessment',],
-      //   order: {
-      //     id: 'DESC'
-      //   }
-      // });
       let queryResults= await this.resultsRepo.createQueryBuilder('result')
       .leftJoinAndMapOne(
         'result.assessment',
@@ -900,23 +892,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
 
       const results=await queryResults.getMany();
-// console.log(results.length)
  let filteredResults=results;
-      // let filteredResults = results.filter(result => result?.assessment?.tool === tool);
-      // console.log(filteredResults)
-      // if (isUserExternal) {
-      //   filteredResults = filteredResults.filter(result => {
-      //     if (result.assessment?.user?.id === currentUser?.id) {
-      //       return result;
-      //     }
-      //   })
-      // } else {
-      //   filteredResults = filteredResults.filter(result => {
-      //     if (result.assessment?.climateAction?.country?.id === currentUser?.country?.id) {
-      //       return result;
-      //     }
-      //   })
-      // }
   
       let formattedResults = await Promise.all(filteredResults.map(async (result) => {
         return {
@@ -950,7 +926,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         assessments: paginated_data
       }
     } catch (error) {
-      console.error("error", error)
       throw new InternalServerErrorException(error)
     }
   }
@@ -1113,7 +1088,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .where('characteristic.id = :id', { id: characteristic_id })
         .getMany()
     } catch (error) {
-      console.error("error", error)
       throw new InternalServerErrorException()
     }
   }
@@ -1141,7 +1115,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       } else {
       }
     } catch (error) {
-      console.error("error", error)
       throw new InternalServerErrorException(error);
     }
     
