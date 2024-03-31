@@ -39,8 +39,6 @@ import { CMResultDto } from 'src/carbon-market/dto/cm-result.dto';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 @Injectable()
 export class MethodologyAssessmentService extends TypeOrmCrudService <MethodologyAssessmentParameters>{
- 
-  
 
    constructor(
     @InjectRepository(MethodologyAssessmentParameters) repo, 
@@ -510,7 +508,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
   async getparam(id:number):Promise<MethodologyAssessmentParameters[]>{
     let result=await this.repo.createQueryBuilder('param')
     .leftJoinAndMapOne('param.assessment',Assessment,'ass',`param.assessment_id = ass.id`)
-    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id`)
+    .leftJoinAndMapOne('ass.climateAction',ClimateAction,'cl',`ass.climateAction_id = cl.id and not cl.status =-20'`)
     .leftJoinAndMapOne('param.methodology',Methodology,'meth',`meth.id = param.methodology_id`)
     .leftJoinAndMapOne('param.category',Category,'cat',`cat.id = param.category_id`)
     .leftJoinAndMapOne('param.characteristics',Characteristics,'cha',`cha.id = param.characteristics_id`)
@@ -530,15 +528,15 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let user = await this.userService.currentUser();
     let data = this.resultRepository.createQueryBuilder('result')
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         'result.assessment',
         'assessment',
         'assessment.id = result.assessment_id'
       )
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         'assessment.climateAction',
         'climateAction',
-        'climateAction.id = assessment.climateAction_id'
+        'climateAction.id = assessment.climateAction_id and not climateAction.status = -20 '
       )
       .leftJoinAndMapMany(
         'climateAction.policy_sector',
@@ -593,6 +591,37 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
         return res
       } catch (err) {
       }
+  }
+
+  async getAssessmentCount():Promise<number> {
+    let user = await this.userService.currentUser();
+    let data = this.resultRepository.createQueryBuilder('result')
+      .leftJoinAndSelect(
+        'result.assessment',
+        'assessment',
+        'assessment.id = result.assessment_id'
+      )
+      .leftJoinAndSelect(
+        'assessment.user',
+        'user',
+        'user.id = assessment.user_id'
+      )
+      .leftJoinAndSelect(
+        'user.country',
+        'country',
+        'country.id = user.countryId'
+      )
+      if (user.userType?.name === 'External') {
+        if (user?.id) data.where('user.id = :userId', {userId: user.id})
+      } else {
+        if (user?.country?.id) data.where('country.id = :countryId', {countryId: user.country.id})
+      }
+      try {
+        let res=  await data.getCount()
+        return res
+      } catch (err) {
+      }
+
   }
 
   async results(): Promise<Results[]> {
@@ -802,7 +831,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'MICRO_LEVEL') {
           return {
-            name: 'What is the scale of the GHG outcome at subnational\/regional\/municipal or subsectoral level?',
+            name: 'What is the scale of the GHG outcome on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -815,12 +844,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'MEDIUM_LEVEL') {
           return {
-            name: 'What is the scale of the contribution to this SDG at national or sectorial level?',
+            name: 'What is the scale of the contribution to this SDG at national or sectoral level?',
             code: 'NATIONAL'
           }
         } else if (characteristic.code === 'MICRO_LEVEL') {
           return {
-            name: 'What is the scale of the contribution to this SDG at subnational\/regional\/municipal or subsectorial level?',
+            name: 'What is the scale of the SDG outcome on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -838,7 +867,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'SHORT_TERM') {
           return {
-            name: 'What is the time frame of the GHG outcome at subnational\/regional\/municipal or subsectoral level?',
+            name: 'What is the time frame of the GHG outcome  on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -851,12 +880,12 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'MEDIUM_TERM') {
           return {
-            name: 'What is the time frame of the contribution to this SDG at national or sectorial level?',
+            name: 'What is the time frame of the contribution to this SDG at national or sectoral level?',
             code: 'NATIONAL'
           }
         } else if (characteristic.code === 'SHORT_TERM') {
           return {
-            name: 'What is the time frame of the contribution to this SDG at subnational\/regional\/municipal or subsectorial level?',
+            name: 'What is the time frame of the contribution to this SDG  on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -874,7 +903,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'SUBNATIONAL') {
           return {
-            name: 'What is the scale of the adaptation co-benefits at subnational\/regional\/municipal or subsectorial level?',
+            name: 'What is the scale of the adaptation co-benefits on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -892,7 +921,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
           }
         } else if (characteristic.code === 'SUBNATIONAL') {
           return {
-            name: 'What is the time frame of the adaptation co-benefits at subnational\/regional\/municipal or subsectorial level?',
+            name: 'What is the time frame of the adaptation co-benefits  on a subnational (i.e. municipal, provincial, city-level) or subsectoral level?',
             code: 'SUBNATIONAL'
           }
         }
@@ -1010,7 +1039,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
     let data = this.assessmentRepository
       .createQueryBuilder('assessment')
-      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and p.countryId = ${countryIdFromTocken}`)
+      .innerJoinAndMapOne('assessment.project', ClimateAction, 'p', `assessment.climateAction_id = p.id and not p.status =-20' and p.countryId = ${countryIdFromTocken}`)
       .leftJoinAndMapOne(
         'assessment.verificationUser',
         User,
@@ -1213,6 +1242,22 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     }); 
   
     return formattedResults;
+  }
+
+  async findCharacteristicByCode(cat_code: string, ch_code: string) {
+    try {
+      return await this.characteristicsRepository.createQueryBuilder('ch')
+      .innerJoin(
+        'ch.category',
+        'category',
+        'category.id = ch.category_id'
+      )
+      .where('ch.code = :ch_code', {ch_code: ch_code})
+      .andWhere('category.code = :cat_code', {cat_code: cat_code})
+      .getOne() 
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
   }
   
   

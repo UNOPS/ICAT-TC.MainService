@@ -64,6 +64,13 @@ var multer = require('multer');
       },
 
     },
+    filter: [
+      {
+        field: 'status',
+        operator: '$ne',
+        value: -20,
+      },
+    ],
     exclude: ['id']
   },
 })
@@ -176,7 +183,7 @@ export class ProjectController implements CrudController<ClimateAction> {
 
   @Post('uploadFiles')
   @UseInterceptors(
-    FilesInterceptor('files',5)
+    FilesInterceptor('files', 5)
   )
   async uploadFile2(
     @UploadedFiles() files,
@@ -261,91 +268,31 @@ export class ProjectController implements CrudController<ClimateAction> {
       sectorId,
     );
   }
-  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN]))
+  @UseGuards(JwtAuthGuard, )
   @Patch('updateOneClimateAction')
   async updateOneClimateAction(
-    @Request() request,
-    @ParsedRequest() req: CrudRequest,
-    @ParsedBody() dto: ClimateAction,
+    @Body() dto: ClimateAction,
   ): Promise<any> {
     let project = await this.projectRepository.findOne({
       where: { id: dto.id },
       relations: ['projectApprovalStatus'],
     });
 
-    let updateData = await this.base.updateOneBase(req, dto);
-    const baseurl = process.env.ClientURl;
+    project.policyName = dto.policyName;
+    project.geographicCoverage =dto.geographicCoverage;
+    project.description =dto.description;
+    project.objective=dto.objective;
+    project.implementingEntity =dto.implementingEntity;
+    project.related_policies=dto.related_policies;
+    project.geographicalAreaCovered =dto.geographicalAreaCovered
+    project.levelofImplemenation=dto.levelofImplemenation
+    project.reference=dto.reference;
+    project.dateOfCompletion= dto.dateOfCompletion
+    project.dateOfImplementation =dto.dateOfImplementation;
 
+    let updateData = await this.service.update(project);
+    return updateData;
 
-    if (
-      dto.projectApprovalStatus &&
-      dto.projectApprovalStatus.id !== project.projectApprovalStatus.id
-    ) {
-      if (dto.projectApprovalStatus.id === 1) {
-        let emailTemplate = fs.readFileSync(
-          './src/template/email/status-approved-ca.html',
-          'utf8',
-        );
-        emailTemplate = emailTemplate.replace('[USER_NAME]', `User`);
-        emailTemplate = emailTemplate.replace(
-          '[CA_Name]',
-          dto.policyName,
-        );
-        emailTemplate = emailTemplate.replace(
-          '[CA_URL]',
-          baseurl + 'propose-project?id=' + dto.id,
-        );
-
-        this.mailService.sendMail(
-          project.email,
-          'Approval Status Approved',
-          'Approval Status Approved',
-          emailTemplate,
-        );
-      }
-      if (dto.projectApprovalStatus.id === 2) {
-        let emailTemplate = fs.readFileSync(
-          './src/template/email/status-rejected-ca.html',
-          'utf8',
-        );
-        emailTemplate = emailTemplate.replace('[USER_NAME]', `User`);
-        emailTemplate = emailTemplate.replace(
-          '[CA_Name]',
-          dto.policyName,
-        );
-        emailTemplate = emailTemplate.replace(
-          '[CA_URL]',
-          baseurl + 'propose-project?id=' + dto.id,
-        );
-        this.mailService.sendMail(
-          project.email,
-          'Approval Status Rejected',
-          'Approval Status Rejected',
-          emailTemplate,
-        );
-      }
-      if (dto.projectApprovalStatus.id === 3) {
-        let emailTemplate = fs.readFileSync(
-          './src/template/email/status-datarequest-ca.html',
-          'utf8',
-        );
-        emailTemplate = emailTemplate.replace('[USER_NAME]', `User`);
-        emailTemplate = emailTemplate.replace(
-          '[CA_Name]',
-          dto.policyName,
-        );
-        emailTemplate = emailTemplate.replace(
-          '[CA_URL]',
-          baseurl + 'propose-project?id=' + dto.id,
-        );
-        this.mailService.sendMail(
-          project.email,
-          'Data request sent successfully',
-          'Data request sent successfully',
-          emailTemplate,
-        );
-      }
-    }
   }
 
   @Post("policybar")
@@ -391,6 +338,17 @@ export class ProjectController implements CrudController<ClimateAction> {
   @Get('getLastID')
   async getLastID() {
     return await this.service.getLastID();
+  }
+  @Get('projectName')
+  async getProjectName( @Query('countryId') countryId: number,) {
+    return this.service.getProjectName(countryId);
+  }
+
+  @Post('delete')
+  async delete(
+    @Query('id') id: number,
+  ): Promise<any> {
+    this.service.delete(id);
   }
 
 }

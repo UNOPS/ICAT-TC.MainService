@@ -117,10 +117,16 @@ export class InvestorToolController {
   @Get('findSectorCount')
   async findSectorCount(@Query('tool') tool:string):Promise<any[]> {
 
-    if(tool =="All Option"){
-      return await this.investorToolService.findAllSectorCount();
-    }
     return await this.investorToolService.findSectorCount(tool);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('find-sector-count-all-tool')
+  async findSectorCountAllTool(
+    @Query('portfolioId') portfolioId: number 
+    ):Promise<any[]> {
+
+      return await this.investorToolService.findAllSectorCount(portfolioId);
   }
   @UseGuards(JwtAuthGuard)
   @Get('getTCValueByAssessment')
@@ -207,37 +213,56 @@ export class InvestorToolController {
 
   @UseGuards(JwtAuthGuard)
   @Get('sdgSumAllCalculateInvester')
-  async sdgSumAllCalculate() {
-    return await this.investorToolService.sdgSumALLCalculate();
+  async sdgSumAllCalculate(
+    @Query('portfolioId') portfolioId: number
+  ) {
+    return await this.investorToolService.sdgSumALLCalculate(portfolioId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('dashboard-data')
   async getDashboardData(
     @Query('page') page: number,
-    @Query('limit') limit: number
+    @Query('limit') limit: number,
+    @Query('selectedAssessIds') selectedAssessIds: number[]
     ):Promise<any> {
     return await this.investorToolService.getDashboardData( {
       limit: limit,
       page: page,
-    },);
+    },selectedAssessIds);
   }
 
   @Post('save-tool-multiselect')
   async saveToolsMultiSelect(@Body() req: ToolsMultiselectDto){
     return await this.investorToolService.saveToolsMultiSelect(req)
   }
-  
   @UseGuards(JwtAuthGuard)
-  @Get('dashboard-all-data')
-  async getDashboardAllData(
-    @Query('page') page: number,
-    @Query('limit') limit: number
+  @Get('dashboard-all-data-graph') 
+  async getDashboardAllDataGraph(
     ):Promise<any> {
-    return await this.investorToolService.getDashboardAllData( {
-      limit: limit,
-      page: page,
-    },);
+      return this.investorToolService.getDashboardAllDataGraph();
+    }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-data/:skip/:pageSize')
+  async getDashboardAllData(
+    @Param('skip') skip: number,
+    @Param('pageSize') pageSize: number,
+    @Query('filterText') filterText: [],
+    @Query('PortfolioID') PortfolioID: number,
+    ):Promise<any> {
+    return await this.investorToolService.getDashboardAllData( skip, pageSize, filterText,PortfolioID);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('dashboard-all-filter/:skip/:pageSize')
+  async getDashboardAllDatafilter(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('filterText') filterText: [],
+    @Query('PortfolioID') PortfolioID: number,
+    ):Promise<any> { 
+    return await this.investorToolService.getDashboardAllDataFilter( {page,limit},  filterText,PortfolioID);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -245,19 +270,16 @@ export class InvestorToolController {
   async saveSdgPriorities(@Body() req: SdgPriorityDto) {
 
     let details = await this.auditDetailService.getAuditDetails()
-    console.log("details from audit service", details)
     let obj = {
       description: "Save SDG priorities"
     }
     let body = { ...details, ...obj }
     try {
       body = { ...body, ...{ actionStatus: "Saved SDG Priorities", } }
-      console.log("request body to audit", body)
       this.auditDetailService.log(body)
       return await this.investorToolService.saveSdgPriorities(req.priorities)
     } catch (error) {
       body = { ...body, ...{ actionStatus: "Failed to save SDG Priorities", } }
-      console.log("save sdg catch", error)
       this.auditDetailService.log(body)
       throw new InternalServerErrorException(error)
     }

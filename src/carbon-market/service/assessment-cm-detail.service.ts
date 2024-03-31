@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AssessmentCMDetail } from "../entity/assessment-cm-detail.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,6 +11,8 @@ import { Country } from "src/country/entity/country.entity";
 import { ClimateAction } from "src/climate-action/entity/climate-action.entity";
 import { GeographicalAreasCovered } from "src/investor-tool/entities/geographical-areas-covered.entity";
 import { InvestorSector } from "src/investor-tool/entities/investor-sector.entity";
+import { Sector } from "src/master-data/sector/entity/sector.entity";
+import { Results } from "src/methodology-assessment/entities/results.entity";
 
 
 @Injectable()
@@ -22,6 +24,8 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
     @InjectRepository(AssessmentCMDetail) private assessmentCMDetailsRepo: Repository<AssessmentCMDetail>,
     @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
+    @InjectRepository(GeographicalAreasCovered) private geographicalAreasCoveredRepo: Repository<GeographicalAreasCovered>,
+    @InjectRepository(InvestorSector) private investorSectorRepo: Repository<InvestorSector>
 
 
   ) {
@@ -68,6 +72,12 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
     let totolAssess = await this.assessmentRepo
       .createQueryBuilder('assessment')
+      .innerJoinAndMapOne(
+        'assessment.result',
+        Results,
+        'result',
+        'result.assessment_id  = assessment.id'
+      )
       .leftJoinAndMapOne(
         'assessment.user',
         User,
@@ -78,7 +88,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
         'assessment.climateAction',
         ClimateAction,
         'ca',
-        'ca.id = assessment.climateAction_id',
+        'ca.id = assessment.climateAction_id and not ca.status =-20 ',
       )
       .leftJoinAndMapOne(
         'ca.country',
@@ -86,7 +96,7 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
         'cntry',
         'cntry.id = ca.countryId',
       )
-      .where('assessment.tool = :value', { value: tool })
+      .andWhere('assessment.tool = :value', { value: tool })
 
     if (isUserExternal) {
       totolAssess.andWhere('user.id = :userId', { userId: currentUser.id })
@@ -97,32 +107,17 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
 
     }
     let totolCount = await totolAssess.getCount();
-
-
-    let passedAssess = await this.assessmentAnswerRepo
-      .createQueryBuilder('assessmentAnswer')
-      .innerJoinAndSelect('assessmentAnswer.answer', 'answer')
-      .innerJoinAndSelect('assessmentAnswer.assessment_question', 'question')
-      .innerJoinAndSelect('question.assessment', 'assessment')
-      .innerJoinAndSelect('assessment.user', 'user')
-      .innerJoinAndSelect('assessment.climateAction', 'ca')
-      .innerJoinAndSelect('ca.country', 'cntry')
-      .where('(answer.code = :value1 OR answer.code = :value2) ', { value1: answerCode1, value2: answerCode2 })
-
-    if (isUserExternal) {
-      passedAssess.andWhere('user.id = :userId', { userId: currentUser.id })
-
+    let totalassess = await totolAssess.getMany();
+    let failed = 0;
+    for await(let assess of totalassess){
+      if(assess.result.averageOutcome == null && assess.result.averageOutcome == null){
+        failed = failed +1;
+      }
     }
-    else {
-      passedAssess.andWhere('cntry.id = :countryId', { countryId: currentUser?.country?.id })
-
-    }
-    let passedCount = await passedAssess.getCount();
-
-    let failedCount = totolCount - passedCount
-
-    return [{ sector: 'passed', count: passedCount },
-    { sector: 'failed', count: failedCount }]
+    let passedCount = totolCount -failed
+    let failedCount = failed
+    return [{ sector: 'Passed', count: passedCount },
+    { sector: 'Failed', count: failedCount }]
 
 
   }
@@ -140,7 +135,41 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
   }
 
   save(dto: AssessmentCMDetail) {
-    return this.repo.save(dto);
+    try {
+      return this.repo.save(dto);
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+  async deleteCmAssessmentDetail(assessmentId: number) {
+    await this.deleteGeographicalAreasCovered(assessmentId);
+    await this.deleteInvestorSector(assessmentId);
+
+    try {
+      await this.repo.delete({cmassessment: {id: assessmentId}});
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+  }
+
+  async deleteGeographicalAreasCovered(assessmentId: number){
+    try {
+      await this.geographicalAreasCoveredRepo.delete({assessment: {id: assessmentId}});
+    
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async deleteInvestorSector(assessmentId: number) {
+    try {
+      await this.investorSectorRepo.delete({assessment: {id: assessmentId}});
+     
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
   }
 }
 

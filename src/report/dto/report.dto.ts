@@ -232,6 +232,8 @@ export class ComparisonReportDto {
     contentTwo:ComparisonReportReportContentTwo=new ComparisonReportReportContentTwo()
     contentThree:ComparisonReportReportContentThree=new ComparisonReportReportContentThree()
     contentFour:ComparisonReportReportContentFour=new ComparisonReportReportContentFour()
+    contentFive:ComparisonReportReportContentFive=new ComparisonReportReportContentFive()
+    contentSix:ComparisonReportReportContentSix=new ComparisonReportReportContentSix()
  
  }
 
@@ -258,6 +260,7 @@ export class ComparisonReportDto {
 
 export class ComparisonReportReportTableOfContent {}
 export class ComparisonReportReportContentOne  {
+    portfolioId:number=0;
  portfolio_details:object[]=[];  
  intervation_details:object[]=[];
 
@@ -299,3 +302,15 @@ export class ComparisonReportReportContentFour {;
  alignment_heat_map:{sdg_names:string[],data:object[]}= {sdg_names:[],data:[]}
  alignment_table:ComparisonDto;
 }
+
+export class ComparisonReportReportContentFive {
+    scores:{ processScore: number;
+        outcomeScore :number;}[]=[]
+   
+ }
+ export class ComparisonReportReportContentSix {
+    link:string=''
+   
+ }
+
+ 
