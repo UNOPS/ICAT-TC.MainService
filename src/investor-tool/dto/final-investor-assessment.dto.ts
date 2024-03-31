@@ -18,6 +18,8 @@ export class FinalInvestorAssessmentDto {
 export class ToolsMultiselectDto{
     sectors: InvestorSector[]
     geographicalAreas: GeographicalAreasCovered[]
+    assessmentId?: number
+    isCompleted?: boolean
 }
 
 export class SdgPriorityDto {
