@@ -35,6 +35,7 @@ import { CalculationResults } from './entities/calculationResults.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { ConfigModule } from '@nestjs/config';
+import { StorageService } from 'src/storage/storage.service';
 
 
 @Module({
@@ -45,7 +46,8 @@ import { ConfigModule } from '@nestjs/config';
     TokenDetails,
     UsersService,
     EmailNotificationService,
-    MasterDataService
+    MasterDataService,
+    StorageService
   ],
   imports: [
     ConfigModule.forRoot({

@@ -122,7 +122,7 @@ export class DocumentController implements CrudController<Documents> {
         storageFile = await this.storageService.get(doc.relativePath);
       } catch (e) {
         if (e.message.toString().includes("No such object")) {
-          throw new NotFoundException("image not found");
+          throw new NotFoundException("Document not found");
         } else {
           throw new ServiceUnavailableException("internal error");
         }
