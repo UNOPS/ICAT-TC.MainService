@@ -271,12 +271,6 @@ export class MethodologyAssessmentController {
   @Post('uploadtest')
 @UseInterceptors(
   FileInterceptor('file',
-  //  {
-  //   storage: multer.diskStorage({
-  //     destination: fileLocation,
-  //     filename: editFileName,
-  //   }),
-  // }
 ),
 )
 async uploadFile2(
