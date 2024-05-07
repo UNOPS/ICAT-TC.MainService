@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Request, Query, UseInterceptors, UploadedFile, Req, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { MethodologyAssessmentService } from './methodology-assessment.service';
 import { UpdateMethodologyAssessmentDto } from './dto/update-methodology-assessment.dto';
 import { CrudRequest } from '@nestjsx/crud';
@@ -9,7 +9,7 @@ import { AssessmentCharacteristics } from './entities/assessmentcharacteristics.
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateValueEnterData } from './dto/updateValueEnterData.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { editFileName, fileLocation } from './entities/file-upload.utils';
+import { editFileName, editFileNameForStorage, fileLocation, fileLocationForStorage } from './entities/file-upload.utils';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Results } from './entities/results.entity';
@@ -24,6 +24,7 @@ import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 import { OutcomeCategory } from './dto/outcome-category.dto';
 import { GetAssessmentDetailsDto } from './dto/get-assessment-detail.dto';
 import { MasterDataService } from 'src/shared/entities/master-data.service';
+import { StorageService } from 'src/storage/storage.service';
 
 
 @ApiTags('methodology-assessment')
@@ -38,7 +39,8 @@ export class MethodologyAssessmentController {
   constructor(private readonly methodologyAssessmentService: MethodologyAssessmentService,
     private readonly tokenDetails: TokenDetails,
     private readonly userService : UsersService,
-    private masterDataService: MasterDataService
+    private masterDataService: MasterDataService,
+    private storageService: StorageService
   ) {
   }
 
@@ -268,18 +270,38 @@ export class MethodologyAssessmentController {
 
   @Post('uploadtest')
 @UseInterceptors(
-  FileInterceptor('file', {
-    storage: multer.diskStorage({
-      destination: fileLocation,
-      filename: editFileName,
-    }),
-  }),
+  FileInterceptor('file',
+  //  {
+  //   storage: multer.diskStorage({
+  //     destination: fileLocation,
+  //     filename: editFileName,
+  //   }),
+  // }
+),
 )
 async uploadFile2(
   @UploadedFile() file,
   @Req() req: CrudRequest,
   @Request() request,
 ) {
+
+
+  const fileName=editFileNameForStorage(file);
+        const location=fileLocationForStorage()
+        try {
+            await this.storageService.save(
+              location + fileName,
+              file.mimetype,
+              file.buffer,
+              [{ mediaId: fileName }]
+            );
+          } catch (e) {
+            if (e.message.toString().includes("No such object")) {
+              throw new NotFoundException("file not found");
+            } else {
+              throw new ServiceUnavailableException("internal error");
+            }
+          }
   this.filename = file.filename;
   return { location: `${this.filename}` };
 }
