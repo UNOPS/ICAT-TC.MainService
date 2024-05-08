@@ -110,12 +110,12 @@ export class ReportController {
         .join('');
       const uniqname = req.reportName + randomName + '.pdf'
       req.reportName = req.reportName + '.pdf'
-
+      let report:Buffer;
       if (req.tool == this.masterDataService.getToolName('CARBON_MARKET')) {
         const reprtDto: ReportCarbonMarketDto = await this.reportService.genarateReportCarbonMarketDto(
           req,
         );
-        const report = await this.reportGenarateService.reportGenarate(
+         report = await this.reportGenarateService.reportGenarate(
           uniqname,
           await this.reportHtmlGenarateService.reportCarbonMarketHtmlGenarate(reprtDto),
         )
@@ -124,7 +124,7 @@ export class ReportController {
         const reprtDto: ReportDto = await this.reportService.genarateReportDto(
           req,
         );
-        const report = await this.reportGenarateService.reportGenarate(
+         report = await this.reportGenarateService.reportGenarate(
           uniqname,
           await this.reportHtmlGenarateService.reportHtmlGenarate(reprtDto),
         )
@@ -134,12 +134,12 @@ export class ReportController {
       
        
       try {
-      const fileContent =await fsPromises.readFile(filePath);
+     
      
         await this.storageService.save(
           'reports/' + uniqname,
           'application/pdf',
-          fileContent,
+          report,
           [{ mediaId: uniqname }]
         );
       } catch (e) {
@@ -190,7 +190,7 @@ export class ReportController {
       req,
     );
  
-   const reportpdf = await this.reportGenarateService.comparisonReportGenarate(
+   const reportpdf:Buffer= await this.reportGenarateService.comparisonReportGenarate(
     uniqname,
       await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
     )
@@ -200,12 +200,12 @@ export class ReportController {
        
     try {
    
-    const fileContent =await fsPromises.readFile(filePath);
+  
  
       await this.storageService.save(
         'reports/' + uniqname,
         'application/pdf',
-        fileContent,
+        reportpdf,
         [{ mediaId: uniqname }]
       );
      
