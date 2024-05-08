@@ -195,7 +195,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
         this.saveTcValue(assessment.id, res);
       }
-      if (expectedGHGMitigation) {
+      if (expectedGHGMitigation || expectedGHGMitigation === null || expectedGHGMitigation === 0) {
         let cm_detail = await this.assessmentCMDetailService.getAssessmentCMDetailByAssessmentId(assessment.id)
         if (cm_detail) {
           cm_detail.expected_ghg_mitigation = expectedGHGMitigation;
