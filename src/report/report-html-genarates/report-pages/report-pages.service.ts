@@ -42,7 +42,7 @@ export class ReportPagesService {
     { label: 'Unlikely', value: 1 },
     { label: 'Very Unlikely', value: 0 },
   ];
-  fileServerURL = process.env.MAIN_SERVER_URL+'/document/downloadDocumentsFromFileName/uploads/';
+  fileServerURL = process.env.MAIN_URL+'/document/downloadDocumentsFromFileName/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -4151,7 +4151,7 @@ PORTFOLIO TOOL
               <th scope="col">Tool Applied	</th>
               <th scope="col">Status</th>
               
-              <th scope="col">Expected GHG reductions over intervention lifetime (Mt CO<sub>2</sub>-eq)</th>
+              <th scope="col">Expected GHG reductions over intervention lifetime (tCO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>
@@ -4174,7 +4174,7 @@ PORTFOLIO TOOL
                 '</td><td>' +
                 (a.status ? a.status : '-') +
                 '</td><td>' +
-                a.mitigation +
+                (a.mitigation? a.mitigation : '-') +
                 '</td></tr>',
             )
             .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
