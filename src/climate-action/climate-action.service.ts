@@ -10,7 +10,7 @@ import {
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/project-approval-status.entity';
 import { PolicyBarriers } from './entity/policy-barriers.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { PolicySector } from './entity/policy-sectors.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entity/user.entity';
@@ -474,6 +474,23 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     project.status = -20;
     return this.repo.save(project)
 
+  }
+
+  
+  async deletePolicySector(id: number) {
+    await this.PolicySectorsRepo.delete({ intervention: { id: id } });
+  }
+
+  async addPolicySector(obj:any){
+
+    for(let sec of obj.sector){
+      let ps = new PolicySector();
+      let policy= new ClimateAction();
+      policy.id =obj.id;
+      ps.sector =sec;
+      ps.intervention= policy;
+      this.PolicySectorsRepo.save(ps)
+    }
   }
 
 
