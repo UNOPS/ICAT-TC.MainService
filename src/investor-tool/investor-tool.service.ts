@@ -2316,7 +2316,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
   async getOutcomeData(assesId:number): Promise<any[]>{
-    let len =(await this.getProcessData(assesId)).length
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
@@ -2330,11 +2329,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       });
       
     for (let category of categories.meth1Outcomes) {
-
       let categoryData=new ProcessData()
       let assess :InvestorAssessment[]=[]
       for (let x of assessment) {
-        
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
@@ -2346,8 +2343,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryData.data=assess;
       categoryDataTemp = categoryData;
       finalData.push(categoryData);
+      
     }
-
     if(!finalData[2].categoryID){
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Scale of the Outcome";
@@ -2355,7 +2352,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryDataNew.categoryCode = "SCALE_SD";
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
-
+      categoryDataNew.data.map(i=> i.category.code = 'SCALE_SD')
       finalData[2] = categoryDataNew;
     }
 
@@ -2366,7 +2363,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryDataNew.categoryCode = "SUSTAINED_SD"
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
-
+      categoryDataNew.data.map(i=> i.category.code = 'SUSTAINED_SD')
       finalData[3] = categoryDataNew;
     }
   let n=0;
@@ -2375,7 +2372,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      n++;
       }
     )
-    
+   
     return finalData;
 
   }
