@@ -36,6 +36,7 @@ import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { CMAssessmentQuestionService } from 'src/carbon-market/service/cm-assessment-question.service';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class AssessmentService extends TypeOrmCrudService<Assessment> {
@@ -282,6 +283,12 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         Sector,
         'sector',
         `sector.id = policySector.sector_id`,
+      )
+      .leftJoinAndMapOne(
+        'asse.user',
+        User,
+        'user',
+        `user.id = asse.user_id`,
       )
       .where('asse.id in (:...newarray)', { newarray });
 
