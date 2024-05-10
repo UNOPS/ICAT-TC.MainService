@@ -18,7 +18,7 @@ import { editFileName, fileLocation } from './entity/file-upload.utils';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
-import { AllBarriersSelected, AllPolicySectors } from './dto/selected-barriers.dto';
+import { AllBarriersSelected, AllPolicySectors, addPolicySector } from './dto/selected-barriers.dto';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 const fs = require('fs');
 var multer = require('multer');
@@ -351,5 +351,18 @@ export class ProjectController implements CrudController<ClimateAction> {
     this.service.delete(id);
   }
 
+  @Post('delete-p-sector')
+  async deletePolicySector(
+    @Query('id') id: number,
+  ): Promise<any> {
+    this.service.deletePolicySector(id);
+  }
+
+    @Post('add-p-sector')
+  async addPolicySector(
+    @Body()  obj: addPolicySector,
+  ): Promise<any> {
+    this.service.addPolicySector(obj);
+  }
 }
 

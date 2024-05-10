@@ -2,6 +2,7 @@ import { Characteristics } from "src/methodology-assessment/entities/characteris
 import { ClimateAction } from "../entity/climate-action.entity";
 import { PolicySector } from "../entity/policy-sectors.entity";
 import { Assessment } from "src/assessment/entities/assessment.entity";
+import { Sector } from "src/master-data/sector/entity/sector.entity";
 
 export class BarrierSelected {
    
@@ -22,4 +23,9 @@ export class AllPolicySectors {
 
     allSectors: PolicySector[];
 
+}
+
+export class addPolicySector {
+    sector:Sector[];
+    id:number;
 }

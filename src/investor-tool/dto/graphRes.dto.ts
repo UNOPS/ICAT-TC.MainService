@@ -12,3 +12,8 @@ export class GraphResdDto {
     six: number = 0;
     seven: number = 0;
 }
+
+export class value{
+    name:string=""
+    value:number=0
+}
