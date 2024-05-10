@@ -297,7 +297,7 @@ export class ReportController {
         storageFile = await this.storageService.get(report.savedLocation);
       } catch (e) {
         if (e.message.toString().includes("No such object")) {
-          throw new NotFoundException("image not found");
+          throw new NotFoundException("Document not found");
         } else {
           throw new ServiceUnavailableException("internal error");
         }
