@@ -281,7 +281,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let investorTool = new InvestorTool();
     let isInvestment:boolean = false;
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
-    if(tool=='Investment'){
+    if(tool=='Investment Tool'){
   
       investorTool = await this.investorToolService.getResultByAssessment(assessmentId)
       isInvestment = true;

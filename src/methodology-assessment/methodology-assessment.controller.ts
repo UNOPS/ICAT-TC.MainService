@@ -223,8 +223,11 @@ export class MethodologyAssessmentController {
     @Param('pageSize') pageSize: number,
     @Query('filterText') filterText: string,
     @Query('sectorList') sectorList: string,
-    @Query('assessmentType') assessmentType: string|undefined) {
-    return await this.methodologyAssessmentService.getResultPageData(skip, pageSize, filterText, sectorList, assessmentType);
+    @Query('assessmentType') assessmentType: string|undefined,
+    @Query('sortField') sortField: string | undefined,
+    @Query('sortOrder') sortOrder: string | undefined,
+  ){
+    return await this.methodologyAssessmentService.getResultPageData(skip, pageSize, filterText, sectorList, assessmentType, sortField, sortOrder);
   }
 
   @UseGuards(JwtAuthGuard)
