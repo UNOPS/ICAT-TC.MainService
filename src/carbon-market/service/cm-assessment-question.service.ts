@@ -545,17 +545,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         obj.adaptation = ans?.assessment_question?.adaptationCoBenifit;
         if (ans?.assessment_question?.selectedSdg) sdgs.push(ans?.assessment_question?.selectedSdg);
 
-        if (obj?.category?.code == 'SCALE_GHG') {
+        if (obj?.category?.code == 'SCALE_GHG' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.scale_GHGs.push(obj);
-        } else if (obj?.category?.code == 'SUSTAINED_GHG') {
+        } else if (obj?.category?.code == 'SUSTAINED_GHG' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.sustained_GHGs.push(obj);
-        } else if (obj?.category?.code == 'SCALE_SD') {
+        } else if (obj?.category?.code == 'SCALE_SD' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.scale_SDs.push(obj);
-        } else if (obj?.category?.code == 'SUSTAINED_SD') {
+        } else if (obj?.category?.code == 'SUSTAINED_SD' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.sustained_SDs.push(obj);
-        } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION') {
+        } else if (obj?.category?.code === 'SUSTAINED_ADAPTATION' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.sustained_adaptation.push(obj);
-        } else if (obj?.category?.code === 'SCALE_ADAPTATION') {
+        } else if (obj?.category?.code === 'SCALE_ADAPTATION' && obj.justification !== undefined && obj.justification !== null) {
           outcomeData.scale_adaptation.push(obj);
         }
       }
@@ -620,6 +620,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
 
       result_final = this.group(result_final, 'section');
+
+      outcomeData.scale_GHGs.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
+      outcomeData.scale_SDs.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
+      outcomeData.scale_adaptation.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
+      outcomeData.sustained_GHGs.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
+      outcomeData.sustained_SDs.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
+      outcomeData.sustained_adaptation.sort((a,b) => a.characteristic.localeCompare(b.characteristic))
 
       return {
         questions:result,
@@ -721,8 +728,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           } else {
             if (+o.score && +o.weight) score = score + Math.round(+o.score * +o.weight / 100)
           }
-          questions.push(o);
-          raw_questions.push(o);
+          if (o.justification !== undefined && o.justification !== null) {
+            questions.push(o);
+            raw_questions.push(o);
+          }
         }
         _obj.questions = questions;
         _obj.raw_questions = raw_questions;
