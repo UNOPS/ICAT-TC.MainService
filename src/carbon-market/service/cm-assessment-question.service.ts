@@ -527,7 +527,17 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         .getMany()
       let criteria = []
       let sdgs = []
-      for await (let ans of answers) {
+
+      let added_chs: number[] = []
+      let uniqueAnswers = []
+      for (let answ of answers) {
+        if (!added_chs.includes(answ.assessment_question?.characteristic?.id) && answ.assessment_question.comment !== null && answ.assessment_question.comment !== undefined) {
+          uniqueAnswers.push(answ);
+          added_chs.push(answ.assessment_question?.characteristic?.id)
+        }
+      }
+
+      for await (let ans of uniqueAnswers) {
         let obj = new OutcomeResult();
         obj.characteristic = ans.assessment_question?.characteristic?.name;
         obj.ch_code = ans.assessment_question?.characteristic?.code;
