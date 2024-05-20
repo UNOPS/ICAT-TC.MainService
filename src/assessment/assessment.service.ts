@@ -230,10 +230,39 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = `${filter} AND (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
     }
+    let data3 = this.repo
+    .createQueryBuilder('asse')
+    .leftJoinAndMapOne(
+      'asse.climateAction',
+      ClimateAction,
+      'proj',
+      `proj.id = asse.climateAction_id and not proj.status =-20 `,
+    )
+    .where(filter, {
+      filterText: `%${filterText}%`,
+    })
+    .orderBy('asse.id', 'ASC')
+    .getMany();
 
-    
+  let data = this.repo
+    .createQueryBuilder('asse')
+    .leftJoinAndMapOne(
+      'asse.climateAction',
+      ClimateAction,
+      'proj',
+      `proj.id = asse.climateAction_id  and not proj.status =-20 `,
+    )
+    .where(filter, {
+      filterText: `%${filterText}%`,
+    })
+    .orderBy('asse.id', 'ASC');
+  let result = await paginate(data, options);
+  let newarray = new Array();
+  for (let asse of result.items) {
+    newarray.push(asse.id)
+  }
 
-    let data1 = this.repo
+  let data1 = this.repo
       .createQueryBuilder('asse')
       .leftJoinAndMapOne(
         'asse.climateAction',
@@ -259,14 +288,22 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         'user',
         `user.id = asse.user_id`,
       )
-      .where(filter, {
-        filterText: `%${filterText}%`,
-      })
-      let result = await paginate(data1, options);
-      if (result) {
-        return result;
-      }
+      .where('asse.id in (:...newarray)', { newarray });
+
+    let item = new Array()
+    let re = new Array()
+    let total: number;
+
+    if (data1) {
+      total = (await data3).length;
+      item = await data1.getMany();
+      re.push(total);
+      re.push(item);
+      return re;
+    }
     
+
+   
   }
 
   async getAssessmentForApproveData(

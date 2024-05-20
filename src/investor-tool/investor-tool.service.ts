@@ -2308,9 +2308,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     switch (value) {
       case -1:
-        return 'Unlikely (0-10%)';
+        return 'Very unlikely (0-10%)';
       case 0:
-        return 'Less likely (10-30%)';
+        return 'Unlikely (10-30%)';
       case 1:
         return 'Possible (30-60%)';
       case 2:
