@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { TokenDetails, TokenReqestType } from "./token_details";
 import { HttpService } from "@nestjs/axios";
@@ -42,8 +42,10 @@ export class AuditDetailService {
 
     log(body: any) {
         try {
-            this.httpService.post(this.auditlogURL, body).subscribe(rr => { },  )
+            this.httpService.post(this.auditlogURL, body).subscribe(rr => { }, error => {console.error(error); throw new InternalServerErrorException(error)}  )
         } catch (err) {
+            console.error(err)
+            throw new InternalServerErrorException(err)
         }
     }
 }

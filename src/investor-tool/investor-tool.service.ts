@@ -33,7 +33,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { SdgPriority } from './entities/sdg-priority.entity';
 import { ProcessData, ProcessData2,} from './dto/processData.dto';
 import { TotalInvestment } from './entities/total-investment.entity';
-import { GraphResdDto } from './dto/graphRes.dto';
+import { GraphResdDto, value } from './dto/graphRes.dto';
 import { PortfolioAssessment } from 'src/portfolio/entities/portfolioAssessment.entity';
 
 const schema = {
@@ -1931,29 +1931,100 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     
     let result1 =await data.getMany();
     let heatMapScore =  await result1.map(item => {return {processScore: item.process_score, outcomeScore: item.outcome_score}});
-    let d =new Array();
+    let value =new Array();
     let colour =new Array();
     let result =new Array();
-    colour=['#ec6665', '#ed816c','#f19f70','#f19f70','#f9d57f','#f98570','#fdbf7b','#fedc82','#a9d27f','#86c97d','#63be7b']
-   
-    let r= await  this.heatMapCAl(heatMapScore);
-        d.push(r.mineThree*100/r.total);
-        d.push(r.mineTwo*100/r.total);
-        d.push(r.mineOne*100/r.total);
-        d.push(r.zero*100/r.total);
-        d.push(r.one*100/r.total);
-        d.push(r.two*100/r.total);
-        d.push(r.three*100/r.total);
-        d.push(r.four*100/r.total);
-        d.push(r.five*100/r.total);
-        d.push(r.six*100/r.total);
-        d.push(r.seven*100/r.total);
+    
+    let r= await  this.heatMapCAl2(heatMapScore);
+    let sum = 0;
+    r.forEach((el) => sum += el.value);
 
-        result.push(d);
+    for(let a of r){
+      colour.push(a.name);
+      value.push(a.value *100/sum)
+    }
+
+        result.push(value);
         result.push(colour);
         return result;
   }
-
+  async heatMapCAl2(heatMapScore:any){
+    let data = new Array();
+    let datamineOne = new value();
+    let datamineTwo = new value();
+    let datamineThree = new value();
+    let data0 = new value();
+    let data1 = new value();
+    let data2 = new value();
+    let data3 = new value();
+    let data4 = new value();
+    let data5 = new value();
+    let data6 = new value();
+    let data7 = new value();
+    for await(let item of heatMapScore){
+      if ( item.processScore != null )  {
+        let value =  item.processScore  +  item.outcomeScore ;
+        switch (value) {
+          case -3:
+            datamineThree.value +=1;
+            datamineThree.name ='#ec6665';
+            break;
+          case -2:
+            datamineTwo.value +=1;
+            datamineTwo.name ='#ed816c';
+            break;
+          case -1:
+            datamineOne.value +=1;
+            datamineOne.name ='#f19f70';
+            break;
+          case 0:
+            data0.value +=1;
+            data0.name ='#f19f70';
+            break;
+          case 1:
+            data1.value +=1;
+            data1.name ='#f9d57f';
+            break;
+          case 2:
+            data2.value +=1;
+            data2.name ='#f98570';
+            break;
+          case 3:
+            data3.value +=1;
+            data3.name ='#fdbf7b';
+            break;
+          case 4:
+            data4.value +=1;
+            data4.name ='#fedc82';
+            break;
+          case 5:
+            data5.value +=1;
+            data5.name ='#a9d27f';
+            break;
+          case 6:
+            data6.value +=1;
+            data6.name ='#86c97d';
+            break;
+          case 7:
+            data7.value +=1;
+            data7.name ='#63be7b';
+            break;
+        }
+      } 
+    }
+    data.push(datamineThree);
+    data.push(datamineTwo);
+    data.push(datamineOne);
+    data.push(data0);
+    data.push(data1);
+    data.push(data2);
+    data.push(data3);
+    data.push(data4);
+    data.push(data5);
+    data.push(data6);
+    data.push(data7);
+    return data.sort((a, b) => a.value - b.value);
+  }
   async heatMapCAl(heatMapScore:any){
     let data = new GraphResdDto();
     for await(let item of heatMapScore){
@@ -2237,9 +2308,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     switch (value) {
       case -1:
-        return 'Unlikely (0-10%)';
+        return 'Very unlikely (0-10%)';
       case 0:
-        return 'Less likely (10-30%)';
+        return 'Unlikely (10-30%)';
       case 1:
         return 'Possible (30-60%)';
       case 2:
@@ -2316,7 +2387,6 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
 
 
   async getOutcomeData(assesId:number): Promise<any[]>{
-    let len =(await this.getProcessData(assesId)).length
     let finalData:ProcessData[]=[]
     let assessment = await this.findAllAssessData(assesId);
     let categories = await this.findAllCategories();
@@ -2330,11 +2400,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       });
       
     for (let category of categories.meth1Outcomes) {
-
       let categoryData=new ProcessData()
       let assess :InvestorAssessment[]=[]
       for (let x of assessment) {
-        
         if (category.name === x.category.name) {
           categoryData.CategoryName = category.name;
           categoryData.categoryID = category.id;
@@ -2346,8 +2414,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryData.data=assess;
       categoryDataTemp = categoryData;
       finalData.push(categoryData);
+      
     }
-
     if(!finalData[2].categoryID){
       let categoryDataNew=new ProcessData();
       categoryDataNew.CategoryName = "SDG Scale of the Outcome";
@@ -2355,7 +2423,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryDataNew.categoryCode = "SCALE_SD";
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
-
+      categoryDataNew.data.map(i=> i.category.code = 'SCALE_SD')
       finalData[2] = categoryDataNew;
     }
 
@@ -2366,7 +2434,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       categoryDataNew.categoryCode = "SUSTAINED_SD"
       categoryDataNew.type = 'outcome';
       categoryDataNew.data = categoryDataTemp.data;
-
+      categoryDataNew.data.map(i=> i.category.code = 'SUSTAINED_SD')
       finalData[3] = categoryDataNew;
     }
   let n=0;
@@ -2375,7 +2443,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
      n++;
       }
     )
-    
+   
     return finalData;
 
   }

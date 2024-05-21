@@ -520,7 +520,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
     return result;
   }
 
-  async getResultPageData(skip, pageSize, filterText, sectorList, assessmentType): Promise<any[]> {
+  async getResultPageData(skip, pageSize, filterText, sectorList, assessmentType, sortField, sortOrder): Promise<any[]> {
     let filter: string = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = '(climateAction.policyName LIKE :filterText OR assessment.assessment_approach LIKE :filterText OR assessment.assessmentType LIKE :filterText OR assessment.tool LIKE :filterText OR climateAction.intervention_id LIKE :filterText)'
@@ -569,8 +569,8 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       } else {
         if (user?.country?.id) data.where('country.id = :countryId', {countryId: user.country.id})
       }
-      data.orderBy('assessment.id', 'DESC')
-      .skip(skip)
+      
+      data.skip(skip)
       .take(pageSize)
 
       if (filterText != null && filterText != undefined && filterText != '') {
@@ -584,6 +584,17 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
 
       if (assessmentType !== '') {
         data.andWhere('assessment.assessmentType = :type', {type: assessmentType})
+      }
+      if (sortField === 'intervention') {
+        data.orderBy('climateAction.policyName', sortOrder)
+      } else if (sortField === 'assessment_type') {
+        data.orderBy('assessment.assessmentType', sortOrder)
+      } else if (sortField === 'tool') {
+        data.orderBy('assessment.tool', sortOrder)
+      } else if (sortField === 'created_date') {
+        data.orderBy('assessment.createdOn', sortOrder)
+      } else {
+        data.orderBy('assessment.id', 'DESC')
       }
 
       try {
