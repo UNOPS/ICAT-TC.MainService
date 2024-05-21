@@ -107,11 +107,8 @@ ${coverPage.reportDate}
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.4	Outcome categories assessment  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
-    ${
-      tool == 'Investment'
-        ? '<div class="table-of-content-sub-header-item"><div >2.5	Transformational impact matrix  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>'
-        : ''
-    }
+    <div class="table-of-content-header-item"><div >3.	Transformational impact matrix  .................................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>       
+    
     </div>
 
   
@@ -251,7 +248,7 @@ ${coverPage.reportDate}
         </table>
       </div>
         <div class="report-table-sm ">
-        <p>Barriers are obstacles that hindered the transformation of a system or lead to undesired effects of the interventions.</p>
+        <p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
@@ -299,7 +296,7 @@ ${coverPage.reportDate}
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
 
   <div class="report-table-sm  ">
-  <p>It describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
+  <p>This information describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
   <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
@@ -365,9 +362,9 @@ ${coverPage.reportDate}
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Category</th>
-      <th scope="col">Outcome Characteristic</th>
+      <th scope="col">Outcome characteristic</th>
       <th scope="col">Description - specific to a policy or action </th>
-      <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
+      <th scope="col">Relevance</th>
     </tr>
   </thead>
   <tbody class="test-tble">
@@ -423,9 +420,9 @@ ${coverPage.reportDate}
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
-       <th scope="col">Process Characteristic</th>
+       <th scope="col">Process characteristic</th>
        <th scope="col">Description - specific to a policy or action </th>
-       <th scope="col">Relevant/ Possibly relevant/ Not relevant</th>
+       <th scope="col">Relevance</th>
      </tr>
    </thead>
    <tbody class="test-tble">
@@ -477,25 +474,31 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_5" class="page text-center" >
   ${header}
   <div class="content">
-  <div  class="main_header text-start">2.	IMPACT ASSESSMENT</div>
+  <div  class="main_header text-start">2.	Impact assessment</div>
   <div  class="main_header_sub text-start">2.1	Process characteristics assessment   </div> 
 
 
 
 <div class="report-table-sm  ">
 <p>
-  Process characteristics refer to the main drivers of system change based on the existing literature: technology, agents, incentives, and norms. Each of them contains three characteristics. The table below indicates whether each characteristic is relevant or not relevant for the assessment, based on the barriers identified in previously (is the characteristic affected by any of the barriers?) and whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any justification which supports the score and refers to documents which may back this justification.
+Process characteristics refer to the main drivers of system change based on the existing 
+literature: technology, agents, incentives, and norms. Each of these drivers contain three characteristics.
+ The table below indicates whether each characteristic is relevant or not relevant for the assessment, based
+  on the barriers identified previously (i.e. is the characteristic affected by any of the barriers?) and
+   whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is
+    relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any 
+justification which supports the score and refers to documents which may back this justification.
 </p>
 <table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
       <th scope="col">Category</th>
-      <th scope="col">Process Characteristic</th>
-      <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
-      <th scope="col">Guiding Question </th>
+      <th scope="col">Process characteristic</th>
+      <th scope="col">Relevance </th>
+      <th scope="col">Guiding question </th>
       <th scope="col">Likelihood score  </th>
       <th scope="col">Rationale justifying the score  </th>
-      <th scope="col">Supporting Documents Supplied </th>
+      <th scope="col">Supporting documents</th>
     </tr>
   </thead>
   <tbody class="test-tble">
@@ -558,12 +561,12 @@ ${coverPage.reportDate}
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
-       <th scope="col">Process Characteristic</th>
-       <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
-       <th scope="col">Guiding Question </th>
+       <th scope="col">Process characteristic</th>
+       <th scope="col">Relevance </th>
+       <th scope="col">Guiding question </th>
        <th scope="col">Likelihood score  </th>
        <th scope="col">Rationale justifying the score  </th>
-       <th scope="col">Supporting Documents Supplied </th>
+       <th scope="col">Supporting documents </th>
      </tr>
    </thead>
    <tbody class="test-tble">
@@ -618,7 +621,7 @@ ${coverPage.reportDate}
     const page_2 = `  <div id="page_5" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header_sub text-start">2.2	Outcomes characteristics assessment  </div> 
+   <div  class="main_header_sub text-start">2.2	Outcome characteristics assessment</div> 
     
 
  
@@ -631,7 +634,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
-       <th scope="col">Outcome Characteristic</th>
+       <th scope="col">Outcome characteristic</th>
        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
        <th scope="col">Score  </th>
        <th scope="col">Rationale justifying the score </th>
@@ -675,7 +678,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    <thead class="table-primary  border-dark">
      <tr>
        <th scope="col">Category</th>
-       <th scope="col">Outcome Characteristic</th>
+       <th scope="col">Outcome characteristic</th>
        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
        <th scope="col">Score  </th>
        <th scope="col">Rationale justifying the score </th>
@@ -734,7 +737,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Category</th>
-        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Outcome characteristic</th>
         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score </th>
@@ -778,7 +781,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     <thead class="table-primary  border-dark">
       <tr>
         <th scope="col">Category</th>
-        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Outcome characteristic</th>
         <th scope="col">Is the characteristic within the assessment boundaries?  </th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score </th>
@@ -839,9 +842,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tr>
       <th scope="col">Category</th>
       <th scope="col">Sustainable Development Goal</th>
-      <th scope="col">Could the intervention have an impact on this particular SDG?</th>
-      <th scope="col">Outcome Characteristic</th>
-      <th scope="col">Is the characteristic within the assessment boundaries?</th>
+     
+      <th scope="col">Outcome characteristic</th>
+      <th scope="col">Within the assessment boundaries?</th>
       <th scope="col">Score  </th>
       <th scope="col">Rationale justifying the score</th>
       </tr>
@@ -866,7 +869,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   return `<tr>
       <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
       <td rowspan="${a.rows}" >${a.name}</td>
-      <td rowspan="${a.rows}" >${a.impact}</td>
+    
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
       <td>${b.score ? b.score : '-'}</td>
@@ -889,7 +892,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                 if (!index) {
                   return `<tr>
 <td rowspan="${a.rows}" >${a.name}</td>
-<td rowspan="${a.rows}" >${a.impact}</td>
+
 <td>${b.name ? b.name : '-'}</td>
 <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
 <td>${b.score ? b.score : '-'}</td>
@@ -941,9 +944,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <tr>
         <th scope="col">Category</th>
         <th scope="col">Sustainable Development Goal</th>
-        <th scope="col">Could the intervention have an impact on this particular SDG?</th>
-        <th scope="col">Outcome Characteristic</th>
-        <th scope="col">Is the characteristic within the assessment boundaries?</th>
+        
+        <th scope="col">Outcome characteristic</th>
+        <th scope="col">Within the assessment boundaries?</th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score</th>
         </tr>
@@ -968,7 +971,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                     return `<tr>
         <td rowspan="${sustained_sd.rows}" >${sustained_sd.name}</td>
         <td rowspan="${a.rows}" >${a.name}</td>
-        <td rowspan="${a.rows}" >${a.impact}</td>
+        
         <td>${b.name ? b.name : '-'}</td>
         <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
         <td>${b.score ? b.score : '-'}</td>
@@ -991,7 +994,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                   if (!index) {
                     return `<tr>
   <td rowspan="${a.rows}" >${a.name}</td>
-  <td rowspan="${a.rows}" >${a.impact}</td>
+ 
   <td>${b.name ? b.name : '-'}</td>
   <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
   <td>${b.score ? b.score : '-'}</td>
@@ -1034,8 +1037,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     const page_6 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
-     <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
-   
+     <div  class="main_header_sub text-start">2.3	 Aggregate process categories assessment   </div> 
+     <blockquote class=" paragraph blockquote text-start ">
+     <p > The following table aggregates the assessments across all process 
+     characteristics and provides a likelihood score (i.e. “how likely is the 
+      intervention to facilitate transformational change”) for each of the four 
+      categories. Based on a weighted average of these category assessments, a final process score is assigned - on a scale from very 
+     unlikely (0) to very likely (4) to enable transformational change.   </p>
+    </blockquote> 
    
    <div class="report-table-sm  ">
   
@@ -1043,7 +1052,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggregated Score</th>
+         <th scope="col">Aggregated score</th>
       
          
        </tr>
@@ -1075,7 +1084,15 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </table>
    </div>
   
-   <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
+   <div  class="main_header_sub text-start">2.4	Aggregate outcome categories assessment </div> 
+   <blockquote class=" paragraph blockquote text-start ">
+   <p >  The following table aggregates the assessments for all outcome 
+   categories across all relevant levels and time scales. Impacts on GHG emission levels,
+    the relevant Sustainable Development Goals and climate adaptation receive separate scores for 
+    their estimated magnitude and persistence. Based on a weighted average, a final outcome score is 
+    assigned - on a seven-step scale from major negative (-3) 
+   to major positive (3) contributions towards transformation.   </p>
+  </blockquote> 
 
    <div class="report-table-sm  ">
   
@@ -1083,7 +1100,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Aggregated Score</th>
+         <th scope="col">Aggregated score</th>
       
          
        </tr>
@@ -1097,13 +1114,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                ? a.category == 'GHG Scale of the Outcome'
                  ? 'Scale of outcome - GHGs'
                  : a.category == 'SDG Scale of the Outcome'
-                 ? 'Scale of outcome - Sustainable Development '
+                 ? 'Scale of outcome - Sustainable development '
                  : a.category ==
                    'GHG Time frame over which the outcome is sustained'
                  ? 'Outcome sustained over time - GHGs '
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
-                 ? 'Outcome sustained over time - Sustainable Development '
+                 ? 'Outcome sustained over time - Sustainable dDevelopment '
                  : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - adaptation ':
                  a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - adaptation ':'-'
                : '-'
@@ -1137,100 +1154,21 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       </div>`;
 
-    const page_6_old = `  <div id="page_5" class="page text-center" >
-     ${header}
-     <div class="content">
-     <div  class="main_header_sub text-start">2.3	 Process categories assessment   </div> 
-   
-   
-   <div class="report-table-sm  ">
-  
-   <table class="table  test-table-one">
-     <thead class="table-primary  border-dark">
-       <tr>
-         <th scope="col">Category</th>
-         <th scope="col">Aggregated Score</th>
-      
-         
-       </tr>
-     </thead>
-     <tbody class="test-tble">
-     ${process_categories_assessment&&process_categories_assessment.length > 0? process_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
-           <td>${a.category ? a.category : '-'}</td>
-           <td>${
-             a.category_score.value != null &&
-             a.category_score.value != undefined
-               ? a.category_score.value
-               : '-'
-           }</td>
-             
-              </tr>`;
-       })
-       .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
-        <tr>
-          <td class="bold-table-row">Process score</td>
-          <td class="bold-table-row">${
-            contentTwo.processScore !== null ? contentTwo.processScore : '-'
-          }</td>
-        </tr>
-       
-   
-     </tbody>
-   </table>
-   </div>
-  
-   <div  class="main_header_sub text-start">2.4	Outcome categories assessment </div> 
-
-   <div class="report-table-sm ">
-  
-   <table class="table  test-table-one">
-     <thead class="table-primary  border-dark">
-       <tr>
-         <th scope="col">Category</th>
-         <th scope="col">Aggregated Score</th>
-      
-         
-       </tr>
-     </thead>
-     <tbody class="test-tble">
-     ${outcomes_categories_assessment&&outcomes_categories_assessment.length>0?outcomes_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
-           <td>${a.category ? a.category : '-'}</td>
-           <td>${
-             a.category_score.value != null &&
-             a.category_score.value != undefined
-               ? a.category_score.value
-               : '-'
-           }</td>
-             
-              </tr>`;
-       })
-       .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
-         <tr>
-          <td class="bold-table-row">Outcomes score </td>
-          <td class="bold-table-row">${
-            contentTwo.outcomeScore !== null ? contentTwo.outcomeScore : '-'
-          }</td>
-        </tr>
     
-   
-     </tbody>
-   </table>
-   </div>
-    
-   
-     </div>
-     
-     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
-     
-      </div>`;
     const page_6_1 = `  <div id="page_6_1" class="page text-center" >
       ${header}
       <div class="content same-page">
-      <div  class="main_header_sub text-start">2.5	Transformational impact matrix </div> 
+      <div  class="main_header text-start">3	Transformational impact matrix   </div>
+     
+
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >  For an intervention to be transformational, it should both have a significant and
+       lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
+       Based on the scores for these two dimensions, the intervention is placed within the matrix – the green area suggesting that it 
+       will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and 
+       if the positive impact is small, it should be 
+      accompanied by a strong focus on changing processes to achieve transformation.   </p>
+     </blockquote> 
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
@@ -1335,7 +1273,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
        </div>`;
 
-    if (contentTwo.tool == 'Investment') {
+    
       return (
         page_1 +
         page_1_1 +
@@ -1346,18 +1284,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         page_6 +
         page_6_1
       );
-    } else {
-      return (
-        page_1 +
-        page_1_1 +
-        page_2 +
-        page_3 +
-        page_4 +
-        page_5 +
-        page_6 +
-        page_6_1
-      );
-    }
+    
   }
   contentThree(
     header: string,
@@ -1369,7 +1296,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX   </div>
+      <div  class="main_header text-start">4  Transformational impact matrix   </div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -1732,7 +1659,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content ">
-    <div  class="main_header text-start">2 ENVIRONMENTAL AND SOCIAL INTEGRITY ASSESSMENT </div>
+    <div  class="main_header text-start">2 Environmental and social integrity assessment </div>
     <blockquote class=" paragraph blockquote text-start ">
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
@@ -1893,7 +1820,7 @@ ${coverPage.reportDate}
                 <tr>
                 <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
-                <th scope="col">Evidence Provided?  </th>
+                <th scope="col">Evidence provided?  </th>
                 
                   
                 </tr>
@@ -1940,7 +1867,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
-    <div  class="main_header text-start">3  IMPACT ASSESSMENT  </div>
+    <div  class="main_header text-start">3 Impact assessment  </div>
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
@@ -1949,12 +1876,12 @@ ${coverPage.reportDate}
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Process Characteristic</th>
-         <th scope="col">Relevant/ Possibly relevant/ Not relevant </th>
-         <th scope="col">Guiding Question </th>
+         <th scope="col">Process characteristic</th>
+         <th scope="col">Relevance </th>
+         <th scope="col">Guiding question </th>
          <th scope="col">Likelihood score  </th>
          <th scope="col">Rationale justifying the score  </th>
-         <th scope="col">Supporting Documents Supplied </th>
+         <th scope="col">Supporting documents </th>
        </tr>
      </thead>
      <tbody class="test-tble">
@@ -2125,7 +2052,7 @@ ${coverPage.reportDate}
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Outcome Characteristic</th>
+         <th scope="col">Outcome characteristic</th>
         
          <th scope="col">Starting situation   </th>
          <th scope="col">Expected impact   </th>
@@ -2176,7 +2103,7 @@ ${coverPage.reportDate}
      <thead class="table-primary  border-dark">
        <tr>
          <th scope="col">Category</th>
-         <th scope="col">Outcome Characteristic</th>
+         <th scope="col">Outcome characteristic</th>
          <th scope="col">Score </th>
          <th scope="col"> Score explanation  </th>
          <th scope="col">Rationale justifying the score </th>
@@ -2237,7 +2164,7 @@ ${coverPage.reportDate}
       <thead class="table-primary  border-dark">
         <tr>
           <th scope="col">Category</th>
-          <th scope="col">Outcome Characteristic</th>
+          <th scope="col">Outcome characteristic</th>
           
           <th scope="col">Starting situation   </th>
           <th scope="col">Expected impact   </th>
@@ -2290,7 +2217,7 @@ ${coverPage.reportDate}
       <thead class="table-primary  border-dark">
         <tr>
           <th scope="col">Category</th>
-          <th scope="col">Outcome Characteristic</th>
+          <th scope="col">Outcome characteristic</th>
           <th scope="col">Score</th>
           <th scope="col"> Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
@@ -2353,7 +2280,7 @@ ${coverPage.reportDate}
         <tr>
         <th scope="col">Category</th>
         <th scope="col">SDG</th>
-        <th scope="col">Outcome Characteristic</th>
+        <th scope="col">Outcome characteristic</th>
         <th scope="col">Starting situation   </th>
         <th scope="col">Expected impact   </th>
         <th scope="col">Score  </th>
@@ -2429,9 +2356,9 @@ ${coverPage.reportDate}
           <tr>
           <th scope="col">Category</th>
           <th scope="col">SDG</th>
-          <th scope="col">Outcome Characteristic</th>
-          <th scope="col">Likelihood Score   </th>
-          <th scope="col">Likelihood Score explanation  </th>
+          <th scope="col">Outcome characteristic</th>
+          <th scope="col">Likelihood score   </th>
+          <th scope="col">Likelihood score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
           <th scope="col">Justification uploaded </th>
           </tr>
@@ -2497,7 +2424,7 @@ ${coverPage.reportDate}
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggregated Score</th>
+           <th scope="col">Aggregated score</th>
         
            
          </tr>
@@ -2536,7 +2463,7 @@ ${coverPage.reportDate}
        <thead class="table-primary  border-dark">
          <tr>
            <th scope="col">Category</th>
-           <th scope="col">Aggregated Score</th>
+           <th scope="col">Aggregated score</th>
         
            
          </tr>
@@ -2636,7 +2563,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  TRANSFORMATIONAL IMPACT MATRIX</div>
+      <div  class="main_header text-start">4  Transformational impact matrix</div>
     
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
@@ -2693,7 +2620,7 @@ ${coverPage.reportDate}
       ${header}
       <div class="content">
      
-      <div  class="main_header text-start">5  ANNEX: SUPPORTING JUSTIFICATION    </div>
+      <div  class="main_header text-start">5  Annex: supporting justification    </div>
     
       <div class="report-table-sm  ">
    <table class="table  test-table-one">
@@ -2798,14 +2725,14 @@ PORTFOLIO TOOL
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
   <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the portfolio ................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
   
     <div class="table-of-content-header-item"><div >2. Impacts comparison .................................................................................................................................................................</div><div ><bdi>................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.1	Processes impacts comparison  ................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.2	Outcomes impacts comparison ....................................................................................................................................................</div><div ><bdi>........................</bdi></div> </div>
     <div class="table-of-content-header-item"><div >3. Aggregation .................................................................................................................................................................</div><div ><bdi>.....................</bdi></div> </div>
     <div class="table-of-content-header-item"><div >4. SDG Alignment .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-
+    <div class="table-of-content-header-item"><div >5. Transformational impact matrix .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >6. Sector coverage .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
    
     </div>
 
@@ -2831,9 +2758,11 @@ PORTFOLIO TOOL
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1.	PORTFOLIO OF INTERVENTIONS INFORMATION </div>
+   <div  class="main_header text-start">1.	Portfolio of interventions information </div>
+   <blockquote class=" paragraph blockquote text-start ">
+   <p >This section gives an overview of the portfolio as a whole and the intervention assessments that it is composed of.   </p>
+  </blockquote> 
  
- <div  class="main_header_sub text-start">1.1	Describe the portfolio </div> 
         <div class="report-table-sm  ">
        
         <table class="table  test-table-one">
@@ -2903,22 +2832,34 @@ PORTFOLIO TOOL
     const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">2.	IMPACTS COMPARISON </div>
- 
- <div  class="main_header_sub text-start">2.1	Processes impacts comparison</div> 
+   <div  class="main_header text-start">2. Comparison of Impacts </div>
+   <blockquote class=" paragraph blockquote text-start ">
+   <p >
+   This section shows how the assessed interventions within this portfolio compare
+    regarding their transformational impact along the two dimensions 
+   Outcome (extent and sustained nature of transformation) and Process (likelihood of transformation).
+    </p>
+  </blockquote> 
+ <div  class="main_header_sub text-start">2.1	Comparison of Process Impacts</div> 
+
+ <blockquote class=" paragraph blockquote text-start ">
+ <p >
+ The likelihood of the intervention’s contribution to transformational change is assessed across several characteristics within four main categories (Technology, Agents, Incentives, Norms). The scores range from very unlikely (0) to very likely (4) to enable transformational change.
+  </p>
+</blockquote> 
         <div class="report-table-sm same-page-table">
        
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
-          <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-          <th colspan="4" scope="col">TECHNOLOGY</th>
+          <th colspan="4" scope="col">Intervention information</th>
+          <th colspan="4" scope="col">Technology</th>
           
         </tr>
             <tr>
-              <th scope="col">Id	</th>
+              <th scope="col">ID	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Tool Applied	</th>
+              <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               <th scope="col">Research and development</th>
               <th scope="col">Adoption</th>
@@ -2969,14 +2910,14 @@ PORTFOLIO TOOL
       <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
-        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-        <th colspan="4" scope="col">AGENTS</th>
+        <th colspan="4" scope="col">Intervention information</th>
+        <th colspan="4" scope="col">Agents</th>
         
       </tr>
           <tr>
-            <th scope="col">Id</th>
+            <th scope="col">ID</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Tool Applied	</th>
+            <th scope="col">Tool applied	</th>
             <th scope="col">Status</th>
             <th scope="col">Entrepreneurs</th>
             <th scope="col">Coalition of advocates</th>
@@ -3038,14 +2979,14 @@ PORTFOLIO TOOL
          <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
            <tr>
-           <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-           <th colspan="4" scope="col">INCENTIVES</th>
+           <th colspan="4" scope="col">Intervention information</th>
+           <th colspan="4" scope="col">Incentives</th>
            
          </tr>
              <tr>
-               <th scope="col">Id	</th>
+               <th scope="col">ID	</th>
                <th scope="col">Intervention name	</th>
-               <th scope="col">Tool Applied	</th>
+               <th scope="col">Tool applied	</th>
                <th scope="col">Status</th>
                <th scope="col">Economic and non-economic</th>
                <th scope="col">Disincentives</th>
@@ -3099,14 +3040,14 @@ PORTFOLIO TOOL
        <table class="table  test-table-one">
          <thead class="table-primary  border-dark">
          <tr>
-         <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-         <th colspan="4" scope="col">CATEGORY - NORMS AND BEHAVIORAL CHANGE</th>
+         <th colspan="4" scope="col">Intervention information</th>
+         <th colspan="4" scope="col">Category - norms and behavioral change</th>
          
        </tr>
            <tr>
-             <th scope="col">Id	</th>
+             <th scope="col">ID	</th>
              <th scope="col">Intervention name	</th>
-             <th scope="col">Tool Applied	</th>
+             <th scope="col">Tool applied	</th>
              <th scope="col">Status</th>
              <th scope="col">Awareness</th>
              <th scope="col">Behavior</th>
@@ -3169,15 +3110,15 @@ PORTFOLIO TOOL
           <table class="table  test-table-one">
             <thead class="table-primary  border-dark">
             <tr>
-            <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-            <th colspan="4" scope="col">AGGREGATED CATERGORY SCORE</th>
-            <th style=" font-size:12px"  scope="col">PROCESSES SCORE</th>
+            <th colspan="4" scope="col">Intervention information</th>
+            <th colspan="4" scope="col">Aggregated catergory score</th>
+            <th style=" font-size:12px"  scope="col">Processes score</th>
             
           </tr>
               <tr>
-                <th scope="col">Id	</th>
+                <th scope="col">ID	</th>
                 <th scope="col">Intervention name	</th>
-                <th scope="col">Tool Applied	</th>
+                <th scope="col">Tool applied	</th>
                 <th scope="col">Status</th>
                 <th style=" font-size:12px" scope="col">Technology score</th>
                 <th style=" font-size:12px" scope="col">Agents </th>
@@ -3264,25 +3205,30 @@ PORTFOLIO TOOL
    <div class="content">
    
  
- <div  class="main_header_sub text-start">2.2	Outcomes impacts comparison</div> 
+ <div  class="main_header_sub text-start">2.2	Comparison of Outcome Impacts</div> 
+ <blockquote class=" paragraph blockquote text-start ">
+ <p >
+ The interventions’ impacts on GHG emission levels, the relevant Sustainable Development Goals and climate adaptation receive separate scores for their estimated magnitude and persistence. Based on a weighted average, a final outcome score is assigned - on a seven-step scale from major negative (-3) to major positive (3) contributions towards transformation. 
+ </p>
+</blockquote> 
         <div class="report-table-sm same-page-table">
        
         <table class="table  test-table-one ">
           <thead class="table-primary  border-dark ">
           <tr>
-          <th colspan="4" scope="col">SCALE COMPARISON	</th>
-          <th colspan="4" scope="col">OUTCOMES</th>
+          <th colspan="4" scope="col">Scale comparison	</th>
+          <th colspan="4" scope="col">Outcomes</th>
           
         </tr>
         <tr>
-        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="4" scope="col">Intervention information</th>
         <th colspan="4" scope="col">GHG</th>
         
       </tr>
             <tr>
-              <th scope="col">Id	</th>
+              <th scope="col">ID	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Tool Applied	</th>
+              <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               <th scope="col">International</th>
               <th scope="col">National/ sectoral	</th>
@@ -3333,19 +3279,19 @@ PORTFOLIO TOOL
         <thead class="table-primary  border-dark">
 
         <tr>
-        <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
-        <th colspan="4" scope="col">OUTCOMES</th>
+        <th colspan="4" scope="col">Sustained in time comparison	</th>
+        <th colspan="4" scope="col">Outcomes</th>
         
       </tr>
         <tr>
-        <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="4" scope="col">Intervention information</th>
         <th colspan="4" scope="col">GHG</th>
         
       </tr>
           <tr>
-            <th scope="col">Id</th>
+            <th scope="col">ID</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Tool Applied	</th>
+            <th scope="col">Tool applied	</th>
             <th scope="col">Status</th>
             <th scope="col">Long term</th>
             <th scope="col">Medium term</th>
@@ -3410,19 +3356,19 @@ PORTFOLIO TOOL
       <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
-        <th colspan="4" scope="col">SCALE COMPARISON	</th>
-        <th colspan="4" scope="col">OUTCOMES</th>
+        <th colspan="4" scope="col">Scale comparison	</th>
+        <th colspan="4" scope="col">Outcomes</th>
         
       </tr>
       <tr>
-      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-      <th colspan="4" scope="col">ADAPTATION</th>
+      <th colspan="4" scope="col">Intervention information</th>
+      <th colspan="4" scope="col">Adaptation</th>
       
     </tr>
           <tr>
-            <th scope="col">Id	</th>
+            <th scope="col">ID	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Tool Applied	</th>
+            <th scope="col">Tool applied	</th>
             <th scope="col">Status</th>
             <th scope="col">international</th>
             <th scope="col">national/ sectoral	</th>
@@ -3472,19 +3418,19 @@ PORTFOLIO TOOL
       <thead class="table-primary  border-dark">
 
       <tr>
-      <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
-      <th colspan="4" scope="col">OUTCOMES</th>
+      <th colspan="4" scope="col">Sustained in time comparison	</th>
+      <th colspan="4" scope="col">Outcomes</th>
       
     </tr>
       <tr>
-      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-      <th colspan="4" scope="col">ADAPTATION</th>
+      <th colspan="4" scope="col">Intervention information</th>
+      <th colspan="4" scope="col">Adaptation</th>
       
     </tr>
         <tr>
-          <th scope="col">Id</th>
+          <th scope="col">ID</th>
           <th scope="col">Intervention name	</th>
-          <th scope="col">Tool Applied	</th>
+          <th scope="col">Tool applied	</th>
           <th scope="col">Status</th>
           <th scope="col">Long term</th>
           <th scope="col">Medium term</th>
@@ -3554,19 +3500,19 @@ PORTFOLIO TOOL
       <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
-        <th colspan="4" scope="col">SCALE COMPARISON	</th>
-        <th colspan="4" scope="col">OUTCOMES</th>
+        <th colspan="4" scope="col">Scale comparison	</th>
+        <th colspan="4" scope="col">Outcomes</th>
         
       </tr>
       <tr>
-      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-      <th colspan="4" scope="col">SDG- ${a.sdg_name} </th>
+      <th colspan="4" scope="col">Intervention information</th>
+      <th colspan="4" scope="col">${a.sdg_name} </th>
       
     </tr>
           <tr>
-            <th scope="col">Id	</th>
+            <th scope="col">ID	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Tool Applied	</th>
+            <th scope="col">Tool applied	</th>
             <th scope="col">Status</th>
             <th scope="col">International</th>
             <th scope="col">National/ sectoral	</th>
@@ -3618,19 +3564,19 @@ PORTFOLIO TOOL
       <thead class="table-primary  border-dark">
   
       <tr>
-      <th colspan="4" scope="col">SUSTAINED IN TIME COMPARISON	</th>
-      <th colspan="4" scope="col">OUTCOMES</th>
+      <th colspan="4" scope="col">Sustained in time comparison	</th>
+      <th colspan="4" scope="col">Outcomes</th>
       
     </tr>
       <tr>
-      <th colspan="4" scope="col">INTERVENTION INFORMATION</th>
-      <th colspan="4" scope="col">SDG- ${a.sdg_name} </th>
+      <th colspan="4" scope="col">Intervention information</th>
+      <th colspan="4" scope="col">${a.sdg_name} </th>
       
     </tr>
         <tr>
-          <th scope="col">Id</th>
+          <th scope="col">ID</th>
           <th scope="col">Intervention name	</th>
-          <th scope="col">Tool Applied	</th>
+          <th scope="col">Tool applied	</th>
           <th scope="col">Status</th>
           <th scope="col">Long term</th>
           <th scope="col">Medium term</th>
@@ -3695,19 +3641,19 @@ PORTFOLIO TOOL
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
      <tr>
-     <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
-     <th colspan="3" scope="col">GHG OUTCOMES</th>
+     <th colspan="4" scope="col">Scale & sustained in time comparison	</th>
+     <th colspan="3" scope="col">GHG outcomes</th>
      
    </tr>
    <tr>
-   <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+   <th colspan="7" scope="col">Intervention information</th>
    
    
  </tr>
        <tr>
-         <th scope="col">Id	</th>
+         <th scope="col">ID	</th>
          <th scope="col">Intervention name	</th>
-         <th scope="col">Tool Applied	</th>
+         <th scope="col">Tool applied	</th>
          <th scope="col">Status</th>
          <th scope="col">Scale category score</th>
          <th scope="col">Sustained category score		</th>
@@ -3754,19 +3700,19 @@ PORTFOLIO TOOL
  <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
    <tr>
-   <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
-   <th colspan="3" scope="col">ADAPTATION OUTCOMES</th>
+   <th colspan="4" scope="col">Scale & sustained in time comparison	</th>
+   <th colspan="3" scope="col">Adaptation outcomes</th>
    
  </tr>
  <tr>
- <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+ <th colspan="7" scope="col">Intervention information</th>
  
  
 </tr>
      <tr>
-       <th scope="col">Id	</th>
+       <th scope="col">ID	</th>
        <th scope="col">Intervention name	</th>
-       <th scope="col">Tool Applied	</th>
+       <th scope="col">Tool applied	</th>
        <th scope="col">Status</th>
        <th scope="col">Scale category score</th>
        <th scope="col">Sustained category score		</th>
@@ -3830,19 +3776,19 @@ PORTFOLIO TOOL
   <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
     <tr>
-    <th colspan="4" scope="col">SCALE & SUSTAINED IN TIME COMPARISON	</th>
+    <th colspan="4" scope="col">Scale & sustained in time comparison	</th>
     <th colspan="3" scope="col">${b.sdg_name}</th>
     
   </tr>
   <tr>
-  <th colspan="7" scope="col">INTERVENTION INFORMATION</th>
+  <th colspan="7" scope="col">Intervention information</th>
   
   
   </tr>
       <tr>
-        <th scope="col">Id	</th>
+        <th scope="col">ID	</th>
         <th scope="col">Intervention name	</th>
-        <th scope="col">Tool Applied	</th>
+        <th scope="col">Tool applied	</th>
         <th scope="col">Status</th>
         <th scope="col">Scale category score</th>
         <th scope="col">Sustained category score		</th>
@@ -3905,19 +3851,19 @@ PORTFOLIO TOOL
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
-          <th colspan="4" scope="col">SCALE COMPARISON	</th>
-          <th colspan="4" scope="col"> OUTCOMES</th>
+          <th colspan="4" scope="col">Scale comparison	</th>
+          <th colspan="4" scope="col"> Outcomes</th>
           
         </tr>
         <tr>
-        <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="8" scope="col">Intervention information</th>
         
         
       </tr>
             <tr>
-              <th scope="col">Id	</th>
+              <th scope="col">ID	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Tool Applied	</th>
+              <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               <th scope="col">GHG</th>
               <th scope="col">SDG </th>
@@ -3965,19 +3911,19 @@ PORTFOLIO TOOL
       <table class="table  test-table-one">
         <thead class="table-primary  border-dark">
         <tr>
-        <th colspan="4" scope="col">SUSTAINED  COMPARISON	</th>
-        <th colspan="4" scope="col">OUTCOMES</th>
+        <th colspan="4" scope="col">Sustained  comparison	</th>
+        <th colspan="4" scope="col">Outcomes</th>
         
       </tr>
       <tr>
-      <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+      <th colspan="8" scope="col">Intervention information</th>
       
       
     </tr>
           <tr>
-            <th scope="col">Id	</th>
+            <th scope="col">ID	</th>
             <th scope="col">Intervention name	</th>
-            <th scope="col">Tool Applied	</th>
+            <th scope="col">Tool applied	</th>
             <th scope="col">Status</th>
             <th scope="col">GHG</th>
             <th scope="col">SDG </th>
@@ -4038,19 +3984,19 @@ PORTFOLIO TOOL
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
-          <th colspan="4" scope="col">OUTCOME LEVEL COMPARISON	</th>
-          <th colspan="4" scope="col"> OUTCOMES</th>
+          <th colspan="4" scope="col">Outcome level comparison</th>
+          <th colspan="4" scope="col"> Outcomes</th>
           
         </tr>
         <tr>
-        <th colspan="8" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="8" scope="col">Intervention information</th>
         
         
       </tr>
             <tr>
               <th scope="col">Id	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Tool Applied	</th>
+              <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               <th scope="col">Scale </th>
               <th scope="col">Sustained  </th>
@@ -4128,30 +4074,34 @@ PORTFOLIO TOOL
     const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">3.	AGGREGATION </div>
+   <div  class="main_header text-start">3 Aggregation </div>
  
- 
+   <blockquote class=" paragraph blockquote text-start ">
+   <p >
+   The following table shows and aggregates the annual GHG emission reductions of each intervention contained in the portfolio. 
+      </p>
+  </blockquote> 
         <div class="report-table-sm same-page-table">
        
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
           <tr>
-          <th colspan="5" scope="col">AGGREGATION</th>
+          <th colspan="5" scope="col">Aggregation</th>
           
           
         </tr>
         <tr>
-        <th colspan="5" scope="col">INTERVENTION INFORMATION</th>
+        <th colspan="5" scope="col">Intervention information</th>
         
         
       </tr>
             <tr>
-              <th scope="col">Id	</th>
+              <th scope="col">ID	</th>
               <th scope="col">Intervention name	</th>
-              <th scope="col">Tool Applied	</th>
+              <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               
-              <th scope="col">Expected GHG reductions over intervention lifetime (tCO<sub>2</sub>-eq)</th>
+              <th scope="col">Expected GHG reductions over intervention lifetime (Mt CO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>
@@ -4208,9 +4158,11 @@ PORTFOLIO TOOL
     const page_1 = `  <div  class="page text-center" >
    ${header}
     <div class="content" style=" height:1000px">
-      <div  class="main_header text-start">4.	SDG ALIGNMENT </div>
+      <div  class="main_header text-start">4.	SDG alignment </div>
       <blockquote class=" paragraph blockquote text-start ">
-      <p >The following table shows the result obtained by the intervention for each SDG and how this compares to the priority given to each SDG in the country of implementation.   </p>
+      <p >
+      The following tables show the score obtained by the interventions in the portfolio for each assessed Sustainable Development Goal (SDG) and how this compares to the priority given to these SDGs in the country of implementation. The first table shows the outcome scores (from major negative (-3) to major positive (3) contributions towards transformation), whereas the second one indicates the alignment between priority and outcome. Positive impacts are green, negative ones red – the shade is darker if the significance of the impact matches the country priorities.   
+      </p>
      </blockquote> 
       <div class="report-all-table-sm-rotate same-page">
    
@@ -4219,10 +4171,10 @@ PORTFOLIO TOOL
           <table class="table  test-table-one table-fixed-width">
             <thead class="table-primary  border-dark">
               <tr>
-                <th colspan="4" scope="col">ALIGNMENT</th>
+                <th colspan="4" scope="col">Alignment</th>
                 <th colspan="${
                   alignment_table.sdg_count
-                }">SUSTAINABLE DEVELOPMENT</th>
+                }">Sustainable development</th>
               </tr>
               <tr>
                 ${alignment_table.col_set_1
@@ -4260,10 +4212,10 @@ PORTFOLIO TOOL
         <table class="table  test-table-one table-fixed-width">
           <thead class="table-primary  border-dark">
             <tr>
-              <th colspan="4" scope="col">ALIGNMENT</th>
+              <th colspan="4" scope="col">Alignment</th>
               <th colspan="${
                 alignment_table.sdg_count
-              }">SUSTAINABLE DEVELOPMENT</th>
+              }">Sustainable development</th>
             </tr>
             <tr>
               ${alignment_table.col_set_1
@@ -4308,8 +4260,17 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">5  TRANSFORMATIONAL IMPACT MATRIX   </div>
-    
+      <div  class="main_header text-start">5  Transformational impact matrix   </div>
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >
+      For interventions to be transformational, they should both have a significant and lasting positive impact (Outcome) and address various components to facilitate systems change (Process). Based on the scores for these two dimensions, interventions are placed within the matrix below – the green area suggesting that they will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and if the positive impact is small, it should be accompanied by a strong focus on changing processes to achieve transformation.  
+      </p>  
+      <p >
+      All fully assessed interventions contained in this portfolio are shown as a dot in the grid below. If two or more interventions received the same combination of outcome and process score, this is represented by a slightly larger dot. 
+
+      </p>
+     </blockquote> 
+
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
@@ -4364,8 +4325,12 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">6 SECTOR COVERAGE  </div>
-    
+      <div  class="main_header text-start">6 Sector coverage  </div>
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >
+      The pie chart below shows how the relative distribution of sectors that are covered by the interventions contained in this portfolio. 
+      </p>
+     </blockquote> 
       <div  class="image-pie "><figure class="figure ">
       <img src="${content.link}"  alt="sector coverage represent chart.">
       
