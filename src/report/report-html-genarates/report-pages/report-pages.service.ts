@@ -55,7 +55,7 @@ export class ReportPagesService {
 
     
           ${
-            coverPage.tool.trim() == 'Investment Tool'
+            coverPage.tool.trim() == "Investment tool"
               ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT TOOL  </div></div>   '
               : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
           }
