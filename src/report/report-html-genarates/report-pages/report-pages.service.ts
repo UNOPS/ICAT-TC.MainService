@@ -3579,7 +3579,7 @@ PORTFOLIO TOOL
           <th scope="col">Tool applied	</th>
           <th scope="col">Status</th>
           <th scope="col">Long term</th>
-          <th scope="col">medium term</th>
+          <th scope="col">Medium term</th>
           <th scope="col">Short term</th>
           <th scope="col">Category score</th>
           
