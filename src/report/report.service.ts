@@ -473,7 +473,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 1: {
 
-        return 'Possible relevant';
+        return 'Possibly relevant';
 
       }
 
@@ -591,6 +591,48 @@ export class ReportService extends TypeOrmCrudService<Report> {
     }
 
   }
+  getScoreLikelihood(number: number): string {
+
+    switch (number) {
+
+      case 4: {
+
+        return 'Very likely (90-100%)';
+
+      }
+
+      case 3: {
+
+        return 'Likely (60-90%)';
+
+      }
+
+      case 2: {
+
+        return 'Possible (30-60%)';
+
+      }
+
+      case 1: {
+
+        return 'Unlikely (10-30%)';
+
+      }
+
+      case 0: {
+
+        return 'Very unlikely (0-10%)';
+
+      }
+    
+
+    default: {
+      return '-';
+    }
+
+    }
+
+  }
 
   async genarateReportDtoContentTwo(
 
@@ -649,7 +691,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
             ? invesass.characteristics.main_question
             : '-',
 
-            likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ? invesass.likelihood : '-',
+            likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined ?this.getScoreLikelihood(invesass.likelihood): '-',
             
 
             rationalejustifying: invesass.likelihood_justification
