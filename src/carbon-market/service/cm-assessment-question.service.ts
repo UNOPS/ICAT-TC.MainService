@@ -732,7 +732,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.label = q.assessmentAnswers[0]?.answer?.label;
           o.document = q.uploadedDocumentPath;
           if (+_obj.relevance === 0) {
-            score = score + 0
+            score = null
+            // score = score + 0
           } else if (+_obj.relevance === 1 ) {
             if (+o.score && +o.weight) score = score + Math.round(+o.score * +o.weight / 2 / 100) 
           } else {
@@ -745,13 +746,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
         _obj.questions = questions;
         _obj.raw_questions = raw_questions;
-        _obj.ch_score = Math.round(score);
+        _obj.ch_score = score === null ? null : Math.round(score);
         return _obj;
       })
+      let _cat_score = null
       let cat_score = ch_data.reduce((accumulator, object) => {
-        return accumulator + (object.ch_score * object.weight / 100);
+        if (object.ch_score === null) {
+          _cat_score = null
+        } else {
+          _cat_score = object.ch_score
+          return accumulator + (object.ch_score * object.weight / 100);
+        }
       }, 0);
-      cat_score = Math.round(cat_score)
+      if (_cat_score === null) cat_score = null
+      cat_score = cat_score === null ? null : Math.round(cat_score)
       data.push({
         name: cat.name,
         characteristic: ch_data,
