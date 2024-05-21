@@ -396,7 +396,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
 
-        Time_periods: 'Long-term (≥15 years)',
+        Time_periods: 'Long term (≥15 years)',
 
         description: asse.vision_long ? asse.vision_long : 'N/A',
 
@@ -404,7 +404,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       {
 
-        Time_periods: 'Medium-term (≥5 years and &lt; than 15 years)',
+        Time_periods: 'Medium term (5-15 years)',
 
         description: asse.vision_medium ? asse.vision_medium : 'N/A',
 
@@ -412,7 +412,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       {
 
-        Time_periods: 'Short-term (&lt; 5 years)',
+        Time_periods: 'Short term (&lt; 5 years)',
 
         description: asse.vision_short ? asse.vision_short : 'N/A',
 
@@ -441,7 +441,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
         characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
 
-        barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
+        barrier_directly_targeted: a.is_affected ? 'Yes' : 'No',
       })
 
     })
@@ -569,13 +569,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       case 0: {
 
-        return 'Less likely (10-30%)';
+        return 'Unlikely (10-30%)';
 
       }
 
       case -1: {
 
-        return 'Unlikely (0-10%)';
+        return 'Very unlikely (0-10%)';
 
       }
       case 99: {
@@ -751,9 +751,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
             withinboundaries:
 
-            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES')
+            : 'Yes')
 
                ,
 
@@ -791,9 +791,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 withinboundaries:
 
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-                : 'YES'),
+                : 'Yes'),
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -857,9 +857,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
 
-            withinboundaries:invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            withinboundaries:invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -894,9 +894,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -961,9 +961,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
-            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
 
             score: invesass.score != null && invesass.score != undefined
@@ -999,9 +999,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
 
                 score: invesass.score != null && invesass.score != undefined
@@ -1071,9 +1071,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
-            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1108,9 +1108,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-                : 'YES'),
+                : 'Yes'),
 
 
                 score: invesass.score != null && invesass.score != undefined
@@ -1201,9 +1201,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
-            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1240,9 +1240,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-                : 'YES'),
+                : 'Yes'),
 
 
                 score: invesass.score != null && invesass.score != undefined
@@ -1333,9 +1333,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
             withinboundaries:
-            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+            invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-            : 'YES'),
+            : 'Yes'),
 
             score: invesass.score != null && invesass.score != undefined
 
@@ -1372,9 +1372,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
 
                 withinboundaries:
-                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'NO'
+                invesass.score == null || invesass.score == undefined?'N/A':(invesass.score == 99 ? 'No'
 
-                : 'YES'),
+                : 'Yes'),
 
                 score: invesass.score != null && invesass.score != undefined
 
@@ -1479,7 +1479,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     var moment = require('moment');
     const coverPage=new ReportCarbonMarketDtoCoverPage()
    
-    coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKETS TOOL';
+    coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKET TOOL';
     coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
     coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
@@ -1589,7 +1589,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
 
-        information: 'Long-term (≥15 years)',
+        information: 'Long term (≥15 years)',
 
         description: asse.vision_long ? asse.vision_long : 'N/A',
 
@@ -1597,7 +1597,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       {
 
-        information: 'Medium-term (≥5 years and &lt; than 15 years)',
+        information: 'Medium term (5-15 years)',
 
         description: asse.vision_medium ? asse.vision_medium : 'N/A',
 
@@ -1605,7 +1605,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
       {
 
-        information: 'Short-term (&lt; 5 years)',
+        information: 'Short term (&lt; 5 years)',
 
         description: asse.vision_short ? asse.vision_short : 'N/A',
 
@@ -1631,7 +1631,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
         characteristics_affected: a.barrierCategory ? a.barrierCategory.map(b => b.characteristics.name.replace(">", "&gt;").replace("<", "&lt;").replace("/", " /")).join(',') : 'N/A',
 
-        barrier_directly_targeted: a.is_affected ? 'YES' : 'NO',
+        barrier_directly_targeted: a.is_affected ? 'Yes' : 'No',
       })
 
     })
@@ -2216,7 +2216,7 @@ return contentOne;
         return 'Short term (&#60 5 years)'
       }
       if(name=='Medium term (5-15 years)'){
-        return 'Medium-term (≥5 years and ≤ than 15 years)'
+        return 'Medium term (5-15 years)'
       }
       else{
         return name
@@ -2237,7 +2237,7 @@ return contentOne;
         return 'Short term (&#60 5 years)'
       }
       if(name=='Medium term (5-15 years)'){
-        return 'Medium-term (≥5 years and ≤ than 15 years)'
+        return 'Medium term (5-15 years)'
       }
       else{
         return name
