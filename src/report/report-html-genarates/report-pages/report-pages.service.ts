@@ -30,9 +30,9 @@ export class ReportPagesService {
     { label: 'Moderate', value: 2 },
     { label: 'Minor', value: 1 },
     { label: 'None', value: 0 },
-    { label: 'Minor Negative', value: -1 },
-    { label: 'Moderate Negative', value: -2 },
-    { label: 'Major Negative', value: -3 },
+    { label: 'Minor negative', value: -1 },
+    { label: 'Moderate negative', value: -2 },
+    { label: 'Major negative', value: -3 },
   ];
 
   yData = [
@@ -40,7 +40,7 @@ export class ReportPagesService {
     { label: 'Likely', value: 3 },
     { label: 'Possible', value: 2 },
     { label: 'Unlikely', value: 1 },
-    { label: 'Very Unlikely', value: 0 },
+    { label: 'Very unlikely', value: 0 },
   ];
   fileServerURL = process.env.MAIN_URL+'/document/downloadDocumentsFromFileName/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
@@ -635,7 +635,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <tr>
        <th scope="col">Category</th>
        <th scope="col">Outcome characteristic</th>
-       <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+       <th scope="col">Within assessment boundaries?  </th>
        <th scope="col">Score  </th>
        <th scope="col">Rationale justifying the score </th>
      </tr>
@@ -679,7 +679,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      <tr>
        <th scope="col">Category</th>
        <th scope="col">Outcome characteristic</th>
-       <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+       <th scope="col">Within assessment boundaries?  </th>
        <th scope="col">Score  </th>
        <th scope="col">Rationale justifying the score </th>
      </tr>
@@ -738,7 +738,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tr>
         <th scope="col">Category</th>
         <th scope="col">Outcome characteristic</th>
-        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        <th scope="col">Within assessment boundaries?  </th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score </th>
       </tr>
@@ -782,7 +782,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <tr>
         <th scope="col">Category</th>
         <th scope="col">Outcome characteristic</th>
-        <th scope="col">Is the characteristic within the assessment boundaries?  </th>
+        <th scope="col">Within assessment boundaries?  </th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score </th>
       </tr>
@@ -844,7 +844,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <th scope="col">Sustainable Development Goal</th>
      
       <th scope="col">Outcome characteristic</th>
-      <th scope="col">Within the assessment boundaries?</th>
+      <th scope="col">Within assessment boundaries?</th>
       <th scope="col">Score  </th>
       <th scope="col">Rationale justifying the score</th>
       </tr>
@@ -946,7 +946,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Sustainable Development Goal</th>
         
         <th scope="col">Outcome characteristic</th>
-        <th scope="col">Within the assessment boundaries?</th>
+        <th scope="col">Within assessment boundaries?</th>
         <th scope="col">Score  </th>
         <th scope="col">Rationale justifying the score</th>
         </tr>
@@ -3112,7 +3112,7 @@ PORTFOLIO TOOL
             <tr>
             <th colspan="4" scope="col">Intervention information</th>
             <th colspan="4" scope="col">Aggregated catergory score</th>
-            <th style=" font-size:12px"  scope="col">Processes score</th>
+            <th style=" font-size:12px"  scope="col">Process score</th>
             
           </tr>
               <tr>
@@ -3994,7 +3994,7 @@ PORTFOLIO TOOL
         
       </tr>
             <tr>
-              <th scope="col">Id	</th>
+              <th scope="col">ID	</th>
               <th scope="col">Intervention name	</th>
               <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
@@ -4074,7 +4074,7 @@ PORTFOLIO TOOL
     const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">3 Aggregation </div>
+   <div  class="main_header text-start">3 Aggregation of GHG Impacts </div>
  
    <blockquote class=" paragraph blockquote text-start ">
    <p >
