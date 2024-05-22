@@ -24,9 +24,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
   col_set_2 = [
     { label: 'ID', code: 'id' },
-    { label: 'INTERVENTION NAME', code: 'name' },
-    { label: 'TOOL APPLIED', code: 'tool' },
-    { label: 'STATUS', code: 'status' }
+    { label: 'Intervention name', code: 'name' },
+    { label: 'Tool applied', code: 'tool' },
+    { label: 'Status', code: 'status' }
   ]
 
 
@@ -266,7 +266,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let response: ComparisonDto[] = []
     let intervention_data = []
     let int_categories = []
-    let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
+    let col_set_1 = [{ label: 'Intervention information', colspan: 4 }]
 
     for await (let pAssessment of pAssessments) {
       let _intervention = {
@@ -300,15 +300,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     likelihood_comparison.col_set_2.push(...this.col_set_2)
     let obj = {}
     for (let [idx, cat] of int_categories.entries()) {
-      likelihood_comparison.col_set_1.push({label: 'CATEGORY - ' + cat.toUpperCase(), colspan: 1})
-      likelihood_comparison.col_set_2.push({label: 'CATEGORY SCORE', code: cat})
+      likelihood_comparison.col_set_1.push({label: 'Category - ' + cat, colspan: 1})
+      likelihood_comparison.col_set_2.push({label: 'Category score', code: cat})
       let comparisonData = new ComparisonDto()
       comparisonData.col_set_1.push(...col_set_1)
       comparisonData.col_set_2.push(...this.col_set_2)
       for (let [index, int_data] of intervention_data.entries()) {
         let data = int_data.categories.find(o => o.col_set_1.label === cat)
         if(data) {
-          data.col_set_1 = {...data.col_set_1, label: 'CATEGORY - ' + data.col_set_1.label.toUpperCase(),}
+          data.col_set_1 = {...data.col_set_1, label: 'Category - ' + data.col_set_1.label,}
           if (comparisonData.col_set_1.length === 1) comparisonData.col_set_1.push(data.col_set_1)
           if (index === 0) {
             comparisonData.col_set_2.push(...data.characteristics)
@@ -320,7 +320,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       comparisonData.order = idx + 1
       response.push(comparisonData)
     }
-    likelihood_comparison.col_set_2.push({label: 'PROCESSES SCORE', code: 'category_score'})
+    likelihood_comparison.col_set_2.push({label: 'Processes score', code: 'category_score'})
     for (let int of intervention_data){
       likelihood_comparison.interventions.push({...int.intervention, ...int.category_scores})
     }
@@ -337,18 +337,18 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs: any[] = []
     let sdgs_score: any = {}
     let intervention_data = []
-    let col_set_1 = [{ label: 'INTERVENTION INFORMATION', colspan: 4 }]
+    let col_set_1 = [{ label: 'Intervention information', colspan: 4 }]
     let col_set_2_scale = [
-      { label: 'INTERNATIONAL', code: 'international' },
-      { label: 'NATIONAL/SECTORAL', code: 'national' },
-      { label: 'SUBNATIONAL/SUBSECTORAL', code: 'subnational' },
-      { label: 'CATEGORY SCORE', code: 'category_score' }
+      { label: 'International', code: 'international' },
+      { label: 'National/Sectoral', code: 'national' },
+      { label: 'Subnational/Subsectoral', code: 'subnational' },
+      { label: 'Category score', code: 'category_score' }
     ]
     let col_set_2_sustained = [
-      { label: 'LONG TERM', code: 'long_term' },
-      { label: 'MEDIUM TERM', code: 'medium_term' },
-      { label: 'SHORT TERM', code: 'short_term' },
-      { label: 'CATEGORY SCORE', code: 'category_score' }
+      { label: 'Long term', code: 'long_term' },
+      { label: 'Medium term', code: 'medium_term' },
+      { label: 'Short term', code: 'short_term' },
+      { label: 'Category score', code: 'category_score' }
     ]
 
     for (let pAssessment of pAssessments) {
@@ -389,14 +389,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_comparison = new ComparisonDto()
     let outcome_level_comparison = new ComparisonDto()
 
-    scaleGhgData.comparison_type = 'SCALE COMPARISON',
-      scaleGhgData.comparison_type_2 = 'OUTCOMES'
-    scalAdaptationData.comparison_type = 'SCALE COMPARISON'
-    scalAdaptationData.comparison_type_2 = 'OUTCOMES'
-    sustainedGhgData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
-    sustainedGhgData.comparison_type_2 = 'OUTCOMES'
-    sustainedAdaptationData.comparison_type = 'SUSTAINED IN TIME COMPARISON'
-    sustainedAdaptationData.comparison_type_2 = 'OUTCOMES'
+    scaleGhgData.comparison_type = 'Scale comparison',
+      scaleGhgData.comparison_type_2 = 'Outcomes'
+    scalAdaptationData.comparison_type = 'Scale comparison'
+    scalAdaptationData.comparison_type_2 = 'Outcomes'
+    sustainedGhgData.comparison_type = 'Sustained in time comparison'
+    sustainedGhgData.comparison_type_2 = 'Outcomes'
+    sustainedAdaptationData.comparison_type = 'Sustained in time comparison'
+    sustainedAdaptationData.comparison_type_2 = 'Outcomes'
     let order = 0
     let sus_order = 0
     let outcome_score = {}
@@ -409,13 +409,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     for (let sd of sdgs) {
       scaleSdgData[sd] = new ComparisonDto()
-      scaleSdgData[sd].comparison_type = 'SCALE COMPARISON'
-      scaleSdgData[sd].comparison_type_2 = 'OUTCOMES'
+      scaleSdgData[sd].comparison_type = 'Scale comparison'
+      scaleSdgData[sd].comparison_type_2 = 'Outcomes'
       scaleSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2_scale]
       scaleSdgData[sd].order = ++order
       sustainedSdgData[sd] = new ComparisonDto()
-      sustainedSdgData[sd].comparison_type = 'SUSTAINED IN TIME COMPARISON'
-      sustainedSdgData[sd].comparison_type_2 = 'OUTCOMES'
+      sustainedSdgData[sd].comparison_type = 'Sustained in time comparison'
+      sustainedSdgData[sd].comparison_type_2 = 'Outcomes'
       sustainedSdgData[sd].col_set_2 = [...this.col_set_2, ...col_set_2_sustained]
       sustainedSdgData[sd].order = ++order
       order++
@@ -466,15 +466,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sustainedAdaptationData.interventions.push({ ...int_data.intervention, ...int_data.data.sustained_comparisons.adaptation.data });
     }
 
-    scale_comparison.comparison_type = 'SCALE COMPARISON';
-    scale_comparison.comparison_type_2 = 'OUTCOMES';
+    scale_comparison.comparison_type = 'Scale comparison';
+    scale_comparison.comparison_type_2 = 'Outcomes';
     scale_comparison.col_set_1 = [
       ...col_set_1,
       { label: 'GHG', colspan: 1 }
     ]
     scale_comparison.col_set_2 = [
       ...this.col_set_2,
-      { label: 'CATEGORY SCORE', code: 'ghg_score' }
+      { label: 'catogory score', code: 'ghg_score' }
     ]
 
     let sc_cat_total = {};
@@ -486,14 +486,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let comparison_type_2 = 'GHG, ';
 
     let sc_sus_col_2 = [
-      { label: 'SCALE CATEGORY SCORE', code: 'scale_score' },
-      { label: 'SUSTAINED CATEGORY SCORE', code: 'sustained_score' },
-      { label: 'CATEGORY SCORE', code: 'category_score' }
+      { label: 'Scale category score', code: 'scale_score' },
+      { label: 'Sustained catogory score', code: 'sustained_score' },
+      { label: 'Catogory score', code: 'category_score' }
     ]
 
     
-    sc_sus_ghg_comparison.comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
-    sc_sus_ghg_comparison.comparison_type_2 = 'GHG OUTCOMES'
+    sc_sus_ghg_comparison.comparison_type = 'Scale & Sustained in time comparison'
+    sc_sus_ghg_comparison.comparison_type_2 = 'GHG Outcomes'
     sc_sus_ghg_comparison.col_set_1 = [
       ...col_set_1,
       { label: '', colspan: 3 }
@@ -514,15 +514,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value;
     })
 
-    sustained_comparison.comparison_type = 'SUSTAINED COMPARISON';
-    sustained_comparison.comparison_type_2 = 'OUTCOMES';
+    sustained_comparison.comparison_type = 'Sustained COMPARISON';
+    sustained_comparison.comparison_type_2 = 'Outcomes';
     sustained_comparison.col_set_1 = [
       ...col_set_1,
       { label: 'GHG', colspan: 1 }
     ]
     sustained_comparison.col_set_2 = [
       ...this.col_set_2,
-      { label: 'CATEGORY SCORE', code: 'ghg_score' }
+      { label: 'Catogory score', code: 'ghg_score' }
     ]
 
     let ss_cat_total = {};
@@ -543,15 +543,15 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
 
     for (let [index, sd] of sdgs.entries()) {
       scale_comparison.col_set_1.push({ label: scaleSdgData[sd].col_set_1[1].label, colspan: 1 });
-      scale_comparison.col_set_2.push({ label: 'CATEGORY SCORE', code: sd + '_score' });
+      scale_comparison.col_set_2.push({ label: 'Catogory score', code: sd + '_score' });
 
       sustained_comparison.col_set_1.push({ label: sustainedSdgData[sd].col_set_1[1].label, colspan: 1 });
-      sustained_comparison.col_set_2.push({ label: 'CATEGORY SCORE', code: sd + '_score' });
+      sustained_comparison.col_set_2.push({ label: 'Catogory score', code: sd + '_score' });
 
       sc_sus_sdgs[sd] = new ComparisonDto()
-      sc_sus_sdgs[sd].comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON';
+      sc_sus_sdgs[sd].comparison_type = 'Scale & Sustained in time comparison';
       let label = (scaleSdgData[sd].col_set_1[1].label).split('-');
-      sc_sus_sdgs[sd].comparison_type_2 = 'SDG OUTCOMES - ' + label[1].trim() + ' - ' + label[2].trim();
+      sc_sus_sdgs[sd].comparison_type_2 = 'SDG Outcomes - ' + label[1].trim() + ' - ' + label[2].trim();
       sc_sus_sdgs[sd].col_set_1 = [
         ...col_set_1,
         { label: '', colspan: 3 }
@@ -615,24 +615,24 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       response.push(scaleSdgData[sd], sustainedSdgData[sd], sc_sus_sdgs[sd]);
     }
 
-    scale_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'SCALE CATEGORY SCORE', colspan: 1 });
+    scale_comparison.col_set_1.push({ label: 'Adaptation', colspan: 1 }, { label: 'Scale catogory score', colspan: 1 });
 
     scale_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
-      { label: 'CATEGORY SCORE', code: 'category_score' },
+      { label: 'Catogory score', code: 'adaptation_score' },
+      { label: 'Catogory score', code: 'category_score' },
     ])
 
-    sustained_comparison.col_set_1.push({ label: 'ADAPTATION', colspan: 1 }, { label: 'SUSTAINED CATEGORY SCORE', colspan: 1 });
+    sustained_comparison.col_set_1.push({ label: 'Adaptation', colspan: 1 }, { label: 'Sustained catogory score', colspan: 1 });
     sustained_comparison.col_set_2.push(...[
-      { label: 'CATEGORY SCORE', code: 'adaptation_score' },
-      { label: 'CATEGORY SCORE', code: 'category_score' },
+      { label: 'Catogory score', code: 'adaptation_score' },
+      { label: 'Catogory score', code: 'category_score' },
     ]);
 
-    comparison_type_2 += 'ADAPTATION OUTCOMES'
+    comparison_type_2 += 'Adaptation Outcomes'
 
     
-    sc_sus_ad_comparison.comparison_type = 'SCALE & SUSTAINED IN TIME COMPARISON'
-    sc_sus_ad_comparison.comparison_type_2 = 'ADAPTATION OUTCOMES'
+    sc_sus_ad_comparison.comparison_type = 'Scale & Sustained in time comparison'
+    sc_sus_ad_comparison.comparison_type_2 = 'Adaptation Outcomes'
     sc_sus_ad_comparison.col_set_1 = [
       ...col_set_1,
       { label: '', colspan: 3 }
@@ -719,7 +719,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       return int;
     })
 
-    outcome_level_comparison.comparison_type = 'OUTCOME LEVEL COMPARISON';
+    outcome_level_comparison.comparison_type = 'Outcome level comparison';
     outcome_level_comparison.comparison_type_2 = comparison_type_2;
     outcome_level_comparison.col_set_1 = [
       ...col_set_1,
@@ -727,9 +727,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     ]
     outcome_level_comparison.col_set_2 = [
       ...this.col_set_2,
-      { label: 'SCALE CATEGORY SCORE', code: 'scale_cat_score' },
-      { label: 'SUSTAINED CATEGORY SCORE', code: 'sustained_cat_score' },
-      { label: 'OUTCOME SCORE', code: 'category_score' }
+      { label: 'Scale category score', code: 'scale_cat_score' },
+      { label: 'Sustained catogory score', code: 'sustained_cat_score' },
+      { label: 'Outcome score', code: 'category_score' }
     ]
     scaleGhgData.interventions.map(int => {
       let scale_score = scale_cat_total[int.assessment_id] !== null ? Math.floor(scale_cat_total[int.assessment_id] / scale_cat_count[int.assessment_id]) : null
@@ -821,7 +821,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     }
 
     response.col_set_1 = [
-      { label: "INTERVENTION INFORMATION", colspan: 4 }
+      { label: "Intervention information", colspan: 4 }
     ]
     response.col_set_2 = [
       ...this.col_set_2,
@@ -871,7 +871,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let characteristics = [];
       let ch_data = {};
       for await (let ch of cat.characteristicData) {
-        characteristics.push({ label: ch.characteristic.toUpperCase(), code: ch.ch_code })
+        characteristics.push({ label: ch.characteristic, code: ch.ch_code })
         ch_data[ch.ch_code] = ch.likelihood?.name
       }
       characteristics.push({ label: 'Category score', code: 'category_score' });
@@ -918,14 +918,14 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scale_SDs = {};
 
     for (let sd of scSD.characteristicData) {
-      let sd_code = (sd.name.replace(' ', '_')).toUpperCase();
+      let sd_code = (sd.name.replace(' ', '_'));
       sdg.push(sd_code);
       let international = sd.data.find(o => o.ch_code === 'MACRO_LEVEL').score;
       let national = sd.data.find(o => o.ch_code === 'MEDIUM_LEVEL').score;
       let subnational = sd.data.find(o => o.ch_code === 'MICRO_LEVEL').score;
 
       scale_SDs[sd_code] = {
-        col_set_1: { label: 'SCALE - ' + sd.name.toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'Scale - ' + sd.name, colspan: 4 },
         data: {
           international: this.mapNameAndValue(international?.name, international?.value),
           national: this.mapNameAndValue(national?.name, national?.value),
@@ -944,7 +944,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     sub = scAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score;
 
     let scale_adaptation = {
-      col_set_1: { label: 'ADAPTATION', colspan: 4 },
+      col_set_1: { label: 'Adaptation', colspan: 4 },
       data: {
         international: this.mapNameAndValue(int?.name, int?.value),
         national: this.mapNameAndValue(nat?.name, nat?.value),
@@ -974,13 +974,13 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sustained_SDs = {};
 
     for (let sd of susSD.characteristicData) {
-      let sd_code = (sd.name.replace(' ', '_')).toUpperCase();
+      let sd_code = (sd.name.replace(' ', '_'));
       let long_term = sd.data.find(o => o.ch_code === 'LONG_TERM').score;
       let medium_term = sd.data.find(o => o.ch_code === 'MEDIUM_TERM').score;
       let short_term = sd.data.find(o => o.ch_code === 'SHORT_TERM').score;
 
       sustained_SDs[sd_code] = {
-        col_set_1: { label: 'SUSTAINED - ' + sd.name.toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'Sustained - ' + sd.name, colspan: 4 },
         data: {
           long_term: this.mapNameAndValue(long_term.name, long_term.value),
           medium_term: this.mapNameAndValue(medium_term.name, medium_term.value),
@@ -999,7 +999,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     short = susAD.characteristicData.find(o => o.ch_code === 'SUBNATIONAL')?.score;
 
     let sustained_adaptation = {
-      col_set_1: { label: 'ADAPTATION', colspan: 4 },
+      col_set_1: { label: 'Adaptation', colspan: 4 },
       data: {
         long_term: this.mapNameAndValue(_long?.name, _long?.value),
         medium_term: this.mapNameAndValue(medium?.name, medium?.value),
@@ -1043,7 +1043,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs = await data.getMany();
 
     sdgs.map(sd => {
-      let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
+      let code = (sd.sdg?.name.replace(' ', '_'))
       let sdg_val = sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name]
       let val = sdg_val === null ? null : Math.floor(sdg_val / 2)
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(val), val))
@@ -1052,10 +1052,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         let priority = sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
         priority_value =  ans.value === null ? null : (4 - Math.abs(ans.value - priority.value))
-        col2.push({label: priority_name?.toUpperCase(), code: code}) 
+        col2.push({label: priority_name, code: code}) 
       }
       response[code] = {name: ans?.name, value: priority_value}
-      col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name.toUpperCase(), colspan: 1})
+      col1.push({label: 'SDG ' + sd.sdg.number + ' - ' + sd.sdg.name, colspan: 1})
       sdgsArr.push(sd.sdg.name)
     })
     return {
@@ -1103,7 +1103,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let characteristics = [];
       let ch_data = {};
       for await (let ch of cat.characteristic) {
-        characteristics.push({ label: ch.name.toUpperCase(), code: ch.code });
+        characteristics.push({ label: ch.name, code: ch.code });
         ch_data[ch.code] = this.investorToolService.mapLikelihood(ch.ch_score);
       }
       characteristics.push({ label: 'Category score', code: 'category_score' });
@@ -1150,7 +1150,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let subnational = data.scale_SDs.find(o => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd)?.outcome_score;
       let cat_score = Math.floor((+international + +national + +subnational) / 3);
       scale_SDs[sd] = {
-        col_set_1: { label: 'SCALE - ' + sd.toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'Scale - ' + sd, colspan: 4 },
         data: {
           international: this.mapNameAndValue(this.investorToolService.mapScaleScores(international), international),
           national: this.mapNameAndValue(this.investorToolService.mapScaleScores(national), national),
@@ -1167,7 +1167,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let scAD_cat_score = result.outcome_score?.scale_adaptation_score;
 
     let scale_adaptation = {
-      col_set_1: { label: 'ADAPTATION', colspan: 4 },
+      col_set_1: { label: 'Adaptation', colspan: 4 },
       data: {
         international: this.mapNameAndValue(this.investorToolService.mapScaleScores(scAD_int), scAD_int),
         national: this.mapNameAndValue(this.investorToolService.mapScaleScores(scAD_nat), scAD_nat),
@@ -1199,7 +1199,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let short_term = data.sustained_SDs.find(o => o.ch_code === 'SHORT_TERM' && o.SDG === sd)?.outcome_score;
       let cat_score = Math.floor((+long_term + +medium_term + +short_term) / 3);
       sustained_SDs[sd] = {
-        col_set_1: { label: 'SUSTAINED - ' + sd.toUpperCase(), colspan: 4 },
+        col_set_1: { label: 'Sustained - ' + sd, colspan: 4 },
         data: {
           long_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(long_term), long_term),
           medium_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(medium_term), medium_term),
@@ -1215,7 +1215,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let susAD_cat_score = result.outcome_score?.sustained_adaptation_score;
 
     let sustained_adaptation = {
-      col_set_1: { label: 'ADAPTATION', colspan: 4 },
+      col_set_1: { label: 'Adaptation', colspan: 4 },
       data: {
         long_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susAD_int), susAD_int),
         medium_term: this.mapNameAndValue(this.investorToolService.mapSustainedScores(susAD_nat), susAD_nat),
@@ -1279,7 +1279,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     let sdgs = await data.getMany()
 
     sdgs.map(sd => {
-      let code = (sd.sdg?.name.replace(' ', '_')).toUpperCase()
+      let code = (sd.sdg?.name.replace(' ', '_'))
       let val = result.outcome_score?.sdgs_score[sd.sdg.id];
       let sdg_val = val === null ? null : val;
       let ans = (this.mapNameAndValue(this.investorToolService.mapScaleScores(sdg_val), sdg_val));
@@ -1288,10 +1288,10 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         let priority = sdgPriorities.find(o => o.sdg.id === sd.sdg.id) 
         let priority_name = this.masterDataService.sdg_priorities.find(o => o.code === priority.priority)?.name
         priority_value = ans.value === null ? null : 4 - Math.abs(ans.value - priority.value)
-        col2.push({label: priority_name?.toUpperCase(), code: code}) 
+        col2.push({label: priority_name, code: code}) 
       }
       response[code] = {name: ans?.name, value: priority_value}
-      col1.push({label: 'SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name.toUpperCase(), colspan: 1})
+      col1.push({label: 'SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name, colspan: 1})
       sdgsArr.push(sd.sdg?.name)
     })
 
