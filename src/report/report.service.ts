@@ -731,7 +731,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                 likelihoodscore: invesass.likelihood!=null&&invesass.likelihood!=undefined
 
-                  ? invesass.likelihood
+                  ? this.getScoreLikelihood(invesass.likelihood)
 
                   : '-',
 
