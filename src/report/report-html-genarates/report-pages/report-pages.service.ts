@@ -2434,7 +2434,11 @@ justification which supports the score and refers to documents which may back th
      
      
      <div class="report-table-sm  ">
-    
+     <p > The following table aggregates the assessments across all process 
+     characteristics and provides a likelihood score (i.e. “how likely is the 
+      intervention to facilitate transformational change”) for each of the four 
+      categories. Based on a weighted average of these category assessments, a final process score is assigned - on a scale from very 
+     unlikely (0) to very likely (4) to enable transformational change.   </p>
      <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
@@ -2473,7 +2477,12 @@ justification which supports the score and refers to documents which may back th
      <div  class="main_header_sub text-start">3.4	Outcomes categories assessment </div> 
   
      <div class="report-table-sm  ">
-    
+     <p >  The following table aggregates the assessments for all outcome 
+     categories across all relevant levels and time scales. Impacts on GHG emission levels,
+      the relevant Sustainable Development Goals and climate adaptation receive separate scores for 
+      their estimated magnitude and persistence. Based on a weighted average, a final outcome score is 
+      assigned - on a seven-step scale from major negative (-3) 
+     to major positive (3) contributions towards transformation.   </p>
      <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
@@ -2579,7 +2588,14 @@ justification which supports the score and refers to documents which may back th
       <div class="content same-page">
      
       <div  class="main_header text-start">4  Transformational impact matrix</div>
-    
+      <blockquote class=" paragraph blockquote text-start ">
+      <p >  For an intervention to be transformational, it should both have a significant and
+       lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
+       Based on the scores for these two dimensions, the intervention is placed within the matrix - the green area suggesting that it 
+       will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and 
+       if the positive impact is small, it should be 
+      accompanied by a strong focus on changing processes to achieve transformation.   </p>
+     </blockquote> 
       <div class="report-table-sm same-page-table">
       <table id="heatmap" class="heatmap" style="text-align: center;">
          <tbody>
