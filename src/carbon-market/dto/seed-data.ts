@@ -213,7 +213,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Prevention/avoidance of negative environmental impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Q2:  Does the implementation of the carbon market intervention result in significant negative social impacts (e.g. displacement, forced evictions, violation of rights of indigenous people and local communities, job losses, income losses, damage or alteration of cultural heritage sites)?",
@@ -224,7 +224,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Prevention/avoidance of negative social impacts',
         message: "If the intervention entails significant negative impacts, it does not enable transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: 'Q1: Does the activity design encourage market penetration / replicability of the envisaged mitigation activity, e.g. by implementing a programme across multiple geographies? ',
@@ -1393,7 +1393,7 @@ export const answers = [
         score_portion: 4,
         isPassing: true,
         question: "S-3-ECONOMIC_NON_ECONOMIC-Q-2",
-        isUpdate: false
+        isUpdate: true
     },
     {
         label: "Less than half of the technical lifetime",
@@ -1612,7 +1612,7 @@ export const characteristic = [
         description: 'Adoption of new technologies can be facilitated by pilot projects, demonstrations, experimentation and publicly or privately funded trials. Through these actions, the required skills and capacities to handle new technologies can be developed, new networks of users can be built, and the potential market for a new technology can be assessed.',
         main_question: 'Does the intervention lead to early adoption of promising low-carbon and/or climate resilience building technologies?',
         weight: 60,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Scale up',
@@ -1621,7 +1621,7 @@ export const characteristic = [
         description: 'The widespread diffusion of a technology throughout society can be facilitated by replication, sectoral public-private networks, training workshops, business forums and the introduction of new business models able to deliver products and services at a larger scale.',
         main_question: 'Does the intervention support the scale up and diffusion of low-carbon and/or climate resilient innovations?',
         weight: 20,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Entrepreneurs',
@@ -1630,7 +1630,7 @@ export const characteristic = [
         description: 'Entrepreneurs are key agents of change that can invest, innovate and experiment with new technologies, applications or business models to drive change. They can be supported by creating an enabling environment and facilitating the exchange of information and ideas.',
         main_question: 'Does the intervention incentivize entrepreneurs, businesses and investors to catalyze transformational change (e.g. by formulating new solutions or developing new technologies)? ',
         weight: 33,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Coalition of advocates',
@@ -1639,7 +1639,7 @@ export const characteristic = [
         description: 'The process of transformational change can benefit from the participation of a wide range of stakeholders organized in different forms (e.g. coalitions, lobbys, social movements etc) representing diverse interests and which could defend the intervention and provide counterbalance those actors opposing it. The way the intervention is planned may determined the networks that may arise around it.',
         main_question: 'Does the intervention support coalitions and networks that seek to broaden and deepen support for low-carbon development (e.g. by promoting acceptance of new technologies or norms, ensuring uptake, etc.)?',
         weight: 33,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Beneficiaries',
@@ -1666,7 +1666,7 @@ export const characteristic = [
         description: 'Disincentives may include taxes on carbon-intensive products, use of market-based instruments such as import duties, tariff structures that discourage investments in business-as-usual technologies, reduction or phase-out of fossil fuels subsidies, or increased or new fossil fuel taxes.',
         main_question: 'Does the intervention disincentivize technologies and businesses contributing to a high carbon economy (e.g. activities focused on accelerating coal phaseout)?',
         weight: 10,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Institutional and regulatory',
@@ -1874,7 +1874,7 @@ export const categories = [
         code: 'TECHNOLOGY',
         description: 'Processes, skills and practices that drive research and development, early adoption and widespread scale-up of clean technologies.',
         weight: 30,
-        isUpdate: false
+        isUpdate: true
     },
     {
         name: 'Agents',
