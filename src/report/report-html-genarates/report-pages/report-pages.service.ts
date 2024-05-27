@@ -1530,7 +1530,7 @@ ${coverPage.reportDate}
 
      
              <div class="report-table-sm  ">
-            
+             <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
              <table class="table  test-table-one">
                <thead class="table-primary  border-dark">
                  <tr>
@@ -1567,6 +1567,7 @@ ${coverPage.reportDate}
 
    
    <div class="report-table-sm  ">
+   <p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1606,6 +1607,7 @@ ${coverPage.reportDate}
 
 
 <div class="report-table-sm  ">
+<p>This information describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
 <table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
@@ -1666,7 +1668,9 @@ ${coverPage.reportDate}
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards for environmental integrity </div>
          <div class="report-table-sm ">
-        
+        <p>
+        Central to safeguarding environmental integrity is the robust assessment of the additionality of the carbon market intervention and quantification of the activity’s mitigation outcomes. Safeguarding the activity’s additionality means verifying that the activity was triggered by the revenues from the credits’ sale. This can be demonstrated through the application of different additionality tests including a regulatory additionality test (going beyond existing laws and regulations), an investment test and/or a barrier test. For the quantification of mitigation outcomes, it is essential that crediting baselines are set credibly and conservatively and that a robust monitoring concept is in place. The following questions are therefore focusing on the intervention’s approach to additionality determination, baseline setting and monitoring.
+        </p>
          <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
              <tr>
@@ -1721,7 +1725,7 @@ ${coverPage.reportDate}
     
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention of GHG emissions lock-in   </div>
            <div class="report-table-sm ">
-          
+          <p>GHG emissions lock-in refers to the investment in technologies or practices that prevent transitioning to lower-emission technologies or practices in the short term, inhibiting a transformation to low-carbon societies.</p>
            <table class="table  test-table-one">
              <thead class="table-primary  border-dark">
                <tr>
@@ -1872,6 +1876,15 @@ ${coverPage.reportDate}
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
    <div class="report-table-sm ">
+   <p>
+Process characteristics refer to the main drivers of system change based on the existing 
+literature: technology, agents, incentives, and norms. Each of these drivers contain three characteristics.
+ The table below indicates whether each characteristic is relevant or not relevant for the assessment, based
+  on the barriers identified previously (i.e. is the characteristic affected by any of the barriers?) and
+   whether the characteristic is impacted by the intervention being assessed or not. If a characteristic is
+    relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any 
+justification which supports the score and refers to documents which may back this justification.
+</p>
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2047,7 +2060,9 @@ ${coverPage.reportDate}
    
    
    <div class="report-table-sm  ">
-
+   <p>
+   Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
+   </p>
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
