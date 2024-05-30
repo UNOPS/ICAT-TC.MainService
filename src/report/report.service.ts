@@ -115,7 +115,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink =  process.env.MAIN_SERVER_URL + '/report/cover/icatlogo.png';
     return coverPage;
 
   }
@@ -1524,7 +1524,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKET TOOL';
     coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink =  process.env.MAIN_SERVER_URL +  '/report/cover/icatlogo.png';
     return coverPage;
 
 
@@ -1911,7 +1911,7 @@ return contentFour
 
     coverPage.document_prepared_by = 'user';
 
-    coverPage.companyLogoLink = process.env.MAIN_URL +  '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink = process.env.MAIN_SERVER_URL +  '/report/cover/icatlogo.png';
       
 
     return coverPage;
