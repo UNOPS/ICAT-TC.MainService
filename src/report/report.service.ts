@@ -2112,7 +2112,7 @@ return contentFour
     async genarateComparisonReportDtoContentFive(portfolioId: number): Promise<ComparisonReportReportContentFive> {
       const contentOne = new ComparisonReportReportContentFive();
       //@ts-ignore
-      contentOne.scores=(await this.investorToolService.getDashboardAllDataFilter( {page:1,limit:1000}, '',portfolioId)).items.map(item => {return {outcomeScore: item.outcome_score, processScore: item.process_score,}});
+      contentOne.scores=(await this.investorToolService.getDashboardAllDataFilter( {page:1,limit:1000}, '',portfolioId)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}});
  
       return contentOne;
 
