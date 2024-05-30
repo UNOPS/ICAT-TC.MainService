@@ -4132,7 +4132,7 @@ PORTFOLIO TOOL
               <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               
-              <th scope="col">Expected average GHG reductions or removals (mitigation outcomes) (tCO<sub>2</sub>e)</th>
+              <th scope="col">Expected average GHG reductions or removals (mitigation outcomes) (tCO<sub>2</sub>e/year)</th>
               
             </tr>
           </thead>
