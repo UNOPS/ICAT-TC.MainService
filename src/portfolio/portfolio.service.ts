@@ -18,6 +18,7 @@ import { MasterDataService } from 'src/shared/entities/master-data.service';
 import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
+import { isNull } from '@nestjsx/util';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -785,7 +786,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
           response.interventions.push(_intervention)
           break;
       }
+      _intervention.mitigation = this.thousandSeperate(_intervention.mitigation, 4)
     }
+    total = this.thousandSeperate(total, 4)
     response.total = total;
     return response
   }
@@ -1402,5 +1405,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       }
     }
     return add
+  }
+
+  thousandSeperate(value: any, decimals: number){
+    if ((value !== undefined)) {
+      if (value === '-'){
+        return value
+      } else if (isNull(value)) {
+        return '-'
+      } else {
+        return parseFloat(value.toFixed(decimals)).toLocaleString('en')
+      }
+    } else {
+      return '-'
+    }
   }
 }
