@@ -1747,6 +1747,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
         });
         let rows:number=0;
         for (let char of cat.characteristic) {
+          if(!char.raw_questions.length){
+
+            char.raw_questions.push({question:null,score:null,justification:null,document:null})
+          }
           rows += char.raw_questions.length
         }
         
@@ -1757,6 +1761,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     
         
       }
+   
     }
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
