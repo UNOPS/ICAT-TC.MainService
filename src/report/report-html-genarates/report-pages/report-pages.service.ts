@@ -96,18 +96,18 @@ ${coverPage.reportDate}
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Description of the intervention .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the transformational vision of the intervention and its context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1	Description .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.2	Understanding the intervention's transformational vision and context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   
 
-    <div class="table-of-content-header-item"><div >2. Impact Assessment .................................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >2. Impact assessment .................................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.1	Process characteristics assessment  ................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes characteristics assessment ....................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.3	Process categories assessment ....................................................................................................................................................</div><div ><bdi>............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.4	Outcome categories assessment  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >3.	Transformational impact matrix  .................................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>       
+    <div class="table-of-content-sub-header-item"><div >2.2	Outcome characteristics assessment ....................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.3	 Aggregate process categories assessment ....................................................................................................................................................</div><div ><bdi>............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.4	Aggregate outcome categories assessment  ....................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >3. Transformational impact matrix   .................................................................................................................................................................</div><div ><bdi>..............</bdi></div> </div>       
     
     </div>
 
@@ -132,7 +132,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1 Single Intervention Information</div>
+   <div  class="main_header text-start">1. Single Intervention Information</div>
  
  <div  class="main_header_sub text-start">1.1 Description  </div> 
         <div class="report-table-sm  ">
@@ -1120,7 +1120,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  ? 'Outcome sustained over time - GHGs '
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
-                 ? 'Outcome sustained over time - Sustainable dDevelopment '
+                 ? 'Outcome sustained over time - Sustainable development '
                  : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - adaptation ':
                  a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - adaptation ':'-'
                : '-'
@@ -1158,13 +1158,13 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     const page_6_1 = `  <div id="page_6_1" class="page text-center" >
       ${header}
       <div class="content same-page">
-      <div  class="main_header text-start">3	Transformational impact matrix   </div>
+      <div  class="main_header text-start">3.	Transformational impact matrix   </div>
      
 
       <blockquote class=" paragraph blockquote text-start ">
       <p >  For an intervention to be transformational, it should both have a significant and
        lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
-       Based on the scores for these two dimensions, the intervention is placed within the matrix – the green area suggesting that it 
+       Based on the scores for these two dimensions, the intervention is placed within the matrix - the green area suggesting that it 
        will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and 
        if the positive impact is small, it should be 
       accompanied by a strong focus on changing processes to achieve transformation.   </p>
@@ -1391,20 +1391,20 @@ ${coverPage.reportDate}
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Single Intervention Information .................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.1	Describe the policy or action ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Single Intervention Information .................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.1 Description ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity ...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the transformational vision of the intervention and its context ...............................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >1.4	Assessment information .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.3 Understanding the intervention's transformational vision and context ...............................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >1.4 Assessment information .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
   
 
-  <div class="table-of-content-header-item"><div >2.  Environmental and social integrity assessment.................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
-  <div class="table-of-content-sub-header-item"><div >2.1	Preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >2. Environmental and social integrity assessment.................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.1 Preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
   <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.1 Safeguards for environmental integrity .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>................</bdi></div></div></div>
   <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.2 Prevention of GHG emissions lock-in	 .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...............</bdi></div></div></div>
   <div><div class="sub-sub table-of-content-sub-header-item"> <div >2.1.3 Prevention/avoidance of negative environmental and social impacts .....................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>..................</bdi></div></div></div>
 
-  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+  <div class="table-of-content-sub-header-item"><div >2.2 Outcomes of the preconditions assessment..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
 
 
    
@@ -1423,14 +1423,14 @@ ${coverPage.reportDate}
    <div class="table-of-content ">
 
   
-     <div class="table-of-content-header-item"><div >3. Impact Assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
-     <div class="table-of-content-sub-header-item"><div >3.1	Process characteristics assessment  .............................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
-     <div class="table-of-content-sub-header-item"><div >3.2	Outcomes characteristics assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-     <div class="table-of-content-sub-header-item"><div >3.3	Process categories assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
-     <div class="table-of-content-sub-header-item"><div >3.4	Outcomes categories assessment  .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+     <div class="table-of-content-header-item"><div >3. Impact assessment ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.1 Process characteristics assessmen  .............................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.2 Outcome characteristics assessment  .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.3 Aggregate process categories assessment .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+     <div class="table-of-content-sub-header-item"><div >3.4 Aggregate outcome categories assessment  .................................................................................................................................................................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
   
-     <div class="table-of-content-header-item"><div >4. Transformational Impact Matrix ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
-     <div class="table-of-content-header-item"><div >5. Annex: Supporting Justification ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+     <div class="table-of-content-header-item"><div >4. Transformational impact matrix ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+     <div class="table-of-content-header-item"><div >5. Annex: supporting justification ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
  
   
   
@@ -1455,9 +1455,9 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1 Single Intervention Information</div>
+   <div  class="main_header text-start">1. Single Intervention Information</div>
  
- <div  class="main_header_sub text-start">1.1 Describe the policy or action </div> 
+ <div  class="main_header_sub text-start">1.1 Description </div> 
         <div class="report-table-sm  ">
        
         <table class="table  test-table-one">
@@ -1526,7 +1526,7 @@ ${coverPage.reportDate}
  
     
  
-      <div  class="main_header_sub text-start">1.3 Understanding the transformational vision of the intervention and its context </div> 
+      <div  class="main_header_sub text-start">1.3 Understanding the intervention's transformational vision and context </div> 
 
      
              <div class="report-table-sm  ">
@@ -1661,7 +1661,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content ">
-    <div  class="main_header text-start">2 Environmental and social integrity assessment </div>
+    <div  class="main_header text-start">2. Environmental and social integrity assessment </div>
     <blockquote class=" paragraph blockquote text-start ">
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
@@ -1871,7 +1871,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
     ${header}
     <div class="content">
-    <div  class="main_header text-start">3 Impact assessment  </div>
+    <div  class="main_header text-start">3. Impact assessment  </div>
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
 
@@ -2054,7 +2054,7 @@ justification which supports the score and refers to documents which may back th
     const page_2 = `  <div id="page_5" class="page text-center" >
      ${header}
      <div class="content">
-     <div  class="main_header_sub text-start">3.2	Outcomes characteristics assessment  </div> 
+     <div  class="main_header_sub text-start">3.2	Outcome characteristics assessment  </div> 
       
   
    
@@ -2430,7 +2430,7 @@ justification which supports the score and refers to documents which may back th
     const page_6 = `  <div id="page_5" class="page text-center" >
        ${header}
        <div class="content">
-       <div  class="main_header_sub text-start">3.3	 Process categories assessment   </div> 
+       <div  class="main_header_sub text-start">3.3	 Aggregate process categories assessment   </div> 
      
      
      <div class="report-table-sm  ">
@@ -2474,7 +2474,7 @@ justification which supports the score and refers to documents which may back th
      </table>
      </div>
     
-     <div  class="main_header_sub text-start">3.4	Outcomes categories assessment </div> 
+     <div  class="main_header_sub text-start">3.4	Aggregate outcome categories assessment </div> 
   
      <div class="report-table-sm  ">
      <p >  The following table aggregates the assessments for all outcome 
@@ -2587,7 +2587,7 @@ justification which supports the score and refers to documents which may back th
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">4  Transformational impact matrix</div>
+      <div  class="main_header text-start">4. Transformational impact matrix</div>
       <blockquote class=" paragraph blockquote text-start ">
       <p >  For an intervention to be transformational, it should both have a significant and
        lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
@@ -2651,7 +2651,7 @@ justification which supports the score and refers to documents which may back th
       ${header}
       <div class="content">
      
-      <div  class="main_header text-start">5  Annex: supporting justification    </div>
+      <div  class="main_header text-start">5.  Annex: supporting justification    </div>
     
       <div class="report-table-sm  ">
    <table class="table  test-table-one">
@@ -2755,13 +2755,13 @@ PORTFOLIO TOOL
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1.	Portfolio of Interventions Information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Portfolio of interventions information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
   
-    <div class="table-of-content-header-item"><div >2. Impacts comparison .................................................................................................................................................................</div><div ><bdi>................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.1	Processes impacts comparison  ................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
-    <div class="table-of-content-sub-header-item"><div >2.2	Outcomes impacts comparison ....................................................................................................................................................</div><div ><bdi>........................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >3. Aggregation .................................................................................................................................................................</div><div ><bdi>.....................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >4. SDG Alignment .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >2. Comparison of Impacts .................................................................................................................................................................</div><div ><bdi>................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.1	Comparison of Process Impacts  ................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
+    <div class="table-of-content-sub-header-item"><div >2.2	Comparison of Outcome Impacts ....................................................................................................................................................</div><div ><bdi>........................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >3. Aggregation of GHG Impacts .................................................................................................................................................................</div><div ><bdi>.....................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >4. SDG alignment .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
     <div class="table-of-content-header-item"><div >5. Transformational impact matrix .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
     <div class="table-of-content-header-item"><div >6. Sector coverage .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
    
@@ -4105,7 +4105,7 @@ PORTFOLIO TOOL
     const page_1 = `  <div  class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">3 Aggregation of GHG Impacts </div>
+   <div  class="main_header text-start">3. Aggregation of GHG Impacts </div>
  
    <blockquote class=" paragraph blockquote text-start ">
    <p >
@@ -4132,7 +4132,7 @@ PORTFOLIO TOOL
               <th scope="col">Tool applied	</th>
               <th scope="col">Status</th>
               
-              <th scope="col">Expected GHG reductions over intervention lifetime (Mt CO<sub>2</sub>-eq)</th>
+              <th scope="col">Expected GHG reductions over intervention lifetime (tCO<sub>2</sub>-eq)</th>
               
             </tr>
           </thead>
@@ -4291,7 +4291,7 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">5  Transformational impact matrix   </div>
+      <div  class="main_header text-start">5. Transformational impact matrix   </div>
       <blockquote class=" paragraph blockquote text-start ">
       <p >
       For interventions to be transformational, they should both have a significant and lasting positive impact (Outcome) and address various components to facilitate systems change (Process). Based on the scores for these two dimensions, interventions are placed within the matrix below – the green area suggesting that they will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and if the positive impact is small, it should be accompanied by a strong focus on changing processes to achieve transformation.  
@@ -4356,7 +4356,7 @@ PORTFOLIO TOOL
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">6 Sector coverage  </div>
+      <div  class="main_header text-start">6. Sector coverage  </div>
       <blockquote class=" paragraph blockquote text-start ">
       <p >
       The pie chart below shows how the relative distribution of sectors that are covered by the interventions contained in this portfolio. 
