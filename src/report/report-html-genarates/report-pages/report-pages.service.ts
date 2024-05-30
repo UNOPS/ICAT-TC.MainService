@@ -1120,7 +1120,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  ? 'Outcome sustained over time - GHGs '
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
-                 ? 'Outcome sustained over time - Sustainable dDevelopment '
+                 ? 'Outcome sustained over time - Sustainable development '
                  : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - adaptation ':
                  a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - adaptation ':'-'
                : '-'
