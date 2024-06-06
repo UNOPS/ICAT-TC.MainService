@@ -194,7 +194,7 @@ ${coverPage.reportDate}
                     a.information +
                     '</td>' +
                     a.description
-                      .map((inv) => '<td>' + inv.propotion + '</td>')
+                      .map((inv) => '<td>' + inv.propotion + '%'+ '</td>')
                       .join('') +
                     '</tr>'
                   );
