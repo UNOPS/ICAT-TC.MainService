@@ -201,7 +201,7 @@ export const questions = [
         characteristic: "",
         short_label: 'Alignment with long-term low-emission development strategy',
         message: "The intervention should not be implemented, as it potentially leads to GHG emissions lock-in and undermines transformational change. The intervention does not meet the integrity preconditions and will not be eligible for a transformational change score.",
-        description: 'An emissions intensive practice or technology refers to a practice or technology with a GHG emissions intensity per unit of production/consumption surpassing the intensity of the lowest emitting, technically feasible and commercially available production pathway for the delivered product, service or output.',
+        description: 'An emissions-intensive practice or technology refers to a practice or technology with a GHG emissions intensity per unit of production/consumption surpassing the intensity of the lowest emitting, technically feasible and commercially available production pathway for the delivered product, service or output.',
         isUpdate: true
     },
     {

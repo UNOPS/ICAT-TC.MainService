@@ -115,7 +115,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = "TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL";
     coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL + '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink =  process.env.MAIN_SERVER_URL + '/report/cover/icatlogo.png';
     return coverPage;
 
   }
@@ -1524,7 +1524,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     coverPage.generateReportName = 'TRANSFORMATIONAL CHANGE ASSESSMENT REPORT  CARBON MARKET TOOL';
     coverPage.reportDate = moment().format("DD/MM/YYYY");
     coverPage.document_prepared_by = 'user';
-    coverPage.companyLogoLink =  process.env.MAIN_URL +  '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink =  process.env.MAIN_SERVER_URL +  '/report/cover/icatlogo.png';
     return coverPage;
 
 
@@ -1747,6 +1747,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
         });
         let rows:number=0;
         for (let char of cat.characteristic) {
+          if(!char.raw_questions.length){
+
+            char.raw_questions.push({question:null,score:null,justification:null,document:null})
+          }
           rows += char.raw_questions.length
         }
         
@@ -1757,6 +1761,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     
         
       }
+   
     }
     if(this.cmResult.outComeData?.scale_GHGs && this.cmResult.outComeData?.scale_GHGs.length>0 ){
       contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map(a=>{
@@ -1906,7 +1911,7 @@ return contentFour
 
     coverPage.document_prepared_by = 'user';
 
-    coverPage.companyLogoLink = process.env.MAIN_URL +  '/report/cover/icatlogo.png';
+    coverPage.companyLogoLink = process.env.MAIN_SERVER_URL +  '/report/cover/icatlogo.png';
       
 
     return coverPage;
@@ -2112,7 +2117,7 @@ return contentFour
     async genarateComparisonReportDtoContentFive(portfolioId: number): Promise<ComparisonReportReportContentFive> {
       const contentOne = new ComparisonReportReportContentFive();
       //@ts-ignore
-      contentOne.scores=(await this.investorToolService.getDashboardAllDataFilter( {page:1,limit:1000}, '',portfolioId)).items.map(item => {return {outcomeScore: item.outcome_score, processScore: item.process_score,}});
+      contentOne.scores=(await this.investorToolService.getDashboardAllDataFilter( {page:1,limit:1000}, '',portfolioId)).items.map(item => {return {outcomeScore: item.result.averageOutcome, processScore: item.result.averageProcess,}});
  
       return contentOne;
 
