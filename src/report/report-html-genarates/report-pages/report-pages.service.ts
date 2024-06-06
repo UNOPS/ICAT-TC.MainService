@@ -1677,7 +1677,7 @@ ${coverPage.reportDate}
                <th scope="col">Question </th>
                <th scope="col">Answer </th>
                <th scope="col">Justification </th>
-               <th scope="col">Supporting information uploaded </th>
+               <th scope="col">Evidence provided</th>
                
              </tr>
            </thead>
@@ -1732,7 +1732,7 @@ ${coverPage.reportDate}
                <th scope="col">Question </th>
                <th scope="col">Answer </th>
                <th scope="col">Justification </th>
-               <th scope="col">Supporting information uploaded </th>
+               <th scope="col">Evidence provided</th>
                  
                </tr>
              </thead>
@@ -1773,7 +1773,7 @@ ${coverPage.reportDate}
              <th scope="col">Question </th>
              <th scope="col">Answer </th>
              <th scope="col">Justification </th>
-             <th scope="col">Supporting information uploaded </th>
+             <th scope="col">Evidence provided</th>
                
              </tr>
            </thead>
@@ -1824,7 +1824,7 @@ ${coverPage.reportDate}
                 <tr>
                 <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
-                <th scope="col">Evidence provided?  </th>
+                <th scope="col">Evidence provided</th>
                 
                   
                 </tr>
@@ -1894,7 +1894,7 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Guiding question </th>
          <th scope="col">Likelihood score  </th>
          <th scope="col">Rationale justifying the score  </th>
-         <th scope="col">Supporting documents </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
      <tbody class="test-tble">
@@ -2061,7 +2061,7 @@ justification which supports the score and refers to documents which may back th
    
    <div class="report-table-sm  ">
    <p>
-   Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
+   Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). The scale and sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development are assessed. 
    </p>
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
@@ -2074,7 +2074,7 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Score  </th>
         
          <th scope="col">Rationale justifying the score </th>
-         <th scope="col">Documentation uploaded?   </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
      <tbody class="test-tble">
@@ -2122,7 +2122,7 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Score </th>
          <th scope="col"> Score explanation  </th>
          <th scope="col">Rationale justifying the score </th>
-         <th scope="col">Documentation uploaded? </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
      <tbody class="test-tble">
@@ -2186,7 +2186,7 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Score  </th>
        
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Documentation uploaded?   </th>
+          <th scope="col">Evidence provided</th>
         </tr>
       </thead>
       <tbody class="test-tble">
@@ -2236,7 +2236,7 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Score</th>
           <th scope="col"> Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Documentation uploaded? </th>
+          <th scope="col">Evidence provided</th>
         </tr>
       </thead>
       <tbody class="test-tble">
@@ -2301,7 +2301,7 @@ justification which supports the score and refers to documents which may back th
         <th scope="col">Score  </th>
        
         <th scope="col">Rationale justifying the score</th>
-        <th scope="col">Justification uploaded   </th>
+        <th scope="col">Evidence provided</th>
         </tr>
       </thead>
       <tbody class="test-tble">
@@ -2375,7 +2375,7 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Likelihood score   </th>
           <th scope="col">Likelihood score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Justification uploaded </th>
+          <th scope="col">Evidence provided</th>
           </tr>
         </thead>
         <tbody class="test-tble">
