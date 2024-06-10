@@ -276,7 +276,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       const isUserInternal = x.assessment?.user?.userType?.description !== 'External';
       const toolName =
         x.assessment?.tool === "PORTFOLIO" ? "General" :
-          x.assessment?.tool === "CARBON_MARKET" ? "Carbon Market" :
+          x.assessment?.tool === "CARBON_MARKET" ? "Carbon market" :
           x.assessment?.tool === "INVESTOR" ? "Investment" :
           x.assessment?.tool;
     
