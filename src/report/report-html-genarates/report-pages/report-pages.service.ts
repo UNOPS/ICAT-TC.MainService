@@ -194,7 +194,7 @@ ${coverPage.reportDate}
                     a.information +
                     '</td>' +
                     a.description
-                      .map((inv) => '<td>' + inv.propotion + '</td>')
+                      .map((inv) => '<td>' + inv.propotion + '%'+ '</td>')
                       .join('') +
                     '</tr>'
                   );
@@ -628,7 +628,7 @@ justification which supports the score and refers to documents which may back th
  
  <div class="report-table-sm  ">
 <p>
-Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
+Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). The scale and sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development are assessed.
 </p>
  <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
@@ -2866,9 +2866,7 @@ PORTFOLIO TOOL
    <div  class="main_header text-start">2. Comparison of Impacts </div>
    <blockquote class=" paragraph blockquote text-start ">
    <p >
-   This section shows how the assessed interventions within this portfolio compare
-    regarding their transformational impact along the two dimensions 
-   Outcome (extent and sustained nature of transformation) and Process (likelihood of transformation).
+   This section shows how the assessed interventions within this portfolio compare regarding their transformational impact along the two dimensions: Outcome (extent and sustained nature of transformation) and Process (likelihood of transformation).
     </p>
   </blockquote> 
  <div  class="main_header_sub text-start">2.1	Comparison of Process Impacts</div> 
@@ -4359,7 +4357,7 @@ PORTFOLIO TOOL
       <div  class="main_header text-start">6. Sector coverage  </div>
       <blockquote class=" paragraph blockquote text-start ">
       <p >
-      The pie chart below shows how the relative distribution of sectors that are covered by the interventions contained in this portfolio. 
+      The pie chart below shows the relative distribution of sectors that are covered by the interventions contained in this portfolio.
       </p>
      </blockquote> 
       <div  class="image-pie "><figure class="figure ">
