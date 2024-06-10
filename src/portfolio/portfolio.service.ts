@@ -515,7 +515,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       sc_sus_total[int.assessment_id] = int.category_score.value === null ? null : int.category_score.value;
     })
 
-    sustained_comparison.comparison_type = 'Sustained COMPARISON';
+    sustained_comparison.comparison_type = 'Sustained comparison';
     sustained_comparison.comparison_type_2 = 'Outcomes';
     sustained_comparison.col_set_1 = [
       ...col_set_1,
