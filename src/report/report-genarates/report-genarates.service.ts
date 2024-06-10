@@ -14,7 +14,10 @@ constructor(){}
        path:  process.env.TEMP_FILE_SAVE_URL + fileName,
    
       printBackground: true,
-      landscape:true
+      landscape:true,
+     headerTemplate: "<div/>",
+     footerTemplate: "<div style=\"text-align: right;width: 297mm;font-size: 8px;\"><span style=\"margin-right: 1cm\"><span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></span></div>"
+    
     };
 
     
@@ -44,7 +47,10 @@ async comparisonReportGenarate(name:string,file:any):Promise<any>{
      path: process.env.TEMP_FILE_SAVE_URL + fileName,
   
     printBackground: true,
-    landscape:true
+    landscape:true,
+    displayHeaderFooter: true,
+    headerTemplate: "<div/>",
+     footerTemplate: "<div style=\"text-align: right;width: 297mm;font-size: 8px;\"><span style=\"margin-right: 1cm\"><span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></span></div>"
   };
 
   const puppeteer = require('puppeteer');
