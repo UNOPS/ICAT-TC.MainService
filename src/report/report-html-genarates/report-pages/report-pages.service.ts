@@ -145,7 +145,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
             .map(
               (a: {
@@ -194,7 +194,7 @@ ${coverPage.reportDate}
                     a.information +
                     '</td>' +
                     a.description
-                      .map((inv) => '<td>' + inv.propotion + '</td>')
+                      .map((inv) => '<td>' + inv.propotion + '%'+ '</td>')
                       .join('') +
                     '</tr>'
                   );
@@ -219,9 +219,11 @@ ${coverPage.reportDate}
    <div class="content">
    
    <div  class="main_header_sub text-start">1.2	Understanding the intervention's transformational vision and context  </div> 
-      
-      <div class="report-table-sm  ">
-      <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
+      <blockquote class=" paragraph blockquote-test text-start ">
+     <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
+</blockquote>  
+      <div class="report-table-sm">
+ 
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             
@@ -233,7 +235,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="test-tble">
+          <tbody class="table-body">
           ${understanPolicyOrActions&&understanPolicyOrActions.length>0?understanPolicyOrActions
             .map(
               (a: { Time_periods: string; description: string }) =>
@@ -247,8 +249,11 @@ ${coverPage.reportDate}
           </tbody>
         </table>
       </div>
+      <blockquote class=" paragraph blockquote-test text-start ">
+<p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
+</blockquote>  
         <div class="report-table-sm ">
-        <p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
+        
         <table class="table  test-table-one">
           <thead class="table-primary  border-dark">
             <tr>
@@ -258,7 +263,7 @@ ${coverPage.reportDate}
               <th scope="col">Barrier directly targeted by intervention</th>
             </tr>
           </thead>
-          <tbody class="test-tble">
+          <tbody class="table-body">
           ${barriers&&barriers.length>0?barriers
             .map(
               (a: {
@@ -294,9 +299,11 @@ ${coverPage.reportDate}
   <div class="content">
 
   <div  class="main_header_sub text-start">1.3	Assessment information</div> 
-
-  <div class="report-table-sm  ">
+<blockquote class=" paragraph blockquote-test text-start ">
   <p>This information describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
+
+</blockquote>  
+  <div class="report-table-sm  ">
   <table class="table  test-table-one">
     <thead class="table-primary  border-dark">
       <tr>
@@ -305,7 +312,7 @@ ${coverPage.reportDate}
       
       </tr>
     </thead>
-    <tbody class="test-tble">
+    <tbody class="table-body">
     <tr><td>
     Assessment type
     </td><td> 
@@ -349,7 +356,7 @@ ${coverPage.reportDate}
     <div class="content">
   
    <div  class="main_header_sub text-start">1.4	Choosing transformational change characteristics to assess </div> 
-   <blockquote class=" paragraph blockquote text-start ">
+   <blockquote class=" paragraph blockquote-test text-start ">
              <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
               Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
                took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
@@ -367,7 +374,7 @@ ${coverPage.reportDate}
       <th scope="col">Relevance</th>
     </tr>
   </thead>
-  <tbody class="test-tble">
+  <tbody class="table-body">
   ${catagory_out&&catagory_out.length>0?catagory_out
     .map((a: { rows: number; name: string; characteristics: any[] }) =>
       a.characteristics
@@ -407,7 +414,7 @@ ${coverPage.reportDate}
      <div class="content">
    
    
-    <blockquote class=" paragraph blockquote text-start ">
+    <blockquote class=" paragraph blockquote-test text-start ">
               <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
                 took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
@@ -425,7 +432,7 @@ ${coverPage.reportDate}
        <th scope="col">Relevance</th>
      </tr>
    </thead>
-   <tbody class="test-tble">
+   <tbody class="table-body">
    ${catagory_process&& catagory_process.length>0?catagory_process
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -477,9 +484,7 @@ ${coverPage.reportDate}
   <div  class="main_header text-start">2.	Impact assessment</div>
   <div  class="main_header_sub text-start">2.1	Process characteristics assessment   </div> 
 
-
-
-<div class="report-table-sm  ">
+<blockquote class=" paragraph blockquote-test text-start ">
 <p>
 Process characteristics refer to the main drivers of system change based on the existing 
 literature: technology, agents, incentives, and norms. Each of these drivers contain three characteristics.
@@ -489,6 +494,10 @@ literature: technology, agents, incentives, and norms. Each of these drivers con
     relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any 
 justification which supports the score and refers to documents which may back this justification.
 </p>
+</blockquote>  
+
+<div class="report-table-sm  ">
+
 <table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
@@ -501,7 +510,7 @@ justification which supports the score and refers to documents which may back th
       <th scope="col">Supporting documents</th>
     </tr>
   </thead>
-  <tbody class="test-tble">
+  <tbody class="table-body">
   ${prossesAssesmentStartingSituation1&&prossesAssesmentStartingSituation1.length>0?prossesAssesmentStartingSituation1
     .map((a: { rows: number; name: string; characteristics: any[] }) =>
       a.characteristics
@@ -569,7 +578,7 @@ justification which supports the score and refers to documents which may back th
        <th scope="col">Supporting documents </th>
      </tr>
    </thead>
-   <tbody class="test-tble">
+   <tbody class="table-body">
    ${prossesAssesmentStartingSituation2&& prossesAssesmentStartingSituation2.length > 0? prossesAssesmentStartingSituation2
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -623,13 +632,15 @@ justification which supports the score and refers to documents which may back th
    <div class="content">
    <div  class="main_header_sub text-start">2.2	Outcome characteristics assessment</div> 
     
-
+<blockquote class=" paragraph blockquote-test text-start ">
+<p>
+Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). The scale and sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development are assessed.
+</p>
+</blockquote>  
  
  
  <div class="report-table-sm  ">
-<p>
-Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
-</p>
+
  <table class="table  test-table-one">
    <thead class="table-primary  border-dark">
      <tr>
@@ -640,7 +651,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <th scope="col">Rationale justifying the score </th>
      </tr>
    </thead>
-   <tbody class="test-tble">
+   <tbody class="table-body">
    ${scale_ghg&&scale_ghg.length>0?scale_ghg
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -684,7 +695,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        <th scope="col">Rationale justifying the score </th>
      </tr>
    </thead>
-   <tbody class="test-tble">
+   <tbody class="table-body">
    ${sustained_ghg&&sustained_ghg.length>0?sustained_ghg
      .map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -743,7 +754,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score </th>
       </tr>
     </thead>
-    <tbody class="test-tble">
+    <tbody class="table-body">
     ${scale_adaptation&&scale_adaptation.length>0?scale_adaptation
       .map((a: { rows: number; name: string; characteristics: any[] }) =>
         a.characteristics
@@ -787,7 +798,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score </th>
       </tr>
     </thead>
-    <tbody class="test-tble">
+    <tbody class="table-body">
     ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
       .map((a: { rows: number; name: string; characteristics: any[] }) =>
         a.characteristics
@@ -849,7 +860,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <th scope="col">Rationale justifying the score</th>
       </tr>
     </thead>
-    <tbody class="test-tble">
+    <tbody class="table-body">
     
     ${scale_sd.sdg&&scale_sd.sdg.length>0?scale_sd.sdg
       .map(
@@ -951,7 +962,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <th scope="col">Rationale justifying the score</th>
         </tr>
       </thead>
-      <tbody class="test-tble">
+      <tbody class="table-body">
       
       ${sustained_sd.sdg&&sustained_sd.sdg.length>0?sustained_sd.sdg
         .map(
@@ -1038,7 +1049,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      ${header}
      <div class="content">
      <div  class="main_header_sub text-start">2.3	 Aggregate process categories assessment   </div> 
-     <blockquote class=" paragraph blockquote text-start ">
+     <blockquote class=" paragraph  text-start ">
      <p > The following table aggregates the assessments across all process 
      characteristics and provides a likelihood score (i.e. “how likely is the 
       intervention to facilitate transformational change”) for each of the four 
@@ -1057,7 +1068,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${process_categories_assessment&&process_categories_assessment.length?process_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1085,7 +1096,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
    </div>
   
    <div  class="main_header_sub text-start">2.4	Aggregate outcome categories assessment </div> 
-   <blockquote class=" paragraph blockquote text-start ">
+   <blockquote class=" paragraph blockquote-test text-start ">
    <p >  The following table aggregates the assessments for all outcome 
    categories across all relevant levels and time scales. Impacts on GHG emission levels,
     the relevant Sustainable Development Goals and climate adaptation receive separate scores for 
@@ -1105,7 +1116,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
          
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${outcomes_categories_assessment&&outcomes_categories_assessment.length>0?outcomes_categories_assessment
        .map((a: { category: any; category_score: any }) => {
          return `<tr>
@@ -1161,7 +1172,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div  class="main_header text-start">3.	Transformational impact matrix   </div>
      
 
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p >  For an intervention to be transformational, it should both have a significant and
        lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
        Based on the scores for these two dimensions, the intervention is placed within the matrix - the green area suggesting that it 
@@ -1221,7 +1232,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <div class="content">
      
     
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p class="mb-0 lh-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
@@ -1241,7 +1252,7 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     </tr>
   </thead>
-  <tbody class="test-tble">
+  <tbody class="table-body">
   ${outcomeDescribeResult&&outcomeDescribeResult.length>0?outcomeDescribeResult
     .map(
       (a: {
@@ -1468,7 +1479,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
             .map(
               (a: { information: string; description: string }) =>
@@ -1509,7 +1520,7 @@ ${coverPage.reportDate}
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${characteristics&&characteristics.length>0?characteristics
             .map(
               (a: { information: string; description: string }) =>
@@ -1528,9 +1539,11 @@ ${coverPage.reportDate}
  
       <div  class="main_header_sub text-start">1.3 Understanding the intervention's transformational vision and context </div> 
 
-     
-             <div class="report-table-sm  ">
+     <blockquote class=" paragraph blockquote-test text-start ">
              <p>The transformational vision describes how an intervention seeks to change a system towards zero-carbon, resilient and sustainable practices.</p>
+
+</blockquote>  
+             <div class="report-table-sm  ">
              <table class="table  test-table-one">
                <thead class="table-primary  border-dark">
                  <tr>
@@ -1539,7 +1552,7 @@ ${coverPage.reportDate}
                    
                  </tr>
                </thead>
-               <tbody class="test-tble ">
+               <tbody class="table-body ">
                ${transformational&&transformational.length>0?transformational
                  .map(
                    (a: { information: string; description: string }) =>
@@ -1564,10 +1577,12 @@ ${coverPage.reportDate}
     const page_3 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-
+<blockquote class=" paragraph blockquote-test text-start ">
+   <p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
+</blockquote>  
    
    <div class="report-table-sm  ">
-   <p>Barriers are obstacles that hinder the transformation of a system or lead to undesired effects from the interventions.</p>
+
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1577,7 +1592,7 @@ ${coverPage.reportDate}
          <th scope="col">Barrier directly targeted by the policy or action</th>
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${barriers&&barriers.length>0?barriers
        .map(
          (a: {
@@ -1605,9 +1620,11 @@ ${coverPage.reportDate}
  
  <div  class="main_header_sub text-start">1.4 Assessment information  </div> 
 
-
-<div class="report-table-sm  ">
+<blockquote class=" paragraph blockquote-test text-start ">
 <p>This information describes the scope of the assessment in terms of the geographical, temporal and sectoral coverage of the intervention.</p>
+</blockquote>  
+<div class="report-table-sm  ">
+
 <table class="table  test-table-one">
   <thead class="table-primary  border-dark">
     <tr>
@@ -1616,7 +1633,7 @@ ${coverPage.reportDate}
     
     </tr>
   </thead>
-  <tbody class="test-tble">
+  <tbody class="table-body">
   <tr><td>
   Assessment type
   </td><td> 
@@ -1662,26 +1679,29 @@ ${coverPage.reportDate}
     ${header}
     <div class="content ">
     <div  class="main_header text-start">2. Environmental and social integrity assessment </div>
-    <blockquote class=" paragraph blockquote text-start ">
+    <blockquote class=" paragraph blockquote-test text-start ">
     <p >These questions help the project and programme developer to assess whether the proposed carbon market intervention meets the environmental and social integrity criteria which are preconditions for delivering transformational change. They can be considered preconditions to enable transformational impacts of carbon market interventions, and thus need to be fulfilled before transformational change criteria can be assessed. The environmental and social integrity preconditions will need to be met to receive a positive score on the transformative impact assessment. The integrity assessment comprises three criteria: safeguards on environmental integrity, prevention of GHG emissions lock-in and prevention/avoidance of negative environmental and social impacts.   </p>
    </blockquote> 
   <div  class="main_header_sub text-start">2.1 	Preconditions assessment </div> 
   <div  class="main_header_sub_sub text-start">2.1.1 Safeguards for environmental integrity </div>
-         <div class="report-table-sm ">
-        <p>
+  <blockquote class=" paragraph blockquote-test text-start ">
+ <p>
         Central to safeguarding environmental integrity is the robust assessment of the additionality of the carbon market intervention and quantification of the activity’s mitigation outcomes. Safeguarding the activity’s additionality means verifying that the activity was triggered by the revenues from the credits’ sale. This can be demonstrated through the application of different additionality tests including a regulatory additionality test (going beyond existing laws and regulations), an investment test and/or a barrier test. For the quantification of mitigation outcomes, it is essential that crediting baselines are set credibly and conservatively and that a robust monitoring concept is in place. The following questions are therefore focusing on the intervention’s approach to additionality determination, baseline setting and monitoring.
         </p>
+</blockquote>  
+         <div class="report-table-sm ">
+        
          <table class="table  test-table-one">
            <thead class="table-primary  border-dark">
              <tr>
                <th scope="col">Question </th>
                <th scope="col">Answer </th>
                <th scope="col">Justification </th>
-               <th scope="col">Supporting information uploaded </th>
+               <th scope="col">Evidence provided</th>
                
              </tr>
            </thead>
-           <tbody class="test-tble ">
+           <tbody class="table-body ">
            ${safeguards&&safeguards.length > 0? safeguards
              .map(
                (a: {
@@ -1724,19 +1744,23 @@ ${coverPage.reportDate}
       <div class="content">
     
     <div  class="main_header_sub_sub text-start">2.1.2 Prevention of GHG emissions lock-in   </div>
+    <blockquote class=" paragraph blockquote-test text-start ">
+          <p>GHG emissions lock-in refers to the investment in technologies or practices that prevent transitioning to lower-emission
+           technologies or practices in the short term, inhibiting a transformation to low-carbon societies.</p>
+
+</blockquote>  
            <div class="report-table-sm ">
-          <p>GHG emissions lock-in refers to the investment in technologies or practices that prevent transitioning to lower-emission technologies or practices in the short term, inhibiting a transformation to low-carbon societies.</p>
            <table class="table  test-table-one">
              <thead class="table-primary  border-dark">
                <tr>
                <th scope="col">Question </th>
                <th scope="col">Answer </th>
                <th scope="col">Justification </th>
-               <th scope="col">Supporting information uploaded </th>
+               <th scope="col">Evidence provided</th>
                  
                </tr>
              </thead>
-             <tbody class="test-tble ">
+             <tbody class="table-body ">
              ${prevention_ghg_emissions&&prevention_ghg_emissions.length>0?prevention_ghg_emissions
                .map(
                  (a: {
@@ -1773,11 +1797,11 @@ ${coverPage.reportDate}
              <th scope="col">Question </th>
              <th scope="col">Answer </th>
              <th scope="col">Justification </th>
-             <th scope="col">Supporting information uploaded </th>
+             <th scope="col">Evidence provided</th>
                
              </tr>
            </thead>
-           <tbody class="test-tble ">
+           <tbody class="table-body ">
            ${prevention_negative_environmental&&prevention_negative_environmental.length>0?prevention_negative_environmental
              .map(
                (a: {
@@ -1824,12 +1848,12 @@ ${coverPage.reportDate}
                 <tr>
                 <th scope="col">Precondition  </th>
                 <th scope="col">Outcome   </th>
-                <th scope="col">Evidence provided?  </th>
+                <th scope="col">Evidence provided</th>
                 
                   
                 </tr>
               </thead>
-              <tbody class="test-tble ">
+              <tbody class="table-body ">
               ${outcomes&&outcomes.length>0?outcomes
                 .map(
                   (a: {
@@ -1874,8 +1898,7 @@ ${coverPage.reportDate}
     <div  class="main_header text-start">3. Impact assessment  </div>
   
   <div  class="main_header_sub text-start">3.1 Process characteristics assessment  </div> 
-
-   <div class="report-table-sm ">
+<blockquote class=" paragraph blockquote-test text-start ">
    <p>
 Process characteristics refer to the main drivers of system change based on the existing 
 literature: technology, agents, incentives, and norms. Each of these drivers contain three characteristics.
@@ -1885,6 +1908,9 @@ literature: technology, agents, incentives, and norms. Each of these drivers con
     relevant, the likelihood score indicates the likelihood of the intervention having an impact on this characteristic. The table presents any 
 justification which supports the score and refers to documents which may back this justification.
 </p>
+</blockquote>  
+   <div class="report-table-sm ">
+
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
@@ -1894,10 +1920,10 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Guiding question </th>
          <th scope="col">Likelihood score  </th>
          <th scope="col">Rationale justifying the score  </th>
-         <th scope="col">Supporting documents </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${prossesAssesmentStartingSituation&&prossesAssesmentStartingSituation.length>0?prossesAssesmentStartingSituation.map(n=>
        n.map((a: { rows: number; name: string; characteristics: any[] }) =>
        a.characteristics
@@ -2056,13 +2082,15 @@ justification which supports the score and refers to documents which may back th
      <div class="content">
      <div  class="main_header_sub text-start">3.2	Outcome characteristics assessment  </div> 
       
-  
+  <blockquote class=" paragraph blockquote-test text-start ">
+   <p>
+   Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). The scale and sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development are assessed. 
+   </p>
+</blockquote>  
    
    
    <div class="report-table-sm  ">
-   <p>
-   Outcome characteristics refer to the scale and sustained nature of outcomes resulting from an intervention. Outcomes are measured in terms of GHG emissions reductions, climate adaptation impacts and selected sustainable development impacts across environmental, social and economic dimensions (e.g. air quality, health, jobs, gender equality, energy security). Users assess both the scale  and the sustained nature of selected impacts of the intervention on GHGs, climate adaptation and sustainable development. 
-   </p>
+
    <table class="table  test-table-one">
      <thead class="table-primary  border-dark">
        <tr>
@@ -2074,10 +2102,10 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Score  </th>
         
          <th scope="col">Rationale justifying the score </th>
-         <th scope="col">Documentation uploaded?   </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${scale_ghg&& scale_ghg.length > 0? scale_ghg
        .map((a: any, index) => {
          if (!index) {
@@ -2122,10 +2150,10 @@ justification which supports the score and refers to documents which may back th
          <th scope="col">Score </th>
          <th scope="col"> Score explanation  </th>
          <th scope="col">Rationale justifying the score </th>
-         <th scope="col">Documentation uploaded? </th>
+         <th scope="col">Evidence provided</th>
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${sustained_ghg&& sustained_ghg.length>0?sustained_ghg
        .map((a: any, index) => {
          if (!index) {
@@ -2186,10 +2214,10 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Score  </th>
        
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Documentation uploaded?   </th>
+          <th scope="col">Evidence provided</th>
         </tr>
       </thead>
-      <tbody class="test-tble">
+      <tbody class="table-body">
       ${scale_adaptation&&scale_adaptation.length>0 ?scale_adaptation
         .map((a: any, index) => {
           if (!index) {
@@ -2236,10 +2264,10 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Score</th>
           <th scope="col"> Score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Documentation uploaded? </th>
+          <th scope="col">Evidence provided</th>
         </tr>
       </thead>
-      <tbody class="test-tble">
+      <tbody class="table-body">
       ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
         .map((a: any, index) => {
           if (!index) {
@@ -2301,10 +2329,10 @@ justification which supports the score and refers to documents which may back th
         <th scope="col">Score  </th>
        
         <th scope="col">Rationale justifying the score</th>
-        <th scope="col">Justification uploaded   </th>
+        <th scope="col">Evidence provided</th>
         </tr>
       </thead>
-      <tbody class="test-tble">
+      <tbody class="table-body">
       
           ${scale_sd&&scale_sd.length>0?scale_sd
             .map((a: any, index) => {
@@ -2375,10 +2403,10 @@ justification which supports the score and refers to documents which may back th
           <th scope="col">Likelihood score   </th>
           <th scope="col">Likelihood score explanation  </th>
           <th scope="col">Rationale justifying the score </th>
-          <th scope="col">Justification uploaded </th>
+          <th scope="col">Evidence provided</th>
           </tr>
         </thead>
-        <tbody class="test-tble">
+        <tbody class="table-body">
         ${sustained_sd&&sustained_sd.length>0?sustained_sd
           .map((a: any, index) => {
             if (!index) {
@@ -2431,14 +2459,16 @@ justification which supports the score and refers to documents which may back th
        ${header}
        <div class="content">
        <div  class="main_header_sub text-start">3.3	 Aggregate process categories assessment   </div> 
-     
-     
-     <div class="report-table-sm  ">
-     <p > The following table aggregates the assessments across all process 
+     <blockquote class=" paragraph blockquote-test text-start ">
+ <p > The following table aggregates the assessments across all process 
      characteristics and provides a likelihood score (i.e. “how likely is the 
       intervention to facilitate transformational change”) for each of the four 
       categories. Based on a weighted average of these category assessments, a final process score is assigned - on a scale from very 
      unlikely (0) to very likely (4) to enable transformational change.   </p>
+</blockquote>  
+     
+     <div class="report-table-sm  ">
+    
      <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
@@ -2448,7 +2478,7 @@ justification which supports the score and refers to documents which may back th
            
          </tr>
        </thead>
-       <tbody class="test-tble">
+       <tbody class="table-body">
        ${process_categories_assessment&& process_categories_assessment.length > 0? process_categories_assessment
          .map((a: { name: string; cat_score: number }) => {
            return `<tr>
@@ -2475,14 +2505,16 @@ justification which supports the score and refers to documents which may back th
      </div>
     
      <div  class="main_header_sub text-start">3.4	Aggregate outcome categories assessment </div> 
-  
-     <div class="report-table-sm  ">
-     <p >  The following table aggregates the assessments for all outcome 
+  <blockquote class=" paragraph blockquote-test text-start ">
+  <p >  The following table aggregates the assessments for all outcome 
      categories across all relevant levels and time scales. Impacts on GHG emission levels,
       the relevant Sustainable Development Goals and climate adaptation receive separate scores for 
       their estimated magnitude and persistence. Based on a weighted average, a final outcome score is 
       assigned - on a seven-step scale from major negative (-3) 
      to major positive (3) contributions towards transformation.   </p>
+</blockquote>  
+     <div class="report-table-sm  ">
+    
      <table class="table  test-table-one">
        <thead class="table-primary  border-dark">
          <tr>
@@ -2492,7 +2524,7 @@ justification which supports the score and refers to documents which may back th
            
          </tr>
        </thead>
-       <tbody class="test-tble">
+       <tbody class="table-body">
        <tr>
          <td >Scale of outcome - GHGs</td>
          <td >${
@@ -2588,7 +2620,7 @@ justification which supports the score and refers to documents which may back th
       <div class="content same-page">
      
       <div  class="main_header text-start">4. Transformational impact matrix</div>
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p >  For an intervention to be transformational, it should both have a significant and
        lasting positive impact (Outcome) and address various components to facilitate systems change (Process). 
        Based on the scores for these two dimensions, the intervention is placed within the matrix - the green area suggesting that it 
@@ -2663,7 +2695,7 @@ justification which supports the score and refers to documents which may back th
       
        </tr>
      </thead>
-     <tbody class="test-tble">
+     <tbody class="table-body">
      ${annex&&annex.length > 0? annex
        .map(
          (a: {
@@ -2790,7 +2822,7 @@ PORTFOLIO TOOL
    ${header}
    <div class="content">
    <div  class="main_header text-start">1.	Portfolio of interventions information </div>
-   <blockquote class=" paragraph blockquote text-start ">
+   <blockquote class=" paragraph blockquote-test text-start ">
    <p >This section gives an overview of the portfolio as a whole and the intervention assessments that it is composed of.   </p>
   </blockquote> 
  
@@ -2804,7 +2836,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${portfolio_details&&portfolio_details.length>0?portfolio_details
             .map(
               (a: { information: string; description: string }) =>
@@ -2829,7 +2861,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${intervation_details&&intervation_details.length>0?intervation_details
             .map(
               (a: { id: string; name: string }) =>
@@ -2864,18 +2896,18 @@ PORTFOLIO TOOL
    ${header}
    <div class="content">
    <div  class="main_header text-start">2. Comparison of Impacts </div>
-   <blockquote class=" paragraph blockquote text-start ">
-   <p >
-   This section shows how the assessed interventions within this portfolio compare
-    regarding their transformational impact along the two dimensions 
-   Outcome (extent and sustained nature of transformation) and Process (likelihood of transformation).
+   <blockquote class=" paragraph blockquote-test text-start ">
+   <p  >
+This section shows how the assessed interventions within this 
+portfolio compare regarding their transformational impact along the two 
+dimensions: Outcome (extent and sustained nature of transformation) and Process (likelihood of transformation).
     </p>
   </blockquote> 
  <div  class="main_header_sub text-start">2.1	Comparison of Process Impacts</div> 
 
- <blockquote class=" paragraph blockquote text-start ">
+ <blockquote class=" paragraph blockquote-test text-start ">
  <p >
- The likelihood of the intervention’s contribution to transformational change is assessed across several characteristics within four main categories (Technology, Agents, Incentives, Norms). The scores range from very unlikely (0) to very likely (4) to enable transformational change.
+ The likelihood of the intervention's contribution to transformational change is assessed across several characteristics within four main categories (Technology, Agents, Incentives, Norms). The scores range from very unlikely (0) to very likely (4) to enable transformational change.
   </p>
 </blockquote> 
         <div class="report-table-sm same-page-table">
@@ -2899,7 +2931,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${prosses_tech&&prosses_tech.length>0?prosses_tech
             .map(
               (a: {
@@ -2957,7 +2989,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="test-tble ">
+        <tbody class="table-body ">
         ${prosses_agent&&prosses_agent.length>0?prosses_agent
           .map(
             (a: {
@@ -3026,7 +3058,7 @@ PORTFOLIO TOOL
                
              </tr>
            </thead>
-           <tbody class="test-tble ">
+           <tbody class="table-body ">
            ${prosses_incentive&&prosses_incentive.length>0?prosses_incentive
              .map(
                (a: {
@@ -3087,7 +3119,7 @@ PORTFOLIO TOOL
              
            </tr>
          </thead>
-         <tbody class="test-tble ">
+         <tbody class="table-body ">
          ${prosses_norms&&prosses_norms.length>0?prosses_norms
            .map(
              (a: {
@@ -3159,7 +3191,7 @@ PORTFOLIO TOOL
                 
               </tr>
             </thead>
-            <tbody class="test-tble ">
+            <tbody class="table-body ">
             ${process_score&&process_score.length>0?process_score
               .map(
                 (a: {
@@ -3237,7 +3269,7 @@ PORTFOLIO TOOL
    
  
  <div  class="main_header_sub text-start">2.2	Comparison of Outcome Impacts</div> 
- <blockquote class=" paragraph blockquote text-start ">
+ <blockquote class=" paragraph blockquote-test text-start ">
  <p >
  The interventions’ impacts on GHG emission levels, the relevant Sustainable Development Goals and climate adaptation receive separate scores for their estimated magnitude and persistence. Based on a weighted average, a final outcome score is assigned - on a seven-step scale from major negative (-3) to major positive (3) contributions towards transformation. 
  </p>
@@ -3268,7 +3300,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${ghg_scale&&ghg_scale.length>0?ghg_scale
             .map(
               (a: {
@@ -3331,7 +3363,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="test-tble ">
+        <tbody class="table-body ">
         ${ghg_sustaind&&ghg_sustaind.length>0?ghg_sustaind
           .map(
             (a: {
@@ -3408,7 +3440,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="test-tble ">
+        <tbody class="table-body ">
         ${adaptation_scale&&adaptation_scale.length>0?adaptation_scale
           .map(
             (a: {
@@ -3470,7 +3502,7 @@ PORTFOLIO TOOL
           
         </tr>
       </thead>
-      <tbody class="test-tble ">
+      <tbody class="table-body ">
       ${adaptation_sustaind&&adaptation_sustaind.length>0?adaptation_sustaind
         .map(
           (a: {
@@ -3552,7 +3584,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="test-tble ">
+        <tbody class="table-body ">
         ${a.sdg_scale&&a.sdg_scale.length>0?a.sdg_scale
           .map(
             (a: {
@@ -3616,7 +3648,7 @@ PORTFOLIO TOOL
           
         </tr>
       </thead>
-      <tbody class="test-tble ">
+      <tbody class="table-body ">
       ${a.sdg_sustaind&&a.sdg_sustaind.length>0?a.sdg_sustaind
         .map(
           (a: {
@@ -3692,7 +3724,7 @@ PORTFOLIO TOOL
          
        </tr>
      </thead>
-     <tbody  class="test-tble ">
+     <tbody  class="table-body ">
      ${ghg_scale_sustaind_comparison&&ghg_scale_sustaind_comparison.length>0?ghg_scale_sustaind_comparison
        .map(
          (a: {
@@ -3751,7 +3783,7 @@ PORTFOLIO TOOL
        
      </tr>
    </thead>
-   <tbody class="test-tble ">
+   <tbody class="table-body ">
    ${adaptation_scale_sustaind_comparison&&adaptation_scale_sustaind_comparison.length>0?adaptation_scale_sustaind_comparison
      .map(
        (a: {
@@ -3827,7 +3859,7 @@ PORTFOLIO TOOL
         
       </tr>
     </thead>
-    <tbody class="test-tble ">
+    <tbody class="table-body ">
     ${b.data&&b.data.length>0?b.data
       .map(
         (a: {
@@ -3903,7 +3935,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${sacle_comparison&&sacle_comparison.length>0?sacle_comparison
             .map(
               (a: {
@@ -3963,7 +3995,7 @@ PORTFOLIO TOOL
             
           </tr>
         </thead>
-        <tbody class="test-tble ">
+        <tbody class="table-body ">
         ${sustaind_comparison&&sustaind_comparison.length>0?sustaind_comparison
           .map(
             (a: {
@@ -4036,7 +4068,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${outcome_level&&outcome_level.length>0?outcome_level
             .map(
               (a: {
@@ -4107,7 +4139,7 @@ PORTFOLIO TOOL
    <div class="content">
    <div  class="main_header text-start">3. Aggregation of GHG Impacts </div>
  
-   <blockquote class=" paragraph blockquote text-start ">
+   <blockquote class=" paragraph blockquote-test text-start ">
    <p >
    The following table shows and aggregates the annual GHG emission reductions of each intervention contained in the portfolio. 
       </p>
@@ -4136,7 +4168,7 @@ PORTFOLIO TOOL
               
             </tr>
           </thead>
-          <tbody class="test-tble ">
+          <tbody class="table-body ">
           ${aggregation.data&&aggregation.data.length>0?aggregation.data
             .map(
               (a: {
@@ -4190,12 +4222,12 @@ PORTFOLIO TOOL
    ${header}
     <div class="content" style=" height:1000px">
       <div  class="main_header text-start">4.	SDG alignment </div>
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p >
       The following tables show the score obtained by the interventions in the portfolio for each assessed Sustainable Development Goal (SDG) and how this compares to the priority given to these SDGs in the country of implementation. The first table shows the outcome scores (from major negative (-3) to major positive (3) contributions towards transformation), whereas the second one indicates the alignment between priority and outcome. Positive impacts are green, negative ones red – the shade is darker if the significance of the impact matches the country priorities.   
       </p>
      </blockquote> 
-      <div class="report-all-table-sm-rotate same-page">
+      <div class="report-all-table-sm-rotate ">
    
         <div class=" same-page-table-rotate">
        
@@ -4226,7 +4258,7 @@ PORTFOLIO TOOL
                 
               </tr>
             </thead>
-            <tbody class="test-tble">
+            <tbody class="">
                   ${this.generateAlignmentBody(
                     alignment_table.interventions,
                     alignment_table.col_set_2,
@@ -4238,8 +4270,8 @@ PORTFOLIO TOOL
       
         </div>
 
-        <div class="report-all-table-sm-rotate same-page">
-        <div class=" same-page-table-rotate">
+        <div class="report-all-table-sm-rotate ">
+        <div class="same-page same-page-table-rotate">
         <table class="table  test-table-one table-fixed-width">
           <thead class="table-primary  border-dark">
             <tr>
@@ -4266,7 +4298,7 @@ PORTFOLIO TOOL
                 .join('')}
             </tr>
           </thead>
-          <tbody class="test-tble">
+          <tbody class="">
                 ${this.generateHeatMapBody(
                   alignment_table.interventions,
                   alignment_table.col_set_2,
@@ -4292,7 +4324,7 @@ PORTFOLIO TOOL
       <div class="content same-page">
      
       <div  class="main_header text-start">5. Transformational impact matrix   </div>
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p >
       For interventions to be transformational, they should both have a significant and lasting positive impact (Outcome) and address various components to facilitate systems change (Process). Based on the scores for these two dimensions, interventions are placed within the matrix below – the green area suggesting that they will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and if the positive impact is small, it should be accompanied by a strong focus on changing processes to achieve transformation.  
       </p>  
@@ -4357,9 +4389,9 @@ PORTFOLIO TOOL
       <div class="content same-page">
      
       <div  class="main_header text-start">6. Sector coverage  </div>
-      <blockquote class=" paragraph blockquote text-start ">
+      <blockquote class=" paragraph blockquote-test text-start ">
       <p >
-      The pie chart below shows how the relative distribution of sectors that are covered by the interventions contained in this portfolio. 
+      The pie chart below shows the relative distribution of sectors that are covered by the interventions contained in this portfolio.
       </p>
      </blockquote> 
       <div  class="image-pie "><figure class="figure ">

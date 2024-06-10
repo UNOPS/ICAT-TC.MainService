@@ -43,6 +43,7 @@ import { CMScoreDto } from 'src/carbon-market/dto/cm-result.dto';
 import { User } from 'src/users/entity/user.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
 import { Sector } from 'src/master-data/sector/entity/sector.entity';
+import { isNull } from 'util';
 
 
 
@@ -281,7 +282,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     let investorTool = new InvestorTool();
     let isInvestment:boolean = false;
     let asse = await this.assessmentService.findbyIDforReport(assessmentId);
-    if(tool=='Investment Tool'){
+    if(tool=='Investment tool'){
   
       investorTool = await this.investorToolService.getResultByAssessment(assessmentId)
       isInvestment = true;
@@ -353,7 +354,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
         information: 'Total investment (in USD)',
         isInvestment: isInvestment,
         description: investorTool.total_investment
-          ? investorTool.total_investment
+          ? this.thousandSeperate(investorTool.total_investment, 2)
           : 'N/A',
       },
       {
@@ -2347,6 +2348,20 @@ return contentOne;
       }
       else{
         return name
+      }
+    }
+
+    thousandSeperate(value: any, decimals: number){
+      if ((value !== undefined)) {
+        if (value === '-'){
+          return value
+        } else if (isNull(value)) {
+          return '-'
+        } else {
+          return parseFloat(value.toFixed(decimals)).toLocaleString('en')
+        }
+      } else {
+        return '-'
       }
     }
 
