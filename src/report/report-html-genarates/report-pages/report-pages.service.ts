@@ -96,7 +96,7 @@ ${coverPage.reportDate}
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1. Single Intervention Information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Single intervention information ....................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.1	Description .................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.2	Understanding the intervention's transformational vision and context ..................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.3	Assessment information ........................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
@@ -132,7 +132,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1. Single Intervention Information</div>
+   <div  class="main_header text-start">1. Single intervention information</div>
  
  <div  class="main_header_sub text-start">1.1 Description  </div> 
         <div class="report-table-sm  ">
@@ -1402,7 +1402,7 @@ ${coverPage.reportDate}
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1. Single Intervention Information .................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Single intervention information .................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>...................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.1 Description ..............................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.2 Understanding the characteristics of the proposed carbon market activity ...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >1.3 Understanding the intervention's transformational vision and context ...............................................................................................................................................................................................................................................................................</div><div ><bdi>.............</bdi></div> </div>
@@ -1466,7 +1466,7 @@ ${coverPage.reportDate}
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1. Single Intervention Information</div>
+   <div  class="main_header text-start">1. Single intervention information</div>
  
  <div  class="main_header_sub text-start">1.1 Description </div> 
         <div class="report-table-sm  ">
