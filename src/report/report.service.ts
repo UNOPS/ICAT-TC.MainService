@@ -182,7 +182,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
               type:type,
               country: { id: countryIdFromTocken },
             },
-            relations: ['climateAction'],
+            relations: ['climateAction','country'],
           });
         } else {
           if(tool){
@@ -192,7 +192,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
                 climateAction: { policyName: Like(`%${climateAction}%`) },
                 reportName: Like(`%${reportName}%`),
                 country: { id: countryIdFromTocken },
-              },
+              }, relations: ['climateAction','country'],
             });
           }else{
             res = await this.repo.find({
@@ -200,7 +200,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
                 climateAction: { policyName: Like(`%${climateAction}%`) },
                 reportName: Like(`%${reportName}%`),
                 country: { id: countryIdFromTocken },
-              },
+              }, relations: ['climateAction','country'],
             });
           }
          
@@ -213,7 +213,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
               type:type,
               country: { id: countryIdFromTocken },
             },
-            relations: ['portfolio'],
+            relations: ['portfolio','country'],
           });
         } else {
           res = await this.repo.find({
@@ -222,6 +222,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
               reportName: Like(`%${reportName}%`),
               country: { id: countryIdFromTocken },
             },
+            relations: ['portfolio','country'],
           });
         }
 
@@ -242,6 +243,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
             reportName: Like(`%${reportName}%`),
             country: { id: countryIdFromTocken },
           },
+          relations: ['climateAction','portfolio','country'],
         });
       }
   
@@ -1977,29 +1979,29 @@ return contentFour
     }
     genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[], outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
       const contentTwo = new ComparisonReportReportContentTwo();
+console.log(process_data)
 
-
-      const tech = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - TECHNOLOGY'));
+      const tech = process_data.find(a => a.col_set_1.some(b => b.label == 'Category - Technology'));
 
       if (tech) {
         contentTwo.prosses_tech = tech.interventions;
 
       }
 
-      const agent = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - AGENTS'));
+      const agent = process_data.find(a => a.col_set_1.some(b => b.label == 'Category - Agents'));
 
       if (agent) {
         contentTwo.prosses_agent = agent.interventions;
 
       }
-      const incen = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - INCENTIVES'));
+      const incen = process_data.find(a => a.col_set_1.some(b => b.label == 'Category - Incentives'));
 
       if (incen) {
         contentTwo.prosses_incentive = incen.interventions;
     
 
       }
-      const norm = process_data.find(a => a.col_set_1.some(b => b.label == 'CATEGORY - NORMS AND BEHAVIORAL CHANGE'));
+      const norm = process_data.find(a => a.col_set_1.some(b => b.label == 'Category - Norms and behavioral change'));
 
       if (norm) {
         contentTwo.prosses_norms = norm.interventions;
@@ -2013,33 +2015,33 @@ return contentFour
       }
 
 
-      const ghg_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG') && a.comparison_type == 'SCALE COMPARISON');
+      const ghg_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG') && a.comparison_type == 'Scale comparison');
       if (ghg_scale) {
         contentTwo.ghg_scale = ghg_scale.interventions;
       }
 
-      const ghg_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG' && a.comparison_type == 'SUSTAINED IN TIME COMPARISON'));
+      const ghg_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'GHG' && a.comparison_type == 'Sustained in time comparison'));
       if (ghg_sustaind) {
         contentTwo.ghg_sustaind = ghg_sustaind.interventions;
       }
 
-      const ghg_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'GHG OUTCOMES' && a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON');
+      const ghg_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'GHG Outcomes' && a.comparison_type == 'Scale & Sustained in time comparison');
       if (ghg_scale_sustaind_comparison) {
 
         contentTwo.ghg_scale_sustaind_comparison = ghg_scale_sustaind_comparison.interventions;
       }
 
-      const adaptation_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'ADAPTATION') && a.comparison_type == 'SCALE COMPARISON');
+      const adaptation_scale = outcome_data.find(a => a.col_set_1.some(b => b.label == 'Adaptation') && a.comparison_type == 'Scale comparison');
       if (adaptation_scale) {
         contentTwo.adaptation_scale = adaptation_scale.interventions;
       }
 
-      const adaptation_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'ADAPTATION') && a.comparison_type == 'SUSTAINED IN TIME COMPARISON');
+      const adaptation_sustaind = outcome_data.find(a => a.col_set_1.some(b => b.label == 'Adaptation') && a.comparison_type == 'Sustained in time comparison');
       if (adaptation_sustaind) {
         contentTwo.adaptation_sustaind = adaptation_sustaind.interventions;
       }
 
-      const adaptation_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'ADAPTATION OUTCOMES' && a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON');
+      const adaptation_scale_sustaind_comparison = outcome_data.find(a => a.comparison_type_2 == 'Adaptation Outcomes' && a.comparison_type == 'Scale & Sustained in time comparison');
       if (adaptation_scale_sustaind_comparison) {
         contentTwo.adaptation_scale_sustaind_comparison = adaptation_scale_sustaind_comparison.interventions;
       }
@@ -2049,15 +2051,15 @@ return contentFour
         let sdg = contentTwo.allsdg.find(d => d.sdg_name == c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim());
 
         if (sdg) {
-          if (c.comparison_type == 'SCALE COMPARISON') {
+          if (c.comparison_type == 'Scale comparison') {
             sdg.sdg_scale = c.interventions;
           }
-          if (c.comparison_type == 'SUSTAINED IN TIME COMPARISON') {
+          if (c.comparison_type == 'Sustained in time comparison') {
             sdg.sdg_sustaind = c.interventions;
           }
         } else {
 
-          if (c.comparison_type == 'SCALE COMPARISON') {
+          if (c.comparison_type == 'Scale comparison') {
 
             contentTwo.allsdg.push({
               sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
@@ -2065,7 +2067,7 @@ return contentFour
               sdg_sustaind: []
             })
           }
-          if (c.comparison_type == 'SUSTAINED IN TIME COMPARISON') {
+          if (c.comparison_type == 'Sustained in time comparison') {
 
             contentTwo.allsdg.push({
               sdg_name: c.col_set_1[1].label.slice(c.col_set_1[1].label.indexOf('-') + 1).trim(),
@@ -2078,20 +2080,20 @@ return contentFour
         }
 
       });
-      outcome_data.filter(a => a.comparison_type == 'SCALE & SUSTAINED IN TIME COMPARISON' && a.comparison_type_2.includes('SDG')).forEach(c => {
+      outcome_data.filter(a => a.comparison_type == 'Sustained in time comparison' && a.comparison_type_2.includes('SDG')).forEach(c => {
         contentTwo.sdg_scale_sustaind_comparison.push({sdg_name:c.comparison_type_2,data:c.interventions})
 
       })
 
-      const sacle_comparison = outcome_data.find(a => a.col_set_1.length > 2 && a.comparison_type == 'SCALE COMPARISON');
+      const sacle_comparison = outcome_data.find(a => a.col_set_1.length > 2 && a.comparison_type == 'Scale comparison');
       if (sacle_comparison) {
         contentTwo.sacle_comparison = sacle_comparison.interventions;
       }
-      const sustaind_comparison = outcome_data.find(a => a.comparison_type == 'SUSTAINED COMPARISON' && a.col_set_1.length > 2);
+      const sustaind_comparison = outcome_data.find(a => a.comparison_type == 'Sustained comparison' && a.col_set_1.length > 2);
       if (sustaind_comparison) {
         contentTwo.sustaind_comparison = sustaind_comparison.interventions;
       }
-      const outcome_level = outcome_data.find(a => a.comparison_type == 'OUTCOME LEVEL COMPARISON');
+      const outcome_level = outcome_data.find(a => a.comparison_type == 'Outcome level comparison');
       if (outcome_level) {
         contentTwo.outcome_level = outcome_level.interventions;
       }
