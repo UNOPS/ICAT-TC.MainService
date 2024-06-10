@@ -2787,15 +2787,15 @@ PORTFOLIO TOOL
   <div class="content tableofcontentpage">
   <div class="table-of-content ">
   <div  class="table-of-content-main-headers text-start">Table of Contents</div>
-  <div class="table-of-content-header-item"><div >1. Portfolio of interventions information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
+  <div class="table-of-content-header-item"><div >1. Portfolio Information ....................................................................................................................................................................</div><div ><bdi>.................</bdi></div> </div>
   
     <div class="table-of-content-header-item"><div >2. Comparison of Impacts .................................................................................................................................................................</div><div ><bdi>................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.1	Comparison of Process Impacts  ................................................................................................................................</div><div ><bdi>....................</bdi></div> </div>
     <div class="table-of-content-sub-header-item"><div >2.2	Comparison of Outcome Impacts ....................................................................................................................................................</div><div ><bdi>........................</bdi></div> </div>
     <div class="table-of-content-header-item"><div >3. Aggregation of GHG Impacts .................................................................................................................................................................</div><div ><bdi>.....................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >4. SDG alignment .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >5. Transformational impact matrix .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
-    <div class="table-of-content-header-item"><div >6. Sector coverage .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >4. SDG Alignment .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >5. Transformational Impact Matrix .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
+    <div class="table-of-content-header-item"><div >6. Sector Coverage .................................................................................................................................................................</div><div ><bdi>......................</bdi></div> </div>
    
     </div>
 
@@ -2821,7 +2821,7 @@ PORTFOLIO TOOL
     const page_1 = `  <div id="page_9" class="page text-center" >
    ${header}
    <div class="content">
-   <div  class="main_header text-start">1.	Portfolio of interventions information </div>
+   <div  class="main_header text-start">1.	Portfolio Information </div>
    <blockquote class=" paragraph blockquote-test text-start ">
    <p >This section gives an overview of the portfolio as a whole and the intervention assessments that it is composed of.   </p>
   </blockquote> 
@@ -4221,7 +4221,7 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
     const page_1 = `  <div  class="page text-center" >
    ${header}
     <div class="content" style=" height:1000px">
-      <div  class="main_header text-start">4.	SDG alignment </div>
+      <div  class="main_header text-start">4.	SDG Alignment </div>
       <blockquote class=" paragraph blockquote-test text-start ">
       <p >
       The following tables show the score obtained by the interventions in the portfolio for each assessed Sustainable Development Goal (SDG) and how this compares to the priority given to these SDGs in the country of implementation. The first table shows the outcome scores (from major negative (-3) to major positive (3) contributions towards transformation), whereas the second one indicates the alignment between priority and outcome. Positive impacts are green, negative ones red – the shade is darker if the significance of the impact matches the country priorities.   
@@ -4323,7 +4323,7 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">5. Transformational impact matrix   </div>
+      <div  class="main_header text-start">5. Transformational Impact Matrix   </div>
       <blockquote class=" paragraph blockquote-test text-start ">
       <p >
       For interventions to be transformational, they should both have a significant and lasting positive impact (Outcome) and address various components to facilitate systems change (Process). Based on the scores for these two dimensions, interventions are placed within the matrix below – the green area suggesting that they will contribute to transformational change. All interventions with negative outcomes cannot be considered transformational (red area) and if the positive impact is small, it should be accompanied by a strong focus on changing processes to achieve transformation.  
@@ -4388,7 +4388,7 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
       ${header}
       <div class="content same-page">
      
-      <div  class="main_header text-start">6. Sector coverage  </div>
+      <div  class="main_header text-start">6. Sector Coverage </div>
       <blockquote class=" paragraph blockquote-test text-start ">
       <p >
       The pie chart below shows the relative distribution of sectors that are covered by the interventions contained in this portfolio.
