@@ -749,16 +749,20 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.ch_score = score === null ? null : Math.round(score);
         return _obj;
       })
-      let _cat_score = null
-      let cat_score = ch_data.reduce((accumulator, object) => {
-        if (object.ch_score === null) {
-          _cat_score = null
-        } else {
-          _cat_score = object.ch_score
-          return accumulator + (object.ch_score * object.weight / 100);
-        }
-      }, 0);
-      if (_cat_score === null) cat_score = null
+      
+      let cat_score = 0;
+      let isAllchNull = false
+      if (ch_data.find(o => o.ch_score !== null)) { isAllchNull = false; } else { isAllchNull = true; }
+
+      if (isAllchNull) {cat_score = null;}
+      else {
+        ch_data.map(ch => {
+          if (ch.ch_score !== null) {
+            cat_score += (ch.ch_score * ch.weight / 100);
+          }
+        })
+      }
+
       cat_score = cat_score === null ? null : Math.round(cat_score)
       data.push({
         name: cat.name,
