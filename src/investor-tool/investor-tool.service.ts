@@ -1950,6 +1950,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
   }
   async heatMapCAl2(heatMapScore:any){
     let data = new Array();
+
     let datamineOne = new value();
     let datamineTwo = new value();
     let datamineThree = new value();
@@ -1961,6 +1962,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let data5 = new value();
     let data6 = new value();
     let data7 = new value();
+  
     for await(let item of heatMapScore){
       if ( item.processScore != null )  {
         let value =  item.processScore  +  item.outcomeScore ;
@@ -2012,18 +2014,19 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         }
       } 
     }
-    data.push(datamineThree);
-    data.push(datamineTwo);
-    data.push(datamineOne);
-    data.push(data0);
-    data.push(data1);
-    data.push(data2);
-    data.push(data3);
-    data.push(data4);
-    data.push(data5);
-    data.push(data6);
     data.push(data7);
-    return data.sort((a, b) => a.value - b.value);
+    data.push(data6);
+    data.push(data5); 
+    data.push(data4);
+    data.push(data1); 
+    data.push(data3);        
+    data.push(data0);       
+    data.push(datamineOne);
+    data.push(datamineTwo);
+    data.push(data2);
+    data.push(datamineThree); 
+    
+    return data;
   }
   async heatMapCAl(heatMapScore:any){
     let data = new GraphResdDto();
