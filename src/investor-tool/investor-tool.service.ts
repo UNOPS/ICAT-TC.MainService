@@ -1884,6 +1884,58 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       ;
     return await sectorSum.getRawMany();
   }
+  async getDashboardAllDataFilter2():  Promise<any> {
+
+    let filter = ''
+    let user = this.userService.currentUser();
+    const currentUser = await user;
+    let userId = currentUser.id;
+    let userCountryId = currentUser.country?.id;
+    if (currentUser?.userType?.name === 'External') {
+      if(filter){
+        filter = filter + ' and asses.user_id=:userId '
+      }else{
+        filter = filter + '  asses.user_id=:userId '  
+      }
+
+    }
+    else {
+      if(filter){
+        filter = filter + ' and country.id=:userCountryId '
+      }else{
+        filter = filter + ' country.id=:userCountryId '
+      }
+    }
+
+    const data = this.assessmentRepo.createQueryBuilder('asses')
+      .select(['asses.id','asses.from','asses.to', 'asses.process_score', 'asses.outcome_score' ,'asses.tool'])
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      )
+      
+      data.andWhere(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
+     
+
+      let allData = await data.getMany();
+    //  let result = await paginate(data);
+     
+   return allData;
+  }
   async getDashboardAllDataGraph() {
 
     let filter = ''
@@ -1929,8 +1981,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     ).where(filter, { userId, userCountryId }).orderBy('asses.id','DESC')
    
     
-    let result1 =await data.getMany();
-    let heatMapScore =  await result1.map(item => {return {processScore: item.process_score, outcomeScore: item.outcome_score}});
+    // let result1 =await data.getMany();
+    let result1 = await this.getDashboardAllDataFilter2()
+    let heatMapScore =  await result1.map(item => {return {processScore: item.result.averageProcess, outcomeScore: item.result.averageOutcome}});
     let value =new Array();
     let colour =new Array();
     let result =new Array();
@@ -1962,11 +2015,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let data5 = new value();
     let data6 = new value();
     let data7 = new value();
-    console.log(heatMapScore.length)
   
     for await(let item of heatMapScore){
-     
-      // if ( item.processScore != null )  {
+      if ( item.processScore != null && item.outcomeScore !=null )  {
         let x =  item.outcomeScore ;
         let y =  item.processScore
         if ((x <= -1) || (x === 1 && y === 0) || (x === 0 && y === 1) || (x === 0 && y === 0)) {
@@ -2021,7 +2072,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
               data7.name ='#63be7b';
               break;
           }
-        // }
+        }
        
       } 
     }
@@ -2036,7 +2087,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     data.push(datamineTwo);
     data.push(data2);
     data.push(datamineThree); 
-    console.log(data)
+    
     return data;
   }
   async heatMapCAl(heatMapScore:any){
