@@ -1962,56 +1962,67 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     let data5 = new value();
     let data6 = new value();
     let data7 = new value();
+    console.log(heatMapScore.length)
   
     for await(let item of heatMapScore){
-      if ( item.processScore != null )  {
-        let value =  item.processScore  +  item.outcomeScore ;
-        switch (value) {
-          case -3:
-            datamineThree.value +=1;
-            datamineThree.name ='#ec6665';
-            break;
-          case -2:
-            datamineTwo.value +=1;
-            datamineTwo.name ='#ed816c';
-            break;
-          case -1:
-            datamineOne.value +=1;
-            datamineOne.name ='#f19f70';
-            break;
-          case 0:
-            data0.value +=1;
-            data0.name ='#f19f70';
-            break;
-          case 1:
-            data1.value +=1;
-            data1.name ='#f9d57f';
-            break;
-          case 2:
-            data2.value +=1;
-            data2.name ='#f98570';
-            break;
-          case 3:
-            data3.value +=1;
-            data3.name ='#fdbf7b';
-            break;
-          case 4:
-            data4.value +=1;
-            data4.name ='#fedc82';
-            break;
-          case 5:
-            data5.value +=1;
-            data5.name ='#a9d27f';
-            break;
-          case 6:
-            data6.value +=1;
-            data6.name ='#86c97d';
-            break;
-          case 7:
-            data7.value +=1;
-            data7.name ='#63be7b';
-            break;
+     
+      // if ( item.processScore != null )  {
+        let x =  item.outcomeScore ;
+        let y =  item.processScore
+        if ((x <= -1) || (x === 1 && y === 0) || (x === 0 && y === 1) || (x === 0 && y === 0)) {
+          datamineThree.value +=1;
+          datamineThree.name ='#ec6665';
         }
+        else{
+          let value =  x  +  y ;
+          switch (value) {
+            case -3:
+              datamineThree.value +=1;
+              datamineThree.name ='#ec6665';
+              break;
+            case -2:
+              datamineTwo.value +=1;
+              datamineTwo.name ='#ed816c';
+              break;
+            case -1:
+              datamineOne.value +=1;
+              datamineOne.name ='#f19f70';
+              break;
+            case 0:
+              data0.value +=1;
+              data0.name ='#f4b979';
+              break;
+            case 1:
+              data1.value +=1;
+              data1.name ='#f9d57f';
+              break;
+            case 2:
+              data2.value +=1;
+              data2.name ='#f98570';
+              break;
+            case 3:
+              data3.value +=1;
+              data3.name ='#fdbf7b';
+              break;
+            case 4:
+              data4.value +=1;
+              data4.name ='#fedc82';
+              break;
+            case 5:
+              data5.value +=1;
+              data5.name ='#a9d27f';
+              break;
+            case 6:
+              data6.value +=1;
+              data6.name ='#86c97d';
+              break;
+            case 7:
+              data7.value +=1;
+              data7.name ='#63be7b';
+              break;
+          }
+        // }
+       
       } 
     }
     data.push(data7);
@@ -2025,7 +2036,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     data.push(datamineTwo);
     data.push(data2);
     data.push(datamineThree); 
-    
+    console.log(data)
     return data;
   }
   async heatMapCAl(heatMapScore:any){
