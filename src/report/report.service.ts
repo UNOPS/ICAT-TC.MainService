@@ -1537,7 +1537,23 @@ export class ReportService extends TypeOrmCrudService<Report> {
   ):Promise<ReportCarbonMarketDtoContentOne>{
     const contentOne=new ReportCarbonMarketDtoContentOne()
     let asse = await this.assessmentService.findbyIDforCarbonMarketReport(assessmentId);
-    
+    let int_cm_approaches = [
+      { id: 1, name: "Article 6.2", code: "ARTICLE_6.2" },
+      { id: 2, name: "Article 6.4", code: "ARTICLE_6.4" },
+      { id: 2, name: "Gold Standard", code: "GOLD_STANDARD" },
+      { id: 2, name: "Verified Carbon Standard", code: "VERIFIED_CARBON_STANDARD" },
+      { id: 2, name: "Plan Vivo", code: "PLAN_VIVO" },
+      { id: 2, name: "American Carbon Registry", code: "AMERICAN_CARBON_REGISTRY" },
+      { id: 2, name: "Climate Action Reserve", code: "CLIMATE_ACTION_RESERVE" },
+      { id: 2, name: "Other", code: "OTHER" },
+    ]
+    let scale_of_activity = [
+      { id: 1, name: 'Project', code: 'PROJECT'},
+      { id: 2, name: 'Programme', code: 'PROGRAMME'}
+    ]
+    let cmApproache = int_cm_approaches.find(o => o.code === asse.cmAssessmentDetails.intCMApproach);
+    let scale =  scale_of_activity.find(o => o.code === asse.cmAssessmentDetails.scale);
+
     contentOne.policyOrActionsDetails = [
       {
         information: 'Title of the intervention',
@@ -1607,7 +1623,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'Scale of the activity',
-        description: asse.cmAssessmentDetails.scale
+        description: scale?.name
       },
       {
         information: 'Assessment boundaries',
@@ -1615,7 +1631,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       },
       {
         information: 'International carbon market approach used ',
-        description: asse.cmAssessmentDetails.intCMApproach
+        description: cmApproache?.name
       },
       {
         information: 'Baseline and monitoring methodology applied by the activity ',
