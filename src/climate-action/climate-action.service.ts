@@ -21,6 +21,8 @@ import { BarrierCategory } from './entity/barrier-category.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { Report } from 'src/report/entities/report.entity';
 import { AssessmentService } from 'src/assessment/assessment.service';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
+import { UserType } from 'src/users/entity/user.type.entity';
 
 @Injectable()
 export class ProjectService extends TypeOrmCrudService<ClimateAction> {
@@ -32,6 +34,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     @InjectRepository(BarrierCategory) private barrierCategoryRepo: Repository<BarrierCategory>,
     @InjectRepository(Results) private readonly resultRepository: Repository<Results>,
     @InjectRepository(Report) private readonly reportRepository: Repository<Report>,
+    @InjectRepository(Assessment) private readonly assessmentRepo: Repository<Assessment>,
     private userService: UsersService,
     private assessmentService: AssessmentService,
 
@@ -258,31 +261,67 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
   async findTypeofAction(): Promise<any[]> {
     const currentUser = await this.userService.currentUser();
 
-    const res = await this.resultRepository
-      .createQueryBuilder('result')
-      .leftJoinAndSelect('result.assessment', 'assessment')
-      .leftJoinAndSelect('assessment.user', 'user')
-      .leftJoinAndSelect('user.country', 'country')
-      .getMany();
+    // const res = await this.resultRepository
+    //   .createQueryBuilder('result')
+    //   .leftJoinAndSelect('result.assessment', 'assessment')
+    //   .leftJoinAndSelect('assessment.user', 'user')
+    //   .leftJoinAndSelect('user.country', 'country')
+    //    .leftJoinAndMapOne(
+    //     'assessment.climateAction',
+    //     ClimateAction,
+    //     'climateAction',
+    //     'assessment.climateAction_id = climateAction.id and not climateAction.status =-20'
+    //   )
+    //   .getMany();
 
+      const res =await this.assessmentRepo.createQueryBuilder('asses')
+      .innerJoinAndMapOne(
+        'asses.result',
+        Results,
+        'result',
+        'asses.id = result.assessment_id'
+      )
+      .leftJoinAndMapOne(
+        'asses.climateAction',
+        ClimateAction,
+        'climateAction',
+        'asses.climateAction_id = climateAction.id and not climateAction.status =-20'
+      )
+      .leftJoinAndMapOne(
+        'asses.user', 
+        User,
+        'user',
+        'user.id=asses.user_id'
+      )
+      .leftJoinAndMapOne(
+        'user.userType', 
+        UserType,
+        'userType',
+         'userType.id = user.userTypeId'
+      )
+      .leftJoinAndMapOne(
+        'climateAction.country',
+        Country,
+        'country',
+        'climateAction.countryId = country.id'
+      ).getMany();
 
-    const policyList: Results[] = [];
+    const policyList: Assessment[] = [];
     const isUserExternal = currentUser?.userType?.description === 'External';
 
     for (const x of res) {
-
-      const isSameUser = x.assessment?.user?.id === currentUser?.id;
-      const isMatchingCountry = x.assessment?.user?.country?.id === currentUser?.country?.id;
-      const isUserInternal = x.assessment?.user?.userType?.description !== 'External';
+      const isSameUser = x.user?.id === currentUser?.id;
+      const isMatchingCountry = x.climateAction?.country?.id === currentUser?.country?.id;
+      const isUserInternal = x.user?.userType?.description !== 'External';
       const toolName =
-        x.assessment?.tool === "PORTFOLIO" ? "General" :
-          x.assessment?.tool === "CARBON_MARKET" ? "Carbon market" :
-          x.assessment?.tool === "INVESTOR" ? "Investment" :
-          x.assessment?.tool;
+        x.tool === "PORTFOLIO" ? "General" :
+          x.tool === "CARBON_MARKET" ? "Carbon market" :
+          x.tool === "INVESTOR" ? "Investment" :
+          x.tool;
     
-          if(x?.assessment?.tool){
+          if(x?.tool){
             
-            x.assessment.tool = toolName;
+            x.tool = toolName;
           }
         
         if ((isUserExternal && isSameUser) || (!isUserExternal && isMatchingCountry && isUserInternal)) {
@@ -294,13 +333,13 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
 
     }
 
-    const actions = policyList.reduce((acc: any[], entity: Results) => {
-      const existingAction = acc.find((item) => item.name === entity.assessment.tool);
+    const actions = policyList.reduce((acc: any[], entity: Assessment) => {
+      const existingAction = acc.find((item) => item.name === entity.tool);
 
       if (existingAction) {
         existingAction.count++;
       } else {
-        acc.push({ name: entity.assessment.tool, count: 1 });
+        acc.push({ name: entity.tool, count: 1 });
       }
 
       return acc;

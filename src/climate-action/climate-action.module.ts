@@ -20,13 +20,14 @@ import { HttpModule } from '@nestjs/axios';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
 import { ConfigModule } from '@nestjs/config';
 import { AssessmentModule } from 'src/assessment/assessment.module';
+import { Assessment } from 'src/assessment/entities/assessment.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,  
     }),
-    TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report]), HttpModule,AssessmentModule],
+    TypeOrmModule.forFeature([ClimateAction,PolicyBarriers,PolicySector,  Results, User, UserType, Institution, Country,Audit,BarrierCategory,Report,Assessment]), HttpModule,AssessmentModule],
   controllers: [ProjectController],
   providers: [ProjectService, EmailNotificationService,PolicyBarriers,TokenDetails,PolicySector, UsersService,BarrierCategory, AuditDetailService],
   exports: [ProjectService],
