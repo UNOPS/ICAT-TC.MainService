@@ -703,7 +703,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
               : '-',
 
-            Supportingsdocumentssupplied: '-',
+            Supportingsdocumentssupplied: invesass.uploadedDocumentPath?'Yes':'No',
 
           });
 
@@ -744,7 +744,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
 
                   : '-',
 
-                Supportingsdocumentssupplied: '-',
+                Supportingsdocumentssupplied: invesass.uploadedDocumentPath?'Yes':'No',
 
               },
 
