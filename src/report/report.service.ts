@@ -1979,7 +1979,6 @@ return contentFour
     }
     genarateComparisonReportDtoContentTwo(process_data: ComparisonDto[], outcome_data: ComparisonDto[]): ComparisonReportReportContentTwo {
       const contentTwo = new ComparisonReportReportContentTwo();
-console.log(process_data)
 
       const tech = process_data.find(a => a.col_set_1.some(b => b.label == 'Category - Technology'));
 
