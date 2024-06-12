@@ -117,6 +117,8 @@ export class AssessmentController {
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('filterText') filterText: string,
+    @Query('sortField') sortField: string | undefined,
+    @Query('sortOrder') sortOrder: string | undefined,
   ): Promise<any> {
     let countryIdFromTocken: number;
     let cuserRoleFromTocken: string;
@@ -131,7 +133,8 @@ export class AssessmentController {
       filterText,
       countryIdFromTocken,
       cuserRoleFromTocken,
-      userNameFromTocken
+      userNameFromTocken,
+      sortField, sortOrder
     );
   }
 

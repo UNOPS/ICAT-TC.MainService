@@ -211,12 +211,15 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     }
   }
 
+
+
   async assessmentInprogress(
     options: IPaginationOptions,
     filterText: string,
     countryIdFromTocken: number,
     cuserRoleFromTocken,
-    userNameFromTocken
+    userNameFromTocken,
+    sortField, sortOrder
   ): Promise<any> {
     let filter: string = 'asse.isDraft = true';
     if (cuserRoleFromTocken != "External") {
@@ -230,39 +233,67 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     if (filterText != null && filterText != undefined && filterText != '') {
       filter = `${filter} AND (proj.policyName LIKE :filterText OR proj.typeofAction LIKE :filterText  OR asse.assessmentType LIKE :filterText OR asse.tool LIKE :filterText)`;
     }
-    let data3 = this.repo
-    .createQueryBuilder('asse')
-    .leftJoinAndMapOne(
-      'asse.climateAction',
-      ClimateAction,
-      'proj',
-      `proj.id = asse.climateAction_id and not proj.status =-20 `,
-    )
-    .where(filter, {
-      filterText: `%${filterText}%`,
-    })
-    .orderBy('asse.id', 'ASC')
-    .getMany();
+    let _data3 = this.repo
+      .createQueryBuilder('asse')
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id and not proj.status =-20 `,
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+      })
+      // .orderBy('asse.id', 'ASC')
 
-  let data = this.repo
-    .createQueryBuilder('asse')
-    .leftJoinAndMapOne(
-      'asse.climateAction',
-      ClimateAction,
-      'proj',
-      `proj.id = asse.climateAction_id  and not proj.status =-20 `,
-    )
-    .where(filter, {
-      filterText: `%${filterText}%`,
-    })
-    .orderBy('asse.id', 'ASC');
-  let result = await paginate(data, options);
-  let newarray = new Array();
-  for (let asse of result.items) {
-    newarray.push(asse.id)
-  }
+      if (sortField === 'intervention') {
+        _data3.orderBy('TRIM(proj.policyName)', sortOrder)
+      } else if (sortField === 'assessment_type') {
+        _data3.orderBy('asse.assessmentType', sortOrder)
+      } else if (sortField === 'tool') {
+        _data3.orderBy('asse.tool', sortOrder)
+      } else if (sortField === 'created_date') {
+        _data3.orderBy('asse.createdOn', sortOrder)
+      }else if (sortField === 'updated_date') {
+        _data3.orderBy('asse.editedOn', sortOrder)
+      } else {
+        _data3.orderBy('asse.editedOn', 'DESC')
+      }
 
-  let data1 = this.repo
+    let data3 = _data3.getMany();
+
+    let data = this.repo
+      .createQueryBuilder('asse')
+      .leftJoinAndMapOne(
+        'asse.climateAction',
+        ClimateAction,
+        'proj',
+        `proj.id = asse.climateAction_id  and not proj.status =-20 `,
+      )
+      .where(filter, {
+        filterText: `%${filterText}%`,
+      })
+      // .orderBy('asse.id', 'ASC');
+      if (sortField === 'intervention') {
+        data.orderBy('TRIM(proj.policyName)', sortOrder)
+      } else if (sortField === 'assessment_type') {
+        data.orderBy('asse.assessmentType', sortOrder)
+      } else if (sortField === 'tool') {
+        data.orderBy('asse.tool', sortOrder)
+      } else if (sortField === 'created_date') {
+        data.orderBy('asse.createdOn', sortOrder)
+      }else if (sortField === 'updated_date') {
+        data.orderBy('asse.editedOn', sortOrder)
+      } else {
+        data.orderBy('asse.editedOn', 'DESC')
+      }
+    let result = await paginate(data, options);
+    let newarray = new Array();
+    for (let asse of result.items) {
+      newarray.push(asse.id)
+    }
+
+    let data1 = this.repo
       .createQueryBuilder('asse')
       .leftJoinAndMapOne(
         'asse.climateAction',
@@ -289,6 +320,19 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         `user.id = asse.user_id`,
       )
       .where('asse.id in (:...newarray)', { newarray });
+      if (sortField === 'intervention') {
+        data1.orderBy('TRIM(proj.policyName)', sortOrder)
+      } else if (sortField === 'assessment_type') {
+        data1.orderBy('asse.assessmentType', sortOrder)
+      } else if (sortField === 'tool') {
+        data1.orderBy('asse.tool', sortOrder)
+      } else if (sortField === 'created_date') {
+        data1.orderBy('asse.createdOn', sortOrder)
+      }else if (sortField === 'updated_date') {
+        data1.orderBy('asse.editedOn', sortOrder)
+      } else {
+        data1.orderBy('asse.editedOn', 'DESC')
+      }
 
     let item = new Array()
     let re = new Array()
@@ -301,9 +345,9 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       re.push(item);
       return re;
     }
-    
 
-   
+
+
   }
 
   async getAssessmentForApproveData(
