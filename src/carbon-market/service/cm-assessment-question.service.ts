@@ -663,6 +663,22 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     return criterias;
   }
 
+  removeNullAssessmentQuestions(assessmentquestions: CMAssessmentQuestion[]) {
+    let AssessQ: CMAssessmentQuestion[] = []
+    assessmentquestions.map(q => {
+      if (['SOCIAL_NORMS', 'BEHAVIOUR', 'AWARENESS', 'INSTITUTIONAL_AND_REGULATORY', 'DISINCENTIVES', 'ECONOMIC_NON_ECONOMIC', 'BENIFICIARIES', 'COALITION_OF_ADVOCATES', 'ENTREPRENEURS', 'SCALE_UP', 'ADOPTION', 'R_&_D'].includes(q.characteristic.code)) {
+        if (q.assessmentAnswers[0]?.answer?.id !== undefined) {
+          AssessQ.push(q)
+        } else if ((q.assessmentAnswers[0]?.answer?.id === undefined && q.relevance === 0)) {
+          AssessQ.push(q)
+        }
+      } else {
+        AssessQ.push(q)
+      }
+    })
+    return AssessQ;
+  }
+
   async getProcessData(assessmentId: number) {
     let cmAssessmentQuestions = await this.assessmentQuestionRepo
       .createQueryBuilder('aq')
@@ -710,6 +726,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     for (let cat of uniqueCats) {
       let qs = cmAssessmentQuestions.filter(o => o.characteristic.category.code === cat.code);
+      qs = this.removeNullAssessmentQuestions(qs);
       let chs = this.group(qs, 'characteristic', 'code');
       let ch_data = Object.keys(chs).map(ch => {
         if (chs[ch].length > maxLength) {
