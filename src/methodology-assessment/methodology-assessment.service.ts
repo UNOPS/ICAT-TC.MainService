@@ -594,7 +594,7 @@ export class MethodologyAssessmentService extends TypeOrmCrudService <Methodolog
       } else if (sortField === 'created_date') {
         data.orderBy('assessment.createdOn', sortOrder)
       } else {
-        data.orderBy('assessment.id', 'DESC')
+        data.orderBy('assessment.createdOn', 'DESC')
       }
 
       try {
