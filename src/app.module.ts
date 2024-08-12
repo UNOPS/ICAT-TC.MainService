@@ -214,12 +214,6 @@ import { CMDefaultValue } from './carbon-market/entity/cm-default-value.entity';
         host: process.env.EMAIL_HOST,
         port: 587,
         secure: false,
-
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_PASSWORD,
-
-        },
       },
       defaults: {
         from: '"Admin"' + process.env.EMAIL,
