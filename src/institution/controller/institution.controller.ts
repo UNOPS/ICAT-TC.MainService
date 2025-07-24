@@ -365,13 +365,14 @@ export class InstitutionController implements CrudController<Institution> {
     )
   }
 
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
   @Post('updateInstituion')
   update(@Body()  ins: Institution) {
 
     return this.service.update(ins);
   }
 
-  
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
   @Post('createInstituion')
   Create(@Body()  ins: Institution) {
 

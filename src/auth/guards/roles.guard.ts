@@ -36,7 +36,8 @@ export function RoleGuard(roles?: LoginRole[]): Type<CanActivate>{
           return false;
         }
      
-      return user.user.role.code;
+      const userRole = user.user.role.code;
+      return roles.includes(userRole);
     }
   }
 
