@@ -143,7 +143,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
   }
 
 
-  async getInstituion(
+  async getInstitution(
     options: IPaginationOptions,
     filterText: number,
     countryId: number) {
@@ -154,7 +154,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       .getMany();
     return policies
   }
-  async getInstituionById(
+  async getInstitutionById(
     Id: number) {
 
     return this.repo.findOne({ relations: ['type', 'category'], where: { id: Id } })

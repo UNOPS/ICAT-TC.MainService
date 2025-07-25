@@ -178,14 +178,14 @@ export class InstitutionController implements CrudController<Institution> {
 
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
 
-  @Get('deactivateInstituion')
+  @Get('deactivateInstitution')
   @ApiCreatedResponse({ type: Any })
-  async deactivateInstitution(@Query('instiId') instiId: number): Promise<any> {
+  async deactivateInstitution(@Query('institutionId') institutionId: number): Promise<any> {
     let audit: AuditDto = new AuditDto();
     audit.action = 'Institution Deactivated';
     audit.comment = 'Institution Deactivated';
     audit.actionStatus = 'Deactivated';
-    return await this.service.softDelete(instiId);
+    return await this.service.softDelete(institutionId);
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.DATA_COLLECTION_TEAM]))
@@ -334,8 +334,8 @@ export class InstitutionController implements CrudController<Institution> {
     return await this.service.getAllInstitutions();
   }
 
-  @Get('getInstituion')
-  async getInstituion(
+  @Get('getInstitution')
+  async getInstitution(
     @Request() request,
     @Query('filterText') type: number,
     @Query('countryId') countryId: number,
@@ -343,7 +343,7 @@ export class InstitutionController implements CrudController<Institution> {
     @Query('page') page: number,
   ): Promise<any> {
 
-    return await this.service.getInstituion(
+    return await this.service.getInstitution(
       {
         limit: limit,
         page: page,
@@ -354,26 +354,26 @@ export class InstitutionController implements CrudController<Institution> {
   }
 
 
-  @Get('getInstituionById')
-  async getInstituionById(
+  @Get('getInstitutionById')
+  async getInstitutionById(
     @Request() request,
     @Query('id') Id: number,
   ): Promise<any> {
 
-    return await this.service.getInstituionById(
+    return await this.service.getInstitutionById(
       Id,
     )
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
-  @Post('updateInstituion')
+  @Post('updateInstitution')
   update(@Body()  ins: Institution) {
 
     return this.service.update(ins);
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN, LoginRole.COUNTRY_ADMIN, LoginRole.SECTOR_ADMIN, LoginRole.DATA_COLLECTION_TEAM, LoginRole.MRV_ADMIN, LoginRole.TECNICAL_TEAM]))
-  @Post('createInstituion')
+  @Post('createInstitution')
   Create(@Body()  ins: Institution) {
 
     return this.service.create(ins);
