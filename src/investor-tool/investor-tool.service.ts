@@ -973,6 +973,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
+      .addGroupBy('sector.id')
       .having('sector IS NOT NULL')
       .getRawMany();
 
@@ -1028,6 +1029,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
+      .addGroupBy('sector.id')
       .having('sector IS NOT NULL')
       .getRawMany();
 
@@ -1567,9 +1569,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
         aggre_Score += category.category_score.value
         sdg_count_aggre++;
     }
+
+    let totalRelevantOutcomeWeight = 0;
+    for (let category of outcomeArray) {
+      if (!category.isSDG && category.category_score?.value !== null && category.category_score?.value !== undefined) {
+        totalRelevantOutcomeWeight += category.category_weight;
+      }
+    }
+
     if(sdg_count_aggre!=0){
       finalProcessDataArray.aggregatedScore.value = this.roundDown(aggre_Score/2);
       finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(this.roundDown(aggre_Score/sdg_count_aggre));
+      totalRelevantOutcomeWeight += 50;
       total_outcome_cat_weight += 50*(finalProcessDataArray.aggregatedScore.value);
     }
     else{
@@ -1578,9 +1589,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
     }
     
     finalProcessDataArray.outcomeData = outcomeArray;
-    if (total_outcome_cat_weight != null){
+    if (total_outcome_cat_weight != null && totalRelevantOutcomeWeight > 0){
       
-      finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / 100);
+      finalProcessDataArray.outcomeScore = this.roundDown(total_outcome_cat_weight / totalRelevantOutcomeWeight);
       
     }
     let scale_sdg= finalProcessDataArray?.outcomeData?.find((item: { code: string; })=>item?.code=='SCALE_SD');
@@ -1757,6 +1768,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sdg.number', 'number')
       .addSelect('count(DISTINCT concat(assessment.id, sdg.id))', 'count')
       .groupBy('sdg.name')
+      .addGroupBy('sdg.number')
       .having('sdg IS NOT NULL')
       ;
     return await sectorSum.getRawMany();

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 
 @Injectable()
@@ -10,6 +10,9 @@ export class TokenDetails {
 
     getDetails(reqDetails: TokenReqestType[]): any[] {
         let details: any[] = [];
+        if (!this.request?.user?.user) {
+            throw new UnauthorizedException('Invalid or expired token');
+        }
         let user: any = this.request.user.user;
         for (let det of reqDetails) {
             switch (det) {
