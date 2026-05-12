@@ -489,7 +489,7 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
       policy.id =obj.id;
       ps.sector =sec;
       ps.intervention= policy;
-      this.PolicySectorsRepo.save(ps)
+      await this.PolicySectorsRepo.save(ps);
     }
   }
 
