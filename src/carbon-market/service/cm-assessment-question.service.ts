@@ -195,14 +195,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
         this.saveTcValue(assessment.id, res);
       }
-      if (expectedGHGMitigation || expectedGHGMitigation === null || expectedGHGMitigation === 0) {
+      if (expectedGHGMitigation !== undefined) {
         let cm_detail = await this.assessmentCMDetailService.getAssessmentCMDetailByAssessmentId(assessment.id)
         if (cm_detail) {
-          cm_detail.expected_ghg_mitigation = expectedGHGMitigation;
-          cm_detail.cmassessment = undefined
-          cm_detail.geographicalAreasCovered = undefined
-          cm_detail.sectorsCovered = undefined
-          this.assessmentCMDetailService.save(cm_detail)
+          await this.assessmentCMDetailService.updateExpectedGhgMitigation(cm_detail.id, expectedGHGMitigation);
         }
       }
       return a_ans
@@ -290,7 +286,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
   async calculateProcessResult(questions: CMAssessmentQuestion[]) {
 
-
     let categories = [...new Set(questions.map(q => q.characteristic.category.code))]
     let obj = {}
 
@@ -301,6 +296,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         let _obj: CharacteristicData = new CharacteristicData()
         _obj.characteristic = chs[ch][0].characteristic.code
         _obj.relevance = chs[ch][0].relevance
+        _obj.ch_weight = chs[ch][0].characteristic.cm_weight
         let weight = chs[ch][0].characteristic.cm_weight
         let score = null
         chs[ch].forEach(_ch => {
@@ -308,7 +304,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             score += _ch.assessmentAnswers[0].score
           }
         })
-        _obj.score = _obj.relevance === '0' ? null : (_obj.relevance === '1' ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
+        let isNotRelevant = +_obj.relevance === 0
+        _obj.score = isNotRelevant ? null : (+_obj.relevance === 1 ? Math.round(score * weight / 2 / 100) : Math.round(score * weight / 100))
         return _obj
       })
       let cat_data = { characteristics: ch_data, weight: qs[0].characteristic.category.cm_weight }
@@ -317,19 +314,30 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     let resObj = {}
     for (let key of Object.keys(obj)) {
+      let relevantChars = obj[key].characteristics.filter(ch => +ch.relevance !== 0 && ch.score !== null)
+      let totalRelevantWeight = relevantChars.reduce((sum, ch) => sum + ch.ch_weight, 0)
+
       let score = null
-      obj[key].characteristics.forEach(ch => {
-        if (ch.relevance !== 0) {
-          score += ch.score
-        }
-      })
+      if (relevantChars.length > 0 && totalRelevantWeight > 0) {
+        score = 0
+        relevantChars.forEach(ch => {
+          let normalizedWeight = ch.ch_weight / totalRelevantWeight
+          score += ch.score * normalizedWeight
+        })
+        score = Math.round(score)
+      }
       resObj[key] = { score: score, weight: obj[key].weight }
     }
 
+    let relevantCategories = Object.keys(resObj).filter(key => resObj[key].score !== null)
+    let totalRelevantCatWeight = relevantCategories.reduce((sum, key) => sum + resObj[key].weight, 0)
+
     let process_score = null
-    for (let key of Object.keys(resObj)) {
-      process_score === null ? (resObj[key].score === null ? process_score === null : process_score = Math.round(resObj[key].score * resObj[key].weight / 100)) :
-        process_score += Math.round(resObj[key].score * resObj[key].weight / 100)
+    if (relevantCategories.length > 0 && totalRelevantCatWeight > 0) {
+      process_score = 0
+      for (let key of relevantCategories) {
+        process_score += Math.round(resObj[key].score * resObj[key].weight / totalRelevantCatWeight)
+      }
     }
 
     return process_score
@@ -394,23 +402,40 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     let scale_ghg_score = null; let scale_sdg_score = null; let scale_adaptation_score = null;
     let sustained_ghg_score = null; let sustained_sdg_score = null; let sustained_adaptation_score = null;
     let outcome_score = null
+
+    let outcomeComponents: { score: number, weight: number }[] = []
+
     if (obj['SCALE_GHG']) {
       scale_ghg_score = obj['SCALE_GHG'].score
       sustained_ghg_score = obj['SUSTAINED_GHG']?.score
       ghg_score = scale_ghg_score === null && sustained_ghg_score === null ? null : (scale_ghg_score + sustained_ghg_score) / 2;
-      ghg_score  !== null ? outcome_score += (ghg_score * obj['SCALE_GHG'].weight / 100) : outcome_score = outcome_score
+      if (ghg_score !== null) {
+        outcomeComponents.push({ score: ghg_score, weight: obj['SCALE_GHG'].weight })
+      }
     }
     if (obj['SCALE_SD']) {
       scale_sdg_score = obj['SCALE_SD'].score
       sustained_sdg_score = obj['SUSTAINED_SD']?.score
       sdg_score = scale_sdg_score === null && sustained_sdg_score === null ? null : (scale_sdg_score + sustained_sdg_score) / 2;
-      sdg_score !== null ? outcome_score += (sdg_score * obj['SCALE_SD'].weight / 100) : outcome_score = outcome_score
+      if (sdg_score !== null) {
+        outcomeComponents.push({ score: sdg_score, weight: obj['SCALE_SD'].weight })
+      }
     }
     if (obj['SCALE_ADAPTATION']) {
       scale_adaptation_score = obj['SCALE_ADAPTATION'].score
       sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score
       adaptation_score = scale_adaptation_score === null && sustained_adaptation_score === null ? null : (scale_adaptation_score + sustained_adaptation_score) / 2;
-      adaptation_score !== null ? outcome_score += (adaptation_score * obj['SCALE_ADAPTATION']?.weight / 100) : outcome_score = outcome_score
+      if (adaptation_score !== null) {
+        outcomeComponents.push({ score: adaptation_score, weight: obj['SCALE_ADAPTATION']?.weight })
+      }
+    }
+
+    if (outcomeComponents.length > 0) {
+      let totalRelevantWeight = outcomeComponents.reduce((sum, c) => sum + c.weight, 0)
+      outcome_score = 0
+      for (let comp of outcomeComponents) {
+        outcome_score += comp.score * comp.weight / totalRelevantWeight
+      }
     }
 
     return {
@@ -528,12 +553,15 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       let criteria = []
       let sdgs = []
 
-      let added_chs: number[] = []
+      let added_chs: string[] = []
       let uniqueAnswers = []
       for (let answ of answers) {
-        if (!added_chs.includes(answ.assessment_question?.characteristic?.id) && answ.assessment_question.comment !== null && answ.assessment_question.comment !== undefined) {
+        let chId = answ.assessment_question?.characteristic?.id
+        let sdgId = answ.assessment_question?.selectedSdg?.id
+        let compositeKey = `${chId}_${sdgId ?? 'none'}`
+        if (!added_chs.includes(compositeKey) && answ.assessment_question.comment !== null && answ.assessment_question.comment !== undefined) {
           uniqueAnswers.push(answ);
-          added_chs.push(answ.assessment_question?.characteristic?.id)
+          added_chs.push(compositeKey)
         }
       }
 
@@ -773,11 +801,13 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
       if (isAllchNull) {cat_score = null;}
       else {
-        ch_data.map(ch => {
-          if (ch.ch_score !== null) {
-            cat_score += (ch.ch_score * ch.weight / 100);
-          }
-        })
+        let relevantChs = ch_data.filter(ch => ch.ch_score !== null)
+        let totalRelevantWeight = relevantChs.reduce((sum, ch) => sum + ch.weight, 0)
+        if (totalRelevantWeight > 0) {
+          relevantChs.map(ch => {
+            cat_score += (ch.ch_score * ch.weight / totalRelevantWeight);
+          })
+        }
       }
 
       cat_score = cat_score === null ? null : Math.round(cat_score)

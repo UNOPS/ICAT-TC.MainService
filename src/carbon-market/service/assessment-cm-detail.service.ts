@@ -142,6 +142,19 @@ export class AssessmentCMDetailService extends TypeOrmCrudService<AssessmentCMDe
     }
   }
 
+  async updateExpectedGhgMitigation(cmDetailId: number, expectedGhgMitigation: number) {
+    try {
+      await this.repo
+        .createQueryBuilder()
+        .update(AssessmentCMDetail)
+        .set({ expected_ghg_mitigation: expectedGhgMitigation })
+        .where("id = :id", { id: cmDetailId })
+        .execute();
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async deleteCmAssessmentDetail(assessmentId: number) {
     await this.deleteGeographicalAreasCovered(assessmentId);
     await this.deleteInvestorSector(assessmentId);
