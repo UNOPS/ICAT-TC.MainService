@@ -170,57 +170,64 @@ export class ReportController {
     @Body() req: CreateComparisonReportDto,
     @Res({ passthrough: true }) res, 
   ): Promise<any> {
-   
-    let countryIdFromTocken: number;
-    let UsernnameFromTocken: string;
-    [countryIdFromTocken,UsernnameFromTocken] =
-      this.tokenDetails.getDetails([
-        TokenReqestType.countryId,TokenReqestType.username
-      ]);
-    req.reportTitle = req.reportTitle
-
-    const randomName = Array(8)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
-    const uniqname = req.reportName+randomName + '.pdf';
-    req.reportName = req.reportName + '.pdf';
-   
-    const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
-      req,
-    );
- 
-   const reportpdf:Buffer= await this.reportGenarateService.comparisonReportGenarate(
-    uniqname,
-      await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
-    )
-
-    const filePath = `./public/${uniqname}`;
-      
-       
-    try {
-   
-  
- 
-      await this.storageService.save(
-        'reports/' + uniqname,
-        'application/pdf',
-        reportpdf,
-        [{ mediaId: uniqname }]
-      );
-     
-    } catch (e) {
-      if (e.message.toString().includes("No such object")) {
-        throw new NotFoundException("file not found");
-      } else {
-        throw new ServiceUnavailableException("internal error");
-      }
+    let details = await this.auditDetailService.getAuditDetails()
+    let obj = {
+      description: "Generate comparison report"
     }
- 
-    let report=  await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
+    let body = { ...details, ...obj }
+    try {
+      let countryIdFromTocken: number;
+      let UsernnameFromTocken: string;
+      [countryIdFromTocken,UsernnameFromTocken] =
+        this.tokenDetails.getDetails([
+          TokenReqestType.countryId,TokenReqestType.username
+        ]);
+      req.reportTitle = req.reportTitle
 
-     fsPromises.rm(filePath);
-    return report;
+      const randomName = Array(8)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+      const uniqname = req.reportName+randomName + '.pdf';
+      req.reportName = req.reportName + '.pdf';
+    
+      const reprtDto: ComparisonReportDto = await this.reportService.genarateComparisonReportDto(
+        req,
+      );
+
+      const reportpdf:Buffer= await this.reportGenarateService.comparisonReportGenarate(
+        uniqname,
+        await this.reportHtmlGenarateService.comparisonReportHtmlGenarate(reprtDto),
+      )
+
+      const filePath = `./public/${uniqname}`;
+
+      try {
+        await this.storageService.save(
+          'reports/' + uniqname,
+          'application/pdf',
+          reportpdf,
+          [{ mediaId: uniqname }]
+        );
+      } catch (e) {
+        if (e.message.toString().includes("No such object")) {
+          throw new NotFoundException("file not found");
+        } else {
+          throw new ServiceUnavailableException("internal error");
+        }
+      }
+
+      let report = await this.reportService.saveReport(req.reportName,uniqname, UsernnameFromTocken, req.climateAction,req.portfolioId,req.tool,req.type);
+
+      body = { ...body, ...{ actionStatus: "Comparison report generated successfully", } }
+      this.auditDetailService.log(body)
+      fsPromises.rm(filePath);
+      return report;
+    } catch (error) {
+      body = { ...body, ...{ actionStatus: "Failed to generate comparison report", } }
+      this.auditDetailService.log(body)
+      throw new InternalServerErrorException(error)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
