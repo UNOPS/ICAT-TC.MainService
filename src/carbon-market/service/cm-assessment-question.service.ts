@@ -97,14 +97,21 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         }
       }
       if (isDraft) {
-        assessment.isDraft = isDraft;
-        assessment.lastDraftLocation = type;
+        const draftFields: any = {
+          isDraft,
+          lastDraftLocation: type,
+        };
         if (type == "prose") {
-          assessment.processDraftLocation = name;
+          draftFields.processDraftLocation = name;
         } else if (type == "out") {
-          assessment.outcomeDraftLocation = name;
+          draftFields.outcomeDraftLocation = name;
         }
-        this.assessmentRepo.save(assessment)
+        await this.assessmentRepo
+          .createQueryBuilder()
+          .update(Assessment)
+          .set(draftFields)
+          .where("id = :id", { id: assessment.id })
+          .execute();
       }
       for await (let res of results) {
         let ass_question = new CMAssessmentQuestion()

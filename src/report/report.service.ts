@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as moment from 'moment';
 import { CreateComparisonReportDto, CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { AssessmentDto } from './dto/assessment.dto';
@@ -78,8 +79,12 @@ export class ReportService extends TypeOrmCrudService<Report> {
     return `This action updates a #${id} report`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async remove(id: number) {
+    const report = await this.repo.findOne({ where: { id } });
+    if (!report) return { message: `Report #${id} not found` };
+    report.status = -20;
+    await this.repo.save(report);
+    return { message: `Report #${id} deleted successfully` };
   }
   async findReportByID(id: number):Promise<Report> {
     
@@ -249,6 +254,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
   
     }
 
+    res = res.filter(r => r.status !== -20);
     let reportList: Report[] = [];
     const isUserExternal = currentUser?.userType?.name === 'External';
     for await  (const x of await res) {
@@ -317,15 +323,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
       {
         information: 'Date of implementation',
         description: asse.climateAction.dateOfImplementation
-          ? new Date(
-            asse.climateAction.dateOfImplementation,
-          ).toLocaleDateString()
+          ? moment(asse.climateAction.dateOfImplementation).format('DD/MM/YYYY')
           : 'N/A',
       },
       {
         information: 'Date of completion (if relevant)',
         description: asse.climateAction.dateOfCompletion
-          ? new Date(asse.climateAction.dateOfCompletion).toLocaleDateString()
+          ? moment(asse.climateAction.dateOfCompletion).format('DD/MM/YYYY')
           : 'N/A',
       },
       {
@@ -1566,15 +1570,13 @@ export class ReportService extends TypeOrmCrudService<Report> {
       {
         information: 'Date of implementation',
         description: asse.climateAction.dateOfImplementation
-          ? new Date(
-            asse.climateAction.dateOfImplementation,
-          ).toLocaleDateString()
+          ? moment(asse.climateAction.dateOfImplementation).format('DD/MM/YYYY')
           : 'N/A',
       },
       {
         information: 'Date of completion (if relevant)',
         description: asse.climateAction.dateOfCompletion
-          ? new Date(asse.climateAction.dateOfCompletion).toLocaleDateString()
+          ? moment(asse.climateAction.dateOfCompletion).format('DD/MM/YYYY')
           : 'N/A',
       },
       {

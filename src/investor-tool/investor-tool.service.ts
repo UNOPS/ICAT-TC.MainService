@@ -973,6 +973,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
+      .addGroupBy('sector.id')
       .having('sector IS NOT NULL')
       .getRawMany();
 
@@ -1028,6 +1029,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sector.id')
       .addSelect('COUNT(investorSector.id)', 'count')
       .groupBy('sector.name')
+      .addGroupBy('sector.id')
       .having('sector IS NOT NULL')
       .getRawMany();
 
@@ -1766,6 +1768,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool>{
       .addSelect('sdg.number', 'number')
       .addSelect('count(DISTINCT concat(assessment.id, sdg.id))', 'count')
       .groupBy('sdg.name')
+      .addGroupBy('sdg.number')
       .having('sdg IS NOT NULL')
       ;
     return await sectorSum.getRawMany();

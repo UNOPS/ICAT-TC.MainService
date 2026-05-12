@@ -348,14 +348,14 @@ export class ProjectController implements CrudController<ClimateAction> {
   async delete(
     @Query('id') id: number,
   ): Promise<any> {
-    this.service.delete(id);
+    await this.service.delete(id);
   }
 
   @Post('delete-p-sector')
   async deletePolicySector(
     @Query('id') id: number,
   ): Promise<any> {
-    this.service.deletePolicySector(id);
+    await this.service.deletePolicySector(id);
   }
 
     @Post('add-p-sector')
