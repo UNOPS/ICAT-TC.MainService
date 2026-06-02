@@ -42,7 +42,8 @@ export class ReportPagesService {
     { label: 'Unlikely', value: 1 },
     { label: 'Very unlikely', value: 0 },
   ];
-  fileServerURL = process.env.MAIN_URL+'/document/downloadDocumentsFromFileName/uploads/';
+  fileServerURL =
+    process.env.MAIN_URL + '/document/downloadDocumentsFromFileName/uploads/';
   coverPage(coverPage: ReportCoverPage): string {
     const cover = `<div id="cover">
     <div  style="height: 250px;">
@@ -55,7 +56,7 @@ export class ReportPagesService {
 
     
           ${
-            coverPage.tool.trim() == "Investment tool"
+            coverPage.tool.trim() == 'Investment tool'
               ? ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">ASSESSMENT REPORT  </div></div><div class="row "><div class="col h2 d-flex justify-content-center">INVESTMENT TOOL  </div></div>   '
               : ' <div class="row "><div class="col h2 d-flex justify-content-center">TRANSFORMATIONAL CHANGE ASSESSMENT REPORT GENERAL INTERVENTIONS TOOL   </div></div>'
           }
@@ -146,62 +147,70 @@ ${coverPage.reportDate}
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
-            .map(
-              (a: {
-                information: string;
-                description: any;
-                isInvestment: boolean;
-              }) => {
-                if (a.isInvestment == undefined) {
-                  return (
-                    '<tr><td>' +
-                    a.information +
-                    '</td><td colspan="3">' +
-                    a.description +
-                    '</td></tr>'
-                  );
-                } else if (
-                  a.isInvestment &&
-                  a.information == 'Total investment (in USD)'
-                ) {
-                  return (
-                    '<tr><td>' +
-                    a.information +
-                    '</td><td colspan="3">' +
-                    a.description +
-                    '</td></tr>'
-                  );
-                } else if (
-                  a.isInvestment &&
-                  a.information == 'Investment instrument(s) used'
-                ) {
-                  return (
-                    '<tr><td>' +
-                    a.information +
-                    '</td>' +
-                    a.description
-                      .map((inv) => '<td>' + inv.instrument_name + '</td>')
-                      .join('') +
-                    '</tr>'
-                  );
-                } else if (
-                  a.isInvestment &&
-                  a.information == 'Proportion of total investment'
-                ) {
-                  return (
-                    '<tr><td>' +
-                    a.information +
-                    '</td>' +
-                    a.description
-                      .map((inv) => '<td>' + inv.propotion + '%'+ '</td>')
-                      .join('') +
-                    '</tr>'
-                  );
-                }
-              },
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            policyOrActionsDetails && policyOrActionsDetails.length > 0
+              ? policyOrActionsDetails
+                  .map(
+                    (a: {
+                      information: string;
+                      description: any;
+                      isInvestment: boolean;
+                    }) => {
+                      if (a.isInvestment == undefined) {
+                        return (
+                          '<tr><td>' +
+                          a.information +
+                          '</td><td colspan="3">' +
+                          a.description +
+                          '</td></tr>'
+                        );
+                      } else if (
+                        a.isInvestment &&
+                        a.information == 'Total investment (in USD)'
+                      ) {
+                        return (
+                          '<tr><td>' +
+                          a.information +
+                          '</td><td colspan="3">' +
+                          a.description +
+                          '</td></tr>'
+                        );
+                      } else if (
+                        a.isInvestment &&
+                        a.information == 'Investment instrument(s) used'
+                      ) {
+                        return (
+                          '<tr><td>' +
+                          a.information +
+                          '</td>' +
+                          a.description
+                            .map(
+                              (inv) => '<td>' + inv.instrument_name + '</td>',
+                            )
+                            .join('') +
+                          '</tr>'
+                        );
+                      } else if (
+                        a.isInvestment &&
+                        a.information == 'Proportion of total investment'
+                      ) {
+                        return (
+                          '<tr><td>' +
+                          a.information +
+                          '</td>' +
+                          a.description
+                            .map(
+                              (inv) => '<td>' + inv.propotion + '%' + '</td>',
+                            )
+                            .join('') +
+                          '</tr>'
+                        );
+                      }
+                    },
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -236,16 +245,20 @@ ${coverPage.reportDate}
             </tr>
           </thead>
           <tbody class="table-body">
-          ${understanPolicyOrActions&&understanPolicyOrActions.length>0?understanPolicyOrActions
-            .map(
-              (a: { Time_periods: string; description: string }) =>
-                '<tr><td>' +
-                a.Time_periods +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            understanPolicyOrActions && understanPolicyOrActions.length > 0
+              ? understanPolicyOrActions
+                  .map(
+                    (a: { Time_periods: string; description: string }) =>
+                      '<tr><td>' +
+                      a.Time_periods +
+                      '</td><td>' +
+                      a.description +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -264,25 +277,29 @@ ${coverPage.reportDate}
             </tr>
           </thead>
           <tbody class="table-body">
-          ${barriers&&barriers.length>0?barriers
-            .map(
-              (a: {
-                barrier: string;
-                explanation: string;
-                characteristics_affected: string;
-                barrier_directly_targeted: string;
-              }) =>
-                '<tr><td>' +
-                a.barrier +
-                '</td><td>' +
-                a.explanation +
-                '</td><td>' +
-                a.characteristics_affected +
-                '</td><td>' +
-                a.barrier_directly_targeted +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            barriers && barriers.length > 0
+              ? barriers
+                  .map(
+                    (a: {
+                      barrier: string;
+                      explanation: string;
+                      characteristics_affected: string;
+                      barrier_directly_targeted: string;
+                    }) =>
+                      '<tr><td>' +
+                      a.barrier +
+                      '</td><td>' +
+                      a.explanation +
+                      '</td><td>' +
+                      a.characteristics_affected +
+                      '</td><td>' +
+                      a.barrier_directly_targeted +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -375,28 +392,32 @@ ${coverPage.reportDate}
     </tr>
   </thead>
   <tbody class="table-body">
-  ${catagory_out&&catagory_out.length>0?catagory_out
-    .map((a: { rows: number; name: string; characteristics: any[] }) =>
-      a.characteristics
-        .map((b, index) => {
-          if (!index) {
-            return `<tr>
+  ${
+    catagory_out && catagory_out.length > 0
+      ? catagory_out
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.comment ? b.comment : '-'}</td>
       <td>${b.relevance ? b.relevance : '-'}</td>
      </tr>`;
-          } else {
-            return `<tr>
+                } else {
+                  return `<tr>
             <td>${b.name ? b.name : '-'}</td>
             <td>${b.comment ? b.comment : '-'}</td>
             <td>${b.relevance ? b.relevance : '-'}</td>
             </tr>`;
-          }
-        })
-        .join(''),
-    )
-    .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                }
+              })
+              .join(''),
+          )
+          .join('')
+      : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+  }
   
 
   </tbody>
@@ -433,28 +454,32 @@ ${coverPage.reportDate}
      </tr>
    </thead>
    <tbody class="table-body">
-   ${catagory_process&& catagory_process.length>0?catagory_process
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+   ${
+     catagory_process && catagory_process.length > 0
+       ? catagory_process
+           .map((a: { rows: number; name: string; characteristics: any[] }) =>
+             a.characteristics
+               .map((b, index) => {
+                 if (!index) {
+                   return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.comment ? b.comment : '-'}</td>
        <td>${b.relevance ? b.relevance : '-'}</td>
       </tr>`;
-           } else {
-             return `<tr>
+                 } else {
+                   return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.comment ? b.comment : '-'}</td>
              <td>${b.relevance ? b.relevance : '-'}</td>
              </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                 }
+               })
+               .join(''),
+           )
+           .join('')
+       : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+   }
    
  
    </tbody>
@@ -511,12 +536,15 @@ justification which supports the score and refers to documents which may back th
     </tr>
   </thead>
   <tbody class="table-body">
-  ${prossesAssesmentStartingSituation1&&prossesAssesmentStartingSituation1.length>0?prossesAssesmentStartingSituation1
-    .map((a: { rows: number; name: string; characteristics: any[] }) =>
-      a.characteristics
-        .map((b, index) => {
-          if (!index) {
-            return `<tr>
+  ${
+    prossesAssesmentStartingSituation1 &&
+    prossesAssesmentStartingSituation1.length > 0
+      ? prossesAssesmentStartingSituation1
+          .map((a: { rows: number; name: string; characteristics: any[] }) =>
+            a.characteristics
+              .map((b, index) => {
+                if (!index) {
+                  return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
@@ -528,8 +556,8 @@ justification which supports the score and refers to documents which may back th
       }</td>
     
      </tr>`;
-          } else {
-            return `<tr>
+                } else {
+                  return `<tr>
             <td>${b.name ? b.name : '-'}</td>
       <td>${b.relavance ? b.relavance : '-'}</td>
       <td>${b.question ? b.question : '-'}</td>
@@ -539,11 +567,13 @@ justification which supports the score and refers to documents which may back th
         b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
       }</td>
             </tr>`;
-          }
-        })
-        .join(''),
-    )
-    .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                }
+              })
+              .join(''),
+          )
+          .join('')
+      : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+  }
   
 
   </tbody>
@@ -579,12 +609,15 @@ justification which supports the score and refers to documents which may back th
      </tr>
    </thead>
    <tbody class="table-body">
-   ${prossesAssesmentStartingSituation2&& prossesAssesmentStartingSituation2.length > 0? prossesAssesmentStartingSituation2
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+   ${
+     prossesAssesmentStartingSituation2 &&
+     prossesAssesmentStartingSituation2.length > 0
+       ? prossesAssesmentStartingSituation2
+           .map((a: { rows: number; name: string; characteristics: any[] }) =>
+             a.characteristics
+               .map((b, index) => {
+                 if (!index) {
+                   return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.relavance ? b.relavance : '-'}</td>
@@ -596,8 +629,8 @@ justification which supports the score and refers to documents which may back th
        }</td>
      
       </tr>`;
-           } else {
-             return `<tr>
+                 } else {
+                   return `<tr>
              <td>${b.name ? b.name : '-'}</td>
        <td>${b.relavance ? b.relavance : '-'}</td>
        <td>${b.question ? b.question : '-'}</td>
@@ -607,11 +640,13 @@ justification which supports the score and refers to documents which may back th
          b.Supportingsdocumentssupplied ? b.Supportingsdocumentssupplied : '-'
        }</td>
              </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                 }
+               })
+               .join(''),
+           )
+           .join('')
+       : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+   }
    
  
    </tbody>
@@ -652,12 +687,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </tr>
    </thead>
    <tbody class="table-body">
-   ${scale_ghg&&scale_ghg.length>0?scale_ghg
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+   ${
+     scale_ghg && scale_ghg.length > 0
+       ? scale_ghg
+           .map((a: { rows: number; name: string; characteristics: any[] }) =>
+             a.characteristics
+               .map((b, index) => {
+                 if (!index) {
+                   return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -666,18 +703,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     
      </tr>`;
-           } else {
-             return `<tr>
+                 } else {
+                   return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                 }
+               })
+               .join(''),
+           )
+           .join('')
+       : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+   }
  
  
    </tbody>
@@ -696,12 +735,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      </tr>
    </thead>
    <tbody class="table-body">
-   ${sustained_ghg&&sustained_ghg.length>0?sustained_ghg
-     .map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-         .map((b, index) => {
-           if (!index) {
-             return `<tr>
+   ${
+     sustained_ghg && sustained_ghg.length > 0
+       ? sustained_ghg
+           .map((a: { rows: number; name: string; characteristics: any[] }) =>
+             a.characteristics
+               .map((b, index) => {
+                 if (!index) {
+                   return `<tr>
       <td rowspan="${a.rows}" >${a.name}</td>
       <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -710,18 +751,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
     
      </tr>`;
-           } else {
-             return `<tr>
+                 } else {
+                   return `<tr>
              <td>${b.name ? b.name : '-'}</td>
              <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
              <td>${b.score ? b.score : '-'}</td>
              <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-           }
-         })
-         .join(''),
-     )
-     .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                 }
+               })
+               .join(''),
+           )
+           .join('')
+       : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+   }
  
  
    </tbody>
@@ -755,12 +798,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </tr>
     </thead>
     <tbody class="table-body">
-    ${scale_adaptation&&scale_adaptation.length>0?scale_adaptation
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            if (!index) {
-              return `<tr>
+    ${
+      scale_adaptation && scale_adaptation.length > 0
+        ? scale_adaptation
+            .map((a: { rows: number; name: string; characteristics: any[] }) =>
+              a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -769,18 +814,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
      
       </tr>`;
-            } else {
-              return `<tr>
+                  } else {
+                    return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-            }
-          })
-          .join(''),
-      )
-      .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                  }
+                })
+                .join(''),
+            )
+            .join('')
+        : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+    }
   
   
     </tbody>
@@ -799,12 +846,14 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </tr>
     </thead>
     <tbody class="table-body">
-    ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
-      .map((a: { rows: number; name: string; characteristics: any[] }) =>
-        a.characteristics
-          .map((b, index) => {
-            if (!index) {
-              return `<tr>
+    ${
+      sustained_adaptation && sustained_adaptation.length > 0
+        ? sustained_adaptation
+            .map((a: { rows: number; name: string; characteristics: any[] }) =>
+              a.characteristics
+                .map((b, index) => {
+                  if (!index) {
+                    return `<tr>
        <td rowspan="${a.rows}" >${a.name}</td>
        <td>${b.name ? b.name : '-'}</td>
        <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
@@ -813,18 +862,20 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        
      
       </tr>`;
-            } else {
-              return `<tr>
+                  } else {
+                    return `<tr>
               <td>${b.name ? b.name : '-'}</td>
               <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
               <td>${b.score ? b.score : '-'}</td>
               <td>${b.ustifying ? b.ustifying : '-'}</td>
              </tr>`;
-            }
-          })
-          .join(''),
-      )
-      .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                  }
+                })
+                .join(''),
+            )
+            .join('')
+        : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+    }
   
   
     </tbody>
@@ -862,22 +913,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </thead>
     <tbody class="table-body">
     
-    ${scale_sd.sdg&&scale_sd.sdg.length>0?scale_sd.sdg
-      .map(
-        (
-          a: {
-            rows: number;
-            name: string;
-            impact: string;
-            characteristics: any[];
-          },
-          index,
-        ) => {
-          if (!index) {
-            return a.characteristics
-              .map((b, index) => {
+    ${
+      scale_sd.sdg && scale_sd.sdg.length > 0
+        ? scale_sd.sdg
+            .map(
+              (
+                a: {
+                  rows: number;
+                  name: string;
+                  impact: string;
+                  characteristics: any[];
+                },
+                index,
+              ) => {
                 if (!index) {
-                  return `<tr>
+                  return a.characteristics
+                    .map((b, index) => {
+                      if (!index) {
+                        return `<tr>
       <td rowspan="${scale_sd.rows}" >${scale_sd.name}</td>
       <td rowspan="${a.rows}" >${a.name}</td>
     
@@ -887,21 +940,21 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       <td>${b.ustifying ? b.ustifying : '-'}</td>
     
      </tr>`;
-                } else {
-                  return `<tr>
+                      } else {
+                        return `<tr>
             <td>${b.name ? b.name : '-'}</td>
     <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
     <td>${b.score ? b.score : '-'}</td>
     <td>${b.ustifying ? b.ustifying : '-'}</td>
             </tr>`;
-                }
-              })
-              .join('');
-          } else {
-            return a.characteristics
-              .map((b, index) => {
-                if (!index) {
-                  return `<tr>
+                      }
+                    })
+                    .join('');
+                } else {
+                  return a.characteristics
+                    .map((b, index) => {
+                      if (!index) {
+                        return `<tr>
 <td rowspan="${a.rows}" >${a.name}</td>
 
 <td>${b.name ? b.name : '-'}</td>
@@ -910,20 +963,22 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
 <td>${b.ustifying ? b.ustifying : '-'}</td>
 
 </tr>`;
-                } else {
-                  return `<tr>
+                      } else {
+                        return `<tr>
    <td>${b.name ? b.name : '-'}</td>
 <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
 <td>${b.score ? b.score : '-'}</td>
 <td>${b.ustifying ? b.ustifying : '-'}</td>
    </tr>`;
+                      }
+                    })
+                    .join('');
                 }
-              })
-              .join('');
-          }
-        },
-      )
-      .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+              },
+            )
+            .join('')
+        : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+    }
   
   
     </tbody>
@@ -964,22 +1019,24 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       </thead>
       <tbody class="table-body">
       
-      ${sustained_sd.sdg&&sustained_sd.sdg.length>0?sustained_sd.sdg
-        .map(
-          (
-            a: {
-              rows: number;
-              name: string;
-              impact: string;
-              characteristics: any[];
-            },
-            index,
-          ) => {
-            if (!index) {
-              return a.characteristics
-                .map((b, index) => {
+      ${
+        sustained_sd.sdg && sustained_sd.sdg.length > 0
+          ? sustained_sd.sdg
+              .map(
+                (
+                  a: {
+                    rows: number;
+                    name: string;
+                    impact: string;
+                    characteristics: any[];
+                  },
+                  index,
+                ) => {
                   if (!index) {
-                    return `<tr>
+                    return a.characteristics
+                      .map((b, index) => {
+                        if (!index) {
+                          return `<tr>
         <td rowspan="${sustained_sd.rows}" >${sustained_sd.name}</td>
         <td rowspan="${a.rows}" >${a.name}</td>
         
@@ -989,21 +1046,21 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
         <td>${b.ustifying ? b.ustifying : '-'}</td>
       
        </tr>`;
-                  } else {
-                    return `<tr>
+                        } else {
+                          return `<tr>
               <td>${b.name ? b.name : '-'}</td>
       <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
       <td>${b.score ? b.score : '-'}</td>
       <td>${b.ustifying ? b.ustifying : '-'}</td>
               </tr>`;
-                  }
-                })
-                .join('');
-            } else {
-              return a.characteristics
-                .map((b, index) => {
-                  if (!index) {
-                    return `<tr>
+                        }
+                      })
+                      .join('');
+                  } else {
+                    return a.characteristics
+                      .map((b, index) => {
+                        if (!index) {
+                          return `<tr>
   <td rowspan="${a.rows}" >${a.name}</td>
  
   <td>${b.name ? b.name : '-'}</td>
@@ -1012,20 +1069,22 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
   <td>${b.ustifying ? b.ustifying : '-'}</td>
   
   </tr>`;
-                  } else {
-                    return `<tr>
+                        } else {
+                          return `<tr>
      <td>${b.name ? b.name : '-'}</td>
   <td>${b.withinboundaries ? b.withinboundaries : '-'}</td>
   <td>${b.score ? b.score : '-'}</td>
   <td>${b.ustifying ? b.ustifying : '-'}</td>
      </tr>`;
+                        }
+                      })
+                      .join('');
                   }
-                })
-                .join('');
-            }
-          },
-        )
-        .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                },
+              )
+              .join('')
+          : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+      }
     
     
       </tbody>
@@ -1069,9 +1128,11 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </tr>
      </thead>
      <tbody class="table-body">
-     ${process_categories_assessment&&process_categories_assessment.length?process_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
+     ${
+       process_categories_assessment && process_categories_assessment.length
+         ? process_categories_assessment
+             .map((a: { category: any; category_score: any }) => {
+               return `<tr>
            <td>${a.category ? a.category : '-'}</td>
            <td>${
              a.category_score.value != null &&
@@ -1081,8 +1142,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            }</td>
              
               </tr>`;
-       })
-       .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+             })
+             .join('')
+         : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
         <tr>
           <td class="bold-table-row">Process score</td>
           <td class="bold-table-row">${
@@ -1117,9 +1180,12 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
        </tr>
      </thead>
      <tbody class="table-body">
-     ${outcomes_categories_assessment&&outcomes_categories_assessment.length>0?outcomes_categories_assessment
-       .map((a: { category: any; category_score: any }) => {
-         return `<tr>
+     ${
+       outcomes_categories_assessment &&
+       outcomes_categories_assessment.length > 0
+         ? outcomes_categories_assessment
+             .map((a: { category: any; category_score: any }) => {
+               return `<tr>
            <td>${
              a.category
                ? a.category == 'GHG Scale of the Outcome'
@@ -1132,8 +1198,12 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
                  : a.category ==
                    'SDG Time frame over which the outcome is sustained'
                  ? 'Outcome sustained over time - Sustainable development '
-                 : a.category =='Adaptation Scale of the Outcome'?'Scale of outcome - adaptation ':
-                 a.category =='Adaptation Time frame over which the outcome is sustained'?'Outcome sustained over time - adaptation ':'-'
+                 : a.category == 'Adaptation Scale of the Outcome'
+                 ? 'Scale of outcome - adaptation '
+                 : a.category ==
+                   'Adaptation Time frame over which the outcome is sustained'
+                 ? 'Outcome sustained over time - adaptation '
+                 : '-'
                : '-'
            }</td>
            <td>${
@@ -1144,8 +1214,10 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
            }</td>
              
               </tr>`;
-       })
-       .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+             })
+             .join('')
+         : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
          <tr>
           <td class="bold-table-row">Outcomes score </td>
           <td class="bold-table-row">${
@@ -1165,7 +1237,6 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
      
       </div>`;
 
-    
     const page_6_1 = `  <div id="page_6_1" class="page text-center" >
       ${header}
       <div class="content same-page">
@@ -1253,23 +1324,27 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
     </tr>
   </thead>
   <tbody class="table-body">
-  ${outcomeDescribeResult&&outcomeDescribeResult.length>0?outcomeDescribeResult
-    .map(
-      (a: {
-        relative_importance: any;
-        score: any;
-        justifying_score: any;
-        name: string;
-      }) => {
-        return `<tr>
+  ${
+    outcomeDescribeResult && outcomeDescribeResult.length > 0
+      ? outcomeDescribeResult
+          .map(
+            (a: {
+              relative_importance: any;
+              score: any;
+              justifying_score: any;
+              name: string;
+            }) => {
+              return `<tr>
             <td>${a.name ? a.name : '-'}</td>
             <td>${a.score ? a.score : '-'}</td>
            <td>${a.justifying_score ? a.justifying_score : '-'}</td>
           
             </tr>`;
-      },
-    )
-    .join(''):'<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+            },
+          )
+          .join('')
+      : '<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'
+  }
  
     
       </tbody>
@@ -1284,18 +1359,9 @@ Outcome characteristics refer to the scale and sustained nature of outcomes resu
       
        </div>`;
 
-    
-      return (
-        page_1 +
-        page_1_1 +
-        page_2 +
-        page_3 +
-        page_4 +
-        page_5 +
-        page_6 +
-        page_6_1
-      );
-    
+    return (
+      page_1 + page_1_1 + page_2 + page_3 + page_4 + page_5 + page_6 + page_6_1
+    );
   }
   contentThree(
     header: string,
@@ -1480,16 +1546,20 @@ ${coverPage.reportDate}
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${policyOrActionsDetails&&policyOrActionsDetails.length>0?policyOrActionsDetails
-            .map(
-              (a: { information: string; description: string }) =>
-                '<tr><td>' +
-                a.information +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            policyOrActionsDetails && policyOrActionsDetails.length > 0
+              ? policyOrActionsDetails
+                  .map(
+                    (a: { information: string; description: string }) =>
+                      '<tr><td>' +
+                      a.information +
+                      '</td><td>' +
+                      a.description +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -1521,16 +1591,20 @@ ${coverPage.reportDate}
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${characteristics&&characteristics.length>0?characteristics
-            .map(
-              (a: { information: string; description: string }) =>
-                '<tr><td>' +
-                a.information +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            characteristics && characteristics.length > 0
+              ? characteristics
+                  .map(
+                    (a: { information: string; description: string }) =>
+                      '<tr><td>' +
+                      a.information +
+                      '</td><td>' +
+                      a.description +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -1553,16 +1627,20 @@ ${coverPage.reportDate}
                  </tr>
                </thead>
                <tbody class="table-body ">
-               ${transformational&&transformational.length>0?transformational
-                 .map(
-                   (a: { information: string; description: string }) =>
-                     '<tr><td>' +
-                     a.information +
-                     '</td><td>' +
-                     a.description +
-                     '</td></tr>',
-                 )
-                 .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+               ${
+                 transformational && transformational.length > 0
+                   ? transformational
+                       .map(
+                         (a: { information: string; description: string }) =>
+                           '<tr><td>' +
+                           a.information +
+                           '</td><td>' +
+                           a.description +
+                           '</td></tr>',
+                       )
+                       .join('')
+                   : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+               }
                </tbody>
              </table>
            </div>
@@ -1593,25 +1671,29 @@ ${coverPage.reportDate}
        </tr>
      </thead>
      <tbody class="table-body">
-     ${barriers&&barriers.length>0?barriers
-       .map(
-         (a: {
-           barrier: string;
-           explanation: string;
-           characteristics_affected: string;
-           barrier_directly_targeted: string;
-         }) =>
-           '<tr><td>' +
-           a.barrier +
-           '</td><td>' +
-           a.explanation +
-           '</td><td>' +
-           a.characteristics_affected +
-           '</td><td>' +
-           a.barrier_directly_targeted +
-           '</td></tr>',
-       )
-       .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+     ${
+       barriers && barriers.length > 0
+         ? barriers
+             .map(
+               (a: {
+                 barrier: string;
+                 explanation: string;
+                 characteristics_affected: string;
+                 barrier_directly_targeted: string;
+               }) =>
+                 '<tr><td>' +
+                 a.barrier +
+                 '</td><td>' +
+                 a.explanation +
+                 '</td><td>' +
+                 a.characteristics_affected +
+                 '</td><td>' +
+                 a.barrier_directly_targeted +
+                 '</td></tr>',
+             )
+             .join('')
+         : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
      </tbody>
    </table>
  </div>
@@ -1702,29 +1784,33 @@ ${coverPage.reportDate}
              </tr>
            </thead>
            <tbody class="table-body ">
-           ${safeguards&&safeguards.length > 0? safeguards
-             .map(
-               (a: {
-                 document: string;
-                 question: any;
-                 answer: string;
-                 comment: string;
-               }) =>
-                 '<tr><td>' +
-                 a.question.label +
-                 '</td><td>' +
-                 a.answer +
-                 '</td><td>' +
-                 (a.comment == null || a.comment == undefined
-                   ? 'No justification was provided by the user'
-                   : a.comment) +
-                 '</td><td>' +
-                 (a.document == null || a.document == undefined
-                   ? 'No'
-                   : 'Yes') +
-                 '</td></tr>',
-             )
-             .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+           ${
+             safeguards && safeguards.length > 0
+               ? safeguards
+                   .map(
+                     (a: {
+                       document: string;
+                       question: any;
+                       answer: string;
+                       comment: string;
+                     }) =>
+                       '<tr><td>' +
+                       a.question.label +
+                       '</td><td>' +
+                       a.answer +
+                       '</td><td>' +
+                       (a.comment == null || a.comment == undefined
+                         ? 'No justification was provided by the user'
+                         : a.comment) +
+                       '</td><td>' +
+                       (a.document == null || a.document == undefined
+                         ? 'No'
+                         : 'Yes') +
+                       '</td></tr>',
+                   )
+                   .join('')
+               : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+           }
            </tbody>
          </table>
        </div>
@@ -1761,29 +1847,33 @@ ${coverPage.reportDate}
                </tr>
              </thead>
              <tbody class="table-body ">
-             ${prevention_ghg_emissions&&prevention_ghg_emissions.length>0?prevention_ghg_emissions
-               .map(
-                 (a: {
-                   comment: string;
-                   document: string;
-                   question: any;
-                   answer: string;
-                 }) =>
-                   '<tr><td>' +
-                   a.question.label +
-                   '</td><td>' +
-                   a.answer +
-                   '</td><td>' +
-                   (a.comment == null || a.comment == undefined
-                     ? 'No justification was provided by the user'
-                     : a.comment) +
-                   '</td><td>' +
-                   (a.document == null || a.document == undefined
-                     ? 'No'
-                     : 'Yes') +
-                   '</td></tr>',
-               )
-               .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+             ${
+               prevention_ghg_emissions && prevention_ghg_emissions.length > 0
+                 ? prevention_ghg_emissions
+                     .map(
+                       (a: {
+                         comment: string;
+                         document: string;
+                         question: any;
+                         answer: string;
+                       }) =>
+                         '<tr><td>' +
+                         a.question.label +
+                         '</td><td>' +
+                         a.answer +
+                         '</td><td>' +
+                         (a.comment == null || a.comment == undefined
+                           ? 'No justification was provided by the user'
+                           : a.comment) +
+                         '</td><td>' +
+                         (a.document == null || a.document == undefined
+                           ? 'No'
+                           : 'Yes') +
+                         '</td></tr>',
+                     )
+                     .join('')
+                 : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+             }
              </tbody>
            </table>
          </div>
@@ -1802,29 +1892,34 @@ ${coverPage.reportDate}
              </tr>
            </thead>
            <tbody class="table-body ">
-           ${prevention_negative_environmental&&prevention_negative_environmental.length>0?prevention_negative_environmental
-             .map(
-               (a: {
-                 question: any;
-                 answer: string;
-                 comment: string;
-                 document: string;
-               }) =>
-                 '<tr><td>' +
-                 a.question.label +
-                 '</td><td>' +
-                 a.answer +
-                 '</td><td>' +
-                 (a.comment == null || a.comment == undefined
-                   ? 'No justification was provided by the user'
-                   : a.comment) +
-                 '</td><td>' +
-                 (a.document == null || a.document == undefined
-                   ? 'No'
-                   : 'Yes') +
-                 '</td></tr>',
-             )
-             .join(''):'<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+           ${
+             prevention_negative_environmental &&
+             prevention_negative_environmental.length > 0
+               ? prevention_negative_environmental
+                   .map(
+                     (a: {
+                       question: any;
+                       answer: string;
+                       comment: string;
+                       document: string;
+                     }) =>
+                       '<tr><td>' +
+                       a.question.label +
+                       '</td><td>' +
+                       a.answer +
+                       '</td><td>' +
+                       (a.comment == null || a.comment == undefined
+                         ? 'No justification was provided by the user'
+                         : a.comment) +
+                       '</td><td>' +
+                       (a.document == null || a.document == undefined
+                         ? 'No'
+                         : 'Yes') +
+                       '</td></tr>',
+                   )
+                   .join('')
+               : '<tr><td colspan="4" style=" text-align: center;" ><p>No data found</p></td></tr>'
+           }
            </tbody>
          </table>
        </div>
@@ -1854,22 +1949,26 @@ ${coverPage.reportDate}
                 </tr>
               </thead>
               <tbody class="table-body ">
-              ${outcomes&&outcomes.length>0?outcomes
-                .map(
-                  (a: {
-                    short_label: any;
-                    isPassing: boolean;
-                    hasEvidence: string;
-                  }) =>
-                    '<tr><td>' +
-                    a.short_label +
-                    '</td><td>' +
-                    (a.isPassing ? 'Yes' : 'No') +
-                    '</td><td>' +
-                    a.hasEvidence +
-                    '</td></tr>',
-                )
-                .join(''):'<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+              ${
+                outcomes && outcomes.length > 0
+                  ? outcomes
+                      .map(
+                        (a: {
+                          short_label: any;
+                          isPassing: boolean;
+                          hasEvidence: string;
+                        }) =>
+                          '<tr><td>' +
+                          a.short_label +
+                          '</td><td>' +
+                          (a.isPassing ? 'Yes' : 'No') +
+                          '</td><td>' +
+                          a.hasEvidence +
+                          '</td></tr>',
+                      )
+                      .join('')
+                  : '<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'
+              }
               </tbody>
             </table>
           </div>
@@ -1924,22 +2023,34 @@ justification which supports the score and refers to documents which may back th
        </tr>
      </thead>
      <tbody class="table-body">
-     ${prossesAssesmentStartingSituation&&prossesAssesmentStartingSituation.length>0?prossesAssesmentStartingSituation.map(n=>
-       n.map((a: { rows: number; name: string; characteristics: any[] }) =>
-       a.characteristics
-       .map((b, index) => {
-         const questionsLength = b.raw_questions.length;
-  
-         if (!index) {
-           return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
+     ${
+       prossesAssesmentStartingSituation &&
+       prossesAssesmentStartingSituation.length > 0
+         ? prossesAssesmentStartingSituation
+             .map((n) =>
+               n
+                 .map(
+                   (a: {
+                     rows: number;
+                     name: string;
+                     characteristics: any[];
+                   }) =>
+                     a.characteristics
+                       .map((b, index) => {
+                         const questionsLength = b.raw_questions.length;
+
+                         if (!index) {
+                           return b.raw_questions
+                             .map((question, questionIndex) =>
+                               !questionIndex
+                                 ? `<tr>
            <td rowspan="${a.rows}" >${a.name}</td>
            <td rowspan="${questionsLength}">${b.name}</td>
            <td rowspan="${questionsLength}">${
-           b.relevance ? b.relevance : '-'
-         }</td>
+             b.relevance ? b.relevance : '-'
+           }</td>
            <td>${
-             question.question != null &&
-             question.question != undefined
+             question.question != null && question.question != undefined
                ? question.question
                : '-'
            }</td>
@@ -1947,9 +2058,7 @@ justification which supports the score and refers to documents which may back th
              questionsLength > 0 &&
              question.score != null &&
              question.score != undefined
-               ? question.score +
-                 '-' +
-                 question.label
+               ? question.score + '-' + question.label
                : '-'
            }</td>
            <td>${
@@ -1960,14 +2069,12 @@ justification which supports the score and refers to documents which may back th
                : 'No justification was provided by the user'
            }</td>
            <td>${
-             questionsLength > 0 && question.document == null
-               ? 'No'
-               : 'Yes'
+             questionsLength > 0 && question.document == null ? 'No' : 'Yes'
            }</td>
-         </tr>`:`<tr>
+         </tr>`
+                                 : `<tr>
          <td>${
-           question.question != null &&
-           question.question != undefined
+           question.question != null && question.question != undefined
              ? question.question
              : '-'
          }</td>
@@ -1975,9 +2082,7 @@ justification which supports the score and refers to documents which may back th
            questionsLength > 0 &&
            question.score != null &&
            question.score != undefined
-             ? question.score +
-               '-' +
-               question.label
+             ? question.score + '-' + question.label
              : '-'
          }</td>
          <td>${
@@ -1988,22 +2093,23 @@ justification which supports the score and refers to documents which may back th
              : 'No justification was provided by the user'
          }</td>
          <td>${
-           questionsLength > 0 && question.document == null
-             ? 'No'
-             : 'Yes'
+           questionsLength > 0 && question.document == null ? 'No' : 'Yes'
          }</td>
-       </tr>` ).join('')
-          
-         } else {
-           return b.raw_questions.map((question, questionIndex) =>!questionIndex? `<tr>
+       </tr>`,
+                             )
+                             .join('');
+                         } else {
+                           return b.raw_questions
+                             .map((question, questionIndex) =>
+                               !questionIndex
+                                 ? `<tr>
           
            <td rowspan="${questionsLength}">${b.name}</td>
            <td rowspan="${questionsLength}">${
-           b.relevance ? b.relevance : '-'
-         }</td>
+             b.relevance ? b.relevance : '-'
+           }</td>
            <td>${
-             question.question != null &&
-             question.question != undefined
+             question.question != null && question.question != undefined
                ? question.question
                : '-'
            }</td>
@@ -2011,9 +2117,7 @@ justification which supports the score and refers to documents which may back th
              questionsLength > 0 &&
              question.score != null &&
              question.score != undefined
-               ? question.score +
-                 '-' +
-                 question.label
+               ? question.score + '-' + question.label
                : '-'
            }</td>
            <td>${
@@ -2024,14 +2128,12 @@ justification which supports the score and refers to documents which may back th
                : 'No justification was provided by the user'
            }</td>
            <td>${
-             questionsLength > 0 && question.document == null
-               ? 'No'
-               : 'Yes'
+             questionsLength > 0 && question.document == null ? 'No' : 'Yes'
            }</td>
-         </tr>`:`<tr>
+         </tr>`
+                                 : `<tr>
          <td>${
-           question.question != null &&
-           question.question != undefined
+           question.question != null && question.question != undefined
              ? question.question
              : '-'
          }</td>
@@ -2039,9 +2141,7 @@ justification which supports the score and refers to documents which may back th
            questionsLength > 0 &&
            question.score != null &&
            question.score != undefined
-             ? question.score +
-               '-' +
-               question.label
+             ? question.score + '-' + question.label
              : '-'
          }</td>
          <td>${
@@ -2052,16 +2152,20 @@ justification which supports the score and refers to documents which may back th
              : 'No justification was provided by the user'
          }</td>
          <td>${
-           questionsLength > 0 && question.document == null
-             ? 'No'
-             : 'Yes'
+           questionsLength > 0 && question.document == null ? 'No' : 'Yes'
          }</td>
-       </tr>` ).join('');
-         }
-       })
-       .join('')
-       )
-       .join('')).join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+       </tr>`,
+                             )
+                             .join('');
+                         }
+                       })
+                       .join(''),
+                 )
+                 .join(''),
+             )
+             .join('')
+         : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
      </tbody>
    </table>
    </div>
@@ -2072,8 +2176,6 @@ justification which supports the score and refers to documents which may back th
     ${footer.replace('#pageNumber#', (pageNumber++).toString())}
     
      </div>`;
-   
-
 
     const scale_ghg = content.scale_ghg;
     const sustained_ghg = content.sustained_ghg;
@@ -2106,36 +2208,48 @@ justification which supports the score and refers to documents which may back th
        </tr>
      </thead>
      <tbody class="table-body">
-     ${scale_ghg&& scale_ghg.length > 0? scale_ghg
-       .map((a: any, index) => {
-         if (!index) {
-           return `<tr>
+     ${
+       scale_ghg && scale_ghg.length > 0
+         ? scale_ghg
+             .map((a: any, index) => {
+               if (!index) {
+                 return `<tr>
                 <td rowspan="${scale_ghg.length}" >Scale of outcome - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
           
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
             </tr>`;
-         } else {
-           return `<tr>
+               } else {
+                 return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
               </tr>`;
-         }
-       })
-       .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+               }
+             })
+             .join('')
+         : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
    
    
      </tbody>
@@ -2154,34 +2268,50 @@ justification which supports the score and refers to documents which may back th
        </tr>
      </thead>
      <tbody class="table-body">
-     ${sustained_ghg&& sustained_ghg.length>0?sustained_ghg
-       .map((a: any, index) => {
-         if (!index) {
-           return `<tr>
+     ${
+       sustained_ghg && sustained_ghg.length > 0
+         ? sustained_ghg
+             .map((a: any, index) => {
+               if (!index) {
+                 return `<tr>
                 <td rowspan="${
                   sustained_ghg.length
                 }" >Outcome sustained over time - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.outcome_score_explain ? a.outcome_score_explain : '-'
+                }</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
             </tr>`;
-         } else {
-           return `<tr>
+               } else {
+                 return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.outcome_score_explain ? a.outcome_score_explain : '-'
+                }</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
               </tr>`;
-         }
-       })
-       .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+               }
+             })
+             .join('')
+         : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
    
    
      </tbody>
@@ -2218,10 +2348,12 @@ justification which supports the score and refers to documents which may back th
         </tr>
       </thead>
       <tbody class="table-body">
-      ${scale_adaptation&&scale_adaptation.length>0 ?scale_adaptation
-        .map((a: any, index) => {
-          if (!index) {
-            return `<tr>
+      ${
+        scale_adaptation && scale_adaptation.length > 0
+          ? scale_adaptation
+              .map((a: any, index) => {
+                if (!index) {
+                  return `<tr>
               <td rowspan="${
                 scale_adaptation.length
               }" >Scale of outcome - adaptation cobenefits</td>
@@ -2230,26 +2362,36 @@ justification which supports the score and refers to documents which may back th
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
             
-              <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+              <td>${
+                a.justification
+                  ? a.justification
+                  : 'No justification was provided by the user'
+              }</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
               }</td>
           </tr>`;
-          } else {
-            return `<tr>
+                } else {
+                  return `<tr>
             <td>${a.characteristic ? a.characteristic : '-'}</td>
             <td>${a.starting_situation ? a.starting_situation : '-'}</td>
             <td>${a.expected_impact ? a.expected_impact : '-'}</td>
             <td>${a.outcome_score ? a.outcome_score : '-'}</td>
             
-            <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+            <td>${
+              a.justification
+                ? a.justification
+                : 'No justification was provided by the user'
+            }</td>
             <td>${
               a.document == null || a.document == undefined ? 'No' : 'Yes'
             }</td>
             </tr>`;
-          }
-        })
-        .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                }
+              })
+              .join('')
+          : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+      }
     
       </tbody>
     </table>
@@ -2268,34 +2410,50 @@ justification which supports the score and refers to documents which may back th
         </tr>
       </thead>
       <tbody class="table-body">
-      ${sustained_adaptation&&sustained_adaptation.length>0?sustained_adaptation
-        .map((a: any, index) => {
-          if (!index) {
-            return `<tr>
+      ${
+        sustained_adaptation && sustained_adaptation.length > 0
+          ? sustained_adaptation
+              .map((a: any, index) => {
+                if (!index) {
+                  return `<tr>
               <td rowspan="${
                 sustained_adaptation.length
               }" >Outcome sustained over time - adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-              <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+              <td>${
+                a.outcome_score_explain ? a.outcome_score_explain : '-'
+              }</td>
+              <td>${
+                a.justification
+                  ? a.justification
+                  : 'No justification was provided by the user'
+              }</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
               }</td>
           </tr>`;
-          } else {
-            return `<tr>
+                } else {
+                  return `<tr>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-              <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+              <td>${
+                a.outcome_score_explain ? a.outcome_score_explain : '-'
+              }</td>
+              <td>${
+                a.justification
+                  ? a.justification
+                  : 'No justification was provided by the user'
+              }</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
               }</td>
             </tr>`;
-          }
-        })
-        .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                }
+              })
+              .join('')
+          : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+      }
     
       </tbody>
     </table>
@@ -2334,10 +2492,12 @@ justification which supports the score and refers to documents which may back th
       </thead>
       <tbody class="table-body">
       
-          ${scale_sd&&scale_sd.length>0?scale_sd
-            .map((a: any, index) => {
-              if (!index) {
-                return `<tr>
+          ${
+            scale_sd && scale_sd.length > 0
+              ? scale_sd
+                  .map((a: any, index) => {
+                    if (!index) {
+                      return `<tr>
                   <td rowspan="${
                     scale_sd.length
                   }">Scale of outcome - sustainable development </td>
@@ -2347,27 +2507,37 @@ justification which supports the score and refers to documents which may back th
                   <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                   <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                   
-                  <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                  <td>${
+                    a.justification
+                      ? a.justification
+                      : 'No justification was provided by the user'
+                  }</td>
                   <td>${
                     a.document == null || a.document == undefined ? 'No' : 'Yes'
                   }</td>
               </tr>`;
-              } else {
-                return `<tr>
+                    } else {
+                      return `<tr>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
                 
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
                 </tr>`;
-              }
-            })
-            .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                    }
+                  })
+                  .join('')
+              : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
     
     
       </tbody>
@@ -2407,36 +2577,52 @@ justification which supports the score and refers to documents which may back th
           </tr>
         </thead>
         <tbody class="table-body">
-        ${sustained_sd&&sustained_sd.length>0?sustained_sd
-          .map((a: any, index) => {
-            if (!index) {
-              return `<tr>
+        ${
+          sustained_sd && sustained_sd.length > 0
+            ? sustained_sd
+                .map((a: any, index) => {
+                  if (!index) {
+                    return `<tr>
                 <td rowspan="${
                   sustained_sd.length
                 }">Outcome sustained over time - sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-                <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-                <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+                <td>${
+                  a.outcome_score_explain ? a.outcome_score_explain : '-'
+                }</td>
+                <td>${
+                  a.justification
+                    ? a.justification
+                    : 'No justification was provided by the user'
+                }</td>
                 <td>${
                   a.document == null || a.document == undefined ? 'No' : 'Yes'
                 }</td>
             </tr>`;
-            } else {
-              return `<tr>
+                  } else {
+                    return `<tr>
               <td>${a.SDG ? a.SDG : '-'}</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.outcome_score ? a.outcome_score : '-'}</td>
-              <td>${a.outcome_score_explain ? a.outcome_score_explain : '-'}</td>
-              <td>${a.justification ? a.justification : 'No justification was provided by the user'}</td>
+              <td>${
+                a.outcome_score_explain ? a.outcome_score_explain : '-'
+              }</td>
+              <td>${
+                a.justification
+                  ? a.justification
+                  : 'No justification was provided by the user'
+              }</td>
               <td>${
                 a.document == null || a.document == undefined ? 'No' : 'Yes'
               }</td>
               </tr>`;
-            }
-          })
-          .join(''):'<tr><td colspan="6" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                  }
+                })
+                .join('')
+            : '<tr><td colspan="6" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         
       
       
@@ -2479,9 +2665,12 @@ justification which supports the score and refers to documents which may back th
          </tr>
        </thead>
        <tbody class="table-body">
-       ${process_categories_assessment&& process_categories_assessment.length > 0? process_categories_assessment
-         .map((a: { name: string; cat_score: number }) => {
-           return `<tr>
+       ${
+         process_categories_assessment &&
+         process_categories_assessment.length > 0
+           ? process_categories_assessment
+               .map((a: { name: string; cat_score: number }) => {
+                 return `<tr>
              <td>${a.name ? a.name : '-'}</td>
              <td>${
                a.cat_score != null && a.cat_score != undefined
@@ -2490,8 +2679,10 @@ justification which supports the score and refers to documents which may back th
              }</td>
                
                 </tr>`;
-         })
-         .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+               })
+               .join('')
+           : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+       }
           <tr>
             <td class="bold-table-row">Process score</td>
             <td class="bold-table-row">${
@@ -2528,7 +2719,8 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Scale of outcome - GHGs</td>
          <td >${
-           content.outcomes_categories_assessment.scale_ghg_score!=null|| content.outcomes_categories_assessment.scale_ghg_score!=undefined
+           content.outcomes_categories_assessment.scale_ghg_score != null ||
+           content.outcomes_categories_assessment.scale_ghg_score != undefined
              ? content.outcomes_categories_assessment.scale_ghg_score
              : 'no data found'
          }</td>
@@ -2536,7 +2728,8 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Scale of outcome - sustainable development </td>
          <td >${
-           content.outcomes_categories_assessment.scale_sdg_score !=null|| content.outcomes_categories_assessment.scale_sdg_score!=undefined
+           content.outcomes_categories_assessment.scale_sdg_score != null ||
+           content.outcomes_categories_assessment.scale_sdg_score != undefined
              ? content.outcomes_categories_assessment.scale_sdg_score
              : 'no data found'
          }</td>
@@ -2544,7 +2737,10 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Scale of outcome - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.scale_adaptation_score !=null|| content.outcomes_categories_assessment.scale_adaptation_score!=undefined
+           content.outcomes_categories_assessment.scale_adaptation_score !=
+             null ||
+           content.outcomes_categories_assessment.scale_adaptation_score !=
+             undefined
              ? content.outcomes_categories_assessment.scale_adaptation_score
              : 'no data found'
          }</td>
@@ -2552,7 +2748,9 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Outcome sustained over time - GHGs </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_ghg_score !=null|| content.outcomes_categories_assessment.sustained_ghg_score!=undefined
+           content.outcomes_categories_assessment.sustained_ghg_score != null ||
+           content.outcomes_categories_assessment.sustained_ghg_score !=
+             undefined
              ? content.outcomes_categories_assessment.sustained_ghg_score
              : 'no data found'
          }</td>
@@ -2560,7 +2758,9 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Outcome sustained over time - sustainable development</td>
          <td >${
-           content.outcomes_categories_assessment.sustained_sdg_score !=null|| content.outcomes_categories_assessment.sustained_sdg_score!=undefined
+           content.outcomes_categories_assessment.sustained_sdg_score != null ||
+           content.outcomes_categories_assessment.sustained_sdg_score !=
+             undefined
              ? content.outcomes_categories_assessment.sustained_sdg_score
              : 'no data found'
          }</td>
@@ -2568,7 +2768,10 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td >Outcome sustained over time - adaptation co-benefits </td>
          <td >${
-           content.outcomes_categories_assessment.sustained_adaptation_score !=null|| content.outcomes_categories_assessment.sustained_adaptation_score!=undefined
+           content.outcomes_categories_assessment.sustained_adaptation_score !=
+             null ||
+           content.outcomes_categories_assessment.sustained_adaptation_score !=
+             undefined
              ? content.outcomes_categories_assessment.sustained_adaptation_score
              : 'no data found'
          }</td>
@@ -2576,7 +2779,9 @@ justification which supports the score and refers to documents which may back th
        <tr>
          <td class="bold-table-row"> Outcomes score </td>
          <td class="bold-table-row">${
-           content.outcomeScore!=null|| content.outcomeScore!=undefined  ? content.outcomeScore : 'no data found'
+           content.outcomeScore != null || content.outcomeScore != undefined
+             ? content.outcomeScore
+             : 'no data found'
          }</td>
        </tr>
       
@@ -2592,21 +2797,9 @@ justification which supports the score and refers to documents which may back th
        
         </div>`;
     if (prossesAssesmentStartingSituation.length == 0) {
-      return page_1 +
-      page_2 +
-      page_4 +
-      page_5 +
-      page_3 +
-      page_6;
+      return page_1 + page_2 + page_4 + page_5 + page_3 + page_6;
     } else {
-      return (
-        page_1 +
-        page_2 +
-        page_4 +
-        page_5 +
-        page_3 +
-        page_6
-      );
+      return page_1 + page_2 + page_4 + page_5 + page_3 + page_6;
     }
   }
   CarbonMarketcontentFour(
@@ -2696,26 +2889,32 @@ justification which supports the score and refers to documents which may back th
        </tr>
      </thead>
      <tbody class="table-body">
-     ${annex&&annex.length > 0? annex
-       .map(
-         (a: {
-           characteristic: Characteristics;
-           uploadedDocumentPath: string;
-         }) =>
-           '<tr><td>' +
-           (a.characteristic?.category ? a.characteristic.category.name : '-') +
-           '</td><td>' +
-           (a.characteristic ? a.characteristic.name : '-') +
-           '</td><td>' +
-           '<a href="' +
-           this.fileServerURL +
-           a.uploadedDocumentPath +
-           '">' +
-           a.uploadedDocumentPath +
-           '</a>' +
-           '</td></tr>',
-       )
-       .join(''):'<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+     ${
+       annex && annex.length > 0
+         ? annex
+             .map(
+               (a: {
+                 characteristic: Characteristics;
+                 uploadedDocumentPath: string;
+               }) =>
+                 '<tr><td>' +
+                 (a.characteristic?.category
+                   ? a.characteristic.category.name
+                   : '-') +
+                 '</td><td>' +
+                 (a.characteristic ? a.characteristic.name : '-') +
+                 '</td><td>' +
+                 '<a href="' +
+                 this.fileServerURL +
+                 a.uploadedDocumentPath +
+                 '">' +
+                 a.uploadedDocumentPath +
+                 '</a>' +
+                 '</td></tr>',
+             )
+             .join('')
+         : '<tr><td colspan="3" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
      </tbody>
    </table>
  </div>
@@ -2837,16 +3036,20 @@ PORTFOLIO TOOL
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${portfolio_details&&portfolio_details.length>0?portfolio_details
-            .map(
-              (a: { information: string; description: string }) =>
-                '<tr><td>' +
-                a.information +
-                '</td><td>' +
-                a.description +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            portfolio_details && portfolio_details.length > 0
+              ? portfolio_details
+                  .map(
+                    (a: { information: string; description: string }) =>
+                      '<tr><td>' +
+                      a.information +
+                      '</td><td>' +
+                      a.description +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -2862,12 +3065,16 @@ PORTFOLIO TOOL
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${intervation_details&&intervation_details.length>0?intervation_details
-            .map(
-              (a: { id: string; name: string }) =>
-                '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            intervation_details && intervation_details.length > 0
+              ? intervation_details
+                  .map(
+                    (a: { id: string; name: string }) =>
+                      '<tr><td>' + a.id + '</td><td>' + a.name + '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="2" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -2932,38 +3139,42 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${prosses_tech&&prosses_tech.length>0?prosses_tech
-            .map(
-              (a: {
-                category_score: string;
-                SCALE_UP: string;
-                ADOPTION: string;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a['R_&_D'] ? a['R_&_D'] : '-') +
-                '</td><td>' +
-                (a.ADOPTION ? a.ADOPTION : '-') +
-                '</td><td>' +
-                (a.SCALE_UP ? a.SCALE_UP : '-') +
-                '</td><td>' +
-                (a.category_score != undefined || a.category_score != null
-                  ? a.category_score
-                  : '-') +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            prosses_tech && prosses_tech.length > 0
+              ? prosses_tech
+                  .map(
+                    (a: {
+                      category_score: string;
+                      SCALE_UP: string;
+                      ADOPTION: string;
+                      id: number;
+                      name: string;
+                      tool: string;
+                      status: string;
+                    }) =>
+                      '<tr><td>' +
+                      (a.id ? a.id : '-') +
+                      '</td><td>' +
+                      (a.name ? a.name : '-') +
+                      '</td><td>' +
+                      (a.tool ? a.tool : '-') +
+                      '</td><td>' +
+                      (a.status ? a.status : '-') +
+                      '</td><td>' +
+                      (a['R_&_D'] ? a['R_&_D'] : '-') +
+                      '</td><td>' +
+                      (a.ADOPTION ? a.ADOPTION : '-') +
+                      '</td><td>' +
+                      (a.SCALE_UP ? a.SCALE_UP : '-') +
+                      '</td><td>' +
+                      (a.category_score != undefined || a.category_score != null
+                        ? a.category_score
+                        : '-') +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -2990,39 +3201,45 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           </tr>
         </thead>
         <tbody class="table-body ">
-        ${prosses_agent&&prosses_agent.length>0?prosses_agent
-          .map(
-            (a: {
-              category_score: string;
-              ENTREPRENEURS: string;
-              COALITION_OF_ADVOCATES: string;
-              BENIFICIARIES: string;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id ? a.id : '-') +
-              '</td><td>' +
-              (a.name ? a.name : '-') +
-              '</td><td>' +
-              (a.tool ? a.tool : '-') +
-              '</td><td>' +
-              (a.status ? a.status : '-') +
-              '</td><td>' +
-              (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
-              '</td><td>' +
-              (a.COALITION_OF_ADVOCATES ? a.COALITION_OF_ADVOCATES : '-') +
-              '</td><td>' +
-              (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
-              '</td><td>' +
-              (a.category_score != undefined || a.category_score != null
-                ? a.category_score
-                : '-') +
-              '</td></tr>',
-          )
-          .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+        ${
+          prosses_agent && prosses_agent.length > 0
+            ? prosses_agent
+                .map(
+                  (a: {
+                    category_score: string;
+                    ENTREPRENEURS: string;
+                    COALITION_OF_ADVOCATES: string;
+                    BENIFICIARIES: string;
+                    id: number;
+                    name: string;
+                    tool: string;
+                    status: string;
+                  }) =>
+                    '<tr><td>' +
+                    (a.id ? a.id : '-') +
+                    '</td><td>' +
+                    (a.name ? a.name : '-') +
+                    '</td><td>' +
+                    (a.tool ? a.tool : '-') +
+                    '</td><td>' +
+                    (a.status ? a.status : '-') +
+                    '</td><td>' +
+                    (a.ENTREPRENEURS ? a.ENTREPRENEURS : '-') +
+                    '</td><td>' +
+                    (a.COALITION_OF_ADVOCATES
+                      ? a.COALITION_OF_ADVOCATES
+                      : '-') +
+                    '</td><td>' +
+                    (a.BENIFICIARIES ? a.BENIFICIARIES : '-') +
+                    '</td><td>' +
+                    (a.category_score != undefined || a.category_score != null
+                      ? a.category_score
+                      : '-') +
+                    '</td></tr>',
+                )
+                .join('')
+            : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         </tbody>
       </table>
     </div>
@@ -3059,41 +3276,48 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
              </tr>
            </thead>
            <tbody class="table-body ">
-           ${prosses_incentive&&prosses_incentive.length>0?prosses_incentive
-             .map(
-               (a: {
-                 category_score: string;
-                 ECONOMIC_NON_ECONOMIC: string;
-                 DISINCENTIVES: string;
-                 INSTITUTIONAL_AND_REGULATORY: string;
-                 id: number;
-                 name: string;
-                 tool: string;
-                 status: string;
-               }) =>
-                 '<tr><td>' +
-                 (a.id ? a.id : '-') +
-                 '</td><td>' +
-                 (a.name ? a.name : '-') +
-                 '</td><td>' +
-                 (a.tool ? a.tool : '-') +
-                 '</td><td>' +
-                 (a.status ? a.status : '-') +
-                 '</td><td>' +
-                 (a.ECONOMIC_NON_ECONOMIC ? a.ECONOMIC_NON_ECONOMIC : '-') +
-                 '</td><td>' +
-                 (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
-                 '</td><td>' +
-                 (a.INSTITUTIONAL_AND_REGULATORY
-                   ? a.INSTITUTIONAL_AND_REGULATORY
-                   : '-') +
-                 '</td><td>' +
-                 (a.category_score != undefined || a.category_score != null
-                   ? a.category_score
-                   : '-') +
-                 '</td></tr>',
-             )
-             .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+           ${
+             prosses_incentive && prosses_incentive.length > 0
+               ? prosses_incentive
+                   .map(
+                     (a: {
+                       category_score: string;
+                       ECONOMIC_NON_ECONOMIC: string;
+                       DISINCENTIVES: string;
+                       INSTITUTIONAL_AND_REGULATORY: string;
+                       id: number;
+                       name: string;
+                       tool: string;
+                       status: string;
+                     }) =>
+                       '<tr><td>' +
+                       (a.id ? a.id : '-') +
+                       '</td><td>' +
+                       (a.name ? a.name : '-') +
+                       '</td><td>' +
+                       (a.tool ? a.tool : '-') +
+                       '</td><td>' +
+                       (a.status ? a.status : '-') +
+                       '</td><td>' +
+                       (a.ECONOMIC_NON_ECONOMIC
+                         ? a.ECONOMIC_NON_ECONOMIC
+                         : '-') +
+                       '</td><td>' +
+                       (a.DISINCENTIVES ? a.DISINCENTIVES : '-') +
+                       '</td><td>' +
+                       (a.INSTITUTIONAL_AND_REGULATORY
+                         ? a.INSTITUTIONAL_AND_REGULATORY
+                         : '-') +
+                       '</td><td>' +
+                       (a.category_score != undefined ||
+                       a.category_score != null
+                         ? a.category_score
+                         : '-') +
+                       '</td></tr>',
+                   )
+                   .join('')
+               : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+           }
            </tbody>
          </table>
        </div>
@@ -3120,39 +3344,43 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
            </tr>
          </thead>
          <tbody class="table-body ">
-         ${prosses_norms&&prosses_norms.length>0?prosses_norms
-           .map(
-             (a: {
-               id: number;
-               name: string;
-               tool: string;
-               status: string;
-               AWARENESS: string;
-               BEHAVIOUR: string;
-               SOCIAL_NORMS: string;
-               category_score: string;
-             }) =>
-               '<tr><td>' +
-               (a.id ? a.id : '-') +
-               '</td><td>' +
-               (a.name ? a.name : '-') +
-               '</td><td>' +
-               (a.tool ? a.tool : '-') +
-               '</td><td>' +
-               (a.status ? a.status : '-') +
-               '</td><td>' +
-               (a.AWARENESS ? a.AWARENESS : '-') +
-               '</td><td>' +
-               (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
-               '</td><td>' +
-               (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
-               '</td><td>' +
-               (a.category_score != undefined || a.category_score != null
-                 ? a.category_score
-                 : '-') +
-               '</td></tr>',
-           )
-           .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+         ${
+           prosses_norms && prosses_norms.length > 0
+             ? prosses_norms
+                 .map(
+                   (a: {
+                     id: number;
+                     name: string;
+                     tool: string;
+                     status: string;
+                     AWARENESS: string;
+                     BEHAVIOUR: string;
+                     SOCIAL_NORMS: string;
+                     category_score: string;
+                   }) =>
+                     '<tr><td>' +
+                     (a.id ? a.id : '-') +
+                     '</td><td>' +
+                     (a.name ? a.name : '-') +
+                     '</td><td>' +
+                     (a.tool ? a.tool : '-') +
+                     '</td><td>' +
+                     (a.status ? a.status : '-') +
+                     '</td><td>' +
+                     (a.AWARENESS ? a.AWARENESS : '-') +
+                     '</td><td>' +
+                     (a.BEHAVIOUR ? a.BEHAVIOUR : '-') +
+                     '</td><td>' +
+                     (a.SOCIAL_NORMS ? a.SOCIAL_NORMS : '-') +
+                     '</td><td>' +
+                     (a.category_score != undefined || a.category_score != null
+                       ? a.category_score
+                       : '-') +
+                     '</td></tr>',
+                 )
+                 .join('')
+             : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+         }
          </tbody>
        </table>
      </div>
@@ -3192,49 +3420,56 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
               </tr>
             </thead>
             <tbody class="table-body ">
-            ${process_score&&process_score.length>0?process_score
-              .map(
-                (a: {
-                  id: number;
-                  name: string;
-                  tool: string;
-                  status: string;
-                  Technology: string;
-                  Agents: string;
-                  Incentives: string;
-                  norms: string;
-                  category_score: string;
-                }) =>
-                  '<tr><td>' +
-                  (a.id ? a.id : '-') +
-                  '</td><td>' +
-                  (a.name ? a.name : '-') +
-                  '</td><td>' +
-                  (a.tool ? a.tool : '-') +
-                  '</td><td>' +
-                  (a.status ? a.status : '-') +
-                  '</td><td>' +
-                  (a.Technology != undefined || a.Technology != null
-                    ? a.Technology
-                    : '-') +
-                  '</td><td>' +
-                  (a.Agents != undefined || a.Agents != null ? a.Agents : '-') +
-                  '</td><td>' +
-                  (a.Incentives != undefined || a.Incentives != null
-                    ? a.Incentives
-                    : '-') +
-                  '</td><td>' +
-                  (a['Norms and behavioral change'] != undefined ||
-                  a['Norms and behavioral change'] != null
-                    ? a['Norms and behavioral change']
-                    : '-') +
-                  '</td><td>' +
-                  (a.category_score != undefined || a.category_score != null
-                    ? a.category_score
-                    : '-') +
-                  '</td></tr>',
-              )
-              .join(''):'<tr><td colspan="9" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+            ${
+              process_score && process_score.length > 0
+                ? process_score
+                    .map(
+                      (a: {
+                        id: number;
+                        name: string;
+                        tool: string;
+                        status: string;
+                        Technology: string;
+                        Agents: string;
+                        Incentives: string;
+                        norms: string;
+                        category_score: string;
+                      }) =>
+                        '<tr><td>' +
+                        (a.id ? a.id : '-') +
+                        '</td><td>' +
+                        (a.name ? a.name : '-') +
+                        '</td><td>' +
+                        (a.tool ? a.tool : '-') +
+                        '</td><td>' +
+                        (a.status ? a.status : '-') +
+                        '</td><td>' +
+                        (a.Technology != undefined || a.Technology != null
+                          ? a.Technology
+                          : '-') +
+                        '</td><td>' +
+                        (a.Agents != undefined || a.Agents != null
+                          ? a.Agents
+                          : '-') +
+                        '</td><td>' +
+                        (a.Incentives != undefined || a.Incentives != null
+                          ? a.Incentives
+                          : '-') +
+                        '</td><td>' +
+                        (a['Norms and behavioral change'] != undefined ||
+                        a['Norms and behavioral change'] != null
+                          ? a['Norms and behavioral change']
+                          : '-') +
+                        '</td><td>' +
+                        (a.category_score != undefined ||
+                        a.category_score != null
+                          ? a.category_score
+                          : '-') +
+                        '</td></tr>',
+                    )
+                    .join('')
+                : '<tr><td colspan="9" style=" text-align: center;" ><p>No data found</p></td></tr>'
+            }
             </tbody>
           </table>
         </div>
@@ -3301,37 +3536,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${ghg_scale&&ghg_scale.length>0?ghg_scale
-            .map(
-              (a: {
-                international: any;
-                national: any;
-                subnational: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.international.name ? a.international.name : '-') +
-                '</td><td>' +
-                (a.national.name ? a.national.name : '-') +
-                '</td><td>' +
-                (a.subnational.name ? a.subnational.name : '-') +
-                '</td><td>' +
-                (a.category_score.name ? a.category_score.name : '-') +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            ghg_scale && ghg_scale.length > 0
+              ? ghg_scale
+                  .map(
+                    (a: {
+                      international: any;
+                      national: any;
+                      subnational: any;
+                      category_score: any;
+                      id: number;
+                      name: string;
+                      tool: string;
+                      status: string;
+                    }) =>
+                      '<tr><td>' +
+                      (a.id ? a.id : '-') +
+                      '</td><td>' +
+                      (a.name ? a.name : '-') +
+                      '</td><td>' +
+                      (a.tool ? a.tool : '-') +
+                      '</td><td>' +
+                      (a.status ? a.status : '-') +
+                      '</td><td>' +
+                      (a.international.name ? a.international.name : '-') +
+                      '</td><td>' +
+                      (a.national.name ? a.national.name : '-') +
+                      '</td><td>' +
+                      (a.subnational.name ? a.subnational.name : '-') +
+                      '</td><td>' +
+                      (a.category_score.name ? a.category_score.name : '-') +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -3364,37 +3603,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           </tr>
         </thead>
         <tbody class="table-body ">
-        ${ghg_sustaind&&ghg_sustaind.length>0?ghg_sustaind
-          .map(
-            (a: {
-              long_term: any;
-              medium_term: any;
-              short_term: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id ? a.id : '-') +
-              '</td><td>' +
-              (a.name ? a.name : '-') +
-              '</td><td>' +
-              (a.tool ? a.tool : '-') +
-              '</td><td>' +
-              (a.status ? a.status : '-') +
-              '</td><td>' +
-              (a.long_term.name ? a.long_term.name : '-') +
-              '</td><td>' +
-              (a.medium_term.name ? a.medium_term.name : '-') +
-              '</td><td>' +
-              (a.short_term.name ? a.short_term.name : '-') +
-              '</td><td>' +
-              (a.category_score.name ? a.category_score.name : '-') +
-              '</td></tr>',
-          )
-          .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+        ${
+          ghg_sustaind && ghg_sustaind.length > 0
+            ? ghg_sustaind
+                .map(
+                  (a: {
+                    long_term: any;
+                    medium_term: any;
+                    short_term: any;
+                    category_score: any;
+                    id: number;
+                    name: string;
+                    tool: string;
+                    status: string;
+                  }) =>
+                    '<tr><td>' +
+                    (a.id ? a.id : '-') +
+                    '</td><td>' +
+                    (a.name ? a.name : '-') +
+                    '</td><td>' +
+                    (a.tool ? a.tool : '-') +
+                    '</td><td>' +
+                    (a.status ? a.status : '-') +
+                    '</td><td>' +
+                    (a.long_term.name ? a.long_term.name : '-') +
+                    '</td><td>' +
+                    (a.medium_term.name ? a.medium_term.name : '-') +
+                    '</td><td>' +
+                    (a.short_term.name ? a.short_term.name : '-') +
+                    '</td><td>' +
+                    (a.category_score.name ? a.category_score.name : '-') +
+                    '</td></tr>',
+                )
+                .join('')
+            : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         </tbody>
       </table>
     </div>
@@ -3441,37 +3684,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           </tr>
         </thead>
         <tbody class="table-body ">
-        ${adaptation_scale&&adaptation_scale.length>0?adaptation_scale
-          .map(
-            (a: {
-              international: any;
-              national: any;
-              subnational: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id ? a.id : '-') +
-              '</td><td>' +
-              (a.name ? a.name : '-') +
-              '</td><td>' +
-              (a.tool ? a.tool : '-') +
-              '</td><td>' +
-              (a.status ? a.status : '-') +
-              '</td><td>' +
-              (a.international.name ? a.international.name : '-') +
-              '</td><td>' +
-              (a.national.name ? a.national.name : '-') +
-              '</td><td>' +
-              (a.subnational.name ? a.subnational.name : '-') +
-              '</td><td>' +
-              (a.category_score.name ? a.category_score.name : '-') +
-              '</td></tr>',
-          )
-          .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+        ${
+          adaptation_scale && adaptation_scale.length > 0
+            ? adaptation_scale
+                .map(
+                  (a: {
+                    international: any;
+                    national: any;
+                    subnational: any;
+                    category_score: any;
+                    id: number;
+                    name: string;
+                    tool: string;
+                    status: string;
+                  }) =>
+                    '<tr><td>' +
+                    (a.id ? a.id : '-') +
+                    '</td><td>' +
+                    (a.name ? a.name : '-') +
+                    '</td><td>' +
+                    (a.tool ? a.tool : '-') +
+                    '</td><td>' +
+                    (a.status ? a.status : '-') +
+                    '</td><td>' +
+                    (a.international.name ? a.international.name : '-') +
+                    '</td><td>' +
+                    (a.national.name ? a.national.name : '-') +
+                    '</td><td>' +
+                    (a.subnational.name ? a.subnational.name : '-') +
+                    '</td><td>' +
+                    (a.category_score.name ? a.category_score.name : '-') +
+                    '</td></tr>',
+                )
+                .join('')
+            : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         </tbody>
       </table>
     </div>
@@ -3503,41 +3750,45 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
         </tr>
       </thead>
       <tbody class="table-body ">
-      ${adaptation_sustaind&&adaptation_sustaind.length>0?adaptation_sustaind
-        .map(
-          (a: {
-            long_term: any;
-            medium_term: any;
-            short_term: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-            long: string;
-            medium: string;
-            short: string;
-            score: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.long_term.name ? a.long_term.name : '-') +
-            '</td><td>' +
-            (a.medium_term.name ? a.medium_term.name : '-') +
-            '</td><td>' +
-            (a.short_term.name ? a.short_term.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+      ${
+        adaptation_sustaind && adaptation_sustaind.length > 0
+          ? adaptation_sustaind
+              .map(
+                (a: {
+                  long_term: any;
+                  medium_term: any;
+                  short_term: any;
+                  category_score: any;
+                  id: number;
+                  name: string;
+                  tool: string;
+                  status: string;
+                  long: string;
+                  medium: string;
+                  short: string;
+                  score: string;
+                }) =>
+                  '<tr><td>' +
+                  (a.id ? a.id : '-') +
+                  '</td><td>' +
+                  (a.name ? a.name : '-') +
+                  '</td><td>' +
+                  (a.tool ? a.tool : '-') +
+                  '</td><td>' +
+                  (a.status ? a.status : '-') +
+                  '</td><td>' +
+                  (a.long_term.name ? a.long_term.name : '-') +
+                  '</td><td>' +
+                  (a.medium_term.name ? a.medium_term.name : '-') +
+                  '</td><td>' +
+                  (a.short_term.name ? a.short_term.name : '-') +
+                  '</td><td>' +
+                  (a.category_score.name ? a.category_score.name : '-') +
+                  '</td></tr>',
+              )
+              .join('')
+          : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+      }
       </tbody>
     </table>
   </div>
@@ -3585,37 +3836,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           </tr>
         </thead>
         <tbody class="table-body ">
-        ${a.sdg_scale&&a.sdg_scale.length>0?a.sdg_scale
-          .map(
-            (a: {
-              international: any;
-              national: any;
-              subnational: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id ? a.id : '-') +
-              '</td><td>' +
-              (a.name ? a.name : '-') +
-              '</td><td>' +
-              (a.tool ? a.tool : '-') +
-              '</td><td>' +
-              (a.status ? a.status : '-') +
-              '</td><td>' +
-              (a.international.name ? a.international.name : '-') +
-              '</td><td>' +
-              (a.national.name ? a.national.name : '-') +
-              '</td><td>' +
-              (a.subnational.name ? a.subnational.name : '-') +
-              '</td><td>' +
-              (a.category_score.name ? a.category_score.name : '-') +
-              '</td></tr>',
-          )
-          .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+        ${
+          a.sdg_scale && a.sdg_scale.length > 0
+            ? a.sdg_scale
+                .map(
+                  (a: {
+                    international: any;
+                    national: any;
+                    subnational: any;
+                    category_score: any;
+                    id: number;
+                    name: string;
+                    tool: string;
+                    status: string;
+                  }) =>
+                    '<tr><td>' +
+                    (a.id ? a.id : '-') +
+                    '</td><td>' +
+                    (a.name ? a.name : '-') +
+                    '</td><td>' +
+                    (a.tool ? a.tool : '-') +
+                    '</td><td>' +
+                    (a.status ? a.status : '-') +
+                    '</td><td>' +
+                    (a.international.name ? a.international.name : '-') +
+                    '</td><td>' +
+                    (a.national.name ? a.national.name : '-') +
+                    '</td><td>' +
+                    (a.subnational.name ? a.subnational.name : '-') +
+                    '</td><td>' +
+                    (a.category_score.name ? a.category_score.name : '-') +
+                    '</td></tr>',
+                )
+                .join('')
+            : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         </tbody>
       </table>
     </div>
@@ -3649,37 +3904,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
         </tr>
       </thead>
       <tbody class="table-body ">
-      ${a.sdg_sustaind&&a.sdg_sustaind.length>0?a.sdg_sustaind
-        .map(
-          (a: {
-            long_term: any;
-            medium_term: any;
-            short_term: any;
-            category_score: any;
-            id: number;
-            name: string;
-            tool: string;
-            status: string;
-          }) =>
-            '<tr><td>' +
-            (a.id ? a.id : '-') +
-            '</td><td>' +
-            (a.name ? a.name : '-') +
-            '</td><td>' +
-            (a.tool ? a.tool : '-') +
-            '</td><td>' +
-            (a.status ? a.status : '-') +
-            '</td><td>' +
-            (a.long_term.name ? a.long_term.name : '-') +
-            '</td><td>' +
-            (a.medium_term.name ? a.medium_term.name : '-') +
-            '</td><td>' +
-            (a.short_term.name ? a.short_term.name : '-') +
-            '</td><td>' +
-            (a.category_score.name ? a.category_score.name : '-') +
-            '</td></tr>',
-        )
-        .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+      ${
+        a.sdg_sustaind && a.sdg_sustaind.length > 0
+          ? a.sdg_sustaind
+              .map(
+                (a: {
+                  long_term: any;
+                  medium_term: any;
+                  short_term: any;
+                  category_score: any;
+                  id: number;
+                  name: string;
+                  tool: string;
+                  status: string;
+                }) =>
+                  '<tr><td>' +
+                  (a.id ? a.id : '-') +
+                  '</td><td>' +
+                  (a.name ? a.name : '-') +
+                  '</td><td>' +
+                  (a.tool ? a.tool : '-') +
+                  '</td><td>' +
+                  (a.status ? a.status : '-') +
+                  '</td><td>' +
+                  (a.long_term.name ? a.long_term.name : '-') +
+                  '</td><td>' +
+                  (a.medium_term.name ? a.medium_term.name : '-') +
+                  '</td><td>' +
+                  (a.short_term.name ? a.short_term.name : '-') +
+                  '</td><td>' +
+                  (a.category_score.name ? a.category_score.name : '-') +
+                  '</td></tr>',
+              )
+              .join('')
+          : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+      }
       </tbody>
     </table>
   </div>
@@ -3725,35 +3984,39 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
        </tr>
      </thead>
      <tbody  class="table-body ">
-     ${ghg_scale_sustaind_comparison&&ghg_scale_sustaind_comparison.length>0?ghg_scale_sustaind_comparison
-       .map(
-         (a: {
-           scale_score: any;
-           sustained_score: any;
+     ${
+       ghg_scale_sustaind_comparison && ghg_scale_sustaind_comparison.length > 0
+         ? ghg_scale_sustaind_comparison
+             .map(
+               (a: {
+                 scale_score: any;
+                 sustained_score: any;
 
-           category_score: any;
-           id: number;
-           name: string;
-           tool: string;
-           status: string;
-         }) =>
-           '<tr><td>' +
-           (a.id ? a.id : '-') +
-           '</td><td>' +
-           (a.name ? a.name : '-') +
-           '</td><td>' +
-           (a.tool ? a.tool : '-') +
-           '</td><td>' +
-           (a.status ? a.status : '-') +
-           '</td><td>' +
-           (a.scale_score.name ? a.scale_score.name : '-') +
-           '</td><td>' +
-           (a.sustained_score.name ? a.sustained_score.name : '-') +
-           '</td><td>' +
-           (a.category_score.name ? a.category_score.name : '-') +
-           '</td></tr>',
-       )
-       .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+                 category_score: any;
+                 id: number;
+                 name: string;
+                 tool: string;
+                 status: string;
+               }) =>
+                 '<tr><td>' +
+                 (a.id ? a.id : '-') +
+                 '</td><td>' +
+                 (a.name ? a.name : '-') +
+                 '</td><td>' +
+                 (a.tool ? a.tool : '-') +
+                 '</td><td>' +
+                 (a.status ? a.status : '-') +
+                 '</td><td>' +
+                 (a.scale_score.name ? a.scale_score.name : '-') +
+                 '</td><td>' +
+                 (a.sustained_score.name ? a.sustained_score.name : '-') +
+                 '</td><td>' +
+                 (a.category_score.name ? a.category_score.name : '-') +
+                 '</td></tr>',
+             )
+             .join('')
+         : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+     }
      </tbody>
    </table>
  </div>
@@ -3784,35 +4047,40 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
      </tr>
    </thead>
    <tbody class="table-body ">
-   ${adaptation_scale_sustaind_comparison&&adaptation_scale_sustaind_comparison.length>0?adaptation_scale_sustaind_comparison
-     .map(
-       (a: {
-         scale_score: any;
-         sustained_score: any;
+   ${
+     adaptation_scale_sustaind_comparison &&
+     adaptation_scale_sustaind_comparison.length > 0
+       ? adaptation_scale_sustaind_comparison
+           .map(
+             (a: {
+               scale_score: any;
+               sustained_score: any;
 
-         category_score: any;
-         id: number;
-         name: string;
-         tool: string;
-         status: string;
-       }) =>
-         '<tr><td>' +
-         (a.id ? a.id : '-') +
-         '</td><td>' +
-         (a.name ? a.name : '-') +
-         '</td><td>' +
-         (a.tool ? a.tool : '-') +
-         '</td><td>' +
-         (a.status ? a.status : '-') +
-         '</td><td>' +
-         (a.scale_score.name ? a.scale_score.name : '-') +
-         '</td><td>' +
-         (a.sustained_score.name ? a.sustained_score.name : '-') +
-         '</td><td>' +
-         (a.category_score.name ? a.category_score.name : '-') +
-         '</td></tr>',
-     )
-     .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+               category_score: any;
+               id: number;
+               name: string;
+               tool: string;
+               status: string;
+             }) =>
+               '<tr><td>' +
+               (a.id ? a.id : '-') +
+               '</td><td>' +
+               (a.name ? a.name : '-') +
+               '</td><td>' +
+               (a.tool ? a.tool : '-') +
+               '</td><td>' +
+               (a.status ? a.status : '-') +
+               '</td><td>' +
+               (a.scale_score.name ? a.scale_score.name : '-') +
+               '</td><td>' +
+               (a.sustained_score.name ? a.sustained_score.name : '-') +
+               '</td><td>' +
+               (a.category_score.name ? a.category_score.name : '-') +
+               '</td></tr>',
+           )
+           .join('')
+       : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+   }
    </tbody>
  </table>
 </div>    
@@ -3860,34 +4128,38 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
       </tr>
     </thead>
     <tbody class="table-body ">
-    ${b.data&&b.data.length>0?b.data
-      .map(
-        (a: {
-          scale_score: any;
-          sustained_score: any;
-          category_score: any;
-          id: number;
-          name: string;
-          tool: string;
-          status: string;
-        }) =>
-          '<tr><td>' +
-          (a.id ? a.id : '-') +
-          '</td><td>' +
-          (a.name ? a.name : '-') +
-          '</td><td>' +
-          (a.tool ? a.tool : '-') +
-          '</td><td>' +
-          (a.status ? a.status : '-') +
-          '</td><td>' +
-          (a.scale_score.name ? a.scale_score.name : '-') +
-          '</td><td>' +
-          (a.sustained_score.name ? a.sustained_score.name : '-') +
-          '</td><td>' +
-          (a.category_score.name ? a.category_score.name : '-') +
-          '</td></tr>',
-      )
-      .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+    ${
+      b.data && b.data.length > 0
+        ? b.data
+            .map(
+              (a: {
+                scale_score: any;
+                sustained_score: any;
+                category_score: any;
+                id: number;
+                name: string;
+                tool: string;
+                status: string;
+              }) =>
+                '<tr><td>' +
+                (a.id ? a.id : '-') +
+                '</td><td>' +
+                (a.name ? a.name : '-') +
+                '</td><td>' +
+                (a.tool ? a.tool : '-') +
+                '</td><td>' +
+                (a.status ? a.status : '-') +
+                '</td><td>' +
+                (a.scale_score.name ? a.scale_score.name : '-') +
+                '</td><td>' +
+                (a.sustained_score.name ? a.sustained_score.name : '-') +
+                '</td><td>' +
+                (a.category_score.name ? a.category_score.name : '-') +
+                '</td></tr>',
+            )
+            .join('')
+        : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+    }
     </tbody>
   </table>
   </div>
@@ -3936,35 +4208,41 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${sacle_comparison&&sacle_comparison.length>0?sacle_comparison
-            .map(
-              (a: {
-                ghg_score: any;
-                adaptation_score: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.ghg_score.name ? a.ghg_score.name : '-') +
-                '</td><td>' +
-                '</td><td>' +
-                (a.adaptation_score.name ? a.adaptation_score.name : '-') +
-                '</td><td>' +
-                (a.category_score.name ? a.category_score.name : '-') +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            sacle_comparison && sacle_comparison.length > 0
+              ? sacle_comparison
+                  .map(
+                    (a: {
+                      ghg_score: any;
+                      adaptation_score: any;
+                      category_score: any;
+                      id: number;
+                      name: string;
+                      tool: string;
+                      status: string;
+                    }) =>
+                      '<tr><td>' +
+                      (a.id ? a.id : '-') +
+                      '</td><td>' +
+                      (a.name ? a.name : '-') +
+                      '</td><td>' +
+                      (a.tool ? a.tool : '-') +
+                      '</td><td>' +
+                      (a.status ? a.status : '-') +
+                      '</td><td>' +
+                      (a.ghg_score.name ? a.ghg_score.name : '-') +
+                      '</td><td>' +
+                      '</td><td>' +
+                      (a.adaptation_score.name
+                        ? a.adaptation_score.name
+                        : '-') +
+                      '</td><td>' +
+                      (a.category_score.name ? a.category_score.name : '-') +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -3996,35 +4274,39 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           </tr>
         </thead>
         <tbody class="table-body ">
-        ${sustaind_comparison&&sustaind_comparison.length>0?sustaind_comparison
-          .map(
-            (a: {
-              ghg_score: any;
-              adaptation_score: any;
-              category_score: any;
-              id: number;
-              name: string;
-              tool: string;
-              status: string;
-            }) =>
-              '<tr><td>' +
-              (a.id ? a.id : '-') +
-              '</td><td>' +
-              (a.name ? a.name : '-') +
-              '</td><td>' +
-              (a.tool ? a.tool : '-') +
-              '</td><td>' +
-              (a.status ? a.status : '-') +
-              '</td><td>' +
-              (a.ghg_score.name ? a.ghg_score.name : '-') +
-              '</td><td>' +
-              '</td><td>' +
-              (a.adaptation_score.name ? a.adaptation_score.name : '-') +
-              '</td><td>' +
-              (a.category_score.name ? a.category_score.name : '-') +
-              '</td></tr>',
-          )
-          .join(''):'<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+        ${
+          sustaind_comparison && sustaind_comparison.length > 0
+            ? sustaind_comparison
+                .map(
+                  (a: {
+                    ghg_score: any;
+                    adaptation_score: any;
+                    category_score: any;
+                    id: number;
+                    name: string;
+                    tool: string;
+                    status: string;
+                  }) =>
+                    '<tr><td>' +
+                    (a.id ? a.id : '-') +
+                    '</td><td>' +
+                    (a.name ? a.name : '-') +
+                    '</td><td>' +
+                    (a.tool ? a.tool : '-') +
+                    '</td><td>' +
+                    (a.status ? a.status : '-') +
+                    '</td><td>' +
+                    (a.ghg_score.name ? a.ghg_score.name : '-') +
+                    '</td><td>' +
+                    '</td><td>' +
+                    (a.adaptation_score.name ? a.adaptation_score.name : '-') +
+                    '</td><td>' +
+                    (a.category_score.name ? a.category_score.name : '-') +
+                    '</td></tr>',
+                )
+                .join('')
+            : '<tr><td colspan="8" style=" text-align: center;" ><p>No data found</p></td></tr>'
+        }
         </tbody>
       </table>
     </div>
@@ -4069,38 +4351,42 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${outcome_level&&outcome_level.length>0?outcome_level
-            .map(
-              (a: {
-                scale_cat_score: any;
-                sustained_cat_score: any;
-                category_score: any;
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
-                '</td><td>' +
-                (a.sustained_cat_score.name
-                  ? a.sustained_cat_score.name
-                  : '-') +
-                '</td><td>' +
-                (a.category_score.name
-                  ? a.category_score.name
-                  : a.category_score) +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            outcome_level && outcome_level.length > 0
+              ? outcome_level
+                  .map(
+                    (a: {
+                      scale_cat_score: any;
+                      sustained_cat_score: any;
+                      category_score: any;
+                      id: number;
+                      name: string;
+                      tool: string;
+                      status: string;
+                    }) =>
+                      '<tr><td>' +
+                      (a.id ? a.id : '-') +
+                      '</td><td>' +
+                      (a.name ? a.name : '-') +
+                      '</td><td>' +
+                      (a.tool ? a.tool : '-') +
+                      '</td><td>' +
+                      (a.status ? a.status : '-') +
+                      '</td><td>' +
+                      (a.scale_cat_score.name ? a.scale_cat_score.name : '-') +
+                      '</td><td>' +
+                      (a.sustained_cat_score.name
+                        ? a.sustained_cat_score.name
+                        : '-') +
+                      '</td><td>' +
+                      (a.category_score.name
+                        ? a.category_score.name
+                        : a.category_score) +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="7" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
           </tbody>
         </table>
       </div>
@@ -4169,28 +4455,32 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
             </tr>
           </thead>
           <tbody class="table-body ">
-          ${aggregation.data&&aggregation.data.length>0?aggregation.data
-            .map(
-              (a: {
-                id: number;
-                name: string;
-                tool: string;
-                status: string;
-                mitigation: string;
-              }) =>
-                '<tr><td>' +
-                (a.id ? a.id : '-') +
-                '</td><td>' +
-                (a.name ? a.name : '-') +
-                '</td><td>' +
-                (a.tool ? a.tool : '-') +
-                '</td><td>' +
-                (a.status ? a.status : '-') +
-                '</td><td>' +
-                (a.mitigation? a.mitigation : '-') +
-                '</td></tr>',
-            )
-            .join(''):'<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'}
+          ${
+            aggregation.data && aggregation.data.length > 0
+              ? aggregation.data
+                  .map(
+                    (a: {
+                      id: number;
+                      name: string;
+                      tool: string;
+                      status: string;
+                      mitigation: string;
+                    }) =>
+                      '<tr><td>' +
+                      (a.id ? a.id : '-') +
+                      '</td><td>' +
+                      (a.name ? a.name : '-') +
+                      '</td><td>' +
+                      (a.tool ? a.tool : '-') +
+                      '</td><td>' +
+                      (a.status ? a.status : '-') +
+                      '</td><td>' +
+                      (a.mitigation ? a.mitigation : '-') +
+                      '</td></tr>',
+                  )
+                  .join('')
+              : '<tr><td colspan="5" style=" text-align: center;" ><p>No data found</p></td></tr>'
+          }
             <tr><td colspan="4" > Total
             </td><td> ${aggregation.total}
                 </td></tr>
@@ -4208,7 +4498,7 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
 
     return page_1;
   }
- 
+
   comparisonContentFour(
     header: string,
     footer: string,
@@ -4417,7 +4707,9 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
       }
       body = body + '</tr>';
     }
-    return body?body:`<tr><td colspan="${cols.length}" style=" text-align: center;" ><p>No data found</p></td></tr>`;
+    return body
+      ? body
+      : `<tr><td colspan="${cols.length}" style=" text-align: center;" ><p>No data found</p></td></tr>`;
   }
   generateHeatMapBody(interventions: any[], cols: any[]) {
     let body = '';
@@ -4551,7 +4843,11 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
   ) {
     let body = '';
     for (let x of this.xData) {
-      const numberOfmatching:number=this.getInterventionComparison(x.value, y, contentTwo)
+      const numberOfmatching: number = this.getInterventionComparison(
+        x.value,
+        y,
+        contentTwo,
+      );
       body =
         body +
         '<td  class="charttd" style="background-color:' +
@@ -4562,7 +4858,11 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
           : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
         ';">' +
         '<span class="' +
-        (numberOfmatching>0 ?numberOfmatching==1?'intervention': 'intervention-large' : '') +
+        (numberOfmatching > 0
+          ? numberOfmatching == 1
+            ? 'intervention'
+            : 'intervention-large'
+          : '') +
         '">1</span>' +
         '</td>';
     }
@@ -4573,9 +4873,10 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
     y: number,
     contentTwo: ComparisonReportReportContentFive,
   ) {
-    let a = contentTwo.scores?.filter(item => item.processScore === y && item.outcomeScore === x).length
-   
-    return a 
+    let a = contentTwo.scores?.filter(
+      (item) => item.processScore === y && item.outcomeScore === x,
+    ).length;
 
+    return a;
   }
 }
