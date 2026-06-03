@@ -374,8 +374,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.score = isNotRelevant
           ? null
           : +_obj.relevance === 1
-          ? Math.round((score * weight) / 2 / 100)
-          : Math.round((score * weight) / 100);
+          ? (score * weight) / 2 / 100
+          : (score * weight) / 100;
         return _obj;
       });
       let cat_data = {
@@ -402,7 +402,6 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           let normalizedWeight = ch.ch_weight / totalRelevantWeight;
           score += ch.score * normalizedWeight;
         });
-        score = Math.round(score);
       }
       resObj[key] = { score: score, weight: obj[key].weight };
     }
@@ -419,13 +418,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     if (relevantCategories.length > 0 && totalRelevantCatWeight > 0) {
       process_score = 0;
       for (let key of relevantCategories) {
-        process_score += Math.round(
-          (resObj[key].score * resObj[key].weight) / totalRelevantCatWeight,
-        );
+        process_score +=
+          (resObj[key].score * resObj[key].weight) / totalRelevantCatWeight;
       }
     }
 
-    return process_score;
+    return Math.round(process_score);
   }
 
   async calculateOutcomeResult(
