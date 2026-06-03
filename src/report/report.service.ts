@@ -2054,7 +2054,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     contentOne.scores = (
       await this.investorToolService.getDashboardAllDataFilter(
         { page: 1, limit: 1000 },
-        '',
+        [],
         portfolioId,
       )
     ).items.map((item) => {
