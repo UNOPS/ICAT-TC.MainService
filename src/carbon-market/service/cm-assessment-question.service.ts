@@ -509,7 +509,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       sdgs_score[key] =
         sdgs_score[key] === null
           ? null
-          : Math.floor(sdgs_score[key] / valid_sdg_score_count[key]);
+          : Math.round(sdgs_score[key] / valid_sdg_score_count[key]);
     }
 
     let ghg_score = null;
@@ -580,27 +580,27 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     return {
-      ghg_score: ghg_score === null ? null : Math.floor(ghg_score),
-      sdg_score: sdg_score === null ? null : Math.floor(sdg_score),
+      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
+      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
       adaptation_score:
-        adaptation_score === null ? null : Math.floor(adaptation_score),
-      outcome_score: outcome_score === null ? null : Math.floor(outcome_score),
+        adaptation_score === null ? null : Math.round(adaptation_score),
+      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
       scale_ghg_score:
-        scale_ghg_score === null ? null : Math.floor(scale_ghg_score),
+        scale_ghg_score === null ? null : Math.round(scale_ghg_score),
       sustained_ghg_score:
-        sustained_ghg_score === null ? null : Math.floor(sustained_ghg_score),
+        sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
       scale_sdg_score:
-        scale_sdg_score === null ? null : Math.floor(scale_sdg_score),
+        scale_sdg_score === null ? null : Math.round(scale_sdg_score),
       sustained_sdg_score:
-        sustained_sdg_score === null ? null : Math.floor(sustained_sdg_score),
+        sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
       scale_adaptation_score:
         scale_adaptation_score === null
           ? null
-          : Math.floor(scale_adaptation_score),
+          : Math.round(scale_adaptation_score),
       sustained_adaptation_score:
         sustained_adaptation_score === null
           ? null
-          : Math.floor(sustained_adaptation_score),
+          : Math.round(sustained_adaptation_score),
       sdgs_score: sdgs_score,
     };
   }
@@ -1037,7 +1037,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             score = null;
           } else if (+_obj.relevance === 1) {
             if (+o.score && +o.weight)
-              score = (score ?? 0) + Math.round((+o.score * +o.weight) / 2 / 100);
+              score =
+                (score ?? 0) + Math.round((+o.score * +o.weight) / 2 / 100);
           } else {
             if (+o.score && +o.weight)
               score = (score ?? 0) + Math.round((+o.score * +o.weight) / 100);
