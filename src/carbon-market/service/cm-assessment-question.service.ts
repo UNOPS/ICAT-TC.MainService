@@ -371,11 +371,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           }
         });
         let isNotRelevant = +_obj.relevance === 0;
-        _obj.score = isNotRelevant
-          ? null
-          : +_obj.relevance === 1
-          ? (score * weight) / 2 / 100
-          : (score * weight) / 100;
+        _obj.score =
+          isNotRelevant || score === null
+            ? null
+            : +_obj.relevance === 1
+            ? (score * weight) / 2 / 100
+            : (score * weight) / 100;
         return _obj;
       });
       let cat_data = {
@@ -391,7 +392,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         (ch) => +ch.relevance !== 0 && ch.score !== null,
       );
       let totalRelevantWeight = relevantChars.reduce(
-        (sum, ch) => sum + ch.ch_weight,
+        (sum, ch) =>
+          sum + (+ch.relevance === 1 ? ch.ch_weight / 2 : ch.ch_weight),
         0,
       );
 
@@ -399,8 +401,9 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       if (relevantChars.length > 0 && totalRelevantWeight > 0) {
         score = 0;
         relevantChars.forEach((ch) => {
-          let normalizedWeight = ch.ch_weight / totalRelevantWeight;
-          score += ch.score * normalizedWeight;
+          const effectiveWeight =
+            +ch.relevance === 1 ? ch.ch_weight / 2 : ch.ch_weight;
+          score += ch.score * (effectiveWeight / totalRelevantWeight);
         });
       }
       resObj[key] = { score: score, weight: obj[key].weight };
@@ -1021,7 +1024,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         _obj.weight = chs[ch][0].characteristic.cm_weight;
         let questions = [];
         let raw_questions = [];
-        let score = 0;
+        let score = null;
         for (let q of chs[ch]) {
           let o = new QuestionData();
           o.question = q.assessmentAnswers[0]?.answer?.question.label;
@@ -1032,13 +1035,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           o.document = q.uploadedDocumentPath;
           if (+_obj.relevance === 0) {
             score = null;
-            // score = score + 0
           } else if (+_obj.relevance === 1) {
             if (+o.score && +o.weight)
-              score = score + Math.round((+o.score * +o.weight) / 2 / 100);
+              score = (score ?? 0) + Math.round((+o.score * +o.weight) / 2 / 100);
           } else {
             if (+o.score && +o.weight)
-              score = score + Math.round((+o.score * +o.weight) / 100);
+              score = (score ?? 0) + Math.round((+o.score * +o.weight) / 100);
           }
           if (o.justification !== undefined && o.justification !== null) {
             questions.push(o);
