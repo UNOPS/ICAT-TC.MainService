@@ -281,6 +281,18 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'assessmentAnswers',
         'assessmentAnswers.assessmentQuestionId = aq.id',
       )
+      .leftJoinAndMapOne(
+        'assessmentAnswers.answer',
+        CMAnswer,
+        'answer',
+        'answer.id = assessmentAnswers.answerId',
+      )
+      .leftJoinAndMapOne(
+        'answer.question',
+        CMQuestion,
+        'question',
+        'question.id = answer.questionId',
+      )
       .where('assessment.id = :id and category.type = "process"', {
         id: assessmentId,
       })
@@ -350,82 +362,88 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
   }
 
   async calculateProcessResult(questions: CMAssessmentQuestion[]) {
-    let categories = [
-      ...new Set(questions.map((q) => q.characteristic.category.code)),
+    let categories = questions.map((q) => q.characteristic.category);
+    let uniqueCats = [
+      ...new Map(categories.map((item) => [item['code'], item])).values(),
     ];
-    let obj = {};
+    let catData = [];
 
-    for (let cat of categories) {
-      let qs = questions.filter((o) => o.characteristic.category.code === cat);
+    for (let cat of uniqueCats) {
+      let qs = questions.filter(
+        (o) => o.characteristic.category.code === cat.code,
+      );
+      qs = this.removeNullAssessmentQuestions(qs);
       let chs = this.group(qs, 'characteristic', 'code');
       let ch_data = Object.keys(chs).map((ch) => {
-        let _obj: CharacteristicData = new CharacteristicData();
-        _obj.characteristic = chs[ch][0].characteristic.code;
-        _obj.relevance = chs[ch][0].relevance;
-        _obj.ch_weight = chs[ch][0].characteristic.cm_weight;
-        let weight = chs[ch][0].characteristic.cm_weight;
-        let score = null;
-        chs[ch].forEach((_ch) => {
-          if (_ch.assessmentAnswers[0]) {
-            score += _ch.assessmentAnswers[0].score;
-          }
-        });
-        let isNotRelevant = +_obj.relevance === 0;
-        _obj.score =
-          isNotRelevant || score === null
-            ? null
-            : +_obj.relevance === 1
-            ? (score * weight) / 2 / 100
-            : (score * weight) / 100;
-        return _obj;
-      });
-      let cat_data = {
-        characteristics: ch_data,
-        weight: qs[0].characteristic.category.cm_weight,
-      };
-      obj[cat] = cat_data;
-    }
+        const chQuestions = chs[ch];
+        const first = chQuestions[0];
+        const relevance = +first.relevance;
 
-    let resObj = {};
-    for (let key of Object.keys(obj)) {
-      let relevantChars = obj[key].characteristics.filter(
-        (ch) => +ch.relevance !== 0 && ch.score !== null,
-      );
-      let totalRelevantWeight = relevantChars.reduce(
-        (sum, ch) =>
-          sum + (+ch.relevance === 1 ? ch.ch_weight / 2 : ch.ch_weight),
+        let score: number | null = relevance === 0 ? null : 0;
+
+        const questions: QuestionData[] = chQuestions.map((q) => {
+          const answer = q.assessmentAnswers[0]?.answer;
+          return {
+            weight: answer?.weight,
+            score: answer?.score_portion,
+          };
+        });
+
+        if (score !== null) {
+          const divisor = relevance === 1 ? 200 : 100;
+          score = questions.reduce((sum, o) => {
+            return +o.score && +o.weight
+              ? sum + (+o.score * +o.weight) / divisor
+              : sum;
+          }, 0);
+        }
+
+        return Object.assign(new CharacteristicProcessData(), {
+          code: first.characteristic.code,
+          relevance: first.relevance,
+          weight: first.characteristic.cm_weight,
+          ch_score: score === null ? null : Math.round(score),
+        });
+      });
+
+      const relevantChs = ch_data.filter((ch) => ch.ch_score !== null);
+      const effectiveWeight = (ch: CharacteristicProcessData) =>
+        +ch.relevance === 1 ? ch.weight / 2 : ch.weight;
+
+      const totalRelevantWeight = relevantChs.reduce(
+        (sum, ch) => sum + effectiveWeight(ch),
         0,
       );
 
-      let score = null;
-      if (relevantChars.length > 0 && totalRelevantWeight > 0) {
-        score = 0;
-        relevantChars.forEach((ch) => {
-          const effectiveWeight =
-            +ch.relevance === 1 ? ch.ch_weight / 2 : ch.ch_weight;
-          score += ch.score * (effectiveWeight / totalRelevantWeight);
-        });
+      let cat_score: number | null = null;
+      if (relevantChs.length > 0 && totalRelevantWeight > 0) {
+        cat_score = relevantChs.reduce(
+          (sum, ch) =>
+            sum + (ch.ch_score * effectiveWeight(ch)) / totalRelevantWeight,
+          0,
+        );
       }
-      resObj[key] = { score: score, weight: obj[key].weight };
+
+      catData.push({
+        name: cat.name,
+        cat_score: cat_score,
+        weight: cat.cm_weight,
+      });
     }
 
-    let relevantCategories = Object.keys(resObj).filter(
-      (key) => resObj[key].score !== null,
-    );
-    let totalRelevantCatWeight = relevantCategories.reduce(
-      (sum, key) => sum + resObj[key].weight,
+    const process_score_weight = catData.reduce(
+      (sum, cat) => (cat.cat_score !== null ? sum + cat.weight : sum),
       0,
     );
 
     let process_score = null;
-    if (relevantCategories.length > 0 && totalRelevantCatWeight > 0) {
-      process_score = 0;
-      for (let key of relevantCategories) {
-        process_score +=
-          (resObj[key].score * resObj[key].weight) / totalRelevantCatWeight;
-      }
-    }
-
+    process_score = catData.reduce(
+      (sum, cat) =>
+        cat.cat_score !== null
+          ? sum + (cat.cat_score * cat.weight) / process_score_weight
+          : sum,
+      0,
+    );
     return Math.round(process_score);
   }
 
