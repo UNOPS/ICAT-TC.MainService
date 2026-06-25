@@ -1066,6 +1066,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
         let assessmentId = data.assessment.id;
         assessmentIdArray.push(assessmentId);
       }
+      if (assessmentIdArray.length === 0) {
+        return [];
+      }
       data.andWhere('assessment.id IN (:...ids)', { ids: assessmentIdArray });
     }
 
@@ -2075,6 +2078,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
       for (let data of await response) {
         let assessmentId = data.assessment.id;
         assessmentIdArray.push(assessmentId);
+      }
+      if (assessmentIdArray.length === 0) {
+        return [];
       }
       sectorSum.andWhere('assessment.id IN (:...ids)', {
         ids: assessmentIdArray,

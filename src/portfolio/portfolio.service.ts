@@ -206,6 +206,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
         let assessmentId = data.assessment.id;
         assessmentIdArray.push(assessmentId);
       }
+      if (assessmentIdArray.length === 0) {
+        return [];
+      }
       data.where('assessment.id IN (:...ids)', { ids: assessmentIdArray });
     } else {
       let filter = 'assessment.tool="PORTFOLIO" ';
