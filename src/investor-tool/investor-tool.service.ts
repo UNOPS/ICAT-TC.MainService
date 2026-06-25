@@ -2461,7 +2461,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
     data
       .andWhere(filter, { userId, userCountryId, filterText, portfolioID })
       .orderBy('asses.id', 'DESC');
-    if (filterText && ar) {
+    if (filterText && ar && filterText.length > 0) {
       data.andWhere('climateAction.policyName IN (:...filterText)');
     }
     data.skip(skip);
@@ -2547,7 +2547,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
     data
       .andWhere(filter, { userId, userCountryId, filterText, portfolioID })
       .orderBy('asses.id', 'DESC');
-    if (filterText && ar) {
+    if (filterText && ar && filterText.length > 0) {
       data.andWhere('asses.id IN (:...filterText)');
     }
 
