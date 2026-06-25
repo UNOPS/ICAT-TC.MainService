@@ -25,6 +25,11 @@ import { PortfolioSdg } from './entities/portfolio-sdg.entity';
 import { Institution } from 'src/institution/entity/institution.entity';
 import { SdgAssessment } from './entities/sdg-assessment.entity';
 import { PolicySector } from 'src/climate-action/entity/policy-sectors.entity';
+import {
+  SDG_CLIMATE_ACTION_SCALE_NAME_PREFIX,
+  shouldFallbackGhgScaleToSdg13,
+  shouldFallbackGhgSustainedToSdg13,
+} from 'src/shared/outcome-ghg-fallback.util';
 import { UsersService } from 'src/users/users.service';
 import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
 import { User } from 'src/users/entity/user.entity';
@@ -1644,6 +1649,61 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
         }
       }
     }
+
+    const applyGhgFallbackFromSdg13 = (
+      ghgCategory: (typeof outcomeCategoryData) | undefined,
+      sdgCategory: (typeof outcomeCategoryData) | undefined,
+      shouldFallback: typeof shouldFallbackGhgScaleToSdg13,
+      mapScore: (value: number) => string,
+    ) => {
+      if (!ghgCategory || !sdgCategory) {
+        return;
+      }
+
+      const ghgScores = ghgCategory.characteristicData.map(
+        (char) => char.score?.value,
+      );
+      const sdg13Entry = sdgCategory.characteristicData.find((char) =>
+        char.name?.startsWith(SDG_CLIMATE_ACTION_SCALE_NAME_PREFIX),
+      );
+
+      if (
+        !shouldFallback(
+          ghgScores,
+          ghgCategory.category_score?.value,
+          sdg13Entry?.sdg_score ?? null,
+        )
+      ) {
+        return;
+      }
+
+      const previousGhgScore = ghgCategory.category_score?.value ?? 0;
+      ghgCategory.category_score = {
+        name: mapScore(sdg13Entry.sdg_score),
+        value: sdg13Entry.sdg_score,
+      };
+
+      if (ghgCategory.category_weight) {
+        total_outcome_cat_weight =
+          (total_outcome_cat_weight ?? 0) -
+          ghgCategory.category_weight * previousGhgScore +
+          ghgCategory.category_weight * sdg13Entry.sdg_score;
+      }
+    };
+
+    applyGhgFallbackFromSdg13(
+      outcomeArray.find((c) => c.code === 'SCALE_GHG'),
+      outcomeArray.find((c) => c.code === 'SCALE_SD'),
+      shouldFallbackGhgScaleToSdg13,
+      (value) => this.mapScaleScores(value),
+    );
+    applyGhgFallbackFromSdg13(
+      outcomeArray.find((c) => c.code === 'SUSTAINED_GHG'),
+      outcomeArray.find((c) => c.code === 'SUSTAINED_SD'),
+      shouldFallbackGhgSustainedToSdg13,
+      (value) => this.mapSustainedScores(value),
+    );
+
     let aggre_Score = 0;
     let sdg_count_aggre = 0;
     for (let category of sdgArray) {
