@@ -27,6 +27,12 @@ import * as moment from 'moment';
 import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
+import {
+  averageValidOutcomeScores,
+  SDG_CLIMATE_ACTION_NUMBER,
+  shouldFallbackGhgScaleToSdg13,
+  shouldFallbackGhgSustainedToSdg13,
+} from 'src/shared/outcome-ghg-fallback.util';
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -543,9 +549,58 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
 
     let outcomeComponents: { score: number; weight: number }[] = [];
 
+    const scaleGhgQuestions = questions.filter(
+      (q) => q.characteristic.category.code === 'SCALE_GHG',
+    );
+    const scaleGhgScores = scaleGhgQuestions.map(
+      (q) => +q.assessmentAnswers[0]?.selectedScore,
+    );
+    const sdg13ScaleScore = averageValidOutcomeScores(
+      questions
+        .filter(
+          (q) =>
+            q.characteristic.category.code === 'SCALE_SD' &&
+            q.selectedSdg?.number === SDG_CLIMATE_ACTION_NUMBER,
+        )
+        .map((q) => +q.assessmentAnswers[0]?.selectedScore),
+    );
+    const sustainedGhgQuestions = questions.filter(
+      (q) => q.characteristic.category.code === 'SUSTAINED_GHG',
+    );
+    const sustainedGhgScores = sustainedGhgQuestions.map(
+      (q) => +q.assessmentAnswers[0]?.selectedScore,
+    );
+    const sdg13SustainedScore = averageValidOutcomeScores(
+      questions
+        .filter(
+          (q) =>
+            q.characteristic.category.code === 'SUSTAINED_SD' &&
+            q.selectedSdg?.number === SDG_CLIMATE_ACTION_NUMBER,
+        )
+        .map((q) => +q.assessmentAnswers[0]?.selectedScore),
+    );
+
     if (obj['SCALE_GHG']) {
       scale_ghg_score = obj['SCALE_GHG'].score;
+      if (
+        shouldFallbackGhgScaleToSdg13(
+          scaleGhgScores,
+          scale_ghg_score,
+          sdg13ScaleScore,
+        )
+      ) {
+        scale_ghg_score = sdg13ScaleScore;
+      }
       sustained_ghg_score = obj['SUSTAINED_GHG']?.score;
+      if (
+        shouldFallbackGhgSustainedToSdg13(
+          sustainedGhgScores,
+          sustained_ghg_score,
+          sdg13SustainedScore,
+        )
+      ) {
+        sustained_ghg_score = sdg13SustainedScore;
+      }
       ghg_score =
         scale_ghg_score === null && sustained_ghg_score === null
           ? null
