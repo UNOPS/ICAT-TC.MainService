@@ -226,7 +226,10 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
       filter = `${filter} AND proj.countryId = ${countryIdFromTocken}`;
     }
     if (cuserRoleFromTocken != "Country Admin") {
-      let userItem = await this.userService.findByUseremail(userNameFromTocken);
+      const userItem = await this.userService.findByUseremail(userNameFromTocken);
+      if (!userItem) {
+        return [0, []];
+      }
       filter = `${filter} AND asse.user_id =${userItem.id}`
     }
 
@@ -288,9 +291,10 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
         data.orderBy('asse.editedOn', 'DESC')
       }
     let result = await paginate(data, options);
-    let newarray = new Array();
-    for (let asse of result.items) {
-      newarray.push(asse.id)
+    const newarray = result.items.map((asse) => asse.id);
+
+    if (newarray.length === 0) {
+      return [0, []];
     }
 
     let data1 = this.repo

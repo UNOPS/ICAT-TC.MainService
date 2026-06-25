@@ -1792,6 +1792,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     portfolio = await this.portfolioRepo.findOne({
       where: { id: portfolioId },
     });
+    if (!portfolio) {
+      throw new Error(`Portfolio with id ${portfolioId} not found`);
+    }
     assessment = await this.portfolioAssessRepo.find({
       relations: ['assessment'],
       where: { portfolio: { id: portfolioId } },
@@ -1799,6 +1802,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     const contentOne = new ComparisonReportReportContentOne();
 
     for (let ass of assessment) {
+      if (!ass.assessment?.climateAction) {
+        continue;
+      }
       contentOne.intervation_details.push({
         id: ass.assessment.climateAction.intervention_id,
         climateAction_id: ass.assessment.climateAction.id,
@@ -1955,12 +1961,15 @@ export class ReportService extends TypeOrmCrudService<Report> {
           a.col_set_1.length < 3,
       )
       .forEach((c) => {
+        const sdgLabel = c.col_set_1[1]?.label;
+        if (!sdgLabel) {
+          return;
+        }
+        const sdgName = sdgLabel
+          .slice(sdgLabel.indexOf('-') + 1)
+          .trim();
         let sdg = contentTwo.allsdg.find(
-          (d) =>
-            d.sdg_name ==
-            c.col_set_1[1].label
-              .slice(c.col_set_1[1].label.indexOf('-') + 1)
-              .trim(),
+          (d) => d.sdg_name == sdgName,
         );
 
         if (sdg) {
@@ -1973,18 +1982,14 @@ export class ReportService extends TypeOrmCrudService<Report> {
         } else {
           if (c.comparison_type == 'Scale comparison') {
             contentTwo.allsdg.push({
-              sdg_name: c.col_set_1[1].label
-                .slice(c.col_set_1[1].label.indexOf('-') + 1)
-                .trim(),
+              sdg_name: sdgName,
               sdg_scale: c.interventions,
               sdg_sustaind: [],
             });
           }
           if (c.comparison_type == 'Sustained in time comparison') {
             contentTwo.allsdg.push({
-              sdg_name: c.col_set_1[1].label
-                .slice(c.col_set_1[1].label.indexOf('-') + 1)
-                .trim(),
+              sdg_name: sdgName,
               sdg_scale: [],
               sdg_sustaind: c.interventions,
             });
@@ -1995,7 +2000,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       .filter(
         (a) =>
           a.comparison_type == 'Sustained in time comparison' &&
-          a.comparison_type_2.includes('SDG'),
+          a.comparison_type_2?.includes('SDG'),
       )
       .forEach((c) => {
         contentTwo.sdg_scale_sustaind_comparison.push({
@@ -2085,6 +2090,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
     data: any[],
     outputPath: string,
   ): Promise<string> {
+    if (!data?.length) {
+      return '';
+    }
     const sector_color_map = [
       { id: 1, sectorNumber: 1, color: '#003360' },
       { id: 2, sectorNumber: 3, color: '#A52A2A' },
