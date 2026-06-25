@@ -30,6 +30,10 @@ import {
   shouldFallbackGhgScaleToSdg13,
   shouldFallbackGhgSustainedToSdg13,
 } from 'src/shared/outcome-ghg-fallback.util';
+import {
+  floorToHalf,
+  floorToHalfOrNull,
+} from 'src/shared/score-rounding.util';
 import { UsersService } from 'src/users/users.service';
 import { MethodologyAssessmentService } from 'src/methodology-assessment/methodology-assessment.service';
 import { User } from 'src/users/entity/user.entity';
@@ -1314,10 +1318,10 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
       });
       finalDataArray.push({
         assessment: obj,
-        likelihood: Math.round(finalLikelihood / 4),
-        relevance: Math.round(finalrelevance / 4),
-        scaleScore: Math.round(scaleScoreTotal / 2),
-        sustainedScore: Math.round(sustainedScoreTotal / 2),
+        likelihood: floorToHalf(finalLikelihood / 4),
+        relevance: floorToHalf(finalrelevance / 4),
+        scaleScore: floorToHalf(scaleScoreTotal / 2),
+        sustainedScore: floorToHalf(sustainedScoreTotal / 2),
       });
     }
 
@@ -1487,9 +1491,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
               Math.round(char.recalculated_char_weight / 10) * 10;
           }
           if (!isNaN(char.likelihood.value)) {
-            cat_score += this.round(
-              char.recalculated_char_weight * char.likelihood.value,
-            );
+            cat_score +=
+              char.recalculated_char_weight * char.likelihood.value;
           }
         } else {
           char.recalculated_char_weight = 0;
@@ -1501,10 +1504,15 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
         )
       ) {
         category.category_score = { name: '-', value: null };
+        (category as { rawCategoryScore?: number | null }).rawCategoryScore =
+          null;
       } else {
+        const rawCategoryScore = cat_score / 100;
+        (category as { rawCategoryScore?: number | null }).rawCategoryScore =
+          rawCategoryScore;
         category.category_score = {
-          name: this.mapLikelihood(this.round(cat_score / 100)),
-          value: this.round(cat_score / 100),
+          name: this.mapLikelihood(floorToHalf(rawCategoryScore)),
+          value: floorToHalf(rawCategoryScore),
         };
         total_cat_weight += category.category_weight;
       }
@@ -1516,18 +1524,21 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
         item.recalculated_category_weight = Math.round(
           (item.category_weight / total_cat_weight) * 100,
         );
+        const rawCategoryScore =
+          (item as { rawCategoryScore?: number | null }).rawCategoryScore ?? 0;
         process_score === null
           ? item.category_score.value === null
             ? null
             : (process_score =
-                item.recalculated_category_weight * item.category_score.value)
+                item.recalculated_category_weight * rawCategoryScore)
           : (process_score +=
-              item.recalculated_category_weight * item.category_score.value);
+              item.recalculated_category_weight * rawCategoryScore);
       }
     });
     finalProcessDataArray.processData = categoryDataArray;
-    finalProcessDataArray.processScore =
-      process_score === null ? null : this.round(process_score / 100);
+    finalProcessDataArray.processScore = floorToHalfOrNull(
+      process_score === null ? null : process_score / 100,
+    );
 
     let total_outcome_cat_weight = null;
     let outcomeArray: (typeof outcomeCategoryData)[] = [];
@@ -1611,16 +1622,22 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
           }
           if (char.data.every((element) => element.isCalulate === false)) {
             char.sdg_score = null;
+            char.rawSdgScore = null;
           } else {
-            char.sdg_score = this.round(sdg_cat_score / sdg_total_char);
+            const rawSdgScore = sdg_cat_score / sdg_total_char;
+            char.rawSdgScore = rawSdgScore;
+            char.sdg_score = floorToHalf(rawSdgScore);
             sdg_count++;
-            total_sdg_score += char.sdg_score;
+            total_sdg_score += rawSdgScore;
           }
         }
         if (sdg_count != 0) {
+          const rawCategoryScore = total_sdg_score / sdg_count;
+          (category as { rawCategoryScore?: number | null }).rawCategoryScore =
+            rawCategoryScore;
           category.category_score = {
-            name: this.mapScaleScores(this.round(total_sdg_score / sdg_count)),
-            value: this.round(total_sdg_score / sdg_count),
+            name: this.mapScaleScores(floorToHalf(rawCategoryScore)),
+            value: floorToHalf(rawCategoryScore),
           };
           sdgArray.push(category);
         }
@@ -1639,13 +1656,18 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
           )
         ) {
           category.category_score = { name: '-', value: null };
+          (category as { rawCategoryScore?: number | null }).rawCategoryScore =
+            null;
         } else {
+          const rawCategoryScore = cat_score / total_char;
+          (category as { rawCategoryScore?: number | null }).rawCategoryScore =
+            rawCategoryScore;
           category.category_score = {
-            name: this.mapScaleScores(this.round(cat_score / total_char)),
-            value: this.round(cat_score / total_char),
+            name: this.mapScaleScores(floorToHalf(rawCategoryScore)),
+            value: floorToHalf(rawCategoryScore),
           };
           total_outcome_cat_weight +=
-            category.category_weight * category.category_score.value;
+            category.category_weight * rawCategoryScore;
         }
       }
     }
@@ -1666,28 +1688,35 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
       const sdg13Entry = sdgCategory.characteristicData.find((char) =>
         char.name?.startsWith(SDG_CLIMATE_ACTION_SCALE_NAME_PREFIX),
       );
+      const rawSdg13Score =
+        sdg13Entry?.rawSdgScore ?? sdg13Entry?.sdg_score ?? null;
 
       if (
         !shouldFallback(
           ghgScores,
-          ghgCategory.category_score?.value,
-          sdg13Entry?.sdg_score ?? null,
+          (ghgCategory as { rawCategoryScore?: number | null })
+            .rawCategoryScore ?? ghgCategory.category_score?.value,
+          rawSdg13Score,
         )
       ) {
         return;
       }
 
-      const previousGhgScore = ghgCategory.category_score?.value ?? 0;
+      const previousGhgScore =
+        (ghgCategory as { rawCategoryScore?: number | null })
+          .rawCategoryScore ?? 0;
+      (ghgCategory as { rawCategoryScore?: number | null }).rawCategoryScore =
+        rawSdg13Score;
       ghgCategory.category_score = {
-        name: mapScore(sdg13Entry.sdg_score),
-        value: sdg13Entry.sdg_score,
+        name: mapScore(floorToHalf(rawSdg13Score)),
+        value: floorToHalf(rawSdg13Score),
       };
 
       if (ghgCategory.category_weight) {
         total_outcome_cat_weight =
           (total_outcome_cat_weight ?? 0) -
           ghgCategory.category_weight * previousGhgScore +
-          ghgCategory.category_weight * sdg13Entry.sdg_score;
+          ghgCategory.category_weight * rawSdg13Score;
       }
     };
 
@@ -1707,7 +1736,9 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
     let aggre_Score = 0;
     let sdg_count_aggre = 0;
     for (let category of sdgArray) {
-      aggre_Score += category.category_score.value;
+      aggre_Score +=
+        (category as { rawCategoryScore?: number | null }).rawCategoryScore ??
+        0;
       sdg_count_aggre++;
     }
 
@@ -1723,13 +1754,13 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
     }
 
     if (sdg_count_aggre != 0) {
-      finalProcessDataArray.aggregatedScore.value = this.round(aggre_Score / 2);
+      const rawAggregatedScore = aggre_Score / sdg_count_aggre;
+      finalProcessDataArray.aggregatedScore.value = floorToHalf(rawAggregatedScore);
       finalProcessDataArray.aggregatedScore.name = this.mapScaleScores(
-        this.round(aggre_Score / sdg_count_aggre),
+        floorToHalf(rawAggregatedScore),
       );
       totalRelevantOutcomeWeight += 50;
-      total_outcome_cat_weight +=
-        50 * finalProcessDataArray.aggregatedScore.value;
+      total_outcome_cat_weight += 50 * rawAggregatedScore;
     } else {
       finalProcessDataArray.aggregatedScore.value = null;
       finalProcessDataArray.aggregatedScore.name = '-';
@@ -1737,7 +1768,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
 
     finalProcessDataArray.outcomeData = outcomeArray;
     if (total_outcome_cat_weight != null && totalRelevantOutcomeWeight > 0) {
-      finalProcessDataArray.outcomeScore = this.round(
+      finalProcessDataArray.outcomeScore = floorToHalf(
         total_outcome_cat_weight / totalRelevantOutcomeWeight,
       );
     }
@@ -1789,11 +1820,12 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
         }
         if (notNullCount == 0) {
           score = 'Outside assessment boundaries';
-        } else
-          score = this.round(
-            (scaleSDG.sdg_score + matchingSustainedSDG.sdg_score) /
-              notNullCount,
-          );
+        } else {
+          const rawScaleScore = scaleSDG.rawSdgScore ?? scaleSDG.sdg_score;
+          const rawSustainedScore =
+            matchingSustainedSDG.rawSdgScore ?? matchingSustainedSDG.sdg_score;
+          score = floorToHalf((rawScaleScore + rawSustainedScore) / notNullCount);
+        }
         result.push({
           name: scaleSDG.name,
           score: score,
@@ -2527,8 +2559,8 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
       } as any,
     };
   }
-  round(value: number) {
-    return Math.round(value);
+  roundScore(value: number) {
+    return floorToHalf(value);
   }
   mapRelevance(value: number) {
     switch (value) {

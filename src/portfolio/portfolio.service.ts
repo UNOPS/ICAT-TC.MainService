@@ -23,6 +23,8 @@ import { InvestorToolService } from 'src/investor-tool/investor-tool.service';
 import { SdgPriority } from 'src/investor-tool/entities/sdg-priority.entity';
 import { Results } from 'src/methodology-assessment/entities/results.entity';
 import { isNull } from '@nestjsx/util';
+import { averageValidOutcomeScores } from 'src/shared/outcome-ghg-fallback.util';
+import { floorToHalf, floorToHalfOrNull } from 'src/shared/score-rounding.util';
 
 @Injectable()
 export class PortfolioService extends TypeOrmCrudService<Portfolio> {
@@ -779,7 +781,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
               ? (score += int.sustained_score.value)
               : (score = int.sustained_score.value);
           }
-          score !== null ? (score = Math.round(score / 2)) : (score = score);
+          score !== null ? (score = floorToHalf(score / 2)) : (score = score);
           int['category_score'] = this.mapNameAndValue(
             this.investorToolService.mapScaleScores(score),
             score,
@@ -887,7 +889,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       (int) => {
         let score =
           sc_cat_total[int.assessment_id] !== null
-            ? Math.round(
+            ? floorToHalf(
                 sc_cat_total[int.assessment_id] /
                   (scale_comparison.col_set_2.length - 4),
               )
@@ -904,7 +906,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       (int) => {
         let score =
           ss_cat_total[int.assessment_id] !== null
-            ? Math.round(
+            ? floorToHalf(
                 ss_cat_total[int.assessment_id] /
                   (sustained_comparison.col_set_2.length - 4),
               )
@@ -928,7 +930,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
             ? (score += int.sustained_score.value)
             : (score = int.sustained_score.value);
         }
-        score !== null ? (score = Math.round(score / 2)) : (score = score);
+        score !== null ? (score = floorToHalf(score / 2)) : (score = score);
         int['category_score'] = this.mapNameAndValue(
           this.investorToolService.mapScaleScores(score),
           score,
@@ -947,7 +949,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
             ? (score += int.sustained_score.value)
             : (score = int.sustained_score.value);
         }
-        score !== null ? (score = Math.round(score / 2)) : (score = score);
+        score !== null ? (score = floorToHalf(score / 2)) : (score = score);
         int['category_score'] = this.mapNameAndValue(
           this.investorToolService.mapScaleScores(score),
           score,
@@ -971,19 +973,19 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     scaleGhgData.interventions.map((int) => {
       let scale_score =
         scale_cat_total[int.assessment_id] !== null
-          ? Math.round(
+          ? floorToHalf(
               scale_cat_total[int.assessment_id] /
                 scale_cat_count[int.assessment_id],
             )
           : null;
       let sustaine_score =
         sustain_cat_total[int.assessment_id] !== null
-          ? Math.round(
+          ? floorToHalf(
               sustain_cat_total[int.assessment_id] /
                 sustain_cat_count[int.assessment_id],
             )
           : null;
-      let _cat_score = Math.round((scale_score + sustaine_score) / 2);
+      let _cat_score = floorToHalf((scale_score + sustaine_score) / 2);
       outcome_level_comparison.interventions.push({
         id: int.id,
         name: int.name,
@@ -1409,7 +1411,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
     sdgs.map((sd) => {
       let code = sd.sdg?.name.replace(' ', '_');
       let sdg_val = sdgs_score['SDG ' + sd.sdg?.number + ' - ' + sd.sdg?.name];
-      let val = sdg_val === null ? null : Math.round(sdg_val / 2);
+      let val = sdg_val === null ? null : floorToHalf(sdg_val / 2);
       let ans = this.mapNameAndValue(
         this.investorToolService.mapScaleScores(val),
         val,
@@ -1564,8 +1566,8 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let subnational = data.scale_SDs.find(
         (o) => o.ch_code === 'MICRO_LEVEL' && o.SDG === sd,
       )?.outcome_score;
-      let cat_score = Math.round(
-        (+international + +national + +subnational) / 3,
+      let cat_score = floorToHalfOrNull(
+        averageValidOutcomeScores([international, national, subnational]),
       );
       scale_SDs[sd] = {
         col_set_1: { label: 'Scale - ' + sd, colspan: 4 },
@@ -1663,7 +1665,9 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       let short_term = data.sustained_SDs.find(
         (o) => o.ch_code === 'SHORT_TERM' && o.SDG === sd,
       )?.outcome_score;
-      let cat_score = Math.round((+long_term + +medium_term + +short_term) / 3);
+      let cat_score = floorToHalfOrNull(
+        averageValidOutcomeScores([long_term, medium_term, short_term]),
+      );
       sustained_SDs[sd] = {
         col_set_1: { label: 'Sustained - ' + sd, colspan: 4 },
         data: {

@@ -21,7 +21,7 @@ export function averageValidOutcomeScores(
     return null;
   }
 
-  return Math.round(valid.reduce((sum, score) => sum + score, 0) / valid.length);
+  return valid.reduce((sum, score) => sum + score, 0) / valid.length;
 }
 
 export function shouldFallbackGhgCategoryToSdg13(
