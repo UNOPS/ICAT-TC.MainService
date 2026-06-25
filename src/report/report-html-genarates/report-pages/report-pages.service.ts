@@ -21,10 +21,28 @@ import {
   ReportCoverPage,
   ReportTableOfContent,
 } from 'src/report/dto/report.dto';
+import { scoresMatchMatrixCell } from 'src/shared/score-rounding.util';
 
 @Injectable()
 export class ReportPagesService {
   constructor() {}
+
+  private formatCmOutcomeScore(
+    score: string | number | null | undefined,
+  ): string {
+    if (score === null || score === undefined || score === '') {
+      return '-';
+    }
+    return String(score);
+  }
+
+  private formatAggregatedScore(score: number | null | undefined): string {
+    if (score === null || score === undefined) {
+      return 'no data found';
+    }
+    return String(score);
+  }
+
   xData = [
     { label: 'Major', value: 3 },
     { label: 'Moderate', value: 2 },
@@ -2218,7 +2236,7 @@ justification which supports the score and refers to documents which may back th
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
           
                 <td>${
                   a.justification
@@ -2234,7 +2252,7 @@ justification which supports the score and refers to documents which may back th
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                
                 <td>${
                   a.justification
@@ -2278,7 +2296,7 @@ justification which supports the score and refers to documents which may back th
                   sustained_ghg.length
                 }" >Outcome sustained over time - GHGs</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                 <td>${
                   a.outcome_score_explain ? a.outcome_score_explain : '-'
                 }</td>
@@ -2294,7 +2312,7 @@ justification which supports the score and refers to documents which may back th
                } else {
                  return `<tr>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                 <td>${
                   a.outcome_score_explain ? a.outcome_score_explain : '-'
                 }</td>
@@ -2360,7 +2378,7 @@ justification which supports the score and refers to documents which may back th
               <td>${a.characteristic ? a.characteristic : '-'}</td>
               <td>${a.starting_situation ? a.starting_situation : '-'}</td>
               <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-              <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
             
               <td>${
                 a.justification
@@ -2376,7 +2394,7 @@ justification which supports the score and refers to documents which may back th
             <td>${a.characteristic ? a.characteristic : '-'}</td>
             <td>${a.starting_situation ? a.starting_situation : '-'}</td>
             <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-            <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+            <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
             
             <td>${
               a.justification
@@ -2420,7 +2438,7 @@ justification which supports the score and refers to documents which may back th
                 sustained_adaptation.length
               }" >Outcome sustained over time - adaptation cobenefits</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
-              <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
               <td>${
                 a.outcome_score_explain ? a.outcome_score_explain : '-'
               }</td>
@@ -2436,7 +2454,7 @@ justification which supports the score and refers to documents which may back th
                 } else {
                   return `<tr>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
-              <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
               <td>${
                 a.outcome_score_explain ? a.outcome_score_explain : '-'
               }</td>
@@ -2505,7 +2523,7 @@ justification which supports the score and refers to documents which may back th
                   <td>${a.characteristic ? a.characteristic : '-'}</td>
                   <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                   <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-                  <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                  <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                   
                   <td>${
                     a.justification
@@ -2522,7 +2540,7 @@ justification which supports the score and refers to documents which may back th
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
                 <td>${a.starting_situation ? a.starting_situation : '-'}</td>
                 <td>${a.expected_impact ? a.expected_impact : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                 
                 <td>${
                   a.justification
@@ -2588,7 +2606,7 @@ justification which supports the score and refers to documents which may back th
                 }">Outcome sustained over time - sustainable development</td>
                 <td>${a.SDG ? a.SDG : '-'}</td>
                 <td>${a.characteristic ? a.characteristic : '-'}</td>
-                <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+                <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
                 <td>${
                   a.outcome_score_explain ? a.outcome_score_explain : '-'
                 }</td>
@@ -2605,7 +2623,7 @@ justification which supports the score and refers to documents which may back th
                     return `<tr>
               <td>${a.SDG ? a.SDG : '-'}</td>
               <td>${a.characteristic ? a.characteristic : '-'}</td>
-              <td>${a.outcome_score ? a.outcome_score : '-'}</td>
+              <td>${this.formatCmOutcomeScore(a.outcome_score)}</td>
               <td>${
                 a.outcome_score_explain ? a.outcome_score_explain : '-'
               }</td>
@@ -2718,71 +2736,45 @@ justification which supports the score and refers to documents which may back th
        <tbody class="table-body">
        <tr>
          <td >Scale of outcome - GHGs</td>
-         <td >${
-           content.outcomes_categories_assessment.scale_ghg_score != null ||
-           content.outcomes_categories_assessment.scale_ghg_score != undefined
-             ? content.outcomes_categories_assessment.scale_ghg_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.scale_ghg_score,
+         )}</td>
        </tr>
        <tr>
          <td >Scale of outcome - sustainable development </td>
-         <td >${
-           content.outcomes_categories_assessment.scale_sdg_score != null ||
-           content.outcomes_categories_assessment.scale_sdg_score != undefined
-             ? content.outcomes_categories_assessment.scale_sdg_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.scale_sdg_score,
+         )}</td>
        </tr>
        <tr>
          <td >Scale of outcome - adaptation co-benefits </td>
-         <td >${
-           content.outcomes_categories_assessment.scale_adaptation_score !=
-             null ||
-           content.outcomes_categories_assessment.scale_adaptation_score !=
-             undefined
-             ? content.outcomes_categories_assessment.scale_adaptation_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.scale_adaptation_score,
+         )}</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - GHGs </td>
-         <td >${
-           content.outcomes_categories_assessment.sustained_ghg_score != null ||
-           content.outcomes_categories_assessment.sustained_ghg_score !=
-             undefined
-             ? content.outcomes_categories_assessment.sustained_ghg_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.sustained_ghg_score,
+         )}</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - sustainable development</td>
-         <td >${
-           content.outcomes_categories_assessment.sustained_sdg_score != null ||
-           content.outcomes_categories_assessment.sustained_sdg_score !=
-             undefined
-             ? content.outcomes_categories_assessment.sustained_sdg_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.sustained_sdg_score,
+         )}</td>
        </tr>
        <tr>
          <td >Outcome sustained over time - adaptation co-benefits </td>
-         <td >${
-           content.outcomes_categories_assessment.sustained_adaptation_score !=
-             null ||
-           content.outcomes_categories_assessment.sustained_adaptation_score !=
-             undefined
-             ? content.outcomes_categories_assessment.sustained_adaptation_score
-             : 'no data found'
-         }</td>
+         <td >${this.formatAggregatedScore(
+           content.outcomes_categories_assessment.sustained_adaptation_score,
+         )}</td>
        </tr>
        <tr>
          <td class="bold-table-row"> Outcomes score </td>
-         <td class="bold-table-row">${
-           content.outcomeScore != null || content.outcomeScore != undefined
-             ? content.outcomeScore
-             : 'no data found'
-         }</td>
+         <td class="bold-table-row">${this.formatAggregatedScore(
+           content.outcomeScore,
+         )}</td>
        </tr>
       
   
@@ -4835,7 +4827,16 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
     y: number,
     contentTwo: ReportContentTwo | ReportCarbonMarketDtoContentFour,
   ) {
-    return contentTwo.processScore === y && contentTwo.outcomeScore === x;
+    if (contentTwo.processScore == null || contentTwo.outcomeScore == null) {
+      return false;
+    }
+
+    return scoresMatchMatrixCell(
+      contentTwo.processScore,
+      contentTwo.outcomeScore,
+      y,
+      x,
+    );
   }
   generateHeatMapforComparison(
     y: number,
@@ -4873,8 +4874,8 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
     y: number,
     contentTwo: ComparisonReportReportContentFive,
   ) {
-    let a = contentTwo.scores?.filter(
-      (item) => item.processScore === y && item.outcomeScore === x,
+    let a = contentTwo.scores?.filter((item) =>
+      scoresMatchMatrixCell(item.processScore, item.outcomeScore, y, x),
     ).length;
 
     return a;

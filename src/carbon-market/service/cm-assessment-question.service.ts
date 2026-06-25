@@ -33,6 +33,10 @@ import {
   shouldFallbackGhgScaleToSdg13,
   shouldFallbackGhgSustainedToSdg13,
 } from 'src/shared/outcome-ghg-fallback.util';
+import {
+  floorToHalf,
+  floorToHalfOrNull,
+} from 'src/shared/score-rounding.util';
 
 @Injectable()
 export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessmentQuestion> {
@@ -408,7 +412,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           code: first.characteristic.code,
           relevance: first.relevance,
           weight: first.characteristic.cm_weight,
-          ch_score: score === null ? null : Math.round(score),
+          ch_score: score,
         });
       });
 
@@ -450,7 +454,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           : sum,
       0,
     );
-    return Math.round(process_score);
+    return floorToHalfOrNull(process_score);
   }
 
   async calculateOutcomeResult(
@@ -533,7 +537,7 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       sdgs_score[key] =
         sdgs_score[key] === null
           ? null
-          : Math.round(sdgs_score[key] / valid_sdg_score_count[key]);
+          : floorToHalf(sdgs_score[key] / valid_sdg_score_count[key]);
     }
 
     let ghg_score = null;
@@ -653,27 +657,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
 
     return {
-      ghg_score: ghg_score === null ? null : Math.round(ghg_score),
-      sdg_score: sdg_score === null ? null : Math.round(sdg_score),
-      adaptation_score:
-        adaptation_score === null ? null : Math.round(adaptation_score),
-      outcome_score: outcome_score === null ? null : Math.round(outcome_score),
-      scale_ghg_score:
-        scale_ghg_score === null ? null : Math.round(scale_ghg_score),
-      sustained_ghg_score:
-        sustained_ghg_score === null ? null : Math.round(sustained_ghg_score),
-      scale_sdg_score:
-        scale_sdg_score === null ? null : Math.round(scale_sdg_score),
-      sustained_sdg_score:
-        sustained_sdg_score === null ? null : Math.round(sustained_sdg_score),
-      scale_adaptation_score:
-        scale_adaptation_score === null
-          ? null
-          : Math.round(scale_adaptation_score),
-      sustained_adaptation_score:
-        sustained_adaptation_score === null
-          ? null
-          : Math.round(sustained_adaptation_score),
+      ghg_score: floorToHalfOrNull(ghg_score),
+      sdg_score: floorToHalfOrNull(sdg_score),
+      adaptation_score: floorToHalfOrNull(adaptation_score),
+      outcome_score: floorToHalfOrNull(outcome_score),
+      scale_ghg_score: floorToHalfOrNull(scale_ghg_score),
+      sustained_ghg_score: floorToHalfOrNull(sustained_ghg_score),
+      scale_sdg_score: floorToHalfOrNull(scale_sdg_score),
+      sustained_sdg_score: floorToHalfOrNull(sustained_sdg_score),
+      scale_adaptation_score: floorToHalfOrNull(scale_adaptation_score),
+      sustained_adaptation_score: floorToHalfOrNull(sustained_adaptation_score),
       sdgs_score: sdgs_score,
     };
   }
@@ -1118,6 +1111,8 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           }, 0);
         }
 
+        const rawChScore = score;
+
         return Object.assign(new CharacteristicProcessData(), {
           name: first.characteristic.name,
           code: first.characteristic.code,
@@ -1125,11 +1120,12 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           weight: first.characteristic.cm_weight,
           questions,
           raw_questions: [...questions],
-          ch_score: score === null ? null : Math.round(score),
+          ch_score: rawChScore === null ? null : floorToHalf(rawChScore),
+          rawChScore,
         });
       });
 
-      const relevantChs = ch_data.filter((ch) => ch.ch_score !== null);
+      const relevantChs = ch_data.filter((ch) => ch.rawChScore !== null);
       const effectiveWeight = (ch: CharacteristicProcessData) =>
         +ch.relevance === 1 ? ch.weight / 2 : ch.weight;
 
@@ -1142,10 +1138,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       if (relevantChs.length > 0 && totalRelevantWeight > 0) {
         const temp_score = relevantChs.reduce(
           (sum, ch) =>
-            sum + (ch.ch_score * effectiveWeight(ch)) / totalRelevantWeight,
+            sum +
+            (ch.rawChScore * effectiveWeight(ch)) / totalRelevantWeight,
           0,
         );
-        cat_score = Math.round(temp_score);
+        cat_score = floorToHalf(temp_score);
       }
 
       data.push({
@@ -1616,6 +1613,7 @@ export class CharacteristicProcessData {
   weight: number;
   score: number;
   ch_score: number;
+  rawChScore?: number | null;
   questions: QuestionData[];
   raw_questions: QuestionData[];
 }

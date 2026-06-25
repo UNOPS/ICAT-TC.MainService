@@ -20,6 +20,7 @@ describe('outcome-ghg-fallback.util', () => {
   describe('averageValidOutcomeScores', () => {
     it('averages valid scores and ignores outside-boundary values', () => {
       expect(averageValidOutcomeScores([3, 3, -99, null])).toBe(3);
+      expect(averageValidOutcomeScores([2, 3, -99, null])).toBe(2.5);
       expect(averageValidOutcomeScores([-99, null])).toBeNull();
     });
   });
