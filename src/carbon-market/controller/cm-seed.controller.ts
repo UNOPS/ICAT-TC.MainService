@@ -1,7 +1,9 @@
-import { Controller, Post } from "@nestjs/common";
+import { Controller, Post, UseGuards } from "@nestjs/common";
 import { CMSeedService } from "../service/cm-seed.service";
+import { ProductionDisabledGuard } from "src/auth/guards/production-disabled.guard";
 
 @Controller('cm-seed')
+@UseGuards(ProductionDisabledGuard)
 export class CMSeedController {
 
     constructor(

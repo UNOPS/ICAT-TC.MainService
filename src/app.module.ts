@@ -1,5 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -127,12 +129,16 @@ import { Report } from './report/entities/report.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CMDefaultValue } from './carbon-market/entity/cm-default-value.entity';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { AppThrottlerGuard } from './auth/guards/app-throttler.guard';
+import { defaultThrottle } from './config/throttle.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,  
     }),
+    ThrottlerModule.forRoot([defaultThrottle]),
     AuditModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -250,7 +256,18 @@ import { CMDefaultValue } from './carbon-market/entity/cm-default-value.entity';
     ParameterHistoryController,
     DefaultValueController,
   ],
-  providers: [AppService, TokenDetails, ParameterRequestService, QualityCheckService, UsersService,
-    ParameterHistoryService, DefaultValueService, MasterDataService, AuditDetailService],
+  providers: [
+    { provide: APP_GUARD, useClass: AppThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    AppService,
+    TokenDetails,
+    ParameterRequestService,
+    QualityCheckService,
+    UsersService,
+    ParameterHistoryService,
+    DefaultValueService,
+    MasterDataService,
+    AuditDetailService,
+  ],
 })
 export class AppModule { }

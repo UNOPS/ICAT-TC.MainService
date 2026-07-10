@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Param, Put, Res } from '@nestjs/common';
-import { Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Post, Res } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
+import { Public } from './decorators/public.decorator';
+import { strictThrottle } from 'src/config/throttle.config';
 import { UsersService } from 'src/users/users.service';
 import { ResetPassword } from './dto/reset.password.dto';
 import { ForgotPasswordDto } from './dto/forgot.passowrd.dto';
@@ -14,6 +16,7 @@ export class AuthController {
 
 
 
+  @Public()
   @Get('auth/validate-reset-password/:email/:token')
   async validateResetPassword(
     @Param('email') email: string,
@@ -23,6 +26,8 @@ export class AuthController {
     return await this.usersService.validateResetPasswordRequest(email, token);
   }
 
+  @Public()
+  @Throttle(strictThrottle)
   @Put('auth/reset-password')
   async resetPassword(@Body() resetPwd: ResetPassword): Promise<boolean> {
 
@@ -43,6 +48,8 @@ export class AuthController {
     return false;
   }
 
+  @Public()
+  @Throttle(strictThrottle)
   @Post('auth/forgot-password')
   async forgotPassword(
     @Body() forgotparam: ForgotPasswordDto,

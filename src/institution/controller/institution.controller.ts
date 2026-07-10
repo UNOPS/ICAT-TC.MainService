@@ -20,6 +20,7 @@ import { Any, Repository, getConnection } from 'typeorm';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { AuditService } from 'src/audit/audit.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ServiceAuth } from 'src/auth/decorators/service-auth.decorator';
 import { TokenDetails, TokenReqestType } from 'src/utills/token_details';
 import { Institution } from '../entity/institution.entity';
 import { InstitutionService } from '../service/institution.service';
@@ -251,6 +252,7 @@ export class InstitutionController implements CrudController<Institution> {
     }
   }
 
+  @ServiceAuth()
   @Post('syncins')
   async syncCountry(
     @Body() dto: any,
