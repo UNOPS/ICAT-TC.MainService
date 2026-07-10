@@ -28,6 +28,7 @@ import { ClimateAction } from 'src/climate-action/entity/climate-action.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { PortfolioSdg } from 'src/investor-tool/entities/portfolio-sdg.entity';
 import {
+  averageRelevantScores,
   averageValidOutcomeScores,
   SDG_CLIMATE_ACTION_NUMBER,
   shouldFallbackGhgScaleToSdg13,
@@ -605,10 +606,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
       ) {
         sustained_ghg_score = sdg13SustainedScore;
       }
-      ghg_score =
-        scale_ghg_score === null && sustained_ghg_score === null
-          ? null
-          : (scale_ghg_score + sustained_ghg_score) / 2;
+      ghg_score = averageRelevantScores([
+        scale_ghg_score,
+        sustained_ghg_score,
+      ]);
       if (ghg_score !== null) {
         outcomeComponents.push({
           score: ghg_score,
@@ -619,10 +620,10 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     if (obj['SCALE_SD']) {
       scale_sdg_score = obj['SCALE_SD'].score;
       sustained_sdg_score = obj['SUSTAINED_SD']?.score;
-      sdg_score =
-        scale_sdg_score === null && sustained_sdg_score === null
-          ? null
-          : (scale_sdg_score + sustained_sdg_score) / 2;
+      sdg_score = averageRelevantScores([
+        scale_sdg_score,
+        sustained_sdg_score,
+      ]);
       if (sdg_score !== null) {
         outcomeComponents.push({
           score: sdg_score,
@@ -632,11 +633,11 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     }
     if (obj['SCALE_ADAPTATION']) {
       scale_adaptation_score = obj['SCALE_ADAPTATION'].score;
-      sustained_adaptation_score = obj['SUSTAINED_ADAPTATION'].score;
-      adaptation_score =
-        scale_adaptation_score === null && sustained_adaptation_score === null
-          ? null
-          : (scale_adaptation_score + sustained_adaptation_score) / 2;
+      sustained_adaptation_score = obj['SUSTAINED_ADAPTATION']?.score;
+      adaptation_score = averageRelevantScores([
+        scale_adaptation_score,
+        sustained_adaptation_score,
+      ]);
       if (adaptation_score !== null) {
         outcomeComponents.push({
           score: adaptation_score,

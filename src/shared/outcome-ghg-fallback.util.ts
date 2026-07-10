@@ -24,6 +24,26 @@ export function averageValidOutcomeScores(
   return valid.reduce((sum, score) => sum + score, 0) / valid.length;
 }
 
+/**
+ * Averages the sub-scores that are relevant (e.g. scale + sustained within an
+ * outcome dimension), excluding any that were marked not relevant (null /
+ * undefined) instead of counting them as zero. Returns null when none of the
+ * sub-scores are relevant.
+ */
+export function averageRelevantScores(
+  scores: (number | null | undefined)[],
+): number | null {
+  const relevant = scores.filter(
+    (score): score is number => score !== null && score !== undefined,
+  );
+
+  if (relevant.length === 0) {
+    return null;
+  }
+
+  return relevant.reduce((sum, score) => sum + score, 0) / relevant.length;
+}
+
 export function shouldFallbackGhgCategoryToSdg13(
   ghgScores: (number | null | undefined)[],
   currentGhgCategoryScore: number | null | undefined,

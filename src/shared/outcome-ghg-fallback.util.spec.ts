@@ -1,4 +1,5 @@
 import {
+  averageRelevantScores,
   averageValidOutcomeScores,
   isGhgOutcomeModuleUsed,
   shouldFallbackGhgScaleToSdg13,
@@ -22,6 +23,28 @@ describe('outcome-ghg-fallback.util', () => {
       expect(averageValidOutcomeScores([3, 3, -99, null])).toBe(3);
       expect(averageValidOutcomeScores([2, 3, -99, null])).toBe(2.5);
       expect(averageValidOutcomeScores([-99, null])).toBeNull();
+    });
+  });
+
+  describe('averageRelevantScores', () => {
+    it('averages every sub-score when all are relevant', () => {
+      expect(averageRelevantScores([3, 1])).toBe(2);
+    });
+
+    it('excludes not-relevant sub-scores instead of counting them as zero', () => {
+      // Scale relevant (3), Sustained not relevant (null) -> 3, not (3 + 0) / 2
+      expect(averageRelevantScores([3, null])).toBe(3);
+      expect(averageRelevantScores([null, 2])).toBe(2);
+      expect(averageRelevantScores([4, undefined])).toBe(4);
+    });
+
+    it('keeps a genuine zero sub-score in the average', () => {
+      expect(averageRelevantScores([0, 2])).toBe(1);
+    });
+
+    it('returns null when no sub-score is relevant', () => {
+      expect(averageRelevantScores([null, undefined])).toBeNull();
+      expect(averageRelevantScores([])).toBeNull();
     });
   });
 
