@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { TokenDetails, TokenReqestType } from "./token_details";
 import { HttpService } from "@nestjs/axios";
+import { getServiceAuthHeaders } from "src/auth/utils/api-key.util";
 
 @Injectable()
 export class AuditDetailService {
@@ -42,7 +43,9 @@ export class AuditDetailService {
 
     log(body: any) {
         try {
-            this.httpService.post(this.auditlogURL, body).subscribe(rr => { }, error => {console.error(error); throw new InternalServerErrorException(error)}  )
+            this.httpService.post(this.auditlogURL, body, {
+                headers: getServiceAuthHeaders(),
+            }).subscribe(rr => { }, error => {console.error(error); throw new InternalServerErrorException(error)}  )
         } catch (err) {
             console.error(err)
             throw new InternalServerErrorException(err)

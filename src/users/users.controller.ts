@@ -31,6 +31,10 @@ import { UsersService } from './users.service';
 import RoleGuard, { LoginRole } from 'src/auth/guards/roles.guard';
 import { Country } from 'src/country/entity/country.entity';
 import { AuditDetailService } from 'src/utills/audit_detail.service';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { ServiceAuth } from 'src/auth/decorators/service-auth.decorator';
+import { authThrottle, strictThrottle } from 'src/config/throttle.config';
+import { Throttle } from '@nestjs/throttler';
 
 @Crud({
   model: {
@@ -92,6 +96,8 @@ export class UsersController implements CrudController<User> {
     }
   }
 
+  @Public()
+  @Throttle(strictThrottle)
   @Post('createExternalUser')
   createExternalUser(@Body() createUserDto: User): Promise<User> {
 
@@ -112,6 +118,7 @@ export class UsersController implements CrudController<User> {
   }
   
 
+  @ServiceAuth()
   @Post('/add-master-admin')
   async addMasterAdmin(@Body() dto: CreateUserDto){
 
@@ -159,6 +166,8 @@ export class UsersController implements CrudController<User> {
     return this.service.findOne({where:{id:id} });
   }
 
+  @Public()
+  @Throttle(authThrottle)
   @Get('isUserAvailable/:userName')
   async isUserAvailable(@Param('userName') userName: string): Promise<boolean> {
     return await this.service.isUserAvailable(userName);
@@ -170,6 +179,8 @@ export class UsersController implements CrudController<User> {
     return await this.service.findUserByUserName(userName);
   }
 
+  @Public()
+  @Throttle(authThrottle)
   @Get('findUserByUserNameEx/:userName')
   async findUserByUserNameEx(@Param('userName') userName: string): Promise<any> {
     return await this.service.isUserAvailable(userName)
@@ -191,6 +202,7 @@ export class UsersController implements CrudController<User> {
     return this;
   }
 
+  @ServiceAuth()
   @Post('syncuser')
   async syncCountry(
     @Body() dto: any,

@@ -1,34 +1,27 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
-import { AppModule } from './app.module';
 
+import { AppModule } from './app.module';
+import { getCorsOptions } from './config/cors.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule , { cors: true });
-  const option = {
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-    credentials: true
-  };
-  app.enableCors(option);
- app.use(json({ limit: '100mb' }));
+  const app = await NestFactory.create(AppModule);
+  app.enableCors(getCorsOptions());
+  app.use(json({ limit: '100mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
- 
+  if (process.env.NODE_ENV !== 'production') {
+    const options = new DocumentBuilder()
+      .setTitle('TC-MAIN-SERVICE')
+      .setDescription('ICAT TC Tool Main Service')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup('api', app, document);
+  }
 
- app.use(urlencoded({ extended: true, limit: '50mb' }));
-  const options = new DocumentBuilder()
-    .setTitle('TC-AUTH-SERVICE')
-    .setDescription('SCC')
-    .setVersion('1.0')
-    .addTag('SCC')
-    .addCookieAuth('optional-session-id')
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
   await app.listen(parseInt(process.env.PORT));
- 
 }
 bootstrap();
