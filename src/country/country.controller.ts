@@ -4,6 +4,7 @@ import { Crud, CrudController, CrudRequest, Override, ParsedBody, ParsedRequest 
 import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ServiceAuth } from 'src/auth/decorators/service-auth.decorator';
 import { Repository } from 'typeorm';
 import { CountryService } from './country.service';
 import { CountrySector } from './entity/country-sector.entity';
@@ -99,6 +100,7 @@ export class CountryController implements CrudController<Country>{
     return coun;
   }
 
+  @ServiceAuth()
   @Get('country1')
   async getCountry(
     @Query('countryId') countryId: number,

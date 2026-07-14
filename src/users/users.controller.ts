@@ -186,6 +186,7 @@ export class UsersController implements CrudController<User> {
     return await this.service.isUserAvailable(userName)
   }
 
+  @ServiceAuth()
   @Get('findUserByEmail/:userName')
   async findUserByEmail(@Param('userName') userName: string): Promise<any> {
     return await this.service.findUserByEmail(userName);
