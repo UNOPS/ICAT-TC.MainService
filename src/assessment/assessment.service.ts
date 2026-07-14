@@ -809,7 +809,7 @@ export class AssessmentService extends TypeOrmCrudService<Assessment> {
     try {
       for await (let barrier of polcybarrier) {
         if(barrier.barrierCategory){
-          this.barrierCategoryRepo.delete({barriers:{id:barrier.id}})
+          await this.barrierCategoryRepo.delete({barriers:{id:barrier.id}})
         }
       }
      

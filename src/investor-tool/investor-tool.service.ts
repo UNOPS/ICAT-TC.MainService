@@ -2111,6 +2111,7 @@ export class InvestorToolService extends TypeOrmCrudService<InvestorTool> {
       .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasses.id)', 'count')
       .groupBy('sdg.name')
+      .addGroupBy('sdg.number')
       .having('sdg IS NOT NULL');
     return await sectorSum.getRawMany();
   }

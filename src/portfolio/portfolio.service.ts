@@ -245,6 +245,7 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       .addSelect('sdg.number', 'number')
       .addSelect('COUNT(sdgasess.id)', 'count')
       .groupBy('sdg.name')
+      .addGroupBy('sdg.number')
       .having('sdg IS NOT NULL');
 
     return await data.getRawMany();
