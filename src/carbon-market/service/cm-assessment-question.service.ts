@@ -462,6 +462,33 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
     questions: CMAssessmentQuestion[],
     assessementId: number,
   ) {
+    // Guard against duplicate assessment-question rows for the same
+    // (characteristic, SDG). The process query dedupes via MAX(aq.id) and the
+    // results display path dedupes by characteristic+SDG (keeping the row with
+    // a justification comment), but this outcome averaging historically ran
+    // over every row. Stale/blank duplicates then leak into the average and
+    // drag category scores down, so the aggregated Scale/Sustained scores no
+    // longer match the per-characteristic scores shown to users. Mirror the
+    // display-path dedup here: keep one authoritative row per key, preferring a
+    // row that carries a comment, then the most recently created id.
+    const authoritativeByKey = new Map<string, CMAssessmentQuestion>();
+    for (const q of questions) {
+      const key = `${q.characteristic?.id}_${q.selectedSdg?.id ?? 'none'}`;
+      const existing = authoritativeByKey.get(key);
+      if (!existing) {
+        authoritativeByKey.set(key, q);
+        continue;
+      }
+      const existingHasComment = existing.comment != null;
+      const currentHasComment = q.comment != null;
+      if (currentHasComment !== existingHasComment) {
+        if (currentHasComment) authoritativeByKey.set(key, q);
+      } else if (q.id > existing.id) {
+        authoritativeByKey.set(key, q);
+      }
+    }
+    questions = [...authoritativeByKey.values()];
+
     let categories = [
       ...new Set(questions.map((q) => q.characteristic.category.code)),
     ];
@@ -489,11 +516,16 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
             uniqueSdgNamesSet.length === 0 ? 1 : uniqueSdgNamesSet.length;
           score = qs.reduce((accumulator, object) => {
             let _score = +object.assessmentAnswers[0]?.selectedScore;
-            if (sdgs_score[object.selectedSdg?.id])
-              sdgs_score[object.selectedSdg?.id] += _score === -99 ? 0 : _score;
-            else
-              sdgs_score[object.selectedSdg?.id] = _score === -99 ? 0 : _score;
-            return accumulator + (_score === -99 ? 0 : _score);
+            const contribution = _score === -99 ? 0 : _score;
+            const sdgId = object.selectedSdg?.id;
+            // Use existence, not truthiness: a running total of 0 is a valid
+            // accumulated value. The previous `if (sdgs_score[id])` check
+            // treated 0 as "unset" and overwrote instead of adding, so any
+            // SDG whose scores summed through 0 lost earlier contributions.
+            const previous = sdgs_score[sdgId];
+            sdgs_score[sdgId] =
+              (typeof previous === 'number' ? previous : 0) + contribution;
+            return accumulator + contribution;
           }, 0);
           qs.forEach((o) => {
             if (+o.assessmentAnswers[0]?.selectedScore !== -99) {
