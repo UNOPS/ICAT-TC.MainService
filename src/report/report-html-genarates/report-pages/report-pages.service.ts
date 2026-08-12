@@ -21,7 +21,7 @@ import {
   ReportCoverPage,
   ReportTableOfContent,
 } from 'src/report/dto/report.dto';
-import { scoresMatchMatrixCell } from 'src/shared/score-rounding.util';
+import { floorToHalf, scoresMatchMatrixCell } from 'src/shared/score-rounding.util';
 
 @Injectable()
 export class ReportPagesService {
@@ -4727,18 +4727,25 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
   ) {
     let body = '';
     for (let x of this.xData) {
+      const isMatch = this.getIntervention(x.value, y, contentTwo);
+      const background = this.getBackgroundColorInvestmentHeatmap(x.value, y);
+      const dot = isMatch
+        ? '<span class="intervention" style="' +
+          this.dotPositionStyle(
+            contentTwo.processScore,
+            contentTwo.outcomeScore,
+          ) +
+          '">1</span>'
+        : '';
+
       body =
         body +
         '<td  class="charttd" style="background-color:' +
-        this.getBackgroundColorInvestmentHeatmap(x.value, y) +
+        background +
         '; color:' +
-        (this.getIntervention(x.value, y, contentTwo)
-          ? '#404040'
-          : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
+        (isMatch ? '#404040' : background) +
         ';">' +
-        '<span class="' +
-        (this.getIntervention(x.value, y, contentTwo) ? 'intervention' : '') +
-        '">1</span>' +
+        dot +
         '</td>';
     }
     return body;
@@ -4844,31 +4851,66 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
   ) {
     let body = '';
     for (let x of this.xData) {
-      const numberOfmatching: number = this.getInterventionComparison(
-        x.value,
-        y,
-        contentTwo,
+      const matches = (contentTwo.scores ?? []).filter((item) =>
+        scoresMatchMatrixCell(item.processScore, item.outcomeScore, y, x.value),
       );
+      const background = this.getBackgroundColorInvestmentHeatmap(x.value, y);
+
+      // Interventions sharing a cell are grouped by their half-step position, so
+      // each position keeps the single counted dot the matrix already uses.
+      const dots = new Map<string, number>();
+      for (const item of matches) {
+        const style = this.dotPositionStyle(
+          item.processScore,
+          item.outcomeScore,
+        );
+        dots.set(style, (dots.get(style) ?? 0) + 1);
+      }
+
+      const spans = Array.from(dots.entries())
+        .map(
+          ([style, count]) =>
+            '<span class="' +
+            (count === 1 ? 'intervention' : 'intervention-large') +
+            '" style="' +
+            style +
+            '">1</span>',
+        )
+        .join('');
+
       body =
         body +
         '<td  class="charttd" style="background-color:' +
-        this.getBackgroundColorInvestmentHeatmap(x.value, y) +
+        background +
         '; color:' +
-        (numberOfmatching
-          ? '#404040'
-          : this.getBackgroundColorInvestmentHeatmap(x.value, y)) +
+        (matches.length ? '#404040' : background) +
         ';">' +
-        '<span class="' +
-        (numberOfmatching > 0
-          ? numberOfmatching == 1
-            ? 'intervention'
-            : 'intervention-large'
-          : '') +
-        '">1</span>' +
+        spans +
         '</td>';
     }
     return body;
   }
+
+  /**
+   * Inline style placing a dot at half-step (0.5) resolution inside its cell: a
+   * score whose half-step remainder is .5 (e.g. 2.5) is drawn on the gridline
+   * between boxes instead of centred in the box. Both axes are drawn
+   * highest-value first, so a .5 remainder shifts the dot onto the top/left
+   * gridline. Mirrors the web app's matrix (HeatMapComponent).
+   */
+  dotPositionStyle(processScore: number, outcomeScore: number): string {
+    const left =
+      floorToHalf(outcomeScore) - Math.floor(outcomeScore) === 0.5
+        ? '0%'
+        : '50%';
+    const top =
+      floorToHalf(processScore) - Math.floor(processScore) === 0.5
+        ? '0%'
+        : '50%';
+
+    return `position:absolute;left:${left};top:${top};transform:translate(-50%,-50%);margin:0;`;
+  }
+
   getInterventionComparison(
     x: number,
     y: number,
