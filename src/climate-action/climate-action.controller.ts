@@ -289,6 +289,9 @@ export class ProjectController implements CrudController<ClimateAction> {
     project.reference=dto.reference;
     project.dateOfCompletion= dto.dateOfCompletion
     project.dateOfImplementation =dto.dateOfImplementation;
+    if (dto.projectStatus?.id) {
+      project.projectStatus = dto.projectStatus;
+    }
 
     let updateData = await this.service.update(project);
     return updateData;
@@ -362,7 +365,7 @@ export class ProjectController implements CrudController<ClimateAction> {
   async addPolicySector(
     @Body()  obj: addPolicySector,
   ): Promise<any> {
-    this.service.addPolicySector(obj);
+    return await this.service.addPolicySector(obj);
   }
 }
 

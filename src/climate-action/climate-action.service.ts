@@ -481,16 +481,22 @@ export class ProjectService extends TypeOrmCrudService<ClimateAction> {
     await this.PolicySectorsRepo.delete({ intervention: { id: id } });
   }
 
+  // Replaces the intervention's sectors in a single transaction. The delete and
+  // the inserts must not be split across two requests: a failure between them
+  // leaves the intervention with no sectors at all.
   async addPolicySector(obj:any){
+    await this.PolicySectorsRepo.manager.transaction(async (manager) => {
+      await manager.delete(PolicySector, { intervention: { id: obj.id } });
 
-    for(let sec of obj.sector){
-      let ps = new PolicySector();
-      let policy= new ClimateAction();
-      policy.id =obj.id;
-      ps.sector =sec;
-      ps.intervention= policy;
-      await this.PolicySectorsRepo.save(ps);
-    }
+      for(let sec of obj.sector){
+        let ps = new PolicySector();
+        let policy= new ClimateAction();
+        policy.id =obj.id;
+        ps.sector =sec;
+        ps.intervention= policy;
+        await manager.save(ps);
+      }
+    });
   }
 
 
