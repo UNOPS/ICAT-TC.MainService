@@ -194,6 +194,24 @@ export class UsersController implements CrudController<User> {
 
  
 
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN]))
+  @Post('admin/:id/send-reset')
+  async adminSendReset(@Param('id') id: number) {
+    const details = await this.auditDetailService.getAuditDetails();
+    const res = await this.service.adminSendReset(id);
+    this.auditDetailService.log({ ...details, description: 'Send password reset', actionStatus: 'Reset email sent to ' + res.email });
+    return res;
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard([LoginRole.MASTER_ADMIN]))
+  @Delete('admin/:id')
+  async adminDelete(@Param('id') id: number) {
+    const details = await this.auditDetailService.getAuditDetails();
+    const res = await this.service.adminDelete(id, details.userName);
+    this.auditDetailService.log({ ...details, description: 'Delete user', actionStatus: 'Deleted ' + res.email + ' (PMU: ' + res.pmu + ')' });
+    return res;
+  }
+
   @Delete(':id')
   remove(@Param('id') id: number): Promise<void> {
     return this.service.remove(id);

@@ -1,4 +1,6 @@
-import { Injectable, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UseGuards } from '@nestjs/common';
+import axios from 'axios';
+import { getServiceAuthHeaders } from 'src/auth/utils/api-key.util';
 import { InjectRepository } from '@nestjs/typeorm';;
 import { Repository } from 'typeorm';;
 import { User } from './entity/user.entity';
@@ -31,7 +33,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   async create(createUserDto: User): Promise<User> {
     let countryId = null;
     let insId = null;
-    if (createUserDto.userType['id'] == 3) {;
+    if (createUserDto.userType['id'] == 3) {
+      ;
       insId = createUserDto.institution['id'];;
     }
     else if (createUserDto.userType['id'] == 2) {
@@ -42,7 +45,8 @@ export class UsersService extends TypeOrmCrudService<User> {
       this.countryRepo.save(cou)
     }
 
-    else if (createUserDto.userType['id'] == 1) {;
+    else if (createUserDto.userType['id'] == 1) {
+      ;
       insId = createUserDto.institution['id'];
     }
 
@@ -55,7 +59,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.firstName = createUserDto.firstName;
     newUser.lastName = createUserDto.lastName;
     newUser.email = createUserDto.email;
-    newUser.username=createUserDto.email;
+    newUser.username = createUserDto.email;
     newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
@@ -69,11 +73,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     var newUserDb = await this.repo.save(newUser);
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      let url =   process.env.ClientURl;
+      let url = process.env.ClientURl;
       systemLoginUrl = url;
     }
     else {
-      let url =  process.env.ClientURl;
+      let url = process.env.ClientURl;
       systemLoginUrl = url;
     }
 
@@ -81,14 +85,14 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async update(createUserDto: User): Promise<User> {
-  
 
-    let newUser =await  this.repo.findOne({where:{id:createUserDto.id}})
+
+    let newUser = await this.repo.findOne({ where: { id: createUserDto.id } })
 
     newUser.firstName = createUserDto.firstName;
     newUser.lastName = createUserDto.lastName;
     newUser.email = createUserDto.email;
-    newUser.username=createUserDto.email;
+    newUser.username = createUserDto.email;
     newUser.mobile = createUserDto.mobile ? createUserDto.mobile : '';
     newUser.status = RecordStatus.Active;
     newUser.landline = createUserDto.landline ? createUserDto.landline : '';
@@ -102,11 +106,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     var newUserDb = await this.repo.save(newUser);
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      let url =   process.env.ClientURl;
+      let url = process.env.ClientURl;
       systemLoginUrl = url;
     }
     else {
-      let url =  process.env.ClientURl;
+      let url = process.env.ClientURl;
       systemLoginUrl = url;
     }
 
@@ -129,8 +133,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    let url =  process.env.ClientURl;
-    let systemLoginUrl = url ;
+    let url = process.env.ClientURl;
+    let systemLoginUrl = url;
     let user = await this.repo.findOne({ where: { id: userId } });
     user.resetToken = newToken;
     let newUUID = uuidv4();
@@ -162,8 +166,8 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async mailcreate(user: User) {
-    let url =  process.env.ClientURl;
-    let systemLoginUrl = url ;
+    let url = process.env.ClientURl;
+    let systemLoginUrl = url;
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
     user.password = await this.hashPassword(
@@ -313,6 +317,63 @@ export class UsersService extends TypeOrmCrudService<User> {
       });
   }
 
+  async adminDelete(id: number, actingUserName: string): Promise<{ email: string, pmu: 'removed' | 'not-found' | 'failed' | 'skipped' }> {
+    const user = await this.repo.findOne({ where: { id: id } });
+    if (!user || user.status === RecordStatus.Deleted) {
+      throw new NotFoundException('User not found');
+    }
+    if (user.username === actingUserName) {
+      throw new BadRequestException('You cannot delete your own account');
+    }
+
+    if (user.loginProfile) {
+      await axios.delete(process.env.AUTH_URL + '/login-profile/admin-delete', {
+        params: { id: user.loginProfile },
+        headers: getServiceAuthHeaders(),
+      });
+    }
+
+    let pmu: 'removed' | 'not-found' | 'failed' | 'skipped' = 'skipped';
+    if (process.env.PMU_SERVICE_URL && user.uniqueIdentification) {
+      try {
+        const res = await axios.post(process.env.PMU_SERVICE_URL + '/users/service-remove',
+          { uniqueIdentification: user.uniqueIdentification },
+          { headers: getServiceAuthHeaders() });
+        pmu = res.data?.removed ? 'removed' : 'not-found';
+      } catch (err) {
+        // access is already revoked at this point, so don't fail the whole delete over the PMU copy
+        console.error(`PMU removal failed for user ${user.id}: ${err?.message ?? err}`);
+        pmu = 'failed';
+      }
+    }
+
+    const tombstone = `deleted-${user.id}-${Date.now()}:`;
+    await this.repo.update(user.id, {
+      status: RecordStatus.Deleted,
+      email: tombstone + user.email,
+      username: tombstone + user.username,
+    });
+    return { email: user.email, pmu: pmu };
+  }
+
+  async adminSendReset(id: number): Promise<{ email: string }> {
+    const user = await this.repo.findOne({ where: { id: id } });
+    if (!user || user.status === RecordStatus.Deleted) {
+      throw new NotFoundException('User not found');
+    }
+    try {
+      await axios.post(process.env.AUTH_URL + '/login-profile/admin-reset',
+        { userName: user.username },
+        { headers: getServiceAuthHeaders() });
+    } catch (err) {
+      if (err?.response?.status === 404) {
+        throw new BadRequestException('This user has no active login (it may be deactivated)');
+      }
+      throw new InternalServerErrorException('Could not send the reset email');
+    }
+    return { email: user.email };
+  }
+
   async remove(id: number): Promise<void> {
     await this.repo.delete(id + '');
   }
@@ -339,7 +400,7 @@ export class UsersService extends TypeOrmCrudService<User> {
       user.salt = salt;
       user.password = await this.hashPassword(password, salt);
       await this.repo.save(user);
-      await this.updateChnagePasswordToken(user.id, ''); 
+      await this.updateChnagePasswordToken(user.id, '');
       return true;
     }
 
@@ -436,7 +497,7 @@ export class UsersService extends TypeOrmCrudService<User> {
         .leftJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId')
         .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId')
 
-        .where(filter, {
+        .where(notDeleted(filter), {
           filterText: `%${filterText}%`,
           userTypeId,
         }).orderBy('user.firstName', 'ASC');
@@ -450,7 +511,7 @@ export class UsersService extends TypeOrmCrudService<User> {
         .innerJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId and user.institutionId =' + institutionIDFromTocken)
         .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
 
-        .where(filter, {
+        .where(notDeleted(filter), {
           filterText: `%${filterText}%`,
           userTypeId,
           countryIDFromTocken,
@@ -496,7 +557,7 @@ export class UsersService extends TypeOrmCrudService<User> {
         'type.id = user.userTypeId',
       )
 
-      .where(' type.id=' + userTypeId + ' AND ins.id=' + institutionId)
+      .where(notDeleted(' type.id=' + userTypeId + ' AND ins.id=' + institutionId))
       .orderBy('user.status', 'ASC');
     let SQLString = data.getSql();
     let result = await paginate(data, options);
@@ -508,7 +569,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async getUserByLoginProfileId(login_profile_id: string) {
     try {
-      let user = await this.repo.createQueryBuilder('user').where('loginProfile = :loginProfile', {loginProfile: login_profile_id}).getOne()
+      let user = await this.repo.createQueryBuilder('user').where('loginProfile = :loginProfile', { loginProfile: login_profile_id }).getOne()
       return user
     } catch (error) {
       throw new InternalServerErrorException();
@@ -518,3 +579,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
 }
 
+function notDeleted(filter: string): string {
+  const cond = `user.status != ${RecordStatus.Deleted}`;
+  return filter ? `(${filter}) AND ${cond}` : cond;
+}
