@@ -292,6 +292,21 @@ export class PortfolioService extends TypeOrmCrudService<Portfolio> {
       cmScores,
       outcomeResponse.sdg_scores,
     );
+    response.matrix_scores = pAssessments.map((pAssessment) => {
+      const id = pAssessment.assessment.id;
+      if (pAssessment.assessment.tool === 'CARBON_MARKET') {
+        return {
+          assessmentId: id,
+          processScore: cmScores[id]?.process_score ?? null,
+          outcomeScore: cmScores[id]?.outcome_score?.outcome_score ?? null,
+        };
+      }
+      return {
+        assessmentId: id,
+        processScore: piScores[id]?.processScore ?? null,
+        outcomeScore: piScores[id]?.outcomeScore ?? null,
+      };
+    });
 
     return response;
   }

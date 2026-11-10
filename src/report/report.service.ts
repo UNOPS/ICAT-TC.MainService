@@ -71,8 +71,6 @@ export class ReportService extends TypeOrmCrudService<Report> {
   ) {
     super(repo);
   }
-  cmResult: any;
-  cmScores: CMScoreDto;
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';
   }
@@ -1268,6 +1266,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
     createReportDto: CreateReportDto,
   ): Promise<ReportCarbonMarketDto> {
     const reportCarbonMarketDto = new ReportCarbonMarketDto();
+    // Per-request state. ReportService is a singleton shared by every
+    // concurrent request on the instance, so these must NOT live on `this`
+    // (they used to, which let simultaneous CM report generations overwrite
+    // each other's results mid-build).
+    const ctx: CarbonMarketReportContext = {};
     reportCarbonMarketDto.reportName = createReportDto.reportName;
     reportCarbonMarketDto.coverPage =
       this.genarateReportCarbonMarketDtoCoverPage(createReportDto.reportTitle);
@@ -1278,14 +1281,17 @@ export class ReportService extends TypeOrmCrudService<Report> {
     reportCarbonMarketDto.contentTwo =
       await this.genarateReportCarbonMarketDtoContentTwo(
         createReportDto.assessmentId,
+        ctx,
       );
     reportCarbonMarketDto.contentThree =
       await this.genarateReportCarbonMarketDtoContentThree(
         createReportDto.assessmentId,
+        ctx,
       );
     reportCarbonMarketDto.contentFour =
       await this.genarateReportCarbonMarketDtoContentFour(
         createReportDto.assessmentId,
+        ctx,
       );
     reportCarbonMarketDto.contentFive =
       await this.genarateReportCarbonMarketDtoContentFive(
@@ -1508,15 +1514,16 @@ export class ReportService extends TypeOrmCrudService<Report> {
   }
   async genarateReportCarbonMarketDtoContentTwo(
     assessmentId: number,
+    ctx: CarbonMarketReportContext,
   ): Promise<ReportCarbonMarketDtoContentTwo> {
     const contentTwo = new ReportCarbonMarketDtoContentTwo();
-    this.cmResult = await this.cmAssessmentQuestionService.getResults(
+    ctx.cmResult = await this.cmAssessmentQuestionService.getResults(
       assessmentId,
     );
     let safeguardsArray = new Array();
     let preventionGHGArray = new Array();
     let preventionAvoidanceArray = new Array();
-    let questions: any[] = this.cmResult.questions;
+    let questions: any[] = ctx.cmResult.questions;
 
     if (questions) {
       questions.sort((a, b) => {
@@ -1546,7 +1553,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
       contentTwo.prevention_negative_environmental = preventionAvoidanceArray;
 
       let outcomes =
-        this.cmResult.result[
+        ctx.cmResult.result[
           'Section 2: Environmental and social integrity preconditions'
         ];
 
@@ -1557,16 +1564,17 @@ export class ReportService extends TypeOrmCrudService<Report> {
   }
   async genarateReportCarbonMarketDtoContentThree(
     assessmentId: number,
+    ctx: CarbonMarketReportContext,
   ): Promise<ReportCarbonMarketDtoContentThree> {
     const contentThree = new ReportCarbonMarketDtoContentThree();
-    let processData = this.cmResult.processData;
-    this.cmScores = await this.cmAssessmentQuestionService.calculateResult(
+    let processData = ctx.cmResult.processData;
+    ctx.cmScores = await this.cmAssessmentQuestionService.calculateResult(
       assessmentId,
     );
-    if (this.cmScores.outcome_score) {
-      contentThree.outcomes_categories_assessment = this.cmScores.outcome_score;
-      contentThree.outcomeScore = this.cmScores.outcome_score.outcome_score;
-      contentThree.processScore = this.cmScores.process_score;
+    if (ctx.cmScores.outcome_score) {
+      contentThree.outcomes_categories_assessment = ctx.cmScores.outcome_score;
+      contentThree.outcomeScore = ctx.cmScores.outcome_score.outcome_score;
+      contentThree.processScore = ctx.cmScores.process_score;
     }
     if (processData?.data.length > 0) {
       contentThree.process_categories_assessment = processData.data;
@@ -1598,10 +1606,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
       }
     }
     if (
-      this.cmResult.outComeData?.scale_GHGs &&
-      this.cmResult.outComeData?.scale_GHGs.length > 0
+      ctx.cmResult.outComeData?.scale_GHGs &&
+      ctx.cmResult.outComeData?.scale_GHGs.length > 0
     ) {
-      contentThree.scale_ghg = this.cmResult.outComeData.scale_GHGs.map((a) => {
+      contentThree.scale_ghg = ctx.cmResult.outComeData.scale_GHGs.map((a) => {
         a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
           a.characteristic,
         );
@@ -1611,10 +1619,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
       });
     }
     if (
-      this.cmResult.outComeData?.sustained_GHGs &&
-      this.cmResult.outComeData?.sustained_GHGs.length > 0
+      ctx.cmResult.outComeData?.sustained_GHGs &&
+      ctx.cmResult.outComeData?.sustained_GHGs.length > 0
     ) {
-      contentThree.sustained_ghg = this.cmResult.outComeData.sustained_GHGs.map(
+      contentThree.sustained_ghg = ctx.cmResult.outComeData.sustained_GHGs.map(
         (a) => {
           a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
             a.characteristic,
@@ -1628,11 +1636,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
       );
     }
     if (
-      this.cmResult.outComeData?.scale_adaptation &&
-      this.cmResult.outComeData?.scale_adaptation.length > 0
+      ctx.cmResult.outComeData?.scale_adaptation &&
+      ctx.cmResult.outComeData?.scale_adaptation.length > 0
     ) {
       contentThree.scale_adaptation =
-        this.cmResult.outComeData.scale_adaptation.map((a) => {
+        ctx.cmResult.outComeData.scale_adaptation.map((a) => {
           a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
             a.characteristic,
           );
@@ -1642,11 +1650,11 @@ export class ReportService extends TypeOrmCrudService<Report> {
         });
     }
     if (
-      this.cmResult.outComeData?.sustained_adaptation &&
-      this.cmResult.outComeData?.sustained_adaptation.length > 0
+      ctx.cmResult.outComeData?.sustained_adaptation &&
+      ctx.cmResult.outComeData?.sustained_adaptation.length > 0
     ) {
       contentThree.sustained_adaptation =
-        this.cmResult.outComeData.sustained_adaptation.map((a) => {
+        ctx.cmResult.outComeData.sustained_adaptation.map((a) => {
           a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
             a.characteristic,
           );
@@ -1658,10 +1666,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
         });
     }
     if (
-      this.cmResult.outComeData?.scale_SDs &&
-      this.cmResult.outComeData?.scale_SDs.length > 0
+      ctx.cmResult.outComeData?.scale_SDs &&
+      ctx.cmResult.outComeData?.scale_SDs.length > 0
     ) {
-      contentThree.scale_sd = this.cmResult.outComeData.scale_SDs.map((a) => {
+      contentThree.scale_sd = ctx.cmResult.outComeData.scale_SDs.map((a) => {
         a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
           a.characteristic,
         );
@@ -1671,10 +1679,10 @@ export class ReportService extends TypeOrmCrudService<Report> {
       });
     }
     if (
-      this.cmResult.outComeData?.sustained_SDs &&
-      this.cmResult.outComeData?.sustained_SDs.length > 0
+      ctx.cmResult.outComeData?.sustained_SDs &&
+      ctx.cmResult.outComeData?.sustained_SDs.length > 0
     ) {
-      contentThree.sustained_sd = this.cmResult.outComeData.sustained_SDs.map(
+      contentThree.sustained_sd = ctx.cmResult.outComeData.sustained_SDs.map(
         (a) => {
           a.characteristic = this.mapCharacteristicsnamesforCarbonMarcket(
             a.characteristic,
@@ -1691,19 +1699,20 @@ export class ReportService extends TypeOrmCrudService<Report> {
   }
   async genarateReportCarbonMarketDtoContentFour(
     assessmentId: number,
+    ctx: CarbonMarketReportContext,
   ): Promise<ReportCarbonMarketDtoContentFour> {
     const contentFour = new ReportCarbonMarketDtoContentFour();
     if (
-      this.cmScores.process_score != null ||
-      this.cmScores.process_score != undefined
+      ctx.cmScores.process_score != null ||
+      ctx.cmScores.process_score != undefined
     ) {
-      contentFour.processScore = this.cmScores.process_score;
+      contentFour.processScore = ctx.cmScores.process_score;
     }
     if (
-      this.cmScores.outcome_score?.outcome_score != null ||
-      this.cmScores.outcome_score?.outcome_score != undefined
+      ctx.cmScores.outcome_score?.outcome_score != null ||
+      ctx.cmScores.outcome_score?.outcome_score != undefined
     ) {
-      contentFour.outcomeScore = this.cmScores.outcome_score.outcome_score;
+      contentFour.outcomeScore = ctx.cmScores.outcome_score.outcome_score;
     }
 
     return contentFour;
@@ -1754,9 +1763,7 @@ export class ReportService extends TypeOrmCrudService<Report> {
     comparisonReportDto.contentFour =
       await this.genarateComparisonReportDtoContentFour(result.alignment_data);
     comparisonReportDto.contentFive =
-      await this.genarateComparisonReportDtoContentFive(
-        createReportDto.portfolioId,
-      );
+      this.genarateComparisonReportDtoContentFive(result.matrix_scores);
     comparisonReportDto.contentSix =
       await this.genarateComparisonReportDtoContentSix(
         comparisonReportDto.contentOne,
@@ -2051,23 +2058,21 @@ export class ReportService extends TypeOrmCrudService<Report> {
     return contentOne;
   }
 
-  async genarateComparisonReportDtoContentFive(
-    portfolioId: number,
-  ): Promise<ComparisonReportReportContentFive> {
+  // The matrix used to read the stored `results.averageProcess/averageOutcome`
+  // snapshot (filtered by the viewer's country), while the comparison tables
+  // are recalculated live from the answers. Any drift between the two (stale
+  // or duplicate results rows, NULL scores drawn as 0) made dots disagree with
+  // the tables. Use the same live scores the tables use instead.
+  genarateComparisonReportDtoContentFive(
+    matrixScores: ComparisonTableDataDto['matrix_scores'],
+  ): ComparisonReportReportContentFive {
     const contentOne = new ComparisonReportReportContentFive();
-    //@ts-ignore
-    contentOne.scores = (
-      await this.investorToolService.getDashboardAllDataFilter(
-        { page: 1, limit: 1000 },
-        [],
-        portfolioId,
-      )
-    ).items.map((item) => {
-      return {
-        outcomeScore: item.result.averageOutcome,
-        processScore: item.result.averageProcess,
-      };
-    });
+    contentOne.scores = (matrixScores ?? [])
+      .filter((s) => s.processScore != null && s.outcomeScore != null)
+      .map((s) => ({
+        processScore: s.processScore,
+        outcomeScore: s.outcomeScore,
+      }));
 
     return contentOne;
   }
@@ -2299,4 +2304,9 @@ export class ReportService extends TypeOrmCrudService<Report> {
       return '-';
     }
   }
+}
+
+interface CarbonMarketReportContext {
+  cmResult?: any;
+  cmScores?: CMScoreDto;
 }

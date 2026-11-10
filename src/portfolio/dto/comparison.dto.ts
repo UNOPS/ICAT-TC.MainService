@@ -15,5 +15,11 @@ export class ComparisonTableDataDto {
     outcome_data: ComparisonDto[]
     aggregation_data: ComparisonDto
     alignment_data: ComparisonDto
+    /**
+     * Per-intervention process/outcome scores, computed live by the same
+     * calculations that feed process_data/outcome_data. The transformational
+     * impact matrix uses these so its dots always match the tables.
+     */
+    matrix_scores?: { assessmentId: number; processScore: number | null; outcomeScore: number | null }[]
 }
 

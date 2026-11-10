@@ -4851,8 +4851,13 @@ dimensions: Outcome (extent and sustained nature of transformation) and Process 
   ) {
     let body = '';
     for (let x of this.xData) {
-      const matches = (contentTwo.scores ?? []).filter((item) =>
-        scoresMatchMatrixCell(item.processScore, item.outcomeScore, y, x.value),
+      // Math.floor(null) === 0, so unscored interventions must be skipped
+      // explicitly or they get drawn in the 0/0 cell.
+      const matches = (contentTwo.scores ?? []).filter(
+        (item) =>
+          item.processScore != null &&
+          item.outcomeScore != null &&
+          scoresMatchMatrixCell(item.processScore, item.outcomeScore, y, x.value),
       );
       const background = this.getBackgroundColorInvestmentHeatmap(x.value, y);
 

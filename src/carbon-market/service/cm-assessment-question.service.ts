@@ -896,13 +896,25 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
           outcomeData.scale_adaptation.push(obj);
         }
       }
+      // One row per precondition question. Historical duplicate
+      // cm_assessment_question rows exist for some questions; the edit form
+      // shows/updates the most recently edited one (see
+      // getAssessmentQuestionsByAssessmentId ordering), so the report must
+      // pick that same row. Previously a Map kept whichever duplicate came
+      // last in unordered SQL results, so the report could show a stale row
+      // (e.g. "No justification was provided") while the form showed the
+      // saved justification.
       answers2 = [
-        ...new Map(
-          answers2.map((item) => [
-            item.assessment_question.question.code,
-            item,
-          ]),
-        ).values(),
+        ...answers2
+          .reduce((byCode, item) => {
+            const code = item.assessment_question.question.code;
+            const existing = byCode.get(code);
+            if (!existing || this.isNewerAssessmentRow(item, existing)) {
+              byCode.set(code, item);
+            }
+            return byCode;
+          }, new Map<string, CMAssessmentAnswer>())
+          .values(),
       ];
 
       let criterias = this.checkPreConditions(answers2);
@@ -991,6 +1003,24 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         sdgs: [...new Map(sdgs.map((item) => [item['id'], item])).values()],
       };
     }
+  }
+
+  /** Most recently edited question row wins; ties fall back to higher ids. */
+  private isNewerAssessmentRow(
+    a: CMAssessmentAnswer,
+    b: CMAssessmentAnswer,
+  ): boolean {
+    const aEdited = a.assessment_question?.editedOn
+      ? new Date(a.assessment_question.editedOn).getTime()
+      : 0;
+    const bEdited = b.assessment_question?.editedOn
+      ? new Date(b.assessment_question.editedOn).getTime()
+      : 0;
+    if (aEdited !== bEdited) return aEdited > bEdited;
+    const aqDiff =
+      (a.assessment_question?.id ?? 0) - (b.assessment_question?.id ?? 0);
+    if (aqDiff !== 0) return aqDiff > 0;
+    return (a.id ?? 0) > (b.id ?? 0);
   }
 
   checkPreConditions(assessmentAnswers: CMAssessmentAnswer[]) {
@@ -1538,7 +1568,14 @@ export class CMAssessmentQuestionService extends TypeOrmCrudService<CMAssessment
         'answer',
         'answer.id = assessmnetAnswer.answerId',
       )
-      .where('assessment.id = :id', { id: assessmentId });
+      .where('assessment.id = :id', { id: assessmentId })
+      // The CM form uses Array.find() on this list, i.e. the first row per
+      // question wins. Order deterministically (most recently edited first)
+      // so the form and the report (getResults) agree on which duplicate row
+      // is authoritative.
+      .orderBy('assessmentQuestion.editedOn', 'DESC')
+      .addOrderBy('assessmentQuestion.id', 'DESC')
+      .addOrderBy('assessmnetAnswer.id', 'DESC');
 
     return await data.getMany();
   }
